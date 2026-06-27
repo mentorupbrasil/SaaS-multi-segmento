@@ -1,0 +1,51 @@
+import { getSegment } from "@/segments";
+import { MODULES } from "@/modules";
+import { resolveTerms, type Terms } from "./terms";
+
+export interface NavItem {
+  href: string;
+  label: string;
+  icon: string;
+  comingSoon?: boolean;
+}
+
+interface OrgLike {
+  segmentId: string;
+  config?: unknown;
+}
+
+function extractTermOverrides(config: unknown): Record<string, string> {
+  if (config && typeof config === "object" && "terms" in config) {
+    const terms = (config as { terms?: unknown }).terms;
+    if (terms && typeof terms === "object") return terms as Record<string, string>;
+  }
+  return {};
+}
+
+/** Monta o menu lateral com base nos modulos ligados do segmento + nomenclatura. */
+export function buildNav(org: OrgLike): NavItem[] {
+  const segment = getSegment(org.segmentId);
+  if (!segment) return [];
+  const terms: Terms = resolveTerms(org.segmentId, extractTermOverrides(org.config));
+
+  const items: NavItem[] = [];
+  for (const moduleId of segment.modules) {
+    const mod = MODULES[moduleId];
+    if (!mod) continue;
+    for (const navItem of mod.nav) {
+      items.push({
+        href: navItem.href,
+        label: terms[navItem.labelKey] ?? navItem.fallback,
+        icon: navItem.icon,
+        comingSoon: mod.comingSoon,
+      });
+    }
+  }
+  return items;
+}
+
+/** Verifica se um modulo esta ligado para um segmento. */
+export function isModuleEnabled(segmentId: string, moduleId: string): boolean {
+  const segment = getSegment(segmentId);
+  return segment?.modules.includes(moduleId as never) ?? false;
+}
