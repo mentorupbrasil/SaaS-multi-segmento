@@ -1,0 +1,421 @@
+import type { SegmentTemplate } from "./types";
+
+// Sub-nichos de Beleza & Estetica (alem de barbearia, salao, estetica e tatuagem).
+
+export const esmalteria: SegmentTemplate = {
+  id: "esmalteria",
+  label: "Esmalteria / Nail Designer",
+  slug: "esmalteria",
+  icon: "Hand",
+  category: "beleza",
+  tagline: "Agenda, clientes e financeiro para nail designers.",
+  modules: ["clients", "scheduling", "services", "financial", "team", "inventory"],
+  terms: {
+    customer: "Cliente",
+    customer_plural: "Clientes",
+    professional: "Nail Designer",
+    professional_plural: "Nail Designers",
+    service: "Serviço",
+    service_plural: "Serviços",
+    appointment: "Agendamento",
+    appointment_plural: "Agenda",
+    inventory: "Estoque",
+  },
+  customerFields: [
+    { key: "data_nascimento", label: "Data de nascimento", type: "date" },
+    { key: "alergias", label: "Alergias / sensibilidades", type: "text", placeholder: "Ex.: acetona, acrílico" },
+    { key: "preferencia", label: "Preferências", type: "text", placeholder: "Ex.: formato, cores" },
+  ],
+  defaultServices: [
+    { name: "Esmaltação em gel", price: 70, durationMin: 60 },
+    { name: "Alongamento em fibra", price: 130, durationMin: 120 },
+    { name: "Banho de gel", price: 90, durationMin: 90 },
+    { name: "Manutenção", price: 80, durationMin: 75 },
+    { name: "Spa dos pés", price: 60, durationMin: 50 },
+    { name: "Blindagem", price: 50, durationMin: 45 },
+  ],
+  benefits: [
+    "Agenda online com confirmação automática que reduz faltas",
+    "Histórico com fotos do trabalho e preferências de cada cliente",
+    "Controle de materiais (gel, fibra, esmaltes) com baixa por atendimento",
+    "Pacotes e manutenção com lembrete de retorno",
+    "Caixa diário e relatório de faturamento em tempo real",
+  ],
+  faq: [
+    { q: "Consigo registrar fotos das unhas?", a: "Sim. Cada atendimento guarda fotos e preferências da cliente para consultar nas próximas visitas." },
+    { q: "Dá para controlar manutenção e retorno?", a: "Sim. Você acompanha a data da última manutenção e envia lembretes de retorno (lembretes automáticos a partir do plano Profissional)." },
+  ],
+  seo: {
+    title: "Sistema para Esmalteria e Nail Designer | Agenda e gestão",
+    description:
+      "Software para esmalteria e nail designer com agenda online, clientes, fotos, materiais, pacotes e financeiro. Assine e comece hoje.",
+    keywords: ["sistema para esmalteria", "agenda nail designer", "software manicure", "app esmalteria"],
+    headline: "O sistema completo para a sua esmalteria",
+    subheadline: "Agenda online, fotos do trabalho, controle de materiais, pacotes e caixa em um só lugar.",
+  },
+};
+
+export const sobrancelhas: SegmentTemplate = {
+  id: "sobrancelhas",
+  label: "Design de Sobrancelhas",
+  slug: "design-de-sobrancelhas",
+  icon: "Eye",
+  category: "beleza",
+  tagline: "Agenda, fotos antes/depois e fidelização.",
+  modules: ["clients", "scheduling", "services", "records", "financial", "team"],
+  terms: {
+    customer: "Cliente",
+    customer_plural: "Clientes",
+    professional: "Designer",
+    professional_plural: "Designers",
+    service: "Procedimento",
+    service_plural: "Procedimentos",
+    appointment: "Agendamento",
+    appointment_plural: "Agenda",
+    records: "Ficha",
+  },
+  customerFields: [
+    { key: "data_nascimento", label: "Data de nascimento", type: "date" },
+    { key: "tipo_pele", label: "Tipo de pele", type: "select", options: ["Normal", "Seca", "Oleosa", "Mista"] },
+    { key: "alergias", label: "Alergias", type: "text", placeholder: "Ex.: henna, anestésico" },
+  ],
+  defaultServices: [
+    { name: "Design com pinça", price: 45, durationMin: 30 },
+    { name: "Design com henna", price: 70, durationMin: 50 },
+    { name: "Brow lamination", price: 150, durationMin: 70 },
+    { name: "Micropigmentação", price: 400, durationMin: 120 },
+    { name: "Retoque", price: 100, durationMin: 60 },
+  ],
+  benefits: [
+    "Agenda online com confirmação que reduz faltas",
+    "Ficha com fotos antes e depois e evolução do visagismo",
+    "Controle de retorno e manutenção de cada técnica",
+    "Termo de consentimento na ficha da cliente",
+    "Financeiro com relatórios de faturamento",
+  ],
+  faq: [
+    { q: "Guardo fotos antes e depois?", a: "Sim. A ficha de cada cliente organiza as fotos de cada atendimento para acompanhar a evolução." },
+    { q: "Serve para micropigmentação?", a: "Sim. Você registra a técnica, o retorno e o termo de consentimento na ficha da cliente." },
+  ],
+  seo: {
+    title: "Sistema para Design de Sobrancelhas | Agenda e fichas",
+    description:
+      "Software para designer de sobrancelhas com agenda online, fotos antes/depois, fichas, retorno e financeiro. Comece hoje.",
+    keywords: ["sistema para sobrancelhas", "agenda design de sobrancelhas", "software micropigmentação"],
+    headline: "O sistema para o seu studio de sobrancelhas",
+    subheadline: "Agenda online, fotos antes/depois, ficha da cliente e controle financeiro.",
+  },
+};
+
+export const cilios: SegmentTemplate = {
+  id: "cilios",
+  label: "Extensão de Cílios (Lash)",
+  slug: "extensao-de-cilios",
+  icon: "Star",
+  category: "beleza",
+  tagline: "Agenda de aplicações e manutenções com fotos.",
+  modules: ["clients", "scheduling", "services", "records", "financial", "team"],
+  terms: {
+    customer: "Cliente",
+    customer_plural: "Clientes",
+    professional: "Lash Designer",
+    professional_plural: "Lash Designers",
+    service: "Procedimento",
+    service_plural: "Procedimentos",
+    appointment: "Agendamento",
+    appointment_plural: "Agenda",
+    records: "Ficha",
+  },
+  customerFields: [
+    { key: "data_nascimento", label: "Data de nascimento", type: "date" },
+    { key: "tecnica", label: "Técnica preferida", type: "select", options: ["Fio a fio", "Volume russo", "Híbrido", "Mega volume"] },
+    { key: "alergias", label: "Alergias / sensibilidades", type: "text", placeholder: "Ex.: cola, adesivo" },
+  ],
+  defaultServices: [
+    { name: "Volume fio a fio", price: 150, durationMin: 120 },
+    { name: "Volume russo", price: 200, durationMin: 150 },
+    { name: "Volume híbrido", price: 180, durationMin: 130 },
+    { name: "Manutenção", price: 100, durationMin: 90 },
+    { name: "Remoção", price: 40, durationMin: 30 },
+  ],
+  benefits: [
+    "Agenda com bloqueio para aplicações longas, sem choque de horários",
+    "Ficha com técnica, fotos e histórico de manutenções",
+    "Lembrete de manutenção no tempo certo para fidelizar",
+    "Termo de consentimento e teste de alergia na ficha",
+    "Financeiro e comissão por lash designer",
+  ],
+  faq: [
+    { q: "Controlo as manutenções?", a: "Sim. O sistema registra a aplicação e ajuda a lembrar a cliente do retorno para manutenção." },
+    { q: "Dá para bloquear horários longos?", a: "Sim. Você define a duração de cada procedimento e a agenda bloqueia o tempo necessário automaticamente." },
+  ],
+  seo: {
+    title: "Sistema para Extensão de Cílios (Lash) | Agenda e fichas",
+    description:
+      "Software para lash designer com agenda de aplicações e manutenções, fichas, fotos, consentimento e financeiro.",
+    keywords: ["sistema para cílios", "agenda lash designer", "software extensão de cílios"],
+    headline: "O sistema da sua agenda de cílios",
+    subheadline: "Agenda de aplicações e manutenções, ficha com fotos, consentimento e financeiro.",
+  },
+};
+
+export const maquiagem: SegmentTemplate = {
+  id: "maquiagem",
+  label: "Maquiadora",
+  slug: "maquiadora",
+  icon: "Brush",
+  category: "beleza",
+  tagline: "Agenda de eventos, orçamentos e fidelização.",
+  modules: ["clients", "scheduling", "services", "financial", "team"],
+  terms: {
+    customer: "Cliente",
+    customer_plural: "Clientes",
+    professional: "Maquiador(a)",
+    professional_plural: "Maquiadores",
+    service: "Serviço",
+    service_plural: "Serviços",
+    appointment: "Agendamento",
+    appointment_plural: "Agenda",
+  },
+  customerFields: [
+    { key: "data_nascimento", label: "Data de nascimento", type: "date" },
+    { key: "tipo_pele", label: "Tipo de pele", type: "select", options: ["Normal", "Seca", "Oleosa", "Mista"] },
+    { key: "evento", label: "Evento", type: "text", placeholder: "Ex.: noiva, formatura" },
+  ],
+  defaultServices: [
+    { name: "Maquiagem social", price: 150, durationMin: 60 },
+    { name: "Maquiagem para noiva", price: 450, durationMin: 120 },
+    { name: "Maquiagem para madrinha", price: 200, durationMin: 75 },
+    { name: "Prova de noiva", price: 120, durationMin: 90 },
+    { name: "Curso / aula", price: 250, durationMin: 180 },
+  ],
+  benefits: [
+    "Agenda de eventos com prova e horários de deslocamento",
+    "Histórico de pele, preferências e fotos de cada cliente",
+    "Orçamentos e pacotes para noivas e madrinhas",
+    "Sinal e pagamento controlados no financeiro",
+    "Relatórios de faturamento por período e por evento",
+  ],
+  faq: [
+    { q: "Consigo controlar provas e eventos?", a: "Sim. Você agenda a prova e o evento separadamente, com horários e lembretes para cada um." },
+    { q: "Dá para registrar o sinal da noiva?", a: "Sim. O sinal e o valor restante ficam registrados no financeiro de cada atendimento." },
+  ],
+  seo: {
+    title: "Sistema para Maquiadora | Agenda de eventos e financeiro",
+    description:
+      "Software para maquiadora com agenda de eventos, provas, orçamentos para noivas, sinal e financeiro. Comece hoje.",
+    keywords: ["sistema para maquiadora", "agenda maquiagem", "software maquiagem noiva"],
+    headline: "O sistema da maquiadora profissional",
+    subheadline: "Agenda de eventos e provas, orçamentos, sinal e controle financeiro em um só lugar.",
+  },
+};
+
+export const cabeleireiro: SegmentTemplate = {
+  id: "cabeleireiro",
+  label: "Cabeleireiro(a)",
+  slug: "cabeleireiro",
+  icon: "Scissors",
+  category: "beleza",
+  tagline: "Agenda, ficha técnica e comissão sem planilha.",
+  modules: ["clients", "scheduling", "services", "financial", "team", "inventory"],
+  terms: {
+    customer: "Cliente",
+    customer_plural: "Clientes",
+    professional: "Cabeleireiro(a)",
+    professional_plural: "Cabeleireiros",
+    service: "Serviço",
+    service_plural: "Serviços",
+    appointment: "Agendamento",
+    appointment_plural: "Agenda",
+    inventory: "Estoque",
+  },
+  customerFields: [
+    { key: "data_nascimento", label: "Data de nascimento", type: "date" },
+    { key: "tipo_cabelo", label: "Tipo de cabelo", type: "select", options: ["Liso", "Ondulado", "Cacheado", "Crespo"] },
+    { key: "quimica", label: "Química / histórico", type: "text", placeholder: "Ex.: progressiva, coloração" },
+    { key: "alergias", label: "Alergias", type: "text", placeholder: "Ex.: amônia" },
+  ],
+  defaultServices: [
+    { name: "Corte", price: 60, durationMin: 45 },
+    { name: "Escova", price: 50, durationMin: 45 },
+    { name: "Coloração", price: 150, durationMin: 120 },
+    { name: "Mechas / luzes", price: 250, durationMin: 180 },
+    { name: "Progressiva", price: 200, durationMin: 150 },
+    { name: "Hidratação", price: 80, durationMin: 60 },
+  ],
+  benefits: [
+    "Agenda online com confirmação que reduz faltas",
+    "Ficha técnica com histórico de química e fotos antes/depois",
+    "Comissão por serviço e por produto calculada automaticamente",
+    "Estoque de produtos com baixa por atendimento",
+    "Relatórios de faturamento, ticket médio e serviços mais vendidos",
+  ],
+  faq: [
+    { q: "Registro a química usada em cada cliente?", a: "Sim. A ficha técnica guarda o histórico de químicas, fórmulas e fotos para os próximos atendimentos." },
+    { q: "Controlo a minha comissão?", a: "Sim. Cada atendimento fica vinculado ao profissional, com cálculo automático de comissão." },
+  ],
+  seo: {
+    title: "Sistema para Cabeleireiro(a) | Agenda, ficha técnica e comissão",
+    description:
+      "Software para cabeleireiro com agenda online, ficha técnica, histórico de química, comissão, estoque e financeiro.",
+    keywords: ["sistema para cabeleireiro", "agenda cabeleireira", "software salão cabelo"],
+    headline: "O sistema do(a) cabeleireiro(a) profissional",
+    subheadline: "Agenda online, ficha técnica, comissão automática, estoque e caixa em um só lugar.",
+  },
+};
+
+export const penteadista: SegmentTemplate = {
+  id: "penteadista",
+  label: "Penteadista",
+  slug: "penteadista",
+  icon: "Wand2",
+  category: "beleza",
+  tagline: "Agenda de eventos, provas e orçamentos.",
+  modules: ["clients", "scheduling", "services", "financial", "team"],
+  terms: {
+    customer: "Cliente",
+    customer_plural: "Clientes",
+    professional: "Penteadista",
+    professional_plural: "Penteadistas",
+    service: "Serviço",
+    service_plural: "Serviços",
+    appointment: "Agendamento",
+    appointment_plural: "Agenda",
+  },
+  customerFields: [
+    { key: "data_nascimento", label: "Data de nascimento", type: "date" },
+    { key: "tipo_cabelo", label: "Tipo de cabelo", type: "select", options: ["Liso", "Ondulado", "Cacheado", "Crespo"] },
+    { key: "evento", label: "Evento", type: "text", placeholder: "Ex.: noiva, formatura, debutante" },
+  ],
+  defaultServices: [
+    { name: "Penteado social", price: 120, durationMin: 60 },
+    { name: "Penteado de noiva", price: 350, durationMin: 90 },
+    { name: "Penteado de madrinha", price: 180, durationMin: 60 },
+    { name: "Prova de penteado", price: 100, durationMin: 60 },
+    { name: "Trança / semipreso", price: 150, durationMin: 70 },
+  ],
+  benefits: [
+    "Agenda de eventos com prova e horários de deslocamento",
+    "Histórico de penteados e fotos de cada cliente",
+    "Orçamentos e pacotes para noivas e madrinhas",
+    "Sinal e pagamento controlados no financeiro",
+    "Relatórios de faturamento por período e por evento",
+  ],
+  faq: [
+    { q: "Consigo agendar prova e evento?", a: "Sim. A prova e o evento ficam em horários separados, com lembretes para cada um." },
+    { q: "Dá para guardar fotos dos penteados?", a: "Sim. Cada cliente tem o histórico de penteados e fotos para consultar e repetir." },
+  ],
+  seo: {
+    title: "Sistema para Penteadista | Agenda de eventos e orçamentos",
+    description:
+      "Software para penteadista com agenda de eventos, provas, orçamentos para noivas, sinal e financeiro.",
+    keywords: ["sistema para penteadista", "agenda penteado", "software penteado noiva"],
+    headline: "O sistema da penteadista profissional",
+    subheadline: "Agenda de eventos e provas, orçamentos, sinal e controle financeiro.",
+  },
+};
+
+export const depilacao: SegmentTemplate = {
+  id: "depilacao",
+  label: "Depilação",
+  slug: "depilacao",
+  icon: "Droplets",
+  category: "beleza",
+  tagline: "Agenda, retorno por região e fidelização.",
+  modules: ["clients", "scheduling", "services", "financial", "team", "inventory"],
+  terms: {
+    customer: "Cliente",
+    customer_plural: "Clientes",
+    professional: "Profissional",
+    professional_plural: "Profissionais",
+    service: "Serviço",
+    service_plural: "Serviços",
+    appointment: "Agendamento",
+    appointment_plural: "Agenda",
+    inventory: "Estoque",
+  },
+  customerFields: [
+    { key: "data_nascimento", label: "Data de nascimento", type: "date" },
+    { key: "tipo_depilacao", label: "Método", type: "select", options: ["Cera", "Laser", "Linha", "Egípcia"] },
+    { key: "alergias", label: "Alergias / sensibilidades", type: "text", placeholder: "Ex.: cera quente" },
+  ],
+  defaultServices: [
+    { name: "Axilas", price: 35, durationMin: 20 },
+    { name: "Meia perna", price: 45, durationMin: 30 },
+    { name: "Perna inteira", price: 70, durationMin: 45 },
+    { name: "Virilha simples", price: 45, durationMin: 25 },
+    { name: "Virilha completa", price: 70, durationMin: 35 },
+    { name: "Buço", price: 20, durationMin: 10 },
+  ],
+  benefits: [
+    "Agenda online com confirmação que reduz faltas",
+    "Controle de retorno por região para fidelizar",
+    "Pacotes e assinatura mensal de sessões",
+    "Estoque de cera e insumos com baixa por atendimento",
+    "Caixa e relatórios de faturamento em tempo real",
+  ],
+  faq: [
+    { q: "Controlo pacotes e retornos?", a: "Sim. Você acompanha as sessões dos pacotes e o tempo de retorno de cada região." },
+    { q: "Serve para laser e cera?", a: "Sim. Você cadastra os serviços por método e região, do jeito do seu negócio." },
+  ],
+  seo: {
+    title: "Sistema para Depilação | Agenda, pacotes e financeiro",
+    description:
+      "Software para depilação com agenda online, controle de retorno, pacotes, assinatura, estoque e financeiro.",
+    keywords: ["sistema para depilação", "agenda depilação", "software depilação cera laser"],
+    headline: "O sistema do seu estúdio de depilação",
+    subheadline: "Agenda online, controle de retorno, pacotes, estoque e caixa em um só lugar.",
+  },
+};
+
+export const massoterapia: SegmentTemplate = {
+  id: "massoterapia",
+  label: "Massoterapia / Spa",
+  slug: "massoterapia",
+  icon: "Flower2",
+  category: "beleza",
+  tagline: "Agenda de sessões, ficha e pacotes.",
+  modules: ["clients", "scheduling", "services", "records", "financial", "team"],
+  terms: {
+    customer: "Cliente",
+    customer_plural: "Clientes",
+    professional: "Massoterapeuta",
+    professional_plural: "Massoterapeutas",
+    service: "Sessão",
+    service_plural: "Sessões",
+    appointment: "Sessão",
+    appointment_plural: "Agenda",
+    records: "Ficha",
+  },
+  customerFields: [
+    { key: "data_nascimento", label: "Data de nascimento", type: "date" },
+    { key: "queixa", label: "Queixa principal", type: "text", placeholder: "Ex.: tensão nos ombros" },
+    { key: "restricoes", label: "Restrições de saúde", type: "text", placeholder: "Ex.: hipertensão, gestante" },
+  ],
+  defaultServices: [
+    { name: "Massagem relaxante", price: 120, durationMin: 60 },
+    { name: "Massagem modeladora", price: 130, durationMin: 60 },
+    { name: "Drenagem linfática", price: 120, durationMin: 60 },
+    { name: "Pedras quentes", price: 160, durationMin: 75 },
+    { name: "Day spa", price: 280, durationMin: 150 },
+  ],
+  benefits: [
+    "Agenda por sala/maca e por massoterapeuta, sem choque de horários",
+    "Ficha com anamnese, queixa e restrições de saúde",
+    "Pacotes de sessões com acompanhamento do que falta",
+    "Termo de consentimento e evolução na ficha do cliente",
+    "Financeiro com relatórios de faturamento",
+  ],
+  faq: [
+    { q: "Tem ficha com anamnese?", a: "Sim. Cada cliente tem anamnese, queixa principal, restrições e a evolução das sessões." },
+    { q: "Controlo pacotes de sessões?", a: "Sim. Você acompanha quantas sessões o cliente já usou e quantas faltam em cada pacote." },
+  ],
+  seo: {
+    title: "Sistema para Massoterapia e Spa | Agenda, ficha e pacotes",
+    description:
+      "Software para massoterapia e spa com agenda de sessões por sala, anamnese, pacotes, evolução e financeiro.",
+    keywords: ["sistema para massoterapia", "agenda spa", "software massagem", "sistema day spa"],
+    headline: "O sistema do seu espaço de massoterapia",
+    subheadline: "Agenda de sessões por sala, ficha com anamnese, pacotes e controle financeiro.",
+  },
+};

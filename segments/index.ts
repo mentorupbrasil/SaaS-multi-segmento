@@ -5,6 +5,16 @@ import { salao } from "./salao";
 import { clinica } from "./clinica";
 import { oficina } from "./oficina";
 import { estetica, tatuagem } from "./beleza-extra";
+import {
+  esmalteria,
+  sobrancelhas,
+  cilios,
+  maquiagem,
+  cabeleireiro,
+  penteadista,
+  depilacao,
+  massoterapia,
+} from "./beleza-pro";
 import { odontologia, psicologia, personal, academia } from "./saude-extra";
 import { lavaRapido } from "./automotivo-extra";
 import { advogado, assistencia, imobiliaria, obras } from "./servicos";
@@ -13,9 +23,17 @@ import { escola } from "./educacao";
 
 // Registro central de segmentos. Adicionar um nicho = importar e adicionar aqui.
 const LIST: SegmentTemplate[] = [
-  barbearia,
   salao,
+  cabeleireiro,
+  barbearia,
+  esmalteria,
+  sobrancelhas,
+  cilios,
+  maquiagem,
+  penteadista,
+  depilacao,
   estetica,
+  massoterapia,
   tatuagem,
   clinica,
   odontologia,
