@@ -12,6 +12,8 @@ const credentialsSchema = z.object({
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   ...authConfig,
+  // Deriva a URL a partir do request (funciona em qualquer porta/dominio).
+  trustHost: true,
   session: { strategy: "jwt" },
   providers: [
     Credentials({

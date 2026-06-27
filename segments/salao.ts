@@ -5,6 +5,7 @@ export const salao: SegmentTemplate = {
   label: "Salao de Beleza",
   slug: "salao-de-beleza",
   icon: "Sparkles",
+  category: "beleza",
   tagline: "Gestao completa para o seu salao de beleza.",
   modules: ["clients", "scheduling", "services", "financial", "team"],
   terms: {
@@ -27,10 +28,16 @@ export const salao: SegmentTemplate = {
     { name: "Manicure", price: 35, durationMin: 40 },
     { name: "Coloracao", price: 150, durationMin: 120 },
   ],
+  benefits: [
+    "Agenda por profissional e por servico",
+    "Ficha tecnica com tipo de cabelo e alergias",
+    "Controle de comissoes da equipe",
+    "Relatorios de faturamento e servicos mais vendidos",
+  ],
   seo: {
     title: "Sistema para Salao de Beleza | Agenda e gestao",
     description:
-      "Software para salao de beleza com agenda online, clientes, servicos, comissoes e financeiro. Experimente.",
+      "Software para salao de beleza com agenda online, clientes, servicos, comissoes e financeiro. Experimente gratis.",
     keywords: ["sistema para salao de beleza", "agenda salao", "software salao", "app salao de beleza"],
     headline: "Tudo que o seu salao precisa em um sistema",
     subheadline:

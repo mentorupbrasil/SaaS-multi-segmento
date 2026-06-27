@@ -53,13 +53,16 @@ export default async function DashboardPage() {
 
   return (
     <div>
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-slate-900">
-          Bem-vindo a {org.name}
-        </h1>
-        <p className="mt-1 text-sm text-slate-500">
-          Painel do seu sistema de {segment?.label.toLowerCase() ?? "negocio"}.
-        </p>
+      <div className="mb-6 flex items-center gap-4">
+        <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-600 to-fuchsia-600 text-white shadow-sm">
+          <Icon name={segment?.icon ?? "Building2"} className="h-6 w-6" />
+        </span>
+        <div>
+          <h1 className="text-2xl font-bold text-slate-900">Bem-vindo a {org.name}</h1>
+          <p className="mt-0.5 text-sm text-slate-500">
+            Painel do seu sistema de {segment?.label.toLowerCase() ?? "negocio"}.
+          </p>
+        </div>
       </div>
 
       {org.subscriptionStatus === "TRIALING" && (
@@ -75,12 +78,14 @@ export default async function DashboardPage() {
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {stats.map((s) => (
-          <Link key={s.label} href={s.href} className="card p-5 transition-shadow hover:shadow-md">
+          <Link key={s.label} href={s.href} className="card p-5 transition-all hover:-translate-y-0.5 hover:shadow-md">
             <div className="flex items-center justify-between">
               <span className="text-sm text-slate-500">{s.label}</span>
-              <Icon name={s.icon} className="h-5 w-5 text-brand-600" />
+              <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-brand-50 to-violet-50 text-brand-600 ring-1 ring-brand-100">
+                <Icon name={s.icon} className="h-4 w-4" />
+              </span>
             </div>
-            <p className="mt-2 text-2xl font-bold text-slate-900">{s.value}</p>
+            <p className="mt-3 text-2xl font-bold text-slate-900">{s.value}</p>
           </Link>
         ))}
       </div>
@@ -94,10 +99,10 @@ export default async function DashboardPage() {
             <Link
               key={item.href}
               href={item.href}
-              className="card flex items-center gap-3 p-4 transition-shadow hover:shadow-md"
+              className="card flex items-center gap-3 p-4 transition-all hover:-translate-y-0.5 hover:shadow-md"
             >
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-brand-50">
-                <Icon name={item.icon} className="h-5 w-5 text-brand-600" />
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-brand-50 to-violet-50 text-brand-600 ring-1 ring-brand-100">
+                <Icon name={item.icon} className="h-5 w-5" />
               </div>
               <div>
                 <p className="text-sm font-medium text-slate-900">{item.label}</p>

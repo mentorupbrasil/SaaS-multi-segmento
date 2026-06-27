@@ -5,6 +5,7 @@ export const clinica: SegmentTemplate = {
   label: "Clinica",
   slug: "clinica",
   icon: "Stethoscope",
+  category: "saude",
   tagline: "Agenda, prontuario e financeiro para a sua clinica.",
   modules: ["clients", "scheduling", "services", "records", "financial", "team"],
   terms: {
@@ -27,6 +28,12 @@ export const clinica: SegmentTemplate = {
     { name: "Consulta", price: 250, durationMin: 30 },
     { name: "Retorno", price: 0, durationMin: 20 },
     { name: "Avaliacao", price: 180, durationMin: 40 },
+  ],
+  benefits: [
+    "Agenda de consultas por profissional",
+    "Prontuario do paciente com historico completo",
+    "Controle de convenios e particulares",
+    "Financeiro com contas a pagar e receber",
   ],
   seo: {
     title: "Sistema para Clinica | Agenda, prontuario e financeiro",

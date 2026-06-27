@@ -1,18 +1,43 @@
-import type { SegmentTemplate } from "./types";
+import type { SegmentTemplate, SegmentCategory } from "./types";
+import { CATEGORY_LABELS, CATEGORY_ORDER } from "./types";
 import { barbearia } from "./barbearia";
 import { salao } from "./salao";
 import { clinica } from "./clinica";
 import { oficina } from "./oficina";
+import { estetica, tatuagem } from "./beleza-extra";
+import { odontologia, psicologia, personal, academia } from "./saude-extra";
+import { lavaRapido } from "./automotivo-extra";
+import { advogado, assistencia, imobiliaria, obras } from "./servicos";
+import { restaurante, petshop } from "./alimentacao";
+import { escola } from "./educacao";
 
 // Registro central de segmentos. Adicionar um nicho = importar e adicionar aqui.
-export const SEGMENTS: Record<string, SegmentTemplate> = {
+const LIST: SegmentTemplate[] = [
   barbearia,
   salao,
+  estetica,
+  tatuagem,
   clinica,
+  odontologia,
+  psicologia,
+  personal,
+  academia,
   oficina,
-};
+  lavaRapido,
+  restaurante,
+  petshop,
+  advogado,
+  assistencia,
+  imobiliaria,
+  obras,
+  escola,
+];
 
-export const ALL_SEGMENTS: SegmentTemplate[] = Object.values(SEGMENTS);
+export const SEGMENTS: Record<string, SegmentTemplate> = Object.fromEntries(
+  LIST.map((s) => [s.id, s]),
+);
+
+export const ALL_SEGMENTS: SegmentTemplate[] = LIST;
 
 export function getSegment(id: string | undefined | null): SegmentTemplate | undefined {
   if (!id) return undefined;
@@ -23,4 +48,20 @@ export function getSegmentBySlug(slug: string): SegmentTemplate | undefined {
   return ALL_SEGMENTS.find((s) => s.slug === slug);
 }
 
-export type { SegmentTemplate } from "./types";
+export interface SegmentGroup {
+  category: SegmentCategory;
+  label: string;
+  segments: SegmentTemplate[];
+}
+
+/** Segmentos agrupados por categoria, na ordem definida. */
+export function getSegmentGroups(): SegmentGroup[] {
+  return CATEGORY_ORDER.map((category) => ({
+    category,
+    label: CATEGORY_LABELS[category],
+    segments: ALL_SEGMENTS.filter((s) => s.category === category),
+  })).filter((g) => g.segments.length > 0);
+}
+
+export type { SegmentTemplate, SegmentCategory } from "./types";
+export { CATEGORY_LABELS, CATEGORY_ORDER } from "./types";

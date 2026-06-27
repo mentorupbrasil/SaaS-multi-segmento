@@ -12,11 +12,13 @@ export default function LoginPage() {
 
   return (
     <div className="w-full max-w-md">
-      <div className="card p-8">
-        <h1 className="text-2xl font-bold text-slate-900">Entrar</h1>
-        <p className="mt-1 text-sm text-slate-500">Acesse o sistema do seu negocio.</p>
+      <div className="card overflow-hidden">
+        <div className="border-b border-slate-100 bg-slate-50/60 px-8 py-6">
+          <h1 className="text-2xl font-bold text-slate-900">Bem-vindo de volta</h1>
+          <p className="mt-1 text-sm text-slate-500">Acesse o sistema do seu negocio.</p>
+        </div>
 
-        <form action={formAction} className="mt-6 space-y-4">
+        <form action={formAction} className="space-y-4 p-8">
           <div>
             <label className="label" htmlFor="email">
               E-mail
@@ -31,20 +33,20 @@ export default function LoginPage() {
           </div>
 
           {state.error && (
-            <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">{state.error}</p>
+            <p className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700">{state.error}</p>
           )}
 
-          <SubmitButton className="w-full" pendingText="Entrando...">
+          <SubmitButton className="w-full py-3 text-base" pendingText="Entrando...">
             Entrar
           </SubmitButton>
-        </form>
 
-        <p className="mt-4 text-center text-sm text-slate-500">
-          Nao tem conta?{" "}
-          <Link href="/signup" className="font-medium text-brand-700 hover:text-brand-800">
-            Criar conta gratis
-          </Link>
-        </p>
+          <p className="text-center text-sm text-slate-500">
+            Nao tem conta?{" "}
+            <Link href="/signup" className="font-semibold text-brand-700 hover:text-brand-800">
+              Criar conta gratis
+            </Link>
+          </p>
+        </form>
       </div>
     </div>
   );
