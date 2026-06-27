@@ -265,6 +265,231 @@ const BELEZA: SegmentExtras = {
   ],
 };
 
+const ALIMENTACAO: SegmentExtras = {
+  intro:
+    "Uma operação completa do pedido ao financeiro — do pequeno estabelecimento às grandes redes de alimentação.",
+  groups: [
+    {
+      id: "pdv",
+      title: "PDV (frente de caixa)",
+      icon: "CreditCard",
+      items: [
+        a("Comanda / pedido eletrônico"),
+        a("Venda por mesa e balcão"),
+        s("Venda rápida (PDV dedicado)"),
+        s("Divisão de conta e pagamento parcial"),
+        s("PIX, cartão e dinheiro integrados"),
+        s("Cashback e vale-presente"),
+      ],
+    },
+    {
+      id: "mesas",
+      title: "Gestão de mesas",
+      icon: "UtensilsCrossed",
+      items: [
+        s("Mapa do salão e status das mesas"),
+        s("Reserva e lista de espera"),
+        s("Transferência e junção de mesas"),
+        s("Tempo de permanência"),
+      ],
+    },
+    {
+      id: "cardapio",
+      title: "Cardápio digital",
+      icon: "QrCode",
+      items: [
+        a("Categorias e produtos"),
+        a("Preços sempre atualizados"),
+        s("QR Code com fotos"),
+        s("Adicionais, combos e promoções"),
+        s("Disponibilidade em tempo real"),
+      ],
+    },
+    {
+      id: "pedidos",
+      title: "Pedidos",
+      icon: "Receipt",
+      items: [
+        a("Balcão e mesa"),
+        s("Delivery e retirada"),
+        s("Garçom via celular / tablet"),
+        s("Autoatendimento (totem)"),
+        s("Aplicativo próprio"),
+      ],
+    },
+    {
+      id: "kds",
+      title: "Cozinha (KDS)",
+      icon: "ChefHat",
+      items: [
+        s("Painel de produção e fila de pedidos"),
+        s("Tempo de preparo e prioridade"),
+        s("Status do pedido"),
+        s("Impressão por setor (cozinha, bar, pizzaria)"),
+      ],
+    },
+    {
+      id: "delivery",
+      title: "Delivery",
+      icon: "Bike",
+      items: [
+        s("Entregadores e controle de rotas"),
+        s("Rastreamento em tempo real"),
+        s("Taxa de entrega e tempo estimado"),
+        s("Histórico e avaliação"),
+      ],
+    },
+    {
+      id: "estoque",
+      title: "Estoque e ficha técnica",
+      icon: "Boxes",
+      items: [
+        a("Entrada e saída"),
+        a("Inventário e estoque mínimo"),
+        s("Ficha técnica com custo e rendimento"),
+        s("Baixa automática por venda"),
+        s("Perdas, validade e produção"),
+        s("Compras e fornecedores"),
+      ],
+    },
+    {
+      id: "financeiro",
+      title: "Financeiro",
+      icon: "Wallet",
+      items: [
+        a("Fluxo de caixa"),
+        a("Contas a pagar e a receber"),
+        a("Fechamento diário"),
+        s("DRE e centros de custo"),
+        s("Conciliação bancária"),
+        s("CMV (custo da mercadoria vendida)"),
+      ],
+    },
+    {
+      id: "crm",
+      title: "Clientes (CRM)",
+      icon: "Users",
+      items: [
+        a("Histórico e pedidos anteriores"),
+        a("Preferências e observações"),
+        s("Fidelidade, cashback e pontuação"),
+        s("Cupons e aniversariantes"),
+      ],
+    },
+    {
+      id: "funcionarios",
+      title: "Funcionários",
+      icon: "UserCog",
+      items: [
+        a("Garçom, cozinha, caixa e gerência"),
+        a("Papéis e permissões"),
+        s("Escalas e metas"),
+        s("Comissão, gorjetas e produtividade"),
+      ],
+    },
+  ],
+  premium: [
+    {
+      id: "autoatendimento",
+      title: "Autoatendimento",
+      icon: "QrCode",
+      items: [s("Totem"), s("Tablet na mesa"), s("QR Code"), s("Pedido pelo celular")],
+    },
+    {
+      id: "ia",
+      title: "Inteligência artificial",
+      icon: "Bot",
+      items: [
+        s("Previsão de demanda e de faturamento"),
+        s("Sugestão de compras e de promoções"),
+        s("Previsão de estoque"),
+        s("Análise de desperdício"),
+      ],
+    },
+    {
+      id: "marketing",
+      title: "Marketing",
+      icon: "Megaphone",
+      items: [
+        s("WhatsApp, SMS e e-mail"),
+        s("Cupons automáticos"),
+        s("Clientes inativos"),
+        s("Promoções por horário e fidelidade"),
+      ],
+    },
+    {
+      id: "unidades",
+      title: "Múltiplas unidades",
+      icon: "Building2",
+      items: [
+        s("Franquias e comparativo"),
+        s("Estoque central e transferências"),
+        s("Gestão centralizada"),
+      ],
+    },
+    {
+      id: "app-cliente",
+      title: "Aplicativo do cliente",
+      icon: "Smartphone",
+      items: [
+        s("Cardápio, pedido e pagamento"),
+        s("Rastreamento do pedido"),
+        s("Cashback, fidelidade e histórico"),
+        s("Avaliações"),
+      ],
+    },
+    {
+      id: "delivery-proprio",
+      title: "Delivery próprio",
+      icon: "Bike",
+      items: [
+        s("Aplicativo do entregador"),
+        s("Rastreamento em tempo real"),
+        s("Controle de rotas e entregas"),
+      ],
+    },
+  ],
+  dashboards: [
+    "Faturamento diário e ticket médio",
+    "Lucro, margem e CMV",
+    "Pedidos por hora",
+    "Tempo médio de preparo e de entrega",
+    "Produtos mais vendidos",
+    "Ingredientes mais consumidos",
+    "Desperdício",
+    "Clientes recorrentes",
+    "Ocupação das mesas",
+    "Vendas por garçom e por unidade",
+    "Ranking de produtos",
+    "Fluxo de caixa",
+  ],
+  integrations: [
+    { label: "PIX", icon: "Wallet" },
+    { label: "Cartões", icon: "CreditCard" },
+    { label: "NFC-e / NFS-e", icon: "FileText" },
+    { label: "Impressoras térmicas", icon: "Receipt" },
+    { label: "Balanças", icon: "Scale" },
+    { label: "WhatsApp", icon: "MessageCircle" },
+    { label: "Google Maps", icon: "MapPin" },
+    { label: "iFood, Uber Eats e Rappi", icon: "Bike" },
+    { label: "Contabilidade / ERP", icon: "Layers" },
+  ],
+  differentials: [
+    "Cardápio digital inteligente com QR Code",
+    "Painel de cozinha (KDS) totalmente integrado",
+    "Autoatendimento por QR Code, tablet e totem",
+    "Delivery próprio com rastreamento em tempo real",
+    "Controle automático de estoque pelas fichas técnicas",
+    "IA para previsão de demanda, compras e desperdício",
+    "Gestão completa de mesas e reservas",
+    "CRM com fidelidade, cashback e campanhas automáticas",
+    "Business Intelligence (BI) em tempo real",
+    "Gestão de franquias e múltiplas unidades",
+    "Apps próprios para clientes, garçons e entregadores",
+    "Controle de custos e CMV para maximizar a lucratividade",
+  ],
+};
+
 // Conjunto generico para os demais segmentos (ate serem detalhados como Beleza).
 const DEFAULT_EXTRAS: SegmentExtras = {
   intro:
@@ -308,6 +533,7 @@ const DEFAULT_EXTRAS: SegmentExtras = {
 
 const BY_CATEGORY: Partial<Record<SegmentCategory, SegmentExtras>> = {
   beleza: BELEZA,
+  alimentacao: ALIMENTACAO,
 };
 
 export function getSegmentExtras(category: SegmentCategory): SegmentExtras {

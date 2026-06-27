@@ -19,6 +19,19 @@ import { odontologia, psicologia, personal, academia } from "./saude-extra";
 import { lavaRapido } from "./automotivo-extra";
 import { advogado, assistencia, imobiliaria, obras } from "./servicos";
 import { restaurante, petshop } from "./alimentacao";
+import {
+  lanchonete,
+  pizzaria,
+  hamburgueria,
+  churrascaria,
+  sushi,
+  acaiteria,
+  cafeteria,
+  padaria,
+  sorveteria,
+  foodtruck,
+  delivery,
+} from "./alimentacao-extra";
 import { escola } from "./educacao";
 
 // Registro central de segmentos. Adicionar um nicho = importar e adicionar aqui.
@@ -43,11 +56,22 @@ const LIST: SegmentTemplate[] = [
   oficina,
   lavaRapido,
   restaurante,
-  petshop,
+  lanchonete,
+  pizzaria,
+  hamburgueria,
+  churrascaria,
+  sushi,
+  acaiteria,
+  cafeteria,
+  padaria,
+  sorveteria,
+  foodtruck,
+  delivery,
   advogado,
   assistencia,
   imobiliaria,
   obras,
+  petshop,
   escola,
 ];
 

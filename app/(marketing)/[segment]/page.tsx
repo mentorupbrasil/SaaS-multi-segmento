@@ -67,7 +67,7 @@ export default async function SegmentLandingPage({
   const moduleDescription: Record<string, string> = {
     clients: `Cadastro de ${terms.customer_plural.toLowerCase()} com histórico, contato e campos próprios do seu segmento.`,
     scheduling: `Agenda por ${terms.professional.toLowerCase()}, com horários, status e lembretes que reduzem faltas.`,
-    services: `Tabela de preços e duração, pronta para usar na agenda e no caixa.`,
+    services: `Tabela de ${terms.service_plural.toLowerCase()} e preços, pronta para usar no atendimento e no caixa.`,
     work_orders: `${terms.work_order_plural ?? "Ordens de serviço"} do início ao fim, com itens, valores e histórico.`,
     records: `${terms.records ?? "Prontuário"} por ${terms.customer.toLowerCase()}, com anotações e histórico organizados e seguros.`,
     financial: "Caixa, contas a pagar e a receber, fluxo de caixa e relatórios de faturamento.",

@@ -13,7 +13,7 @@ export const CATEGORY_LABELS: Record<SegmentCategory, string> = {
   beleza: "Beleza & Estética",
   saude: "Saúde & Bem-estar",
   automotivo: "Automotivo",
-  alimentacao: "Alimentação & Pet",
+  alimentacao: "Alimentação",
   servicos: "Serviços & Profissionais",
   educacao: "Educação",
 };
@@ -41,8 +41,8 @@ export const CATEGORY_META: Record<SegmentCategory, CategoryMeta> = {
     icon: "Car",
   },
   alimentacao: {
-    label: "Alimentação & Pet",
-    description: "Cardápio, comandas, estoque e atendimento.",
+    label: "Alimentação",
+    description: "Cardápio digital, PDV, mesas, delivery e estoque.",
     icon: "Utensils",
   },
   servicos: {
