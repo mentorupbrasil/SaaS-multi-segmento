@@ -2,7 +2,7 @@ import type { SegmentTemplate } from "./types";
 
 export const clinica: SegmentTemplate = {
   id: "clinica",
-  label: "Clínica",
+  label: "Clínica Médica",
   slug: "clinica",
   icon: "Stethoscope",
   category: "saude",

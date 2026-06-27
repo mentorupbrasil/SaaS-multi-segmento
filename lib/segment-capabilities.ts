@@ -490,6 +490,230 @@ const ALIMENTACAO: SegmentExtras = {
   ],
 };
 
+const SAUDE: SegmentExtras = {
+  intro:
+    "Uma plataforma completa para a saúde — da agenda ao prontuário, do financeiro ao relacionamento com o paciente. Do profissional autônomo às clínicas e redes.",
+  groups: [
+    {
+      id: "agenda",
+      title: "Agenda inteligente",
+      icon: "Calendar",
+      items: [
+        a("Agenda por profissional"),
+        a("Reagendamento e bloqueio de horários"),
+        a("Atendimento recorrente"),
+        s("Agendamento online (link do paciente)"),
+        s("Confirmação automática"),
+        s("Lista de espera"),
+        s("Teleconsulta"),
+      ],
+    },
+    {
+      id: "pacientes",
+      title: "Cadastro de pacientes / alunos",
+      icon: "Users",
+      items: [
+        a("Histórico completo e contatos"),
+        a("Convênios e responsáveis"),
+        a("Anamnese, alergias e observações"),
+        s("Documentos e fotos anexados"),
+        s("Assinatura digital"),
+      ],
+    },
+    {
+      id: "prontuario",
+      title: "Prontuário eletrônico",
+      icon: "ClipboardList",
+      items: [
+        a("Evolução e histórico completo"),
+        a("Anexos e fotos"),
+        s("Prescrições e receitas"),
+        s("Solicitação de exames e laudos"),
+        s("Atestados"),
+      ],
+    },
+    {
+      id: "financeiro",
+      title: "Financeiro",
+      icon: "Wallet",
+      items: [
+        a("Caixa e fluxo de caixa"),
+        a("Contas a pagar e a receber"),
+        a("Convênios e particulares"),
+        s("PIX e cartão integrados"),
+        s("Cobrança recorrente"),
+        s("Controle de inadimplência"),
+      ],
+    },
+    {
+      id: "planos",
+      title: "Planos e assinaturas",
+      icon: "Repeat",
+      items: [
+        a("Pacotes de sessões"),
+        a("Controle de vencimentos"),
+        s("Planos mensais e mensalidades"),
+        s("Renovação automática"),
+        s("Cobrança recorrente"),
+      ],
+    },
+    {
+      id: "profissionais",
+      title: "Gestão dos profissionais",
+      icon: "UserCog",
+      items: [
+        a("Agenda por profissional"),
+        a("Atendimentos realizados"),
+        s("Escalas"),
+        s("Comissão e metas"),
+        s("Produtividade"),
+      ],
+    },
+    {
+      id: "documentos",
+      title: "Documentos",
+      icon: "FileSignature",
+      items: [
+        s("Receitas, atestados e declarações"),
+        s("Contratos e consentimentos"),
+        s("Termos de LGPD"),
+        s("Assinatura eletrônica"),
+      ],
+    },
+    {
+      id: "estoque",
+      title: "Estoque",
+      icon: "Boxes",
+      items: [
+        a("Materiais e produtos"),
+        a("Inventário e fornecedores"),
+        s("Medicamentos com lote e validade"),
+      ],
+    },
+    {
+      id: "especialidade",
+      title: "Recursos por especialidade",
+      icon: "Stethoscope",
+      items: [
+        s("Médico: CID, prescrição digital, exames e telemedicina"),
+        s("Odontologia: odontograma, plano de tratamento e evolução por dente"),
+        s("Psicologia: evolução terapêutica e anotações sigilosas"),
+        s("Fisioterapia: plano terapêutico, exercícios e escalas de avaliação"),
+        s("Nutrição: avaliação antropométrica, plano e diário alimentar"),
+        s("Academia: matrículas, treinos, avaliação física e frequência"),
+      ],
+    },
+  ],
+  premium: [
+    {
+      id: "app-paciente",
+      title: "Aplicativo do paciente / aluno",
+      icon: "Smartphone",
+      items: [
+        s("Agendamento e cancelamento"),
+        s("Teleconsulta e chat"),
+        s("Resultados, receitas e histórico"),
+        s("Pagamentos"),
+        s("Treinos e plano alimentar"),
+      ],
+    },
+    {
+      id: "ia",
+      title: "Inteligência artificial",
+      icon: "Bot",
+      items: [
+        s("Lembretes automáticos"),
+        s("Previsão de faltas e sugestão de retorno"),
+        s("Evolução em gráfico"),
+        s("Resumo inteligente do prontuário"),
+        s("Chat de atendimento"),
+      ],
+    },
+    {
+      id: "crm",
+      title: "Marketing (CRM)",
+      icon: "Megaphone",
+      items: [
+        s("WhatsApp, SMS e e-mail"),
+        s("Campanhas e aniversariantes"),
+        s("Pacientes inativos"),
+        s("Pesquisa de satisfação"),
+      ],
+    },
+    {
+      id: "unidades",
+      title: "Múltiplas unidades",
+      icon: "Building2",
+      items: [
+        s("Gestão centralizada e comparativo"),
+        s("Transferência de pacientes"),
+        s("Gestão de franquias"),
+      ],
+    },
+    {
+      id: "teleconsulta",
+      title: "Teleconsulta",
+      icon: "Video",
+      items: [
+        s("Atendimento por vídeo integrado à agenda"),
+        s("Sala de espera virtual"),
+        s("Receitas e documentos pós-consulta"),
+      ],
+    },
+    {
+      id: "acesso",
+      title: "Controle de acesso (academias)",
+      icon: "Fingerprint",
+      items: [
+        s("Biometria e catracas"),
+        s("Frequência dos alunos"),
+        s("Bloqueio por inadimplência"),
+      ],
+    },
+  ],
+  dashboards: [
+    "Consultas e sessões realizadas",
+    "Pacientes ativos e novos pacientes",
+    "Taxa de retorno",
+    "No-show (faltas)",
+    "Agenda ocupada e ocupação por horário",
+    "Faturamento e evolução financeira",
+    "Inadimplência",
+    "Ticket médio",
+    "Convênios",
+    "Profissionais mais produtivos",
+    "Alunos ativos (academias)",
+    "Frequência dos alunos",
+  ],
+  integrations: [
+    { label: "WhatsApp", icon: "MessageCircle" },
+    { label: "PIX", icon: "Wallet" },
+    { label: "Cartões", icon: "CreditCard" },
+    { label: "NFS-e", icon: "FileText" },
+    { label: "Convênios", icon: "ShieldCheck" },
+    { label: "Laboratórios", icon: "Pill" },
+    { label: "Teleconsulta", icon: "Video" },
+    { label: "Google Agenda", icon: "Calendar" },
+    { label: "Google Meet", icon: "Video" },
+    { label: "Biometria e catracas", icon: "Fingerprint" },
+    { label: "Contabilidade / ERP", icon: "Layers" },
+  ],
+  differentials: [
+    "Prontuário eletrônico personalizável por especialidade",
+    "Agendamento online com confirmação automática",
+    "Teleconsulta integrada",
+    "Aplicativo completo para pacientes e alunos",
+    "IA para resumir prontuários e sugerir retornos",
+    "Gestão completa de planos, mensalidades e pacotes",
+    "CRM com automação de relacionamento",
+    "Business Intelligence (BI) em tempo real",
+    "Controle de acesso para academias (biometria e catracas)",
+    "Gestão de múltiplas unidades e franquias",
+    "Assinatura eletrônica de documentos e consentimentos",
+    "Painéis com indicadores clínicos e financeiros",
+  ],
+};
+
 // Conjunto generico para os demais segmentos (ate serem detalhados como Beleza).
 const DEFAULT_EXTRAS: SegmentExtras = {
   intro:
@@ -534,6 +758,7 @@ const DEFAULT_EXTRAS: SegmentExtras = {
 const BY_CATEGORY: Partial<Record<SegmentCategory, SegmentExtras>> = {
   beleza: BELEZA,
   alimentacao: ALIMENTACAO,
+  saude: SAUDE,
 };
 
 export function getSegmentExtras(category: SegmentCategory): SegmentExtras {

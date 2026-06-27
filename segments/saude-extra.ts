@@ -2,7 +2,7 @@ import type { SegmentTemplate } from "./types";
 
 export const odontologia: SegmentTemplate = {
   id: "odontologia",
-  label: "Consultório Odontológico",
+  label: "Odontologia",
   slug: "odontologia",
   icon: "Smile",
   category: "saude",
@@ -50,7 +50,7 @@ export const odontologia: SegmentTemplate = {
 
 export const psicologia: SegmentTemplate = {
   id: "psicologia",
-  label: "Psicólogo / Terapeuta",
+  label: "Psicologia",
   slug: "psicologia",
   icon: "Brain",
   category: "saude",

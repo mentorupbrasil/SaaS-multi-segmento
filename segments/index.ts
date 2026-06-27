@@ -16,6 +16,7 @@ import {
   massoterapia,
 } from "./beleza-pro";
 import { odontologia, psicologia, personal, academia } from "./saude-extra";
+import { consultorioMedico, fisioterapia, nutricionista, terapeuta } from "./saude-pro";
 import { lavaRapido } from "./automotivo-extra";
 import { advogado, assistencia, imobiliaria, obras } from "./servicos";
 import { restaurante, petshop } from "./alimentacao";
@@ -49,8 +50,12 @@ const LIST: SegmentTemplate[] = [
   massoterapia,
   tatuagem,
   clinica,
+  consultorioMedico,
   odontologia,
   psicologia,
+  fisioterapia,
+  nutricionista,
+  terapeuta,
   personal,
   academia,
   oficina,
