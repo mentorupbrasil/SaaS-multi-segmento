@@ -58,7 +58,7 @@ export const petshop: SegmentTemplate = {
   label: "Petshop",
   slug: "petshop",
   icon: "PawPrint",
-  category: "servicos",
+  category: "pet",
   tagline: "Agenda de banho e tosa, tutores e pets.",
   modules: ["clients", "scheduling", "services", "inventory", "financial", "team"],
   terms: {

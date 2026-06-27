@@ -7,7 +7,8 @@ export type SegmentCategory =
   | "automotivo"
   | "alimentacao"
   | "servicos"
-  | "educacao";
+  | "educacao"
+  | "pet";
 
 export const CATEGORY_LABELS: Record<SegmentCategory, string> = {
   beleza: "Beleza & Estética",
@@ -16,6 +17,7 @@ export const CATEGORY_LABELS: Record<SegmentCategory, string> = {
   alimentacao: "Alimentação",
   servicos: "Serviços & Profissionais",
   educacao: "Educação",
+  pet: "Pet",
 };
 
 export interface CategoryMeta {
@@ -55,6 +57,11 @@ export const CATEGORY_META: Record<SegmentCategory, CategoryMeta> = {
     description: "Alunos, turmas, aulas e mensalidades.",
     icon: "GraduationCap",
   },
+  pet: {
+    label: "Pet",
+    description: "Banho, tosa, agenda, tutores e venda de produtos.",
+    icon: "PawPrint",
+  },
 };
 
 // Ordem de exibicao das categorias.
@@ -65,6 +72,7 @@ export const CATEGORY_ORDER: SegmentCategory[] = [
   "alimentacao",
   "servicos",
   "educacao",
+  "pet",
 ];
 
 export interface FieldDef {

@@ -109,6 +109,11 @@ import {
   Fingerprint,
   Pill,
   Salad,
+  Calculator,
+  Umbrella,
+  Stamp,
+  KanbanSquare,
+  FolderOpen,
   type LucideIcon,
 } from "lucide-react";
 
@@ -223,6 +228,11 @@ const ICONS: Record<string, LucideIcon> = {
   Fingerprint,
   Pill,
   Salad,
+  Calculator,
+  Umbrella,
+  Stamp,
+  KanbanSquare,
+  FolderOpen,
 };
 
 export function Icon({

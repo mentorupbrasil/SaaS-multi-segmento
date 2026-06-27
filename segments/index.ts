@@ -19,6 +19,7 @@ import { odontologia, psicologia, personal, academia } from "./saude-extra";
 import { consultorioMedico, fisioterapia, nutricionista, terapeuta } from "./saude-pro";
 import { lavaRapido } from "./automotivo-extra";
 import { advogado, assistencia, imobiliaria, obras } from "./servicos";
+import { contabilidade, consultoria, seguros, despachante, agencia } from "./servicos-pro";
 import { restaurante, petshop } from "./alimentacao";
 import {
   lanchonete,
@@ -73,11 +74,16 @@ const LIST: SegmentTemplate[] = [
   foodtruck,
   delivery,
   advogado,
-  assistencia,
+  contabilidade,
   imobiliaria,
+  assistencia,
+  consultoria,
+  seguros,
+  despachante,
+  agencia,
   obras,
-  petshop,
   escola,
+  petshop,
 ];
 
 export const SEGMENTS: Record<string, SegmentTemplate> = Object.fromEntries(

@@ -714,6 +714,199 @@ const SAUDE: SegmentExtras = {
   ],
 };
 
+const SERVICOS: SegmentExtras = {
+  intro:
+    "Tudo para profissionais e escritórios de serviços — do primeiro contato à cobrança. CRM, demandas, documentos e financeiro integrados, do autônomo às redes.",
+  groups: [
+    {
+      id: "crm",
+      title: "CRM de clientes",
+      icon: "Users",
+      items: [
+        a("Cadastro completo e histórico de atendimentos"),
+        a("Observações e anexos"),
+        s("Documentos e contratos por cliente"),
+        s("Funil de atendimento"),
+      ],
+    },
+    {
+      id: "agenda",
+      title: "Agenda inteligente",
+      icon: "Calendar",
+      items: [
+        a("Compromissos, reuniões e visitas"),
+        a("Controle de prazos"),
+        a("Agenda por profissional"),
+        s("Lembretes automáticos"),
+        s("Agenda compartilhada"),
+      ],
+    },
+    {
+      id: "servicos",
+      title: "Gestão de serviços",
+      icon: "ClipboardList",
+      items: [
+        a("Ordens de serviço e solicitações"),
+        a("Andamento, status e responsáveis"),
+        a("Histórico completo"),
+        s("Protocolos e prioridades"),
+      ],
+    },
+    {
+      id: "documentos",
+      title: "Documentos",
+      icon: "FolderOpen",
+      items: [
+        s("Contratos, procurações e propostas"),
+        s("Orçamentos e modelos personalizados"),
+        s("Armazenamento digital"),
+        s("Assinatura eletrônica"),
+      ],
+    },
+    {
+      id: "financeiro",
+      title: "Financeiro",
+      icon: "Wallet",
+      items: [
+        a("Caixa e fluxo de caixa"),
+        a("Contas a pagar e a receber"),
+        a("Honorários"),
+        s("Mensalidades e cobrança recorrente"),
+        s("PIX e cartão integrados"),
+        s("Controle de inadimplência"),
+      ],
+    },
+    {
+      id: "equipe",
+      title: "Equipe",
+      icon: "UserCog",
+      items: [
+        a("Usuários e perfis de acesso"),
+        a("Agenda individual"),
+        s("Metas e produtividade"),
+        s("Comissões"),
+        s("Controle de tarefas"),
+      ],
+    },
+    {
+      id: "tarefas",
+      title: "Gestão de tarefas",
+      icon: "KanbanSquare",
+      items: [
+        s("Kanban e checklist"),
+        s("Subtarefas e prazos"),
+        s("Alertas e comentários"),
+        s("Anexos"),
+      ],
+    },
+    {
+      id: "area",
+      title: "Recursos por área",
+      icon: "Briefcase",
+      items: [
+        s("Advocacia: processos, prazos, audiências e andamentos"),
+        s("Contabilidade: empresas, obrigações fiscais e guias"),
+        s("Imobiliária: imóveis, captação, propostas e contratos"),
+        s("Assistência técnica: OS, diagnóstico, peças e garantia"),
+        s("Consultorias: projetos, cronogramas, entregas e horas"),
+      ],
+    },
+  ],
+  premium: [
+    {
+      id: "portal",
+      title: "Portal do cliente",
+      icon: "Globe",
+      items: [
+        s("Acompanhamento dos serviços em tempo real"),
+        s("Documentos, contratos e boletos"),
+        s("Mensagens e solicitações"),
+        s("Histórico"),
+      ],
+    },
+    {
+      id: "ia",
+      title: "Inteligência artificial",
+      icon: "Bot",
+      items: [
+        s("Resumo automático de documentos"),
+        s("Geração de contratos"),
+        s("Organização de tarefas e sugestão de prioridades"),
+        s("Chat inteligente e automação de respostas"),
+      ],
+    },
+    {
+      id: "marketing",
+      title: "Marketing (CRM)",
+      icon: "Megaphone",
+      items: [
+        s("WhatsApp, e-mail e SMS"),
+        s("Automação de propostas e follow-up"),
+        s("Campanhas"),
+        s("Pesquisa de satisfação"),
+      ],
+    },
+    {
+      id: "unidades",
+      title: "Múltiplas unidades",
+      icon: "Building2",
+      items: [
+        s("Gestão centralizada e comparativo"),
+        s("Filiais"),
+        s("Franquias"),
+      ],
+    },
+    {
+      id: "app",
+      title: "Aplicativo para equipe e clientes",
+      icon: "Smartphone",
+      items: [
+        s("Acesso remoto às informações"),
+        s("Acompanhamento dos serviços"),
+        s("Tarefas e agenda na palma da mão"),
+      ],
+    },
+  ],
+  dashboards: [
+    "Clientes ativos e novos clientes",
+    "Serviços em andamento e concluídos",
+    "Prazos próximos",
+    "Produtividade da equipe",
+    "Faturamento e fluxo de caixa",
+    "Inadimplência",
+    "Ticket médio",
+    "Conversão de propostas",
+    "Tempo médio de atendimento",
+    "Rentabilidade por cliente",
+    "Rentabilidade por serviço",
+  ],
+  integrations: [
+    { label: "WhatsApp", icon: "MessageCircle" },
+    { label: "E-mail", icon: "Mail" },
+    { label: "Google Agenda", icon: "Calendar" },
+    { label: "Google Drive", icon: "FolderOpen" },
+    { label: "OneDrive", icon: "FolderOpen" },
+    { label: "Dropbox", icon: "FolderOpen" },
+    { label: "PIX", icon: "Wallet" },
+    { label: "Cartões", icon: "CreditCard" },
+    { label: "NFS-e", icon: "FileText" },
+    { label: "Assinatura eletrônica", icon: "FileSignature" },
+    { label: "Contabilidade / ERP", icon: "Layers" },
+  ],
+  differentials: [
+    "CRM completo com funil comercial e histórico do cliente",
+    "Gestão documental com assinatura eletrônica integrada",
+    "Portal do cliente para acompanhamento em tempo real",
+    "Kanban e gestão de tarefas totalmente integrados",
+    "IA para gerar contratos, resumir documentos e organizar demandas",
+    "Automação de cobranças, lembretes e follow-ups",
+    "Business Intelligence (BI) em tempo real",
+    "Gestão financeira integrada aos serviços",
+    "Controle de múltiplas unidades e franquias",
+    "Aplicativo para equipe e clientes com acesso remoto",
+  ],
+};
+
 // Conjunto generico para os demais segmentos (ate serem detalhados como Beleza).
 const DEFAULT_EXTRAS: SegmentExtras = {
   intro:
@@ -759,6 +952,7 @@ const BY_CATEGORY: Partial<Record<SegmentCategory, SegmentExtras>> = {
   beleza: BELEZA,
   alimentacao: ALIMENTACAO,
   saude: SAUDE,
+  servicos: SERVICOS,
 };
 
 export function getSegmentExtras(category: SegmentCategory): SegmentExtras {
