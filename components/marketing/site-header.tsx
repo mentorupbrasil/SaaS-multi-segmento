@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Logo } from "./logo";
+import { SegmentsMenu } from "./segments-menu";
 
 export function SiteHeader() {
   return (
@@ -7,9 +8,7 @@ export function SiteHeader() {
       <div className="section flex h-16 items-center justify-between">
         <Logo />
         <nav className="hidden items-center gap-8 text-sm font-medium text-slate-600 md:flex">
-          <Link href="/#segmentos" className="hover:text-slate-900">
-            Segmentos
-          </Link>
+          <SegmentsMenu />
           <Link href="/#recursos" className="hover:text-slate-900">
             Recursos
           </Link>
