@@ -40,11 +40,11 @@ export function ServiceForm({ serviceLabel }: { serviceLabel: string }) {
           <input name="name" className="input" required />
         </div>
         <div>
-          <label className="label">Preco (R$)</label>
+          <label className="label">Preço (R$)</label>
           <input name="price" type="number" step="0.01" min="0" className="input" defaultValue="0" />
         </div>
         <div>
-          <label className="label">Duracao (min)</label>
+          <label className="label">Duração (min)</label>
           <input name="durationMin" type="number" min="0" className="input" defaultValue="30" />
         </div>
 

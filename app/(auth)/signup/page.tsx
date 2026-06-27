@@ -40,9 +40,9 @@ export default function SignupPage() {
     <div className="w-full max-w-4xl">
       <div className="card overflow-hidden">
         <div className="border-b border-slate-100 bg-slate-50/60 px-8 py-6">
-          <h1 className="text-2xl font-bold text-slate-900">Crie a conta do seu negocio</h1>
+          <h1 className="text-2xl font-bold text-slate-900">Crie a conta do seu negócio</h1>
           <p className="mt-1 text-sm text-slate-500">
-            Escolha o seu segmento e o sistema se adapta a voce. 14 dias gratis, sem cartao.
+            Escolha o seu segmento e o sistema se adapta a você. 14 dias grátis, sem cartão.
           </p>
         </div>
 
@@ -50,7 +50,7 @@ export default function SignupPage() {
           {/* Seletor de segmento */}
           <div>
             <div className="mb-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-              <span className="label mb-0">1. Qual e o seu segmento?</span>
+              <span className="label mb-0">1. Qual é o seu segmento?</span>
               <input
                 type="search"
                 placeholder="Buscar segmento..."
@@ -63,7 +63,7 @@ export default function SignupPage() {
             <div className="max-h-72 space-y-5 overflow-y-auto rounded-xl border border-slate-200 bg-slate-50/50 p-4">
               {groups.length === 0 && (
                 <p className="py-6 text-center text-sm text-slate-500">
-                  Nenhum segmento encontrado. Voce ainda pode criar a conta e personalizar depois.
+                  Nenhum segmento encontrado. Você ainda pode criar a conta e personalizar depois.
                 </p>
               )}
               {groups.map((group) => (
@@ -103,9 +103,9 @@ export default function SignupPage() {
             <div className="grid gap-4 sm:grid-cols-2">
               <div>
                 <label className="label" htmlFor="businessName">
-                  Nome do negocio
+                  Nome do negócio
                 </label>
-                <input id="businessName" name="businessName" className="input" placeholder="Ex.: Barbearia do Joao" required />
+                <input id="businessName" name="businessName" className="input" placeholder="Ex.: Barbearia do João" required />
               </div>
               <div>
                 <label className="label" htmlFor="name">
@@ -123,7 +123,7 @@ export default function SignupPage() {
                 <label className="label" htmlFor="password">
                   Senha
                 </label>
-                <input id="password" name="password" type="password" className="input" placeholder="Minimo 6 caracteres" required />
+                <input id="password" name="password" type="password" className="input" placeholder="Mínimo 6 caracteres" required />
               </div>
             </div>
           </div>
@@ -133,11 +133,11 @@ export default function SignupPage() {
           )}
 
           <SubmitButton className="w-full py-3 text-base" pendingText="Criando conta...">
-            Criar conta gratis
+            Criar conta grátis
           </SubmitButton>
 
           <p className="text-center text-sm text-slate-500">
-            Ja tem conta?{" "}
+            Já tem conta?{" "}
             <Link href="/login" className="font-semibold text-brand-700 hover:text-brand-800">
               Entrar
             </Link>

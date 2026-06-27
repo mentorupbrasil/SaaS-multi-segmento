@@ -6,20 +6,20 @@ export const barbearia: SegmentTemplate = {
   slug: "barbearia",
   icon: "Scissors",
   category: "beleza",
-  tagline: "Agenda, clientes e caixa da sua barbearia em um so lugar.",
+  tagline: "Agenda, clientes e caixa da sua barbearia em um só lugar.",
   modules: ["clients", "scheduling", "services", "financial", "team"],
   terms: {
     customer: "Cliente",
     customer_plural: "Clientes",
     professional: "Barbeiro",
     professional_plural: "Barbeiros",
-    service: "Servico",
-    service_plural: "Servicos",
+    service: "Serviço",
+    service_plural: "Serviços",
     appointment: "Agendamento",
     appointment_plural: "Agenda",
   },
   customerFields: [
-    { key: "preferencia_corte", label: "Preferencia de corte", type: "text", placeholder: "Ex.: maquina 2, tesoura" },
+    { key: "preferencia_corte", label: "Preferência de corte", type: "text", placeholder: "Ex.: máquina 2, tesoura" },
   ],
   defaultServices: [
     { name: "Corte", price: 40, durationMin: 30 },
@@ -27,22 +27,22 @@ export const barbearia: SegmentTemplate = {
     { name: "Corte + Barba", price: 60, durationMin: 45 },
   ],
   benefits: [
-    "Agenda online que reduz faltas com lembretes",
-    "Historico de cortes e preferencias de cada cliente",
-    "Controle de comissao por barbeiro",
-    "Caixa diario e relatorio de faturamento",
+    "Agenda online por barbeiro que reduz faltas com lembretes",
+    "Histórico de cortes e preferências de cada cliente",
+    "Controle de comissão por barbeiro de forma automática",
+    "Caixa diário e relatório de faturamento em tempo real",
   ],
   faq: [
-    { q: "Consigo controlar a comissao de cada barbeiro?", a: "Sim. Cada profissional tem seus atendimentos registrados, facilitando o calculo de comissao." },
-    { q: "Meus clientes conseguem agendar sozinhos?", a: "O agendamento interno ja esta pronto. O link publico de auto-agendamento entra nas proximas atualizacoes." },
+    { q: "Consigo controlar a comissão de cada barbeiro?", a: "Sim. Cada profissional tem os atendimentos registrados, o que facilita o cálculo da comissão no fim do dia ou do mês." },
+    { q: "Meus clientes conseguem agendar sozinhos?", a: "O agendamento interno já está pronto. O link público de autoagendamento está disponível a partir do plano Profissional." },
   ],
   seo: {
-    title: "Sistema para Barbearia | Agenda online e gestao completa",
+    title: "Sistema para Barbearia | Agenda online e gestão completa",
     description:
-      "Software para barbearia com agenda online, controle de clientes, servicos, comissoes e financeiro. Teste gratis por 14 dias.",
+      "Software para barbearia com agenda online, controle de clientes, serviços, comissões e financeiro. Teste grátis por 14 dias.",
     keywords: ["sistema para barbearia", "agenda barbearia", "software barbearia", "app barbearia"],
     headline: "O sistema completo para a sua barbearia",
     subheadline:
-      "Agenda online, cadastro de clientes, controle de servicos e caixa. Tudo pensado para barbearias.",
+      "Agenda online, cadastro de clientes, controle de serviços e caixa. Tudo pensado para barbearias.",
   },
 };

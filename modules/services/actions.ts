@@ -12,7 +12,7 @@ export interface FormResult {
 
 const schema = z.object({
   name: z.string().min(1, "Informe o nome"),
-  price: z.coerce.number().min(0, "Preco invalido"),
+  price: z.coerce.number().min(0, "Preço inválido"),
   durationMin: z.coerce.number().int().min(0).default(30),
 });
 
@@ -27,7 +27,7 @@ export async function createService(
     durationMin: formData.get("durationMin"),
   });
   if (!parsed.success) {
-    return { error: parsed.error.issues[0]?.message ?? "Dados invalidos" };
+    return { error: parsed.error.issues[0]?.message ?? "Dados inválidos" };
   }
 
   await prisma.service.create({

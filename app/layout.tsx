@@ -6,11 +6,11 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
 export const metadata: Metadata = {
   title: {
-    default: "SaaS Multi-Segmento | O sistema do seu negocio",
-    template: "%s | SaaS Multi-Segmento",
+    default: "GestorPro | O sistema do seu negócio",
+    template: "%s | GestorPro",
   },
   description:
-    "Uma plataforma que se adapta ao seu segmento: barbearia, salao, clinica, oficina e muito mais.",
+    "Uma plataforma que se adapta ao seu segmento: barbearia, salão, clínica, oficina e muito mais.",
 };
 
 export default function RootLayout({

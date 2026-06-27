@@ -1,113 +1,73 @@
 import type { ModuleDef, ModuleId } from "./types";
 
-// Registro central de modulos. Adicionar um modulo novo = adicionar uma entrada aqui.
+// Registro central de módulos. Adicionar um módulo novo = adicionar uma entrada aqui.
 export const MODULES: Record<ModuleId, ModuleDef> = {
   clients: {
     id: "clients",
     name: "Clientes (CRM)",
-    description: "Cadastro de clientes, contatos e historico.",
+    description: "Cadastro completo com contatos, histórico de atendimentos e campos do seu segmento.",
     nav: [
-      {
-        href: "/clientes",
-        labelKey: "customer_plural",
-        fallback: "Clientes",
-        icon: "Users",
-      },
+      { href: "/clientes", labelKey: "customer_plural", fallback: "Clientes", icon: "Users" },
     ],
   },
   scheduling: {
     id: "scheduling",
     name: "Agendamento",
-    description: "Agenda online, horarios e status de atendimento.",
+    description: "Agenda online por profissional, com horários, status e confirmação de atendimento.",
     nav: [
-      {
-        href: "/agenda",
-        labelKey: "appointment_plural",
-        fallback: "Agenda",
-        icon: "Calendar",
-      },
+      { href: "/agenda", labelKey: "appointment_plural", fallback: "Agenda", icon: "Calendar" },
     ],
   },
   services: {
     id: "services",
-    name: "Servicos e Precos",
-    description: "Catalogo de servicos, precos e duracao.",
+    name: "Serviços e Preços",
+    description: "Catálogo de serviços com preço e duração, pronto para usar na agenda e no caixa.",
     nav: [
-      {
-        href: "/servicos",
-        labelKey: "service_plural",
-        fallback: "Servicos",
-        icon: "Tag",
-      },
+      { href: "/servicos", labelKey: "service_plural", fallback: "Serviços", icon: "Tag" },
     ],
   },
   financial: {
     id: "financial",
     name: "Financeiro",
-    description: "Caixa, contas a pagar e receber, fluxo de caixa.",
+    description: "Caixa, contas a pagar e receber, fluxo de caixa e relatório de faturamento.",
     nav: [
-      {
-        href: "/financeiro",
-        labelKey: "financial",
-        fallback: "Financeiro",
-        icon: "Wallet",
-      },
+      { href: "/financeiro", labelKey: "financial", fallback: "Financeiro", icon: "Wallet" },
     ],
   },
   team: {
     id: "team",
-    name: "Equipe e Permissoes",
-    description: "Membros da equipe, papeis e permissoes.",
+    name: "Equipe e Permissões",
+    description: "Membros da equipe com papéis e níveis de acesso diferentes.",
     nav: [
-      {
-        href: "/equipe",
-        labelKey: "team",
-        fallback: "Equipe",
-        icon: "UserCog",
-      },
+      { href: "/equipe", labelKey: "team", fallback: "Equipe", icon: "UserCog" },
     ],
   },
-  // ---- Modulos avancados (a arquitetura ja suporta; UI completa nas proximas fases) ----
+  // ---- Módulos avançados (a arquitetura já suporta; UI completa nas próximas fases) ----
   inventory: {
     id: "inventory",
     name: "Estoque",
-    description: "Entrada, saida, inventario e alerta de estoque minimo.",
+    description: "Entrada, saída, inventário e alerta de estoque mínimo dos seus produtos.",
     comingSoon: true,
     nav: [
-      {
-        href: "/estoque",
-        labelKey: "inventory",
-        fallback: "Estoque",
-        icon: "Package",
-      },
+      { href: "/estoque", labelKey: "inventory", fallback: "Estoque", icon: "Package" },
     ],
   },
   work_orders: {
     id: "work_orders",
-    name: "Ordens de Servico",
-    description: "Abertura, acompanhamento e fechamento de OS.",
+    name: "Ordens de Serviço",
+    description: "Abertura, acompanhamento e fechamento de OS, com itens, mão de obra e histórico.",
     comingSoon: true,
     nav: [
-      {
-        href: "/ordens-de-servico",
-        labelKey: "work_order_plural",
-        fallback: "Ordens de Servico",
-        icon: "ClipboardList",
-      },
+      { href: "/ordens-de-servico", labelKey: "work_order_plural", fallback: "Ordens de Serviço", icon: "ClipboardList" },
     ],
   },
   records: {
     id: "records",
-    name: "Prontuario",
-    description: "Prontuario e historico do paciente.",
+    name: "Prontuário",
+    description: "Prontuário e histórico detalhado por cliente, com anotações e evolução.",
     comingSoon: true,
     nav: [
-      {
-        href: "/prontuario",
-        labelKey: "records",
-        fallback: "Prontuario",
-        icon: "FileText",
-      },
+      { href: "/prontuario", labelKey: "records", fallback: "Prontuário", icon: "FileText" },
     ],
   },
 };

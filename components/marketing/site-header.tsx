@@ -14,10 +14,10 @@ export function SiteHeader() {
             Recursos
           </Link>
           <Link href="/#precos" className="hover:text-slate-900">
-            Precos
+            Preços
           </Link>
           <Link href="/#faq" className="hover:text-slate-900">
-            Duvidas
+            Dúvidas
           </Link>
         </nav>
         <div className="flex items-center gap-2 sm:gap-3">
@@ -25,7 +25,7 @@ export function SiteHeader() {
             Entrar
           </Link>
           <Link href="/signup" className="btn-primary">
-            Comecar gratis
+            Começar grátis
           </Link>
         </div>
       </div>

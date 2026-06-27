@@ -30,7 +30,7 @@ export function Sidebar({
   ];
   const bottomItems: NavItem[] = [
     { href: "/assinatura", label: "Assinatura", icon: "CreditCard" },
-    { href: "/configuracoes", label: "Configuracoes", icon: "Settings" },
+    { href: "/configuracoes", label: "Configurações", icon: "Settings" },
   ];
 
   const renderItem = (item: NavItem) => {
@@ -89,7 +89,7 @@ export function Sidebar({
       <nav className="flex-1 space-y-1 overflow-y-auto px-3 py-4">
         {baseItems.map(renderItem)}
         <div className="px-3 pb-1 pt-4 text-xs font-semibold uppercase tracking-wider text-slate-400">
-          Modulos
+          Módulos
         </div>
         {navItems.map(renderItem)}
         <div className="px-3 pb-1 pt-4 text-xs font-semibold uppercase tracking-wider text-slate-400">

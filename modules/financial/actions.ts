@@ -12,8 +12,8 @@ export interface FormResult {
 
 const schema = z.object({
   type: z.enum(["INCOME", "EXPENSE"]),
-  description: z.string().min(1, "Informe a descricao"),
-  amount: z.coerce.number().min(0.01, "Valor invalido"),
+  description: z.string().min(1, "Informe a descrição"),
+  amount: z.coerce.number().min(0.01, "Valor inválido"),
   dueDate: z.string().optional(),
   paid: z.string().optional(),
 });
@@ -31,7 +31,7 @@ export async function createFinancialEntry(
     paid: formData.get("paid") ?? undefined,
   });
   if (!parsed.success) {
-    return { error: parsed.error.issues[0]?.message ?? "Dados invalidos" };
+    return { error: parsed.error.issues[0]?.message ?? "Dados inválidos" };
   }
 
   const isPaid = parsed.data.paid === "on";

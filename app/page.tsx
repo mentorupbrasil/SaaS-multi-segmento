@@ -11,32 +11,32 @@ import { Pricing } from "@/components/marketing/pricing";
 import { Faq } from "@/components/marketing/faq";
 
 export const metadata: Metadata = {
-  title: "GestorPro | O sistema de gestao sob medida para o seu segmento",
+  title: "GestorPro | O sistema de gestão sob medida para o seu segmento",
   description:
-    "Plataforma completa de gestao que se adapta ao seu negocio: barbearia, salao, clinica, oficina, petshop, academia e muito mais. Agenda, clientes, financeiro. Teste 14 dias gratis.",
+    "Plataforma completa de gestão que se adapta ao seu negócio: barbearia, salão, clínica, oficina, petshop, academia e muito mais. Agenda, clientes e financeiro. Teste 14 dias grátis.",
 };
 
 const FEATURES = [
-  { icon: "Calendar", title: "Agenda inteligente", text: "Agendamentos, horarios e status de atendimento em uma agenda clara e organizada." },
-  { icon: "Users", title: "Clientes e CRM", text: "Cadastro completo, historico e campos especificos do seu segmento." },
-  { icon: "Wallet", title: "Financeiro e caixa", text: "Contas a pagar e receber, fluxo de caixa e relatorios de faturamento." },
-  { icon: "UserCog", title: "Equipe e permissoes", text: "Adicione profissionais com papeis e acessos diferentes." },
-  { icon: "Layers", title: "Adapta ao seu nicho", text: "Menus, nomes e modulos mudam conforme o segmento que voce escolher." },
+  { icon: "Calendar", title: "Agenda inteligente", text: "Agendamentos, horários e status de atendimento em uma agenda clara e organizada." },
+  { icon: "Users", title: "Clientes e CRM", text: "Cadastro completo, histórico de atendimentos e campos específicos do seu segmento." },
+  { icon: "Wallet", title: "Financeiro e caixa", text: "Contas a pagar e a receber, fluxo de caixa e relatórios de faturamento." },
+  { icon: "UserCog", title: "Equipe e permissões", text: "Adicione profissionais com papéis e níveis de acesso diferentes." },
+  { icon: "Layers", title: "Adapta ao seu nicho", text: "Menus, nomes e módulos mudam conforme o segmento que você escolher." },
   { icon: "Smartphone", title: "Acesso de qualquer lugar", text: "Funciona no computador e no celular, na nuvem, sem instalar nada." },
 ];
 
 const STEPS = [
-  { icon: "Rocket", title: "Crie sua conta", text: "Cadastro em 2 minutos e escolha o segmento do seu negocio." },
+  { icon: "Rocket", title: "Crie sua conta", text: "Cadastro em 2 minutos e escolha o segmento do seu negócio." },
   { icon: "Layers", title: "O sistema se adapta", text: "Tudo se personaliza para o seu nicho automaticamente." },
-  { icon: "TrendingUp", title: "Organize e venda mais", text: "Gerencie agenda, clientes e caixa em um lugar so." },
+  { icon: "TrendingUp", title: "Organize e venda mais", text: "Gerencie agenda, clientes e caixa em um lugar só." },
 ];
 
 const FAQ_ITEMS = [
-  { q: "Preciso instalar algo?", a: "Nao. O GestorPro funciona 100% online, no navegador do computador ou do celular. Seus dados ficam seguros na nuvem." },
-  { q: "Serve para o meu tipo de negocio?", a: "Atendemos diversos segmentos e a plataforma e flexivel para praticamente qualquer negocio que trabalhe com clientes, agenda, servicos e financeiro." },
-  { q: "Como funciona o teste gratis?", a: "Voce tem 14 dias gratuitos para testar tudo, sem precisar de cartao de credito. Depois, basta assinar para continuar." },
-  { q: "Posso cancelar quando quiser?", a: "Sim. Nao ha fidelidade. Voce pode cancelar a assinatura a qualquer momento." },
-  { q: "Meus dados ficam seguros?", a: "Sim. Cada negocio tem seu ambiente isolado e os dados sao protegidos e acessiveis apenas pela sua equipe." },
+  { q: "Preciso instalar algo?", a: "Não. O GestorPro funciona 100% online, no navegador do computador ou do celular. Seus dados ficam seguros na nuvem." },
+  { q: "Serve para o meu tipo de negócio?", a: "Atendemos diversos segmentos e a plataforma é flexível para praticamente qualquer negócio que trabalhe com clientes, agenda, serviços e financeiro." },
+  { q: "Como funciona o teste grátis?", a: "Você tem 14 dias gratuitos para testar tudo, sem precisar de cartão de crédito. Depois, basta assinar para continuar." },
+  { q: "Posso cancelar quando quiser?", a: "Sim. Não há fidelidade. Você pode cancelar a assinatura a qualquer momento." },
+  { q: "Meus dados ficam seguros?", a: "Sim. Cada negócio tem o ambiente isolado e os dados são protegidos, acessíveis apenas pela sua equipe." },
 ];
 
 export default function HomePage() {
@@ -47,23 +47,23 @@ export default function HomePage() {
       {/* Hero */}
       <section className="relative overflow-hidden border-b border-slate-100">
         <div className="absolute inset-0 bg-grid [mask-image:radial-gradient(ellipse_at_top,black,transparent_70%)]" />
-        <div className="section relative grid items-center gap-12 py-20 lg:grid-cols-2 lg:py-28">
+        <div className="section relative grid items-center gap-12 py-16 lg:grid-cols-2 lg:py-24">
           <div>
             <span className="eyebrow">
               <Icon name="Sparkles" className="h-3.5 w-3.5" />
-              Gestao para qualquer segmento
+              Gestão para qualquer segmento
             </span>
             <h1 className="mt-5 text-4xl font-bold leading-tight tracking-tight text-slate-900 sm:text-5xl">
               O sistema que fala a{" "}
-              <span className="gradient-text">lingua do seu negocio</span>
+              <span className="gradient-text">língua do seu negócio</span>
             </h1>
             <p className="mt-5 max-w-xl text-lg text-slate-600">
-              Escolha o seu segmento e tenha uma plataforma sob medida: agenda, clientes, servicos e
-              financeiro. Tudo adaptado ao seu nicho, a partir de R$ 39,90/mes.
+              Escolha o seu segmento e tenha uma plataforma sob medida: agenda, clientes, serviços e
+              financeiro. Tudo adaptado ao seu nicho, a partir de R$ 39,90/mês.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link href="/signup" className="btn-primary px-6 py-3 text-base">
-                Comecar gratis por 14 dias
+                Começar grátis por 14 dias
                 <Icon name="ArrowRight" className="h-4 w-4" />
               </Link>
               <Link href="#segmentos" className="btn-secondary px-6 py-3 text-base">
@@ -72,13 +72,13 @@ export default function HomePage() {
             </div>
             <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-slate-500">
               <span className="inline-flex items-center gap-1.5">
-                <Icon name="Check" className="h-4 w-4 text-green-600" /> Sem cartao de credito
+                <Icon name="Check" className="h-4 w-4 text-green-600" /> Sem cartão de crédito
               </span>
               <span className="inline-flex items-center gap-1.5">
                 <Icon name="Check" className="h-4 w-4 text-green-600" /> Cancele quando quiser
               </span>
               <span className="inline-flex items-center gap-1.5">
-                <Icon name="Check" className="h-4 w-4 text-green-600" /> Suporte em portugues
+                <Icon name="Check" className="h-4 w-4 text-green-600" /> Suporte em português
               </span>
             </div>
           </div>
@@ -86,13 +86,13 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Faixa de confianca */}
+      {/* Faixa de confiança */}
       <section className="border-b border-slate-100 bg-slate-50/60">
         <div className="section grid grid-cols-2 gap-6 py-8 text-center sm:grid-cols-4">
           {[
             { n: `${ALL_SEGMENTS.length}+`, l: "Segmentos atendidos" },
-            { n: "14 dias", l: "Gratis para testar" },
-            { n: "R$ 39,90", l: "A partir de, por mes" },
+            { n: "14 dias", l: "Grátis para testar" },
+            { n: "R$ 39,90", l: "A partir de, por mês" },
             { n: "100%", l: "Online e na nuvem" },
           ].map((s) => (
             <div key={s.l}>
@@ -104,11 +104,11 @@ export default function HomePage() {
       </section>
 
       {/* Recursos */}
-      <section id="recursos" className="section py-20">
+      <section id="recursos" className="section py-16">
         <div className="text-center">
           <span className="eyebrow">Recursos</span>
           <h2 className="mt-4 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
-            Tudo para gerenciar o seu negocio
+            Tudo para gerenciar o seu negócio
           </h2>
           <p className="mx-auto mt-3 max-w-2xl text-slate-600">
             Os recursos essenciais, prontos para usar e adaptados ao seu segmento.
@@ -129,7 +129,7 @@ export default function HomePage() {
 
       {/* Como funciona */}
       <section className="border-y border-slate-100 bg-slate-50/60">
-        <div className="section py-20">
+        <div className="section py-16">
           <div className="text-center">
             <span className="eyebrow">Simples assim</span>
             <h2 className="mt-4 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
@@ -164,18 +164,18 @@ export default function HomePage() {
       <Faq items={FAQ_ITEMS} />
 
       {/* CTA final */}
-      <section className="section pb-20">
+      <section className="section pb-16">
         <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-brand-600 via-brand-700 to-violet-700 px-8 py-16 text-center shadow-xl">
           <div className="absolute inset-0 bg-grid opacity-20" />
           <div className="relative">
             <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
-              Pronto para organizar o seu negocio?
+              Pronto para organizar o seu negócio?
             </h2>
             <p className="mx-auto mt-3 max-w-xl text-brand-100">
-              Crie sua conta gratis e veja o sistema se adaptar ao seu segmento em minutos.
+              Crie sua conta grátis e veja o sistema se adaptar ao seu segmento em minutos.
             </p>
             <Link href="/signup" className="btn-white mt-7 px-6 py-3 text-base">
-              Comecar gratis agora
+              Começar grátis agora
               <Icon name="ArrowRight" className="h-4 w-4" />
             </Link>
           </div>

@@ -26,7 +26,7 @@ export default async function EquipePage() {
     <div>
       <PageHeader
         title="Equipe"
-        description="Membros, papeis e permissoes."
+        description="Membros, papéis e permissões."
         action={<MemberForm professionalLabel={professionalLabel} />}
       />
 
@@ -37,7 +37,7 @@ export default async function EquipePage() {
               <th className="px-4 py-3">Nome</th>
               <th className="px-4 py-3">E-mail</th>
               <th className="px-4 py-3">Cargo</th>
-              <th className="px-4 py-3">Permissao</th>
+              <th className="px-4 py-3">Permissão</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100">

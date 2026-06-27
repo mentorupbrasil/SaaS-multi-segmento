@@ -29,14 +29,14 @@ export async function createAppointment(
     notes: formData.get("notes") ?? undefined,
   });
   if (!parsed.success) {
-    return { error: parsed.error.issues[0]?.message ?? "Dados invalidos" };
+    return { error: parsed.error.issues[0]?.message ?? "Dados inválidos" };
   }
 
   // Garante que cliente/servico pertencem ao tenant.
   const customer = await prisma.customer.findFirst({
     where: { id: parsed.data.customerId, organizationId: ctx.orgId },
   });
-  if (!customer) return { error: "Cliente invalido" };
+  if (!customer) return { error: "Cliente inválido" };
 
   let durationMin = 30;
   let serviceId: string | null = null;

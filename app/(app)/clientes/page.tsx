@@ -22,7 +22,7 @@ export default async function ClientesPage() {
     <div>
       <PageHeader
         title={term(terms, "customer_plural")}
-        description={`Gerencie os ${term(terms, "customer_plural").toLowerCase()} do seu negocio.`}
+        description={`Gerencie os ${term(terms, "customer_plural").toLowerCase()} do seu negócio.`}
         action={
           <CustomerForm customerLabel={customerLabel} customFields={segment?.customerFields ?? []} />
         }

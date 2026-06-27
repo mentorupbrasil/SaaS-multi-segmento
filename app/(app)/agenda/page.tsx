@@ -8,7 +8,7 @@ import { formatDateTime } from "@/lib/utils";
 const STATUS_LABELS: Record<string, string> = {
   SCHEDULED: "Agendado",
   CONFIRMED: "Confirmado",
-  COMPLETED: "Concluido",
+  COMPLETED: "Concluído",
   CANCELED: "Cancelado",
   NO_SHOW: "Faltou",
 };

@@ -26,14 +26,14 @@ export function EntryForm() {
     return (
       <button className="btn-primary" onClick={() => setOpen(true)}>
         <Icon name="Plus" className="h-4 w-4" />
-        Novo lancamento
+        Novo lançamento
       </button>
     );
   }
 
   return (
     <div className="card mb-6 p-6">
-      <h2 className="mb-4 text-lg font-semibold">Novo lancamento</h2>
+      <h2 className="mb-4 text-lg font-semibold">Novo lançamento</h2>
       <form ref={formRef} action={action} className="grid gap-4 sm:grid-cols-2">
         <div>
           <label className="label">Tipo</label>
@@ -47,7 +47,7 @@ export function EntryForm() {
           <input name="amount" type="number" step="0.01" min="0" className="input" required />
         </div>
         <div className="sm:col-span-2">
-          <label className="label">Descricao</label>
+          <label className="label">Descrição</label>
           <input name="description" className="input" required />
         </div>
         <div>
@@ -57,7 +57,7 @@ export function EntryForm() {
         <div className="flex items-end">
           <label className="flex items-center gap-2 text-sm text-slate-700">
             <input name="paid" type="checkbox" className="h-4 w-4 rounded border-slate-300" />
-            Ja recebido/pago
+            Já recebido/pago
           </label>
         </div>
 

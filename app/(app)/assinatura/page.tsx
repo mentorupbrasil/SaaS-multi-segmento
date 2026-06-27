@@ -18,7 +18,7 @@ export default async function AssinaturaPage() {
 
   return (
     <div>
-      <PageHeader title="Assinatura" description="Gerencie o plano do seu negocio." />
+      <PageHeader title="Assinatura" description="Gerencie o plano do seu negócio." />
 
       <div className="mb-6 flex items-center justify-between rounded-xl border border-slate-200 bg-white px-5 py-4">
         <div>
@@ -37,11 +37,11 @@ export default async function AssinaturaPage() {
       </div>
 
       <div className="rounded-lg border border-blue-200 bg-blue-50 px-4 py-3 text-sm text-blue-800">
-        Pagamento simulado nesta versao. A integracao real com o Mercado Pago (checkout + webhook)
-        entra nas proximas fases.
+        Pagamento simulado nesta versão. A integração real com o Mercado Pago (checkout + webhook)
+        entra nas próximas fases.
       </div>
 
-      <div className="mt-6 grid gap-6 sm:grid-cols-2">
+      <div className="mt-6 grid gap-6 lg:grid-cols-3">
         {PLANS.map((plan) => {
           const isCurrent = org.plan === plan.id && org.subscriptionStatus === "ACTIVE";
           return (
@@ -52,17 +52,21 @@ export default async function AssinaturaPage() {
                 plan.highlight && "ring-2 ring-brand-500",
               )}
             >
-              {plan.highlight && (
-                <span className="absolute -top-3 left-6 rounded-full bg-brand-600 px-3 py-1 text-xs font-semibold text-white">
-                  Mais popular
+              {plan.badge && (
+                <span className={cn(
+                  "absolute -top-3 left-6 rounded-full px-3 py-1 text-xs font-semibold text-white",
+                  plan.highlight ? "bg-brand-600" : "bg-slate-900",
+                )}>
+                  {plan.badge}
                 </span>
               )}
               <h2 className="text-lg font-semibold text-slate-900">{plan.name}</h2>
-              <p className="mt-2">
+              <p className="mt-1 text-sm text-slate-500">{plan.description}</p>
+              <p className="mt-3">
                 <span className="text-3xl font-bold text-slate-900">
                   {formatCurrency(plan.priceMonthly)}
                 </span>
-                <span className="text-sm text-slate-500">/mes</span>
+                <span className="text-sm text-slate-500">/mês</span>
               </p>
               <ul className="mt-4 space-y-2">
                 {plan.features.map((f) => (

@@ -16,10 +16,10 @@ export function ComingSoon({
         <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-50 to-violet-50 text-brand-600 ring-1 ring-brand-100">
           <Icon name={icon} className="h-7 w-7" />
         </div>
-        <h2 className="text-lg font-semibold text-slate-900">Modulo em breve</h2>
+        <h2 className="text-lg font-semibold text-slate-900">Módulo em breve</h2>
         <p className="max-w-md text-sm text-slate-500">{description}</p>
         <span className="mt-2 rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-700">
-          Disponivel nas proximas fases
+          Disponível nas próximas fases
         </span>
       </div>
     </div>

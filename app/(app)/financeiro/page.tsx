@@ -34,7 +34,7 @@ export default async function FinanceiroPage() {
     <div>
       <PageHeader
         title="Financeiro"
-        description="Caixa, contas a pagar e receber."
+        description="Caixa, contas a pagar e a receber."
         action={<EntryForm />}
       />
 
@@ -48,13 +48,13 @@ export default async function FinanceiroPage() {
       </div>
 
       {entries.length === 0 ? (
-        <div className="card p-10 text-center text-slate-500">Nenhum lancamento ainda.</div>
+        <div className="card p-10 text-center text-slate-500">Nenhum lançamento ainda.</div>
       ) : (
         <div className="card overflow-hidden">
           <table className="w-full text-sm">
             <thead className="bg-slate-50 text-left text-xs uppercase tracking-wider text-slate-500">
               <tr>
-                <th className="px-4 py-3">Descricao</th>
+                <th className="px-4 py-3">Descrição</th>
                 <th className="px-4 py-3">Tipo</th>
                 <th className="px-4 py-3">Valor</th>
                 <th className="px-4 py-3">Vencimento</th>

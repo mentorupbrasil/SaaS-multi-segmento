@@ -13,11 +13,11 @@ export default async function ConfiguracoesPage() {
 
   return (
     <div>
-      <PageHeader title="Configuracoes" description="Detalhes do seu negocio e segmento." />
+      <PageHeader title="Configurações" description="Detalhes do seu negócio e segmento." />
 
       <div className="grid gap-6 lg:grid-cols-2">
         <div className="card p-6">
-          <h2 className="mb-4 text-lg font-semibold">Negocio</h2>
+          <h2 className="mb-4 text-lg font-semibold">Negócio</h2>
           <dl className="space-y-3 text-sm">
             <div className="flex justify-between">
               <dt className="text-slate-500">Nome</dt>
@@ -35,7 +35,7 @@ export default async function ConfiguracoesPage() {
         </div>
 
         <div className="card p-6">
-          <h2 className="mb-4 text-lg font-semibold">Modulos ativos</h2>
+          <h2 className="mb-4 text-lg font-semibold">Módulos ativos</h2>
           <ul className="space-y-2">
             {segment?.modules.map((id) => (
               <li key={id} className="flex items-center gap-2 text-sm text-slate-700">

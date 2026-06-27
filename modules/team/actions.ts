@@ -13,7 +13,7 @@ export interface FormResult {
 
 const schema = z.object({
   name: z.string().min(2, "Informe o nome"),
-  email: z.string().email("E-mail invalido"),
+  email: z.string().email("E-mail inválido"),
   password: z.string().min(6, "Senha de ao menos 6 caracteres"),
   role: z.enum(["ADMIN", "STAFF"]),
   title: z.string().optional(),
@@ -34,7 +34,7 @@ export async function inviteMember(
     title: formData.get("title") ?? undefined,
   });
   if (!parsed.success) {
-    return { error: parsed.error.issues[0]?.message ?? "Dados invalidos" };
+    return { error: parsed.error.issues[0]?.message ?? "Dados inválidos" };
   }
 
   const email = parsed.data.email.toLowerCase();
@@ -46,7 +46,7 @@ export async function inviteMember(
 
   if (existing) {
     const already = existing.memberships.some((m) => m.organizationId === ctx.orgId);
-    if (already) return { error: "Este usuario ja faz parte da equipe" };
+    if (already) return { error: "Este usuário já faz parte da equipe" };
     await prisma.membership.create({
       data: {
         userId: existing.id,

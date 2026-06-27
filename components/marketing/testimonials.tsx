@@ -16,25 +16,25 @@ const TESTIMONIALS: Testimonial[] = [
   },
   {
     name: "Dra. Carla Lima",
-    role: "Clinica de estetica",
+    role: "Clínica de estética",
     initials: "CL",
-    text: "A agenda e o prontuario por cliente mudaram minha rotina. Tudo organizado em um lugar so, sem papelada.",
+    text: "A agenda e o prontuário por cliente mudaram minha rotina. Tudo organizado em um lugar só, sem papelada.",
   },
   {
-    name: "Joao Oliveira",
-    role: "Oficina mecanica",
+    name: "João Oliveira",
+    role: "Oficina mecânica",
     initials: "JO",
-    text: "As ordens de servico ficaram profissionais e o controle de pecas evita prejuizo. Meus clientes elogiam.",
+    text: "As ordens de serviço ficaram profissionais e o controle de peças evita prejuízo. Meus clientes elogiam.",
   },
 ];
 
 export function Testimonials() {
   return (
-    <section className="section py-20">
+    <section className="section py-16">
       <div className="text-center">
         <span className="eyebrow">Depoimentos</span>
         <h2 className="mt-4 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
-          Negocios que ja se organizaram
+          Negócios que já se organizaram
         </h2>
       </div>
       <div className="mt-12 grid gap-6 md:grid-cols-3">

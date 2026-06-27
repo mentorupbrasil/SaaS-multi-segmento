@@ -13,10 +13,10 @@ export function SiteFooter() {
             <Logo />
             <p className="mt-4 max-w-xs text-sm text-slate-500">
               Uma plataforma que se adapta ao seu segmento. Agenda, clientes, financeiro e muito
-              mais, do jeito do seu negocio.
+              mais, do jeito do seu negócio.
             </p>
             <Link href="/signup" className="btn-primary mt-5">
-              Criar conta gratis
+              Criar conta grátis
             </Link>
           </div>
 

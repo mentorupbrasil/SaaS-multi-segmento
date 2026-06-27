@@ -31,7 +31,7 @@ export async function createCustomer(
     notes: formData.get("notes") ?? undefined,
   });
   if (!parsed.success) {
-    return { error: parsed.error.issues[0]?.message ?? "Dados invalidos" };
+    return { error: parsed.error.issues[0]?.message ?? "Dados inválidos" };
   }
 
   // Campos customizados do segmento (prefixo cf_)

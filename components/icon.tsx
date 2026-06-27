@@ -49,6 +49,8 @@ import {
   Smartphone,
   Lock,
   HeartHandshake,
+  Languages,
+  Briefcase,
   type LucideIcon,
 } from "lucide-react";
 
@@ -103,6 +105,8 @@ const ICONS: Record<string, LucideIcon> = {
   Smartphone,
   Lock,
   HeartHandshake,
+  Languages,
+  Briefcase,
 };
 
 export function Icon({

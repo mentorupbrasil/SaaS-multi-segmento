@@ -3,9 +3,9 @@ import { ComingSoon } from "@/components/coming-soon";
 export default function ProntuarioPage() {
   return (
     <ComingSoon
-      title="Prontuario"
+      title="Prontuário"
       icon="FileText"
-      description="Prontuario eletronico do paciente: historico de atendimentos, anotacoes clinicas, anexos e evolucao."
+      description="Prontuário eletrônico do paciente: histórico de atendimentos, anotações clínicas, anexos e evolução."
     />
   );
 }

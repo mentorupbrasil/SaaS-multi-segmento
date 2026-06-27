@@ -31,7 +31,7 @@ export function HeroMockup() {
           </div>
           <div className="rounded-xl border border-slate-100 p-4">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-medium text-slate-500">Receita do mes</span>
+              <span className="text-xs font-medium text-slate-500">Receita do mês</span>
               <Wallet className="h-4 w-4 text-brand-600" />
             </div>
             <p className="mt-1 text-2xl font-bold text-slate-900">R$ 18.430</p>
@@ -47,7 +47,7 @@ export function HeroMockup() {
           </div>
           <div className="flex items-center gap-2 rounded-xl bg-green-50 px-3 py-2 text-xs font-medium text-green-700">
             <TrendingUp className="h-4 w-4" />
-            +24% em relacao ao mes passado
+            +24% em relação ao mês passado
           </div>
         </div>
       </div>

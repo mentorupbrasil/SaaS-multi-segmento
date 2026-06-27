@@ -6,16 +6,16 @@ export const DEFAULT_TERMS: Record<string, string> = {
   customer_plural: "Clientes",
   professional: "Profissional",
   professional_plural: "Profissionais",
-  service: "Servico",
-  service_plural: "Servicos",
+  service: "Serviço",
+  service_plural: "Serviços",
   appointment: "Agendamento",
   appointment_plural: "Agenda",
-  work_order: "Ordem de Servico",
-  work_order_plural: "Ordens de Servico",
+  work_order: "Ordem de Serviço",
+  work_order_plural: "Ordens de Serviço",
   financial: "Financeiro",
   team: "Equipe",
   inventory: "Estoque",
-  records: "Prontuario",
+  records: "Prontuário",
 };
 
 export type Terms = Record<string, string>;

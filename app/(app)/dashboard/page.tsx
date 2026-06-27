@@ -44,7 +44,7 @@ export default async function DashboardPage() {
     { label: term(terms, "customer_plural"), value: customerCount, icon: "Users", href: "/clientes" },
     { label: term(terms, "appointment_plural") + " hoje", value: todayAppointments, icon: "Calendar", href: "/agenda" },
     { label: term(terms, "service_plural"), value: serviceCount, icon: "Tag", href: "/servicos" },
-    { label: "Receita do mes", value: formatCurrency(monthIncome._sum.amount ?? 0), icon: "Wallet", href: "/financeiro" },
+    { label: "Receita do mês", value: formatCurrency(monthIncome._sum.amount ?? 0), icon: "Wallet", href: "/financeiro" },
   ];
 
   const trialDays = org.trialEndsAt
@@ -58,9 +58,9 @@ export default async function DashboardPage() {
           <Icon name={segment?.icon ?? "Building2"} className="h-6 w-6" />
         </span>
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Bem-vindo a {org.name}</h1>
+          <h1 className="text-2xl font-bold text-slate-900">Bem-vindo à {org.name}</h1>
           <p className="mt-0.5 text-sm text-slate-500">
-            Painel do seu sistema de {segment?.label.toLowerCase() ?? "negocio"}.
+            Painel do seu sistema de {segment?.label.toLowerCase() ?? "negócio"}.
           </p>
         </div>
       </div>
@@ -68,7 +68,7 @@ export default async function DashboardPage() {
       {org.subscriptionStatus === "TRIALING" && (
         <div className="mb-6 flex items-center justify-between rounded-xl border border-amber-200 bg-amber-50 px-4 py-3">
           <p className="text-sm text-amber-800">
-            Voce esta no periodo de teste. {trialDays} dia(s) restante(s).
+            Você está no período de teste. {trialDays} dia(s) restante(s).
           </p>
           <Link href="/assinatura" className="text-sm font-semibold text-amber-900 underline">
             Assinar agora
@@ -92,7 +92,7 @@ export default async function DashboardPage() {
 
       <div className="mt-8">
         <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-slate-400">
-          Modulos do seu segmento
+          Módulos do seu segmento
         </h2>
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {nav.map((item) => (

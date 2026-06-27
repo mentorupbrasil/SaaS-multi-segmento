@@ -14,9 +14,9 @@ export interface ActionState {
 
 const signupSchema = z.object({
   name: z.string().min(2, "Informe seu nome"),
-  email: z.string().email("E-mail invalido"),
+  email: z.string().email("E-mail inválido"),
   password: z.string().min(6, "A senha deve ter ao menos 6 caracteres"),
-  businessName: z.string().min(2, "Informe o nome do negocio"),
+  businessName: z.string().min(2, "Informe o nome do negócio"),
   segmentId: z.string().min(1, "Escolha um segmento"),
 });
 
@@ -44,18 +44,18 @@ export async function signupAction(
   });
 
   if (!parsed.success) {
-    return { error: parsed.error.issues[0]?.message ?? "Dados invalidos" };
+    return { error: parsed.error.issues[0]?.message ?? "Dados inválidos" };
   }
 
   const { name, email, password, businessName, segmentId } = parsed.data;
 
   const segment = getSegment(segmentId);
-  if (!segment) return { error: "Segmento invalido" };
+  if (!segment) return { error: "Segmento inválido" };
 
   const existing = await prisma.user.findUnique({
     where: { email: email.toLowerCase() },
   });
-  if (existing) return { error: "Ja existe uma conta com este e-mail" };
+  if (existing) return { error: "Já existe uma conta com este e-mail" };
 
   const passwordHash = await bcrypt.hash(password, 10);
   const slug = await uniqueSlug(businessName);
@@ -111,7 +111,7 @@ export async function signupAction(
 }
 
 const loginSchema = z.object({
-  email: z.string().email("E-mail invalido"),
+  email: z.string().email("E-mail inválido"),
   password: z.string().min(1, "Informe a senha"),
 });
 
@@ -124,7 +124,7 @@ export async function loginAction(
     password: formData.get("password"),
   });
   if (!parsed.success) {
-    return { error: parsed.error.issues[0]?.message ?? "Dados invalidos" };
+    return { error: parsed.error.issues[0]?.message ?? "Dados inválidos" };
   }
 
   try {

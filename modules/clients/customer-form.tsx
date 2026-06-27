@@ -55,7 +55,7 @@ export function CustomerForm({
           <input name="email" type="email" className="input" />
         </div>
         <div>
-          <label className="label">Observacoes</label>
+          <label className="label">Observações</label>
           <input name="notes" className="input" />
         </div>
 

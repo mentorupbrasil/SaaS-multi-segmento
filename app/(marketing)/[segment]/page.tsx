@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { ALL_SEGMENTS, getSegmentBySlug, CATEGORY_LABELS } from "@/segments";
 import { MODULES } from "@/modules";
 import { resolveTerms } from "@/lib/terms";
+import { formatCurrency } from "@/lib/utils";
 import { Icon } from "@/components/icon";
 import { SiteHeader } from "@/components/marketing/site-header";
 import { SiteFooter } from "@/components/marketing/site-footer";
@@ -33,9 +34,9 @@ export async function generateMetadata({
 }
 
 const GENERIC_FAQ = [
-  { q: "Preciso instalar algo?", a: "Nao. Funciona online no computador e no celular, com seus dados seguros na nuvem." },
-  { q: "Como funciona o teste gratis?", a: "Sao 14 dias gratuitos, sem cartao de credito. Depois e so assinar para continuar." },
-  { q: "Posso cancelar quando quiser?", a: "Sim, sem fidelidade. Voce cancela a qualquer momento." },
+  { q: "Preciso instalar algo?", a: "Não. Funciona online no computador e no celular, com seus dados seguros na nuvem." },
+  { q: "Como funciona o teste grátis?", a: "São 14 dias gratuitos, sem cartão de crédito. Depois é só assinar para continuar." },
+  { q: "Posso cancelar quando quiser?", a: "Sim, sem fidelidade. Você cancela a qualquer momento." },
 ];
 
 export default async function SegmentLandingPage({
@@ -49,17 +50,39 @@ export default async function SegmentLandingPage({
 
   const terms = resolveTerms(seg.id);
 
-  // Rotulo de cada modulo adaptado ao nicho.
+  // Rótulo de cada módulo adaptado ao nicho.
   const moduleLabel: Record<string, string> = {
     clients: terms.customer_plural,
     scheduling: terms.appointment_plural,
     services: terms.service_plural,
-    work_orders: terms.work_order_plural ?? "Ordens de Servico",
-    records: terms.records ?? "Prontuario",
+    work_orders: terms.work_order_plural ?? "Ordens de Serviço",
+    records: terms.records ?? "Prontuário",
     financial: "Financeiro",
     team: "Equipe",
     inventory: terms.inventory ?? "Estoque",
   };
+
+  // Descrição de cada módulo usando a nomenclatura exata do segmento.
+  const moduleDescription: Record<string, string> = {
+    clients: `Cadastro de ${terms.customer_plural.toLowerCase()} com histórico, contato e campos próprios do seu segmento.`,
+    scheduling: `Agenda por ${terms.professional.toLowerCase()}, com horários, status e lembretes que reduzem faltas.`,
+    services: `Tabela de preços e duração, pronta para usar na agenda e no caixa.`,
+    work_orders: `${terms.work_order_plural ?? "Ordens de serviço"} do início ao fim, com itens, valores e histórico.`,
+    records: `${terms.records ?? "Prontuário"} por ${terms.customer.toLowerCase()}, com anotações e histórico organizados e seguros.`,
+    financial: "Caixa, contas a pagar e a receber, fluxo de caixa e relatórios de faturamento.",
+    team: `Cadastro de ${terms.professional_plural.toLowerCase()} com papéis e permissões de acesso.`,
+    inventory: `${terms.inventory ?? "Estoque"} com entrada, saída, inventário e alerta de estoque mínimo.`,
+  };
+
+  // Mapeamento de nomenclatura (padrão -> termo do segmento).
+  const nomenclature: { base: string; value: string }[] = [
+    { base: "Clientes", value: terms.customer_plural },
+    { base: "Profissionais", value: terms.professional_plural },
+    { base: "Serviços", value: terms.service_plural },
+  ];
+  if (seg.modules.includes("scheduling")) {
+    nomenclature.push({ base: "Agenda", value: terms.appointment_plural });
+  }
 
   const related = ALL_SEGMENTS.filter(
     (s) => s.category === seg.category && s.id !== seg.id,
@@ -74,7 +97,7 @@ export default async function SegmentLandingPage({
       {/* Hero */}
       <section className="relative overflow-hidden border-b border-slate-100">
         <div className="absolute inset-0 bg-grid [mask-image:radial-gradient(ellipse_at_top,black,transparent_70%)]" />
-        <div className="section relative grid items-center gap-12 py-20 lg:grid-cols-2">
+        <div className="section relative grid items-center gap-12 py-16 lg:grid-cols-2">
           <div>
             <span className="eyebrow">
               <Icon name={seg.icon} className="h-3.5 w-3.5" />
@@ -86,16 +109,24 @@ export default async function SegmentLandingPage({
             <p className="mt-5 max-w-xl text-lg text-slate-600">{seg.seo.subheadline}</p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link href="/signup" className="btn-primary px-6 py-3 text-base">
-                Testar gratis por 14 dias
+                Testar grátis por 14 dias
                 <Icon name="ArrowRight" className="h-4 w-4" />
               </Link>
               <Link href="#precos" className="btn-secondary px-6 py-3 text-base">
-                Ver precos
+                Ver preços
               </Link>
+            </div>
+            <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-slate-500">
+              <span className="inline-flex items-center gap-1.5">
+                <Icon name="Check" className="h-4 w-4 text-green-600" /> Sem cartão de crédito
+              </span>
+              <span className="inline-flex items-center gap-1.5">
+                <Icon name="Check" className="h-4 w-4 text-green-600" /> Pronto em minutos
+              </span>
             </div>
           </div>
 
-          {/* Card de beneficios */}
+          {/* Card de benefícios */}
           <div className="relative mx-auto w-full max-w-md">
             <div className="absolute -inset-4 rounded-3xl bg-gradient-to-br from-brand-200/40 via-violet-200/40 to-fuchsia-200/40 blur-2xl" />
             <div className="relative rounded-2xl border border-slate-200 bg-white p-7 shadow-2xl shadow-slate-300/40">
@@ -121,15 +152,15 @@ export default async function SegmentLandingPage({
         </div>
       </section>
 
-      {/* Modulos do nicho */}
-      <section className="section py-20">
+      {/* Módulos do nicho */}
+      <section className="section py-16">
         <div className="text-center">
-          <span className="eyebrow">O que esta incluso</span>
+          <span className="eyebrow">O que está incluso</span>
           <h2 className="mt-4 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
             Tudo que a sua {seg.label.toLowerCase()} precisa
           </h2>
           <p className="mx-auto mt-3 max-w-2xl text-slate-600">
-            Modulos prontos e ja com os nomes do seu segmento.
+            Módulos prontos e já com os nomes do seu segmento.
           </p>
         </div>
         <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -149,52 +180,139 @@ export default async function SegmentLandingPage({
                     </span>
                   )}
                 </h3>
-                <p className="mt-1.5 text-sm leading-relaxed text-slate-600">{mod.description}</p>
+                <p className="mt-1.5 text-sm leading-relaxed text-slate-600">
+                  {moduleDescription[id] ?? mod.description}
+                </p>
               </div>
             );
           })}
         </div>
       </section>
 
-      {/* Como funciona */}
+      {/* Personalizado para o segmento */}
       <section className="border-y border-slate-100 bg-slate-50/60">
-        <div className="section py-20">
+        <div className="section py-16">
           <div className="text-center">
-            <span className="eyebrow">Simples assim</span>
+            <span className="eyebrow">Já vem pronto</span>
             <h2 className="mt-4 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
-              Comece em 3 passos
+              Configurado para {seg.label.toLowerCase()}
             </h2>
+            <p className="mx-auto mt-3 max-w-2xl text-slate-600">
+              Ao escolher o seu segmento, a plataforma se adapta automaticamente — sem configuração técnica.
+            </p>
           </div>
-          <div className="mt-12 grid gap-8 md:grid-cols-3">
-            {[
-              { icon: "Rocket", t: "Crie sua conta", d: `Cadastro rapido escolhendo "${seg.label}".` },
-              { icon: "Layers", t: "Sistema personalizado", d: "Menus e termos do seu nicho ja configurados." },
-              { icon: "TrendingUp", t: "Gerencie e cresca", d: "Agenda, clientes e caixa em um lugar so." },
-            ].map((s, i) => (
-              <div key={s.t} className="text-center">
-                <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-white text-brand-600 shadow-sm ring-1 ring-slate-200">
-                  <Icon name={s.icon} className="h-6 w-6" />
-                </div>
-                <span className="mt-4 inline-block text-xs font-bold uppercase tracking-wider text-brand-600">
-                  Passo {i + 1}
-                </span>
-                <h3 className="mt-1 text-lg font-semibold text-slate-900">{s.t}</h3>
-                <p className="mx-auto mt-1.5 max-w-xs text-sm text-slate-600">{s.d}</p>
-              </div>
-            ))}
+
+          <div className="mt-12 grid gap-6 lg:grid-cols-3">
+            {/* Nomenclatura */}
+            <div className="card p-6">
+              <h3 className="flex items-center gap-2 font-semibold text-slate-900">
+                <Icon name="Languages" className="h-5 w-5 text-brand-600" />
+                A linguagem do seu negócio
+              </h3>
+              <p className="mt-1.5 text-sm text-slate-500">
+                Os menus e telas usam os termos que você já fala no dia a dia.
+              </p>
+              <ul className="mt-4 space-y-2.5">
+                {nomenclature.map((n) => (
+                  <li key={n.base} className="flex items-center gap-2 text-sm">
+                    <span className="text-slate-400">{n.base}</span>
+                    <Icon name="ArrowRight" className="h-3.5 w-3.5 text-slate-300" />
+                    <span className="font-semibold text-slate-900">{n.value}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Serviços padrão */}
+            <div className="card p-6">
+              <h3 className="flex items-center gap-2 font-semibold text-slate-900">
+                <Icon name="Tag" className="h-5 w-5 text-brand-600" />
+                {terms.service_plural} já cadastrados
+              </h3>
+              <p className="mt-1.5 text-sm text-slate-500">
+                Você começa com exemplos prontos e ajusta como quiser.
+              </p>
+              <ul className="mt-4 space-y-2.5">
+                {(seg.defaultServices ?? []).map((s) => (
+                  <li key={s.name} className="flex items-center justify-between gap-2 text-sm">
+                    <span className="text-slate-700">{s.name}</span>
+                    <span className="font-medium text-slate-900">
+                      {s.price > 0 ? formatCurrency(s.price) : "—"}
+                      {s.durationMin > 0 && (
+                        <span className="ml-1 text-xs text-slate-400">· {s.durationMin}min</span>
+                      )}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Ficha de cadastro */}
+            <div className="card p-6">
+              <h3 className="flex items-center gap-2 font-semibold text-slate-900">
+                <Icon name="ClipboardList" className="h-5 w-5 text-brand-600" />
+                Ficha de {terms.customer.toLowerCase()}
+              </h3>
+              <p className="mt-1.5 text-sm text-slate-500">
+                Além de nome, telefone e e-mail, o cadastro inclui campos do seu segmento.
+              </p>
+              <ul className="mt-4 flex flex-wrap gap-2">
+                <li className="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-600">Nome</li>
+                <li className="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-600">Telefone</li>
+                <li className="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-600">E-mail</li>
+                {(seg.customerFields ?? []).map((f) => (
+                  <li
+                    key={f.key}
+                    className="rounded-full bg-brand-50 px-3 py-1 text-xs font-medium text-brand-700 ring-1 ring-brand-100"
+                  >
+                    {f.label}
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
         </div>
       </section>
 
-      <Pricing />
+      {/* Como funciona */}
+      <section className="section py-16">
+        <div className="text-center">
+          <span className="eyebrow">Simples assim</span>
+          <h2 className="mt-4 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+            Comece em 3 passos
+          </h2>
+        </div>
+        <div className="mt-12 grid gap-8 md:grid-cols-3">
+          {[
+            { icon: "Rocket", t: "Crie sua conta", d: `Cadastro rápido escolhendo "${seg.label}".` },
+            { icon: "Layers", t: "Sistema personalizado", d: "Menus e termos do seu nicho já configurados." },
+            { icon: "TrendingUp", t: "Gerencie e cresça", d: "Agenda, clientes e caixa em um lugar só." },
+          ].map((s, i) => (
+            <div key={s.t} className="text-center">
+              <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-white text-brand-600 shadow-sm ring-1 ring-slate-200">
+                <Icon name={s.icon} className="h-6 w-6" />
+              </div>
+              <span className="mt-4 inline-block text-xs font-bold uppercase tracking-wider text-brand-600">
+                Passo {i + 1}
+              </span>
+              <h3 className="mt-1 text-lg font-semibold text-slate-900">{s.t}</h3>
+              <p className="mx-auto mt-1.5 max-w-xs text-sm text-slate-600">{s.d}</p>
+            </div>
+          ))}
+        </div>
+      </section>
 
-      <Faq items={faqItems} title={`Duvidas sobre o sistema para ${seg.label.toLowerCase()}`} />
+      <div className="border-t border-slate-100 bg-slate-50/60">
+        <Pricing />
+      </div>
+
+      <Faq items={faqItems} title={`Dúvidas sobre o sistema para ${seg.label.toLowerCase()}`} />
 
       {/* Segmentos relacionados */}
       {related.length > 0 && (
         <section className="section pb-8">
           <h2 className="text-center text-sm font-bold uppercase tracking-wider text-slate-500">
-            Tambem em {CATEGORY_LABELS[seg.category]}
+            Também em {CATEGORY_LABELS[seg.category]}
           </h2>
           <div className="mx-auto mt-6 flex max-w-3xl flex-wrap justify-center gap-3">
             {related.map((r) => (
@@ -217,13 +335,13 @@ export default async function SegmentLandingPage({
           <div className="absolute inset-0 bg-grid opacity-20" />
           <div className="relative">
             <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
-              Pronto para comecar?
+              Pronto para começar?
             </h2>
             <p className="mx-auto mt-3 max-w-xl text-brand-100">
               Crie a conta da sua {seg.label.toLowerCase()} em menos de 2 minutos.
             </p>
             <Link href="/signup" className="btn-white mt-7 px-6 py-3 text-base">
-              Criar conta gratis
+              Criar conta grátis
               <Icon name="ArrowRight" className="h-4 w-4" />
             </Link>
           </div>

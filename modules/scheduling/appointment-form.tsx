@@ -84,7 +84,7 @@ export function AppointmentForm({
             <input name="startAt" type="datetime-local" className="input" required />
           </div>
           <div>
-            <label className="label">Observacoes</label>
+            <label className="label">Observações</label>
             <input name="notes" className="input" />
           </div>
 

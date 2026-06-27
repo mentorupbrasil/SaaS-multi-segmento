@@ -7,7 +7,7 @@ export interface FaqItem {
 
 export function Faq({ items, title = "Perguntas frequentes" }: { items: FaqItem[]; title?: string }) {
   return (
-    <section id="faq" className="section py-20">
+    <section id="faq" className="section py-16">
       <h2 className="text-center text-3xl font-bold tracking-tight text-slate-900">{title}</h2>
       <div className="mx-auto mt-10 max-w-3xl divide-y divide-slate-200 overflow-hidden rounded-2xl border border-slate-200 bg-white">
         {items.map((item, i) => (

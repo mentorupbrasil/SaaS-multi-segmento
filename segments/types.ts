@@ -10,12 +10,51 @@ export type SegmentCategory =
   | "educacao";
 
 export const CATEGORY_LABELS: Record<SegmentCategory, string> = {
-  beleza: "Beleza & Estetica",
-  saude: "Saude & Bem-estar",
+  beleza: "Beleza & Estética",
+  saude: "Saúde & Bem-estar",
   automotivo: "Automotivo",
-  alimentacao: "Alimentacao & Pet",
-  servicos: "Servicos & Profissionais",
-  educacao: "Educacao",
+  alimentacao: "Alimentação & Pet",
+  servicos: "Serviços & Profissionais",
+  educacao: "Educação",
+};
+
+export interface CategoryMeta {
+  label: string;
+  description: string;
+  icon: string;
+}
+
+export const CATEGORY_META: Record<SegmentCategory, CategoryMeta> = {
+  beleza: {
+    label: "Beleza & Estética",
+    description: "Agenda, comissões e fidelização de clientes.",
+    icon: "Sparkles",
+  },
+  saude: {
+    label: "Saúde & Bem-estar",
+    description: "Consultas, prontuário e gestão de pacientes.",
+    icon: "Stethoscope",
+  },
+  automotivo: {
+    label: "Automotivo",
+    description: "Ordens de serviço, veículos e peças.",
+    icon: "Car",
+  },
+  alimentacao: {
+    label: "Alimentação & Pet",
+    description: "Cardápio, comandas, estoque e atendimento.",
+    icon: "Utensils",
+  },
+  servicos: {
+    label: "Serviços & Profissionais",
+    description: "Clientes, orçamentos, processos e agenda.",
+    icon: "Briefcase",
+  },
+  educacao: {
+    label: "Educação",
+    description: "Alunos, turmas, aulas e mensalidades.",
+    icon: "GraduationCap",
+  },
 };
 
 // Ordem de exibicao das categorias.

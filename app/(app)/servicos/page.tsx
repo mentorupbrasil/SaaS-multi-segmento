@@ -20,7 +20,7 @@ export default async function ServicosPage() {
     <div>
       <PageHeader
         title={term(terms, "service_plural")}
-        description="Catalogo de servicos, precos e duracao."
+        description="Catálogo de serviços, preços e duração."
         action={<ServiceForm serviceLabel={serviceLabel} />}
       />
 
@@ -34,8 +34,8 @@ export default async function ServicosPage() {
             <thead className="bg-slate-50 text-left text-xs uppercase tracking-wider text-slate-500">
               <tr>
                 <th className="px-4 py-3">Nome</th>
-                <th className="px-4 py-3">Preco</th>
-                <th className="px-4 py-3">Duracao</th>
+                <th className="px-4 py-3">Preço</th>
+                <th className="px-4 py-3">Duração</th>
                 <th className="px-4 py-3">Status</th>
               </tr>
             </thead>

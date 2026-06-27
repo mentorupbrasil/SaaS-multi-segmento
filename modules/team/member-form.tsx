@@ -40,7 +40,7 @@ export function MemberForm({ professionalLabel }: { professionalLabel: string })
           <input name="name" className="input" required />
         </div>
         <div>
-          <label className="label">Cargo / Titulo</label>
+          <label className="label">Cargo / Título</label>
           <input name="title" className="input" defaultValue={professionalLabel} />
         </div>
         <div>
@@ -49,10 +49,10 @@ export function MemberForm({ professionalLabel }: { professionalLabel: string })
         </div>
         <div>
           <label className="label">Senha de acesso</label>
-          <input name="password" type="password" className="input" placeholder="Minimo 6 caracteres" required />
+          <input name="password" type="password" className="input" placeholder="Mínimo 6 caracteres" required />
         </div>
         <div>
-          <label className="label">Permissao</label>
+          <label className="label">Permissão</label>
           <select name="role" className="input" defaultValue="STAFF">
             <option value="STAFF">Membro</option>
             <option value="ADMIN">Administrador</option>

@@ -5,7 +5,7 @@ export default function EstoquePage() {
     <ComingSoon
       title="Estoque"
       icon="Package"
-      description="Entrada e saida de produtos, inventario, codigo de barras e alerta de estoque minimo. A arquitetura modular ja suporta este modulo."
+      description="Entrada e saída de produtos, inventário, código de barras e alerta de estoque mínimo. A arquitetura modular já suporta este módulo."
     />
   );
 }

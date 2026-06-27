@@ -21,7 +21,7 @@ export default async function AppLayout({
     <div className="flex">
       <Sidebar
         orgName={ctx.organization.name}
-        segmentLabel={segment?.label ?? "Negocio"}
+        segmentLabel={segment?.label ?? "Negócio"}
         segmentIcon={segment?.icon ?? "Building2"}
         userName={session?.user?.name ?? session?.user?.email ?? ""}
         navItems={navItems}
