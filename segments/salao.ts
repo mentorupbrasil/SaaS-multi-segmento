@@ -41,7 +41,7 @@ export const salao: SegmentTemplate = {
   seo: {
     title: "Sistema para Salão de Beleza | Agenda e gestão",
     description:
-      "Software para salão de beleza com agenda online, clientes, serviços, comissões e financeiro. Experimente grátis.",
+      "Software para salão de beleza com agenda online, clientes, serviços, comissões e financeiro. Assine e comece hoje.",
     keywords: ["sistema para salão de beleza", "agenda salão", "software salão", "app salão de beleza"],
     headline: "Tudo que o seu salão precisa em um sistema",
     subheadline:

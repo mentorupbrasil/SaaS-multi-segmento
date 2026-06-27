@@ -2,11 +2,13 @@
 
 import { useActionState, useMemo, useState } from "react";
 import Link from "next/link";
+import { Check } from "lucide-react";
 import { getSegmentGroups } from "@/segments";
+import { PAYABLE_PLANS } from "@/lib/plans";
 import { signupAction, type ActionState } from "../actions";
 import { SubmitButton } from "@/components/submit-button";
 import { Icon } from "@/components/icon";
-import { cn } from "@/lib/utils";
+import { cn, formatCurrency } from "@/lib/utils";
 
 const initialState: ActionState = {};
 
@@ -20,6 +22,7 @@ function normalize(text: string): string {
 export default function SignupPage() {
   const [state, formAction] = useActionState(signupAction, initialState);
   const [segmentId, setSegmentId] = useState<string>("");
+  const [planId, setPlanId] = useState<string>("pro");
   const [query, setQuery] = useState<string>("");
 
   const groups = useMemo(() => {
@@ -42,7 +45,7 @@ export default function SignupPage() {
         <div className="border-b border-slate-100 bg-slate-50/60 px-8 py-6">
           <h1 className="text-2xl font-bold text-slate-900">Crie a conta do seu negócio</h1>
           <p className="mt-1 text-sm text-slate-500">
-            Escolha o seu segmento e o sistema se adapta a você. 14 dias grátis, sem cartão.
+            Escolha o seu segmento e o plano. Sua conta já fica ativa e pronta para usar.
           </p>
         </div>
 
@@ -97,9 +100,65 @@ export default function SignupPage() {
             <input type="hidden" name="segmentId" value={segmentId} />
           </div>
 
+          {/* Seletor de plano */}
+          <div>
+            <span className="label">2. Escolha o seu plano</span>
+            <div className="grid gap-3 sm:grid-cols-3">
+              {PAYABLE_PLANS.map((plan) => {
+                const selected = planId === plan.id;
+                return (
+                  <button
+                    type="button"
+                    key={plan.id}
+                    onClick={() => setPlanId(plan.id)}
+                    className={cn(
+                      "relative rounded-xl border bg-white p-4 text-left transition-all",
+                      selected
+                        ? "border-brand-600 ring-1 ring-brand-600"
+                        : "border-slate-200 hover:border-brand-300",
+                    )}
+                  >
+                    {plan.badge && (
+                      <span
+                        className={cn(
+                          "absolute -top-2 right-3 rounded-full px-2 py-0.5 text-[10px] font-semibold text-white",
+                          plan.highlight ? "bg-brand-600" : "bg-slate-900",
+                        )}
+                      >
+                        {plan.badge}
+                      </span>
+                    )}
+                    <span className="flex items-center justify-between">
+                      <span className="text-sm font-semibold text-slate-900">{plan.name}</span>
+                      {selected && <Check className="h-4 w-4 text-brand-600" />}
+                    </span>
+                    <span className="mt-1 block">
+                      <span className="text-xl font-bold text-slate-900">
+                        {formatCurrency(plan.priceMonthly as number)}
+                      </span>
+                      <span className="text-xs text-slate-500">/mês</span>
+                    </span>
+                    <span className="mt-1 block text-xs leading-snug text-slate-500">
+                      {plan.description}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+            <p className="mt-2 text-xs text-slate-500">
+              Sem fidelidade. Você pode trocar de plano ou cancelar quando quiser nas configurações.
+              Rede ou franquia?{" "}
+              <Link href="/suporte" className="font-semibold text-brand-700 hover:text-brand-800">
+                Fale com o time sobre o Enterprise
+              </Link>
+              .
+            </p>
+            <input type="hidden" name="planId" value={planId} />
+          </div>
+
           {/* Dados */}
           <div>
-            <span className="label">2. Seus dados</span>
+            <span className="label">3. Seus dados</span>
             <div className="grid gap-4 sm:grid-cols-2">
               <div>
                 <label className="label" htmlFor="businessName">
@@ -133,7 +192,7 @@ export default function SignupPage() {
           )}
 
           <SubmitButton className="w-full py-3 text-base" pendingText="Criando conta...">
-            Criar conta grátis
+            Criar conta e começar
           </SubmitButton>
 
           <p className="text-center text-sm text-slate-500">

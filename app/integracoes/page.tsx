@@ -1,0 +1,55 @@
+import Link from "next/link";
+import type { Metadata } from "next";
+import { INTEGRATIONS } from "@/lib/integrations";
+import { Icon } from "@/components/icon";
+import { MarketingShell, PageHero } from "@/components/marketing/marketing-shell";
+
+export const metadata: Metadata = {
+  title: "Integrações",
+  description:
+    "Conecte o GestorPro com WhatsApp, PIX, pagamentos online, Google Agenda e mais. Tire o trabalho manual da sua rotina.",
+};
+
+export default function IntegracoesPage() {
+  return (
+    <MarketingShell>
+      <PageHero
+        eyebrow="Integrações"
+        title="Conecte com as ferramentas que você já usa"
+        description="As integrações chegam para automatizar a rotina e centralizar tudo em um só lugar."
+      />
+
+      <section className="section py-16">
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {INTEGRATIONS.map((i) => (
+            <div key={i.name} className="card p-6">
+              <div className="flex items-center justify-between">
+                <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-slate-100 text-slate-600">
+                  <Icon name={i.icon} className="h-5 w-5" />
+                </span>
+                <span className="rounded-full bg-amber-100 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-amber-700">
+                  Em breve
+                </span>
+              </div>
+              <h3 className="mt-4 font-semibold text-slate-900">{i.name}</h3>
+              <p className="text-xs font-medium uppercase tracking-wide text-brand-600">
+                {i.category}
+              </p>
+              <p className="mt-1.5 text-sm leading-relaxed text-slate-600">{i.description}</p>
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-12 rounded-2xl border border-dashed border-slate-300 bg-white p-8 text-center">
+          <h3 className="text-lg font-semibold text-slate-900">Precisa de uma integração específica?</h3>
+          <p className="mx-auto mt-2 max-w-xl text-sm text-slate-600">
+            No plano Enterprise desenvolvemos integrações personalizadas para a sua operação.
+          </p>
+          <Link href="/suporte" className="btn-primary mt-5">
+            Falar com o time
+          </Link>
+        </div>
+      </section>
+    </MarketingShell>
+  );
+}

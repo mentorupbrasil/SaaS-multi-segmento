@@ -42,7 +42,7 @@ export const clinica: SegmentTemplate = {
   seo: {
     title: "Sistema para Clínica | Agenda, prontuário e financeiro",
     description:
-      "Software para clínicas com agenda de consultas, prontuário eletrônico, convênios e financeiro. Teste grátis.",
+      "Software para clínicas com agenda de consultas, prontuário eletrônico, convênios e financeiro. Assine e comece hoje.",
     keywords: ["sistema para clínica", "agenda médica", "prontuário eletrônico", "software clínica"],
     headline: "Gestão completa para a sua clínica",
     subheadline:

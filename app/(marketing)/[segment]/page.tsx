@@ -35,8 +35,8 @@ export async function generateMetadata({
 
 const GENERIC_FAQ = [
   { q: "Preciso instalar algo?", a: "Não. Funciona online no computador e no celular, com seus dados seguros na nuvem." },
-  { q: "Como funciona o teste grátis?", a: "São 14 dias gratuitos, sem cartão de crédito. Depois é só assinar para continuar." },
-  { q: "Posso cancelar quando quiser?", a: "Sim, sem fidelidade. Você cancela a qualquer momento." },
+  { q: "Como começo a usar?", a: "Escolha o seu segmento e o plano, crie a conta e o sistema já fica ativo e pronto para usar na hora." },
+  { q: "Tem fidelidade ou multa?", a: "Não. Você assina por mês e pode trocar de plano ou cancelar quando quiser, sem multa." },
 ];
 
 export default async function SegmentLandingPage({
@@ -109,19 +109,19 @@ export default async function SegmentLandingPage({
             <p className="mt-5 max-w-xl text-lg text-slate-600">{seg.seo.subheadline}</p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link href="/signup" className="btn-primary px-6 py-3 text-base">
-                Testar grátis por 14 dias
+                Assinar agora
                 <Icon name="ArrowRight" className="h-4 w-4" />
               </Link>
               <Link href="#precos" className="btn-secondary px-6 py-3 text-base">
-                Ver preços
+                Ver planos
               </Link>
             </div>
             <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-slate-500">
               <span className="inline-flex items-center gap-1.5">
-                <Icon name="Check" className="h-4 w-4 text-green-600" /> Sem cartão de crédito
+                <Icon name="Check" className="h-4 w-4 text-green-600" /> Conta ativa na hora
               </span>
               <span className="inline-flex items-center gap-1.5">
-                <Icon name="Check" className="h-4 w-4 text-green-600" /> Pronto em minutos
+                <Icon name="Check" className="h-4 w-4 text-green-600" /> Sem fidelidade
               </span>
             </div>
           </div>
@@ -338,10 +338,10 @@ export default async function SegmentLandingPage({
               Pronto para começar?
             </h2>
             <p className="mx-auto mt-3 max-w-xl text-brand-100">
-              Crie a conta da sua {seg.label.toLowerCase()} em menos de 2 minutos.
+              Crie a conta da sua {seg.label.toLowerCase()} e comece a usar em menos de 2 minutos.
             </p>
             <Link href="/signup" className="btn-white mt-7 px-6 py-3 text-base">
-              Criar conta grátis
+              Assinar agora
               <Icon name="ArrowRight" className="h-4 w-4" />
             </Link>
           </div>

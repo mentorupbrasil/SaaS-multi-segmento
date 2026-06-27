@@ -1,5 +1,5 @@
 import { getAuthContext } from "@/lib/auth-context";
-import { PLANS } from "@/lib/plans";
+import { PLANS, getPlan } from "@/lib/plans";
 import { PageHeader } from "@/components/page-header";
 import { Icon } from "@/components/icon";
 import { formatCurrency, cn } from "@/lib/utils";
@@ -15,6 +15,7 @@ const STATUS_LABELS: Record<string, string> = {
 export default async function AssinaturaPage() {
   const ctx = await getAuthContext();
   const org = ctx.organization;
+  const currentPlan = getPlan(org.plan);
 
   return (
     <div>
@@ -24,7 +25,7 @@ export default async function AssinaturaPage() {
         <div>
           <p className="text-sm text-slate-500">Status atual</p>
           <p className="text-lg font-semibold text-slate-900">
-            {STATUS_LABELS[org.subscriptionStatus]} - Plano {org.plan}
+            {STATUS_LABELS[org.subscriptionStatus]} · Plano {currentPlan?.name ?? org.plan}
           </p>
         </div>
         {org.subscriptionStatus === "ACTIVE" && (
@@ -41,14 +42,15 @@ export default async function AssinaturaPage() {
         entra nas próximas fases.
       </div>
 
-      <div className="mt-6 grid gap-6 lg:grid-cols-3">
+      <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {PLANS.map((plan) => {
           const isCurrent = org.plan === plan.id && org.subscriptionStatus === "ACTIVE";
+          const isEnterprise = plan.priceMonthly === null;
           return (
             <div
               key={plan.id}
               className={cn(
-                "card relative p-6",
+                "card relative flex flex-col p-6",
                 plan.highlight && "ring-2 ring-brand-500",
               )}
             >
@@ -63,12 +65,18 @@ export default async function AssinaturaPage() {
               <h2 className="text-lg font-semibold text-slate-900">{plan.name}</h2>
               <p className="mt-1 text-sm text-slate-500">{plan.description}</p>
               <p className="mt-3">
-                <span className="text-3xl font-bold text-slate-900">
-                  {formatCurrency(plan.priceMonthly)}
-                </span>
-                <span className="text-sm text-slate-500">/mês</span>
+                {isEnterprise ? (
+                  <span className="text-2xl font-bold text-slate-900">Sob consulta</span>
+                ) : (
+                  <>
+                    <span className="text-3xl font-bold text-slate-900">
+                      {formatCurrency(plan.priceMonthly as number)}
+                    </span>
+                    <span className="text-sm text-slate-500">/mês</span>
+                  </>
+                )}
               </p>
-              <ul className="mt-4 space-y-2">
+              <ul className="mt-4 flex-1 space-y-2">
                 {plan.features.map((f) => (
                   <li key={f} className="flex items-center gap-2 text-sm text-slate-600">
                     <Icon name="Check" className="h-4 w-4 text-green-600" />
@@ -76,15 +84,21 @@ export default async function AssinaturaPage() {
                   </li>
                 ))}
               </ul>
-              <form action={subscribeFake.bind(null, plan.id)} className="mt-6">
-                <button
-                  type="submit"
-                  disabled={isCurrent}
-                  className={cn("btn-primary w-full", isCurrent && "opacity-60")}
-                >
-                  {isCurrent ? "Plano atual" : "Assinar"}
-                </button>
-              </form>
+              {isEnterprise ? (
+                <a href="mailto:vendas@gestorpro.com.br" className="btn-secondary mt-6 w-full">
+                  Falar com vendas
+                </a>
+              ) : (
+                <form action={subscribeFake.bind(null, plan.id)} className="mt-6">
+                  <button
+                    type="submit"
+                    disabled={isCurrent}
+                    className={cn("btn-primary w-full", isCurrent && "opacity-60")}
+                  >
+                    {isCurrent ? "Plano atual" : "Assinar"}
+                  </button>
+                </form>
+              )}
             </div>
           );
         })}

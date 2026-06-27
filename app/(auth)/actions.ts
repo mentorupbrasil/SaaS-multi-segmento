@@ -6,6 +6,7 @@ import { AuthError } from "next-auth";
 import { prisma } from "@/lib/db";
 import { signIn } from "@/auth";
 import { getSegment } from "@/segments";
+import { getPlan, PLANS } from "@/lib/plans";
 import { slugify } from "@/lib/utils";
 
 export interface ActionState {
@@ -18,6 +19,7 @@ const signupSchema = z.object({
   password: z.string().min(6, "A senha deve ter ao menos 6 caracteres"),
   businessName: z.string().min(2, "Informe o nome do negócio"),
   segmentId: z.string().min(1, "Escolha um segmento"),
+  planId: z.string().min(1, "Escolha um plano"),
 });
 
 async function uniqueSlug(base: string): Promise<string> {
@@ -41,16 +43,19 @@ export async function signupAction(
     password: formData.get("password"),
     businessName: formData.get("businessName"),
     segmentId: formData.get("segmentId"),
+    planId: formData.get("planId"),
   });
 
   if (!parsed.success) {
     return { error: parsed.error.issues[0]?.message ?? "Dados inválidos" };
   }
 
-  const { name, email, password, businessName, segmentId } = parsed.data;
+  const { name, email, password, businessName, segmentId, planId } = parsed.data;
 
   const segment = getSegment(segmentId);
   if (!segment) return { error: "Segmento inválido" };
+
+  const plan = getPlan(planId) ?? PLANS[0];
 
   const existing = await prisma.user.findUnique({
     where: { email: email.toLowerCase() },
@@ -59,10 +64,9 @@ export async function signupAction(
 
   const passwordHash = await bcrypt.hash(password, 10);
   const slug = await uniqueSlug(businessName);
-  const trialEndsAt = new Date();
-  trialEndsAt.setDate(trialEndsAt.getDate() + 14);
 
   // Criacao transacional: User + Organization + Membership (+ servicos padrao).
+  // Sem periodo de teste: a conta ja nasce assinante do plano escolhido.
   await prisma.$transaction(async (tx) => {
     const user = await tx.user.create({
       data: { name, email: email.toLowerCase(), passwordHash },
@@ -73,8 +77,9 @@ export async function signupAction(
         name: businessName,
         slug,
         segmentId,
-        subscriptionStatus: "TRIALING",
-        trialEndsAt,
+        plan: plan.id,
+        subscriptionStatus: "ACTIVE",
+        trialEndsAt: null,
         memberships: {
           create: { userId: user.id, role: "OWNER", title: segment.terms.professional },
         },

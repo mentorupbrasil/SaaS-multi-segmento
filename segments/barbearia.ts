@@ -39,7 +39,7 @@ export const barbearia: SegmentTemplate = {
   seo: {
     title: "Sistema para Barbearia | Agenda online e gestão completa",
     description:
-      "Software para barbearia com agenda online, controle de clientes, serviços, comissões e financeiro. Teste grátis por 14 dias.",
+      "Software para barbearia com agenda online, controle de clientes, serviços, comissões e financeiro. Planos a partir de R$ 39,90/mês.",
     keywords: ["sistema para barbearia", "agenda barbearia", "software barbearia", "app barbearia"],
     headline: "O sistema completo para a sua barbearia",
     subheadline:

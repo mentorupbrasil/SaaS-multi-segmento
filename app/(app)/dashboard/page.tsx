@@ -47,9 +47,9 @@ export default async function DashboardPage() {
     { label: "Receita do mês", value: formatCurrency(monthIncome._sum.amount ?? 0), icon: "Wallet", href: "/financeiro" },
   ];
 
-  const trialDays = org.trialEndsAt
-    ? Math.max(0, Math.ceil((org.trialEndsAt.getTime() - Date.now()) / 86400000))
-    : 0;
+  // ACTIVE (novo padrao) e TRIALING (contas legadas) liberam o sistema.
+  const subscriptionActive =
+    org.subscriptionStatus === "ACTIVE" || org.subscriptionStatus === "TRIALING";
 
   return (
     <div>
@@ -65,13 +65,13 @@ export default async function DashboardPage() {
         </div>
       </div>
 
-      {org.subscriptionStatus === "TRIALING" && (
+      {!subscriptionActive && (
         <div className="mb-6 flex items-center justify-between rounded-xl border border-amber-200 bg-amber-50 px-4 py-3">
           <p className="text-sm text-amber-800">
-            Você está no período de teste. {trialDays} dia(s) restante(s).
+            Sua assinatura está inativa. Reative o seu plano para continuar usando o sistema.
           </p>
           <Link href="/assinatura" className="text-sm font-semibold text-amber-900 underline">
-            Assinar agora
+            Ver planos
           </Link>
         </div>
       )}

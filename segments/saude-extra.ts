@@ -41,7 +41,7 @@ export const odontologia: SegmentTemplate = {
   seo: {
     title: "Sistema para Consultório Odontológico | Agenda e prontuário",
     description:
-      "Software para dentistas com agenda, prontuário odontológico, convênios e financeiro. Teste grátis.",
+      "Software para dentistas com agenda, prontuário odontológico, convênios e financeiro. Assine e comece hoje.",
     keywords: ["sistema para dentista", "software odontológico", "prontuário odontológico"],
     headline: "Gestão completa para o seu consultório odontológico",
     subheadline: "Agenda, prontuário, convênios e financeiro em uma só plataforma.",

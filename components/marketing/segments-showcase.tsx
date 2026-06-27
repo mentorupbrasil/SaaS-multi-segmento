@@ -67,7 +67,7 @@ export function SegmentsShowcase() {
           com clientes, agenda, serviços e financeiro. Crie sua conta e personalize.
         </p>
         <Link href="/signup" className="btn-primary mt-5">
-          Começar grátis
+          Criar minha conta
         </Link>
       </div>
     </section>

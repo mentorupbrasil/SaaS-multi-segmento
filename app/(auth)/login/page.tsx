@@ -43,7 +43,7 @@ export default function LoginPage() {
           <p className="text-center text-sm text-slate-500">
             Não tem conta?{" "}
             <Link href="/signup" className="font-semibold text-brand-700 hover:text-brand-800">
-              Criar conta grátis
+              Criar minha conta
             </Link>
           </p>
         </form>

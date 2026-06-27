@@ -88,7 +88,7 @@ export function SegmentsMenu() {
                 onClick={() => setOpen(false)}
                 className="text-sm font-semibold text-brand-700 hover:text-brand-800"
               >
-                Criar conta grátis
+                Criar minha conta
               </Link>
             </div>
           </div>

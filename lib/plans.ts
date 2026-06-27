@@ -4,8 +4,9 @@
 export interface Plan {
   id: string;
   name: string;
-  priceMonthly: number;
+  priceMonthly: number | null; // null = sob consulta (Enterprise)
   description: string;
+  audience: string;
   highlight?: boolean;
   badge?: string;
   features: string[];
@@ -14,9 +15,10 @@ export interface Plan {
 export const PLANS: Plan[] = [
   {
     id: "starter",
-    name: "Essencial",
+    name: "Inicial",
     priceMonthly: 39.9,
     description: "Para quem está começando a organizar o negócio.",
+    audience: "Autônomos e MEI",
     features: [
       "Todos os módulos do seu segmento",
       "Clientes e agendamentos ilimitados",
@@ -31,10 +33,11 @@ export const PLANS: Plan[] = [
     name: "Profissional",
     priceMonthly: 79.9,
     description: "Para negócios em crescimento que querem vender mais.",
+    audience: "Pequenas empresas",
     highlight: true,
     badge: "Mais popular",
     features: [
-      "Tudo do Essencial",
+      "Tudo do Inicial",
       "Até 8 usuários na equipe",
       "Lembretes automáticos por WhatsApp",
       "Link público de agendamento",
@@ -46,7 +49,8 @@ export const PLANS: Plan[] = [
     id: "premium",
     name: "Premium",
     priceMonthly: 149.9,
-    description: "Para redes, franquias e múltiplas unidades.",
+    description: "Para empresas em crescimento com mais volume.",
+    audience: "Empresas em crescimento",
     badge: "Completo",
     features: [
       "Tudo do Profissional",
@@ -57,13 +61,32 @@ export const PLANS: Plan[] = [
       "Suporte dedicado",
     ],
   },
+  {
+    id: "enterprise",
+    name: "Enterprise",
+    priceMonthly: null,
+    description: "Para redes, franquias e operações personalizadas.",
+    audience: "Redes e franquias",
+    badge: "Sob medida",
+    features: [
+      "Tudo do Premium",
+      "Gestão de rede e franquias",
+      "Onboarding e treinamento dedicados",
+      "Integrações personalizadas",
+      "SLA e gerente de conta",
+      "Faturamento personalizado",
+    ],
+  },
 ];
+
+/** Planos com preço fixo (assináveis no autoatendimento). */
+export const PAYABLE_PLANS = PLANS.filter((p) => p.priceMonthly !== null);
 
 export function getPlan(id: string): Plan | undefined {
   return PLANS.find((p) => p.id === id);
 }
 
-// Tabela comparativa (valores na mesma ordem de PLANS: Essencial, Profissional, Premium).
+// Tabela comparativa (valores na mesma ordem de PLANS: Inicial, Profissional, Premium, Enterprise).
 export interface ComparisonRow {
   label: string;
   values: (string | boolean)[];
@@ -78,35 +101,37 @@ export const COMPARISON: ComparisonGroup[] = [
   {
     group: "Essencial do dia a dia",
     rows: [
-      { label: "Módulos do seu segmento", values: [true, true, true] },
-      { label: "Clientes cadastrados", values: ["Ilimitado", "Ilimitado", "Ilimitado"] },
-      { label: "Agendamentos", values: ["Ilimitado", "Ilimitado", "Ilimitado"] },
-      { label: "Controle financeiro e caixa", values: [true, true, true] },
-      { label: "Acesso no celular e computador", values: [true, true, true] },
+      { label: "Módulos do seu segmento", values: [true, true, true, true] },
+      { label: "Clientes cadastrados", values: ["Ilimitado", "Ilimitado", "Ilimitado", "Ilimitado"] },
+      { label: "Agendamentos", values: ["Ilimitado", "Ilimitado", "Ilimitado", "Ilimitado"] },
+      { label: "Controle financeiro e caixa", values: [true, true, true, true] },
+      { label: "Acesso no celular e computador", values: [true, true, true, true] },
     ],
   },
   {
     group: "Equipe e unidades",
     rows: [
-      { label: "Usuários na equipe", values: ["2", "8", "Ilimitado"] },
-      { label: "Unidades / filiais", values: ["1", "1", "Ilimitado"] },
-      { label: "Níveis de permissão", values: [true, true, true] },
+      { label: "Usuários na equipe", values: ["2", "8", "Ilimitado", "Ilimitado"] },
+      { label: "Unidades / filiais", values: ["1", "1", "Múltiplas", "Rede"] },
+      { label: "Níveis de permissão", values: [true, true, true, true] },
     ],
   },
   {
     group: "Crescimento e automação",
     rows: [
-      { label: "Relatórios", values: ["Básicos", "Avançados", "Consolidados"] },
-      { label: "Lembretes por WhatsApp", values: [false, true, true] },
-      { label: "Link público de agendamento", values: [false, true, true] },
-      { label: "Módulos extras (estoque, comissão)", values: [false, false, true] },
+      { label: "Relatórios", values: ["Básicos", "Avançados", "Consolidados", "Personalizados"] },
+      { label: "Lembretes por WhatsApp", values: [false, true, true, true] },
+      { label: "Link público de agendamento", values: [false, true, true, true] },
+      { label: "Módulos extras (estoque, comissão)", values: [false, false, true, true] },
+      { label: "Integrações personalizadas", values: [false, false, false, true] },
     ],
   },
   {
     group: "Suporte",
     rows: [
-      { label: "Atendimento", values: ["E-mail", "Prioritário", "Dedicado"] },
-      { label: "Onboarding assistido", values: [false, true, true] },
+      { label: "Atendimento", values: ["E-mail", "Prioritário", "Dedicado", "Gerente de conta"] },
+      { label: "Onboarding assistido", values: [false, true, true, true] },
+      { label: "SLA garantido", values: [false, false, false, true] },
     ],
   },
 ];

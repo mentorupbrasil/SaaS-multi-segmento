@@ -22,8 +22,9 @@ async function main() {
       name: "Barbearia Demo",
       slug: "barbearia-demo",
       segmentId: segment.id,
-      subscriptionStatus: "TRIALING",
-      trialEndsAt: new Date(Date.now() + 14 * 86400000),
+      plan: "pro",
+      subscriptionStatus: "ACTIVE",
+      trialEndsAt: null,
       memberships: {
         create: {
           role: "OWNER",
