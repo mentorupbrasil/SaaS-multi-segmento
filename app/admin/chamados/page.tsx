@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Icon } from "@/components/icon";
 
 export default function AdminTicketsPage() {
@@ -19,9 +20,9 @@ export default function AdminTicketsPage() {
         </p>
         <p className="mt-4 text-sm text-slate-500">
           Enquanto isso, use{" "}
-          <a href="/admin/organizacoes" className="font-medium text-brand-700 hover:underline">
+          <Link href="/admin/organizacoes" className="font-medium text-brand-700 hover:underline">
             Organizações
-          </a>{" "}
+          </Link>{" "}
           para validar cada conta cadastrada.
         </p>
       </div>
