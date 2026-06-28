@@ -117,7 +117,7 @@ npx auth secret
 - Link publico de agendamento (`/agendar/[slug]`, plan Pro+)
 - Portal do cliente (scaffold em `/portal/[orgSlug]`, flag `FEATURE_PORTAL`)
 - IA — resumos e insights (scaffold em `/ia`, flag `FEATURE_IA`)
-- Integracoes — WhatsApp, PIX, Google Agenda (scaffold em `/integracoes`, plan-gated)
+- Integracoes — WhatsApp, PIX, Google Agenda (painel em `/conexoes`, plan-gated; marketing em `/integracoes`)
 - Billing — checkout Mercado Pago + webhook stub (`/api/billing/webhook`)
 - Limites de plano aplicados (`lib/plan-limits.ts`)
 
