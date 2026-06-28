@@ -1,16 +1,19 @@
 import { ALL_SEGMENTS, getSegmentGroups } from "@/segments";
 import type { SegmentCategory, SegmentTemplate } from "@/segments/types";
 
+/** Máximo de segmentos listados no mega-menu (resto vai para a página). */
+export const MENU_SEGMENT_PREVIEW_LIMIT = 12;
+
 /** Segmentos exibidos como atalhos rápidos no menu e na vitrine. */
 export const FEATURED_SEGMENT_IDS = [
+  "restaurante",
   "barbearia",
-  "salao",
   "clinica",
   "oficina",
-  "restaurante",
-  "hotel",
+  "academia",
   "escola",
-  "clinica-veterinaria",
+  "salao",
+  "hotel",
 ] as const;
 
 export function getFeaturedSegments(): SegmentTemplate[] {

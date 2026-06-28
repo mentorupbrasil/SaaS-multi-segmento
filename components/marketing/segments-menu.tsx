@@ -2,11 +2,19 @@
 
 import { useMemo, useRef, useState } from "react";
 import Link from "next/link";
-import { ChevronDown, Search } from "lucide-react";
-import { CATEGORY_META, CATEGORY_ORDER, type SegmentCategory } from "@/segments/types";
-import { getSegmentGroupsForVitrine, getFeaturedSegments, getSegmentTotal, filterSegments } from "@/lib/segment-vitrine";
+import { ArrowLeft, ChevronDown, Search, Star } from "lucide-react";
+import { CATEGORY_META, type SegmentCategory } from "@/segments/types";
+import {
+  getSegmentGroupsForVitrine,
+  getFeaturedSegments,
+  getSegmentTotal,
+  filterSegments,
+  MENU_SEGMENT_PREVIEW_LIMIT,
+} from "@/lib/segment-vitrine";
 import { Icon } from "@/components/icon";
 import { cn } from "@/lib/utils";
+
+type MenuView = "home" | "category";
 
 export function SegmentsMenu() {
   const groups = getSegmentGroupsForVitrine();
@@ -15,7 +23,8 @@ export function SegmentsMenu() {
 
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
-  const [activeCategory, setActiveCategory] = useState<SegmentCategory>(CATEGORY_ORDER[0]);
+  const [view, setView] = useState<MenuView>("home");
+  const [activeCategory, setActiveCategory] = useState<SegmentCategory | null>(null);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const searchRef = useRef<HTMLInputElement>(null);
 
@@ -24,27 +33,42 @@ export function SegmentsMenu() {
     setOpen(true);
   };
 
+  const resetMenu = () => {
+    setQuery("");
+    setView("home");
+    setActiveCategory(null);
+  };
+
   const scheduleClose = () => {
     if (closeTimer.current) clearTimeout(closeTimer.current);
     closeTimer.current = setTimeout(() => {
       setOpen(false);
-      setQuery("");
+      resetMenu();
     }, 150);
+  };
+
+  const close = () => {
+    setOpen(false);
+    resetMenu();
   };
 
   const isSearching = query.trim().length > 0;
 
   const searchResults = useMemo(
-    () => (isSearching ? filterSegments(query).slice(0, 14) : []),
+    () => (isSearching ? filterSegments(query).slice(0, 8) : []),
     [isSearching, query],
   );
 
-  const activeSegments = useMemo(() => {
-    const group = groups.find((g) => g.category === activeCategory);
-    return group?.segments ?? [];
-  }, [groups, activeCategory]);
+  const activeGroup = groups.find((g) => g.category === activeCategory);
+  const activeMeta = activeCategory ? CATEGORY_META[activeCategory] : null;
+  const previewSegments = activeGroup?.segments.slice(0, MENU_SEGMENT_PREVIEW_LIMIT) ?? [];
+  const hiddenCount = (activeGroup?.segments.length ?? 0) - previewSegments.length;
 
-  const activeMeta = CATEGORY_META[activeCategory];
+  const openCategory = (category: SegmentCategory) => {
+    setActiveCategory(category);
+    setView("category");
+    setQuery("");
+  };
 
   return (
     <div className="relative" onMouseEnter={openMenu} onMouseLeave={scheduleClose}>
@@ -66,139 +90,121 @@ export function SegmentsMenu() {
 
       {open && (
         <div
-          className="absolute left-1/2 top-full z-50 mt-3 w-[min(94vw,820px)] -translate-x-1/2"
+          className="absolute left-0 top-full z-50 mt-2 w-[600px] max-w-[calc(100vw-1.5rem)]"
           onMouseEnter={openMenu}
           onMouseLeave={scheduleClose}
         >
-          <div className="overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-2xl shadow-slate-300/30 ring-1 ring-slate-100">
-            {/* Header */}
-            <div className="border-b border-slate-100 bg-slate-50/80 px-4 py-3">
-              <div className="flex items-center gap-3">
-                <div className="relative min-w-0 flex-1">
-                  <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
-                  <input
-                    ref={searchRef}
-                    type="search"
-                    value={query}
-                    onChange={(e) => setQuery(e.target.value)}
-                    placeholder="Buscar barbearia, restaurante, clínica..."
-                    className="w-full rounded-xl border border-slate-200 bg-white py-2 pl-9 pr-3 text-sm text-slate-800 outline-none transition-shadow placeholder:text-slate-400 focus:border-brand-300 focus:ring-2 focus:ring-brand-100"
-                  />
-                </div>
-                <span className="hidden shrink-0 rounded-full bg-white px-2.5 py-1 text-xs font-medium text-slate-500 ring-1 ring-slate-200 sm:inline">
-                  {total} segmentos
-                </span>
+          <div className="rounded-2xl border border-slate-200/80 bg-white shadow-xl shadow-slate-300/25 ring-1 ring-slate-100">
+            {/* Busca em destaque */}
+            <div className="border-b border-slate-100 px-4 pb-4 pt-4">
+              <label htmlFor="segments-menu-search" className="block text-sm font-semibold text-slate-900">
+                Encontre o segmento do seu negócio
+              </label>
+              <p className="mt-0.5 text-xs text-slate-500">
+                Digite barbearia, restaurante, clínica… · {total} opções
+              </p>
+              <div className="relative mt-3">
+                <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                <input
+                  id="segments-menu-search"
+                  ref={searchRef}
+                  type="search"
+                  value={query}
+                  onChange={(e) => {
+                    setQuery(e.target.value);
+                    if (e.target.value.trim()) {
+                      setView("home");
+                      setActiveCategory(null);
+                    }
+                  }}
+                  placeholder="Ex.: pizzaria, pet shop, escola de idiomas"
+                  className="w-full rounded-xl border border-slate-200 bg-slate-50 py-2.5 pl-10 pr-3 text-sm outline-none transition-colors placeholder:text-slate-400 focus:border-brand-300 focus:bg-white focus:ring-2 focus:ring-brand-100"
+                />
               </div>
             </div>
 
-            {/* Body */}
-            {isSearching ? (
-              <div className="max-h-[min(60vh,420px)] overflow-y-auto p-4">
-                {searchResults.length === 0 ? (
-                  <p className="py-8 text-center text-sm text-slate-500">
-                    Nenhum segmento encontrado para &ldquo;{query}&rdquo;.
-                  </p>
-                ) : (
-                  <ul className="grid gap-1 sm:grid-cols-2">
-                    {searchResults.map((seg) => (
-                      <li key={seg.id}>
-                        <Link
-                          href={`/${seg.slug}`}
-                          onClick={() => setOpen(false)}
-                          className="group flex items-center gap-3 rounded-xl px-3 py-2.5 transition-colors hover:bg-slate-50"
-                        >
-                          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-brand-50 to-violet-50 text-brand-600 ring-1 ring-brand-100/80">
-                            <Icon name={seg.icon} className="h-4 w-4" />
-                          </span>
-                          <span className="min-w-0">
-                            <span className="block truncate text-sm font-medium text-slate-800 group-hover:text-brand-700">
-                              {seg.label}
+            <div className="p-4">
+              {isSearching ? (
+                /* Resultados da busca */
+                <>
+                  {searchResults.length === 0 ? (
+                    <p className="py-4 text-center text-sm text-slate-500">
+                      Nenhum segmento para &ldquo;{query}&rdquo;. Tente outro termo ou veja o catálogo.
+                    </p>
+                  ) : (
+                    <ul className="grid grid-cols-2 gap-1">
+                      {searchResults.map((seg) => (
+                        <li key={seg.id}>
+                          <Link
+                            href={`/${seg.slug}`}
+                            onClick={close}
+                            className="group flex items-center gap-2 rounded-lg px-2 py-2 hover:bg-slate-50"
+                          >
+                            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-brand-50 text-brand-600">
+                              <Icon name={seg.icon} className="h-4 w-4" />
                             </span>
-                            <span className="block truncate text-xs text-slate-400">
-                              {CATEGORY_META[seg.category].label}
+                            <span className="min-w-0">
+                              <span className="block truncate text-xs font-medium text-slate-800 group-hover:text-brand-700">
+                                {seg.label}
+                              </span>
+                              <span className="block truncate text-[10px] text-slate-400">
+                                {CATEGORY_META[seg.category].label}
+                              </span>
                             </span>
-                          </span>
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-                {searchResults.length > 0 && (
-                  <div className="mt-3 border-t border-slate-100 pt-3 text-center">
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                  <p className="mt-3 text-center">
                     <Link
                       href={`/segmentos?q=${encodeURIComponent(query.trim())}`}
-                      onClick={() => setOpen(false)}
-                      className="text-sm font-semibold text-brand-700 hover:text-brand-800"
+                      onClick={close}
+                      className="text-xs font-semibold text-brand-700 hover:text-brand-800"
                     >
-                      Ver todos os resultados
+                      Ver todos no catálogo →
                     </Link>
+                  </p>
+                </>
+              ) : view === "category" && activeGroup && activeMeta ? (
+                /* Detalhe da categoria */
+                <>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setView("home");
+                      setActiveCategory(null);
+                    }}
+                    className="mb-3 inline-flex items-center gap-1 text-xs font-medium text-slate-500 hover:text-brand-700"
+                  >
+                    <ArrowLeft className="h-3.5 w-3.5" />
+                    Todas as categorias
+                  </button>
+                  <div className="flex items-start gap-3">
+                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-brand-50 to-violet-50 text-brand-600 ring-1 ring-brand-100">
+                      <Icon name={activeMeta.icon} className="h-5 w-5" />
+                    </span>
+                    <div>
+                      <h3 className="text-sm font-bold text-slate-900">{activeMeta.label}</h3>
+                      <p className="mt-0.5 text-xs text-slate-500">{activeMeta.description}</p>
+                      <p className="mt-1 text-[11px] font-medium text-brand-600">
+                        {activeGroup.segments.length} segmentos nesta área
+                      </p>
+                    </div>
                   </div>
-                )}
-              </div>
-            ) : (
-              <div className="flex max-h-[min(60vh,420px)]">
-                {/* Categories */}
-                <nav className="w-[210px] shrink-0 overflow-y-auto border-r border-slate-100 bg-slate-50/50 p-2">
-                  <ul className="space-y-0.5">
-                    {groups.map((group) => {
-                      const meta = CATEGORY_META[group.category];
-                      const active = group.category === activeCategory;
-                      return (
-                        <li key={group.category}>
-                          <button
-                            type="button"
-                            onMouseEnter={() => setActiveCategory(group.category)}
-                            onFocus={() => setActiveCategory(group.category)}
-                            onClick={() => setActiveCategory(group.category)}
-                            className={cn(
-                              "flex w-full items-center gap-2.5 rounded-xl px-2.5 py-2 text-left transition-colors",
-                              active
-                                ? "bg-white text-brand-700 shadow-sm ring-1 ring-slate-200/80"
-                                : "text-slate-600 hover:bg-white/70 hover:text-slate-900",
-                            )}
-                          >
-                            <span
-                              className={cn(
-                                "flex h-8 w-8 shrink-0 items-center justify-center rounded-lg",
-                                active
-                                  ? "bg-brand-100 text-brand-700"
-                                  : "bg-white text-slate-500 ring-1 ring-slate-200/60",
-                              )}
-                            >
-                              <Icon name={meta.icon} className="h-4 w-4" />
-                            </span>
-                            <span className="min-w-0 flex-1">
-                              <span className="block truncate text-xs font-semibold leading-tight">
-                                {meta.label}
-                              </span>
-                              <span className="text-[10px] text-slate-400">{group.segments.length}</span>
-                            </span>
-                          </button>
-                        </li>
-                      );
-                    })}
-                  </ul>
-                </nav>
-
-                {/* Segments panel */}
-                <div className="min-w-0 flex-1 overflow-y-auto p-4">
-                  <div className="mb-3">
-                    <p className="text-sm font-semibold text-slate-900">{activeMeta.label}</p>
-                    <p className="text-xs text-slate-500">{activeMeta.description}</p>
-                  </div>
-                  <ul className="grid gap-1 sm:grid-cols-2">
-                    {activeSegments.map((seg) => (
+                  <ul className="mt-4 grid grid-cols-2 gap-x-3 gap-y-1">
+                    {previewSegments.map((seg) => (
                       <li key={seg.id}>
                         <Link
                           href={`/${seg.slug}`}
-                          onClick={() => setOpen(false)}
-                          className="group flex items-center gap-2.5 rounded-xl px-2.5 py-2 transition-colors hover:bg-slate-50"
+                          onClick={close}
+                          className="group flex items-center gap-1.5 rounded-md py-1 transition-colors"
                         >
                           <Icon
                             name={seg.icon}
-                            className="h-4 w-4 shrink-0 text-slate-400 group-hover:text-brand-600"
+                            className="h-3.5 w-3.5 shrink-0 text-slate-400 group-hover:text-brand-600"
                           />
-                          <span className="truncate text-sm text-slate-700 group-hover:text-brand-700">
+                          <span className="truncate text-xs text-slate-700 group-hover:text-brand-700">
                             {seg.label}
                           </span>
                         </Link>
@@ -207,41 +213,81 @@ export function SegmentsMenu() {
                   </ul>
                   <Link
                     href={`/segmentos#${activeCategory}`}
-                    onClick={() => setOpen(false)}
+                    onClick={close}
                     className="mt-3 inline-flex text-xs font-semibold text-brand-700 hover:text-brand-800"
                   >
-                    Ver todos em {activeMeta.label} →
+                    {hiddenCount > 0
+                      ? `Ver mais ${hiddenCount} em ${activeMeta.label} →`
+                      : `Ver categoria completa →`}
                   </Link>
-                </div>
-              </div>
-            )}
+                </>
+              ) : (
+                /* Home: populares + categorias */
+                <>
+                  <div className="mb-1 flex items-center gap-1.5">
+                    <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
+                    <p className="text-xs font-semibold text-slate-800">Mais escolhidos</p>
+                  </div>
+                  <p className="mb-2 text-[11px] text-slate-500">
+                    Os segmentos mais usados — clique e comece direto.
+                  </p>
+                  <div className="grid grid-cols-4 gap-2">
+                    {featured.map((seg) => (
+                      <Link
+                        key={seg.id}
+                        href={`/${seg.slug}`}
+                        onClick={close}
+                        className="group flex flex-col items-center rounded-xl border border-slate-200/80 bg-white px-2 py-2.5 text-center transition-all hover:border-brand-200 hover:shadow-sm"
+                      >
+                        <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-brand-50 to-violet-50 text-brand-600 ring-1 ring-brand-100/80">
+                          <Icon name={seg.icon} className="h-4 w-4" />
+                        </span>
+                        <span className="mt-1.5 line-clamp-2 text-[11px] font-medium leading-tight text-slate-700 group-hover:text-brand-700">
+                          {seg.label}
+                        </span>
+                      </Link>
+                    ))}
+                  </div>
 
-            {/* Footer */}
-            <div className="border-t border-slate-100 bg-white px-4 py-3">
-              <div className="flex flex-wrap items-center justify-between gap-3">
-                <div className="flex min-w-0 flex-wrap items-center gap-1.5">
-                  <span className="mr-1 text-[10px] font-semibold uppercase tracking-wider text-slate-400">
-                    Populares
-                  </span>
-                  {featured.map((seg) => (
-                    <Link
-                      key={seg.id}
-                      href={`/${seg.slug}`}
-                      onClick={() => setOpen(false)}
-                      className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600 transition-colors hover:bg-brand-50 hover:text-brand-700"
-                    >
-                      {seg.label}
-                    </Link>
-                  ))}
-                </div>
-                <Link
-                  href="/segmentos"
-                  onClick={() => setOpen(false)}
-                  className="shrink-0 text-sm font-semibold text-brand-700 hover:text-brand-800"
-                >
-                  Ver catálogo completo
-                </Link>
-              </div>
+                  <div className="my-4 border-t border-slate-100" />
+
+                  <p className="text-xs font-semibold text-slate-800">Ou navegue por categoria</p>
+                  <p className="mt-0.5 mb-2 text-[11px] text-slate-500">
+                    Escolha a área que mais se aproxima do seu ramo.
+                  </p>
+                  <div className="grid grid-cols-3 gap-2">
+                    {groups.map((group) => {
+                      const meta = CATEGORY_META[group.category];
+                      return (
+                        <button
+                          key={group.category}
+                          type="button"
+                          onClick={() => openCategory(group.category)}
+                          className="group rounded-xl border border-slate-200/80 p-2.5 text-left transition-all hover:border-brand-200 hover:bg-brand-50/30"
+                        >
+                          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-50 text-slate-500 ring-1 ring-slate-100 group-hover:bg-white group-hover:text-brand-600">
+                            <Icon name={meta.icon} className="h-4 w-4" />
+                          </span>
+                          <p className="mt-2 text-[11px] font-semibold leading-tight text-slate-800 group-hover:text-brand-700">
+                            {meta.label}
+                          </p>
+                          <p className="mt-0.5 text-[10px] text-slate-400">{group.segments.length} segmentos</p>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </>
+              )}
+            </div>
+
+            <div className="border-t border-slate-100 px-4 py-2.5 text-center">
+              <Link
+                href="/segmentos"
+                onClick={close}
+                className="text-xs font-semibold text-brand-700 hover:text-brand-800"
+              >
+                Ver catálogo completo ({total} segmentos) →
+              </Link>
             </div>
           </div>
         </div>

@@ -8,7 +8,6 @@ import {
   getFeaturedFeatures,
   getFeatureGroups,
   getFeatureTotal,
-  FEATURE_GROUP_ICONS,
 } from "@/lib/feature-vitrine";
 import type { FeatureItem } from "@/lib/features";
 import { Icon } from "@/components/icon";
@@ -17,19 +16,64 @@ import { cn } from "@/lib/utils";
 function FeatureBadge({ item }: { item: FeatureItem }) {
   if (item.status === "soon") {
     return (
-      <span className="shrink-0 rounded bg-amber-100 px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wide text-amber-700">
+      <span className="shrink-0 rounded bg-amber-100 px-1 py-0.5 text-[9px] font-semibold uppercase text-amber-700">
         Em breve
       </span>
     );
   }
   if (item.planGated) {
     return (
-      <span className="shrink-0 rounded bg-brand-100 px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wide text-brand-700">
+      <span className="shrink-0 rounded bg-brand-100 px-1 py-0.5 text-[9px] font-semibold uppercase text-brand-700">
         Pro+
       </span>
     );
   }
   return null;
+}
+
+function FeatureLink({
+  item,
+  onClose,
+  compact = false,
+}: {
+  item: FeatureItem;
+  onClose: () => void;
+  compact?: boolean;
+}) {
+  return (
+    <Link
+      href={`/funcionalidades#${item.id}`}
+      onClick={onClose}
+      className={cn(
+        "group flex items-start gap-2 rounded-lg transition-colors hover:bg-slate-50",
+        compact ? "px-2 py-1.5" : "gap-3 px-3 py-2",
+      )}
+    >
+      <Icon
+        name={item.icon}
+        className={cn(
+          "shrink-0 text-slate-400 group-hover:text-brand-600",
+          compact ? "mt-0.5 h-3.5 w-3.5" : "mt-0.5 h-4 w-4",
+        )}
+      />
+      <span className="min-w-0 flex-1">
+        <span className="flex flex-wrap items-center gap-1.5">
+          <span
+            className={cn(
+              "font-medium text-slate-800 group-hover:text-brand-700",
+              compact ? "text-xs" : "text-sm",
+            )}
+          >
+            {item.name}
+          </span>
+          <FeatureBadge item={item} />
+        </span>
+        {!compact && (
+          <span className="mt-0.5 block text-xs leading-snug text-slate-500">{item.short}</span>
+        )}
+      </span>
+    </Link>
+  );
 }
 
 export function FeaturesMenu() {
@@ -39,7 +83,6 @@ export function FeaturesMenu() {
 
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
-  const [activeGroupId, setActiveGroupId] = useState(groups[0]?.id ?? "gestao");
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const searchRef = useRef<HTMLInputElement>(null);
 
@@ -56,15 +99,13 @@ export function FeaturesMenu() {
     }, 150);
   };
 
+  const close = () => setOpen(false);
   const isSearching = query.trim().length > 0;
 
   const searchResults = useMemo(
-    () => (isSearching ? filterFeatures(query).slice(0, 10) : []),
+    () => (isSearching ? filterFeatures(query).slice(0, 8) : []),
     [isSearching, query],
   );
-
-  const activeGroup = groups.find((g) => g.id === activeGroupId) ?? groups[0];
-  const activeItems = activeGroup?.items ?? [];
 
   return (
     <div className="relative" onMouseEnter={openMenu} onMouseLeave={scheduleClose}>
@@ -86,12 +127,11 @@ export function FeaturesMenu() {
 
       {open && (
         <div
-          className="absolute left-1/2 top-full z-50 mt-3 w-[min(94vw,780px)] -translate-x-1/2"
+          className="absolute left-1/2 top-full z-50 mt-3 w-[min(94vw,760px)] -translate-x-1/2"
           onMouseEnter={openMenu}
           onMouseLeave={scheduleClose}
         >
-          <div className="overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-2xl shadow-slate-300/30 ring-1 ring-slate-100">
-            {/* Header */}
+          <div className="rounded-2xl border border-slate-200/80 bg-white shadow-2xl shadow-slate-300/30 ring-1 ring-slate-100">
             <div className="border-b border-slate-100 bg-slate-50/80 px-4 py-3">
               <div className="flex items-center gap-3">
                 <div className="relative min-w-0 flex-1">
@@ -102,178 +142,84 @@ export function FeaturesMenu() {
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
                     placeholder="Buscar agenda, financeiro, PDV..."
-                    className="w-full rounded-xl border border-slate-200 bg-white py-2 pl-9 pr-3 text-sm text-slate-800 outline-none transition-shadow placeholder:text-slate-400 focus:border-brand-300 focus:ring-2 focus:ring-brand-100"
+                    className="w-full rounded-xl border border-slate-200 bg-white py-2 pl-9 pr-3 text-sm outline-none placeholder:text-slate-400 focus:border-brand-300 focus:ring-2 focus:ring-brand-100"
                   />
                 </div>
-                <span className="hidden shrink-0 rounded-full bg-white px-2.5 py-1 text-xs font-medium text-slate-500 ring-1 ring-slate-200 sm:inline">
-                  {total} recursos
-                </span>
+                <span className="hidden shrink-0 text-xs text-slate-500 sm:inline">{total} recursos</span>
               </div>
             </div>
 
-            {/* Body */}
             {isSearching ? (
-              <div className="max-h-[min(56vh,380px)] overflow-y-auto p-4">
+              <div className="p-4">
                 {searchResults.length === 0 ? (
-                  <p className="py-8 text-center text-sm text-slate-500">
-                    Nenhuma funcionalidade encontrada para &ldquo;{query}&rdquo;.
+                  <p className="py-6 text-center text-sm text-slate-500">
+                    Nenhum resultado para &ldquo;{query}&rdquo;.
                   </p>
                 ) : (
-                  <ul className="space-y-1">
+                  <ul className="grid gap-0.5 sm:grid-cols-2">
                     {searchResults.map((item) => (
                       <li key={item.id}>
-                        <Link
-                          href={`/funcionalidades#${item.id}`}
-                          onClick={() => setOpen(false)}
-                          className="group flex items-start gap-3 rounded-xl px-3 py-2.5 transition-colors hover:bg-slate-50"
-                        >
-                          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-brand-50 to-violet-50 text-brand-600 ring-1 ring-brand-100/80">
-                            <Icon name={item.icon} className="h-4 w-4" />
-                          </span>
-                          <span className="min-w-0 flex-1">
-                            <span className="flex flex-wrap items-center gap-2">
-                              <span className="text-sm font-medium text-slate-800 group-hover:text-brand-700">
-                                {item.name}
-                              </span>
-                              <FeatureBadge item={item} />
-                            </span>
-                            <span className="block text-xs text-slate-400">{item.short}</span>
-                          </span>
-                        </Link>
+                        <FeatureLink item={item} onClose={close} />
                       </li>
                     ))}
                   </ul>
                 )}
                 {searchResults.length > 0 && (
-                  <div className="mt-3 border-t border-slate-100 pt-3 text-center">
+                  <p className="mt-3 text-center">
                     <Link
                       href={`/funcionalidades?q=${encodeURIComponent(query.trim())}`}
-                      onClick={() => setOpen(false)}
+                      onClick={close}
                       className="text-sm font-semibold text-brand-700 hover:text-brand-800"
                     >
-                      Ver na página de funcionalidades
+                      Ver todos na página de funcionalidades
                     </Link>
-                  </div>
+                  </p>
                 )}
               </div>
             ) : (
-              <div className="flex max-h-[min(56vh,380px)]">
-                {/* Groups */}
-                <nav className="w-[200px] shrink-0 overflow-y-auto border-r border-slate-100 bg-slate-50/50 p-2">
-                  <ul className="space-y-0.5">
-                    {groups.map((group) => {
-                      const active = group.id === activeGroupId;
-                      const icon = FEATURE_GROUP_ICONS[group.id] ?? "Layers";
-                      return (
-                        <li key={group.id}>
-                          <button
-                            type="button"
-                            onMouseEnter={() => setActiveGroupId(group.id)}
-                            onFocus={() => setActiveGroupId(group.id)}
-                            onClick={() => setActiveGroupId(group.id)}
-                            className={cn(
-                              "flex w-full items-center gap-2.5 rounded-xl px-2.5 py-2.5 text-left transition-colors",
-                              active
-                                ? "bg-white text-brand-700 shadow-sm ring-1 ring-slate-200/80"
-                                : "text-slate-600 hover:bg-white/70 hover:text-slate-900",
-                            )}
-                          >
-                            <span
-                              className={cn(
-                                "flex h-8 w-8 shrink-0 items-center justify-center rounded-lg",
-                                active
-                                  ? "bg-brand-100 text-brand-700"
-                                  : "bg-white text-slate-500 ring-1 ring-slate-200/60",
-                              )}
-                            >
-                              <Icon name={icon} className="h-4 w-4" />
-                            </span>
-                            <span className="min-w-0 flex-1">
-                              <span className="block text-xs font-semibold leading-tight">
-                                {group.label}
-                              </span>
-                              <span className="text-[10px] text-slate-400">{group.items.length} recursos</span>
-                            </span>
-                          </button>
+              /* Três colunas — tudo visível, sem scroll (padrão mega-menu) */
+              <div className="grid gap-0 divide-x divide-slate-100 sm:grid-cols-3">
+                {groups.map((group) => (
+                  <div key={group.id} className="p-4">
+                    <p className="text-xs font-semibold text-slate-900">{group.label}</p>
+                    <p className="mt-0.5 line-clamp-2 text-[10px] leading-snug text-slate-400">
+                      {group.description}
+                    </p>
+                    <ul className="mt-3 space-y-0.5">
+                      {group.items.map((item) => (
+                        <li key={item.id}>
+                          <FeatureLink item={item} onClose={close} compact />
                         </li>
-                      );
-                    })}
-                  </ul>
-                </nav>
-
-                {/* Features panel */}
-                <div className="min-w-0 flex-1 overflow-y-auto p-4">
-                  {activeGroup && (
-                    <>
-                      <div className="mb-3">
-                        <p className="text-sm font-semibold text-slate-900">{activeGroup.label}</p>
-                        <p className="text-xs text-slate-500">{activeGroup.description}</p>
-                      </div>
-                      <ul className="space-y-1">
-                        {activeItems.map((item) => (
-                          <li key={item.id}>
-                            <Link
-                              href={`/funcionalidades#${item.id}`}
-                              onClick={() => setOpen(false)}
-                              className="group flex items-start gap-3 rounded-xl px-2.5 py-2.5 transition-colors hover:bg-slate-50"
-                            >
-                              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-brand-50 to-violet-50 text-brand-600 ring-1 ring-brand-100/80">
-                                <Icon name={item.icon} className="h-4 w-4" />
-                              </span>
-                              <span className="min-w-0 flex-1">
-                                <span className="flex flex-wrap items-center gap-2">
-                                  <span className="text-sm font-medium text-slate-800 group-hover:text-brand-700">
-                                    {item.name}
-                                  </span>
-                                  <FeatureBadge item={item} />
-                                </span>
-                                <span className="mt-0.5 block text-xs leading-snug text-slate-500">
-                                  {item.short}
-                                </span>
-                              </span>
-                            </Link>
-                          </li>
-                        ))}
-                      </ul>
-                      <Link
-                        href={`/funcionalidades#${activeGroup.id}`}
-                        onClick={() => setOpen(false)}
-                        className="mt-3 inline-flex text-xs font-semibold text-brand-700 hover:text-brand-800"
-                      >
-                        Ver seção completa →
-                      </Link>
-                    </>
-                  )}
-                </div>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
               </div>
             )}
 
-            {/* Footer */}
-            <div className="border-t border-slate-100 bg-white px-4 py-3">
-              <div className="flex flex-wrap items-center justify-between gap-3">
-                <div className="flex min-w-0 flex-wrap items-center gap-1.5">
-                  <span className="mr-1 text-[10px] font-semibold uppercase tracking-wider text-slate-400">
-                    Destaques
-                  </span>
-                  {featured.map((item) => (
-                    <Link
-                      key={item.id}
-                      href={`/funcionalidades#${item.id}`}
-                      onClick={() => setOpen(false)}
-                      className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600 transition-colors hover:bg-brand-50 hover:text-brand-700"
-                    >
-                      {item.name}
-                    </Link>
-                  ))}
-                </div>
-                <Link
-                  href="/funcionalidades"
-                  onClick={() => setOpen(false)}
-                  className="shrink-0 text-sm font-semibold text-brand-700 hover:text-brand-800"
-                >
-                  Ver todas
-                </Link>
+            <div className="flex flex-wrap items-center justify-between gap-2 border-t border-slate-100 px-4 py-2.5">
+              <div className="flex flex-wrap items-center gap-1.5">
+                <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-400">
+                  Destaques
+                </span>
+                {featured.map((item) => (
+                  <Link
+                    key={item.id}
+                    href={`/funcionalidades#${item.id}`}
+                    onClick={close}
+                    className="rounded-full bg-slate-100 px-2 py-0.5 text-[11px] font-medium text-slate-600 hover:bg-brand-50 hover:text-brand-700"
+                  >
+                    {item.name}
+                  </Link>
+                ))}
               </div>
+              <Link
+                href="/funcionalidades"
+                onClick={close}
+                className="text-xs font-semibold text-brand-700 hover:text-brand-800"
+              >
+                Ver todas
+              </Link>
             </div>
           </div>
         </div>

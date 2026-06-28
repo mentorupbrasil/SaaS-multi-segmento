@@ -126,9 +126,8 @@ export function SolutionsMenu() {
                 Nenhuma solução encontrada para &ldquo;{query}&rdquo;.
               </div>
             ) : (
-              <div className="flex max-h-[min(56vh,400px)]">
-                {/* List */}
-                <nav className="w-[220px] shrink-0 overflow-y-auto border-r border-slate-100 bg-slate-50/50 p-2">
+              <div className="flex">
+                <nav className="w-[200px] shrink-0 border-r border-slate-100 bg-slate-50/50 p-2">
                   <ul className="space-y-0.5">
                     {filtered.map((solution) => {
                       const active = !isSearching && solution.slug === activeSlug;
@@ -173,7 +172,7 @@ export function SolutionsMenu() {
                 </nav>
 
                 {/* Preview */}
-                <div className="min-w-0 flex-1 overflow-y-auto p-5">
+                <div className="min-w-0 flex-1 p-5">
                   {activeSolution && (
                     <SolutionPreview solution={activeSolution} onNavigate={close} />
                   )}
