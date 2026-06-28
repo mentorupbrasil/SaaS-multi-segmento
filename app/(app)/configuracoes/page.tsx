@@ -2,6 +2,8 @@ import { getAuthContext } from "@/lib/auth-context";
 import { getSegment } from "@/segments";
 import { MODULES } from "@/modules";
 import { resolveTerms } from "@/lib/terms";
+import { resolveSegmentModules } from "@/lib/segment-modules";
+import type { ModuleId } from "@/modules/types";
 import { PageHeader } from "@/components/page-header";
 import { Icon } from "@/components/icon";
 
@@ -10,6 +12,8 @@ export default async function ConfiguracoesPage() {
   const org = ctx.organization;
   const segment = getSegment(org.segmentId);
   const terms = resolveTerms(org.segmentId, (org.config as { terms?: Record<string, string> })?.terms);
+
+  const moduleIds = resolveSegmentModules(org.segmentId);
 
   return (
     <div>
@@ -37,7 +41,7 @@ export default async function ConfiguracoesPage() {
         <div className="card p-6">
           <h2 className="mb-4 text-lg font-semibold">Módulos ativos</h2>
           <ul className="space-y-2">
-            {segment?.modules.map((id) => (
+            {moduleIds.map((id: ModuleId) => (
               <li key={id} className="flex items-center gap-2 text-sm text-slate-700">
                 <Icon name="Check" className="h-4 w-4 text-green-600" />
                 {MODULES[id]?.name}

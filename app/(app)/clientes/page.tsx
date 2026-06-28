@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { getAuthContext } from "@/lib/auth-context";
 import { prisma } from "@/lib/db";
 import { getSegment } from "@/segments";
@@ -46,7 +47,11 @@ export default async function ClientesPage() {
             <tbody className="divide-y divide-slate-100">
               {customers.map((c) => (
                 <tr key={c.id} className="hover:bg-slate-50">
-                  <td className="px-4 py-3 font-medium text-slate-900">{c.name}</td>
+                  <td className="px-4 py-3 font-medium text-slate-900">
+                    <Link href={`/clientes/${c.id}`} className="hover:text-brand-600">
+                      {c.name}
+                    </Link>
+                  </td>
                   <td className="px-4 py-3 text-slate-600">{c.phone ?? "-"}</td>
                   <td className="px-4 py-3 text-slate-600">{c.email ?? "-"}</td>
                   <td className="px-4 py-3 text-slate-600">{formatDate(c.createdAt)}</td>

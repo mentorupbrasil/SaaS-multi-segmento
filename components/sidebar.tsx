@@ -7,6 +7,7 @@ import { Icon } from "@/components/icon";
 import { signOutAction } from "@/app/(app)/actions";
 import { cn } from "@/lib/utils";
 import { OrgSwitcher, type OrgOption } from "@/components/org-switcher";
+import { SegmentSwitcher, type SegmentOption } from "@/components/segment-switcher";
 import type { NavItem } from "@/lib/nav";
 
 interface SidebarProps {
@@ -18,6 +19,8 @@ interface SidebarProps {
   isPlatformAdmin?: boolean;
   organizations?: OrgOption[];
   activeOrgId?: string;
+  segments?: SegmentOption[];
+  activeSegmentId?: string;
 }
 
 export function Sidebar({
@@ -29,6 +32,8 @@ export function Sidebar({
   isPlatformAdmin = false,
   organizations = [],
   activeOrgId = "",
+  segments = [],
+  activeSegmentId = "",
 }: SidebarProps) {
   const pathname = usePathname();
 
@@ -92,6 +97,12 @@ export function Sidebar({
           <p className="truncate text-xs text-slate-500">{segmentLabel}</p>
         </div>
       </div>
+
+      {isPlatformAdmin && segments.length > 0 && (
+        <div className="border-b border-slate-100 py-3">
+          <SegmentSwitcher segments={segments} activeSegmentId={activeSegmentId} />
+        </div>
+      )}
 
       {isPlatformAdmin && organizations.length > 0 && (
         <div className="border-b border-slate-100 py-3">

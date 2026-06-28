@@ -16,12 +16,18 @@ export default async function ServicosPage() {
     orderBy: { createdAt: "desc" },
   });
 
+  const staff = await prisma.membership.findMany({
+    where: { organizationId: org.id },
+    include: { user: true },
+    orderBy: { user: { name: "asc" } },
+  });
+
   return (
     <div>
       <PageHeader
         title={term(terms, "service_plural")}
         description="Catálogo de serviços, preços e duração."
-        action={<ServiceForm serviceLabel={serviceLabel} />}
+        action={<ServiceForm serviceLabel={serviceLabel} staff={staff.map((m) => ({ id: m.id, label: m.user.name }))} />}
       />
 
       {services.length === 0 ? (

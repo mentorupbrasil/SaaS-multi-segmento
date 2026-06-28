@@ -4,8 +4,11 @@ import { prisma } from "@/lib/db";
 import { getSegment } from "@/segments";
 import { resolveTerms, term } from "@/lib/terms";
 import { buildNav } from "@/lib/nav";
+import { resolveSegmentModules } from "@/lib/segment-modules";
+import { markOverdueEntries } from "@/lib/finance-utils";
 import { Icon } from "@/components/icon";
 import { formatCurrency } from "@/lib/utils";
+import type { ModuleId } from "@/modules/types";
 
 export default async function DashboardPage() {
   const ctx = await getAuthContext();
@@ -13,6 +16,7 @@ export default async function DashboardPage() {
   const segment = getSegment(org.segmentId);
   const terms = resolveTerms(org.segmentId, (org.config as { terms?: Record<string, string> })?.terms);
   const nav = buildNav(org);
+  const modules = new Set(resolveSegmentModules(org.segmentId));
 
   const startOfMonth = new Date();
   startOfMonth.setDate(1);
@@ -23,12 +27,25 @@ export default async function DashboardPage() {
   const endOfDay = new Date();
   endOfDay.setHours(23, 59, 59, 999);
 
-  const [customerCount, serviceCount, todayAppointments, monthIncome] = await Promise.all([
+  await markOverdueEntries(org.id);
+
+  const [
+    customerCount,
+    serviceCount,
+    todayAppointments,
+    monthIncome,
+    openWorkOrders,
+    overdueCount,
+    openCashShift,
+    inventoryItems,
+  ] = await Promise.all([
     prisma.customer.count({ where: { organizationId: org.id } }),
     prisma.service.count({ where: { organizationId: org.id, active: true } }),
-    prisma.appointment.count({
-      where: { organizationId: org.id, startAt: { gte: startOfDay, lte: endOfDay } },
-    }),
+    modules.has("scheduling")
+      ? prisma.appointment.count({
+          where: { organizationId: org.id, startAt: { gte: startOfDay, lte: endOfDay } },
+        })
+      : Promise.resolve(0),
     prisma.financialEntry.aggregate({
       where: {
         organizationId: org.id,
@@ -38,16 +55,85 @@ export default async function DashboardPage() {
       },
       _sum: { amount: true },
     }),
+    modules.has("work_orders")
+      ? prisma.workOrder.count({
+          where: {
+            organizationId: org.id,
+            status: { in: ["OPEN", "IN_PROGRESS"] },
+          },
+        })
+      : Promise.resolve(0),
+    modules.has("financial")
+      ? prisma.financialEntry.count({
+          where: { organizationId: org.id, status: "OVERDUE" },
+        })
+      : Promise.resolve(0),
+    modules.has("financial")
+      ? prisma.cashShift.count({
+          where: { organizationId: org.id, closedAt: null },
+        })
+      : Promise.resolve(0),
+    modules.has("inventory")
+      ? prisma.inventoryItem.findMany({
+          where: { organizationId: org.id, minQuantity: { gt: 0 } },
+          select: { quantity: true, minQuantity: true },
+        })
+      : Promise.resolve([]),
   ]);
 
-  const stats = [
-    { label: term(terms, "customer_plural"), value: customerCount, icon: "Users", href: "/clientes" },
-    { label: term(terms, "appointment_plural") + " hoje", value: todayAppointments, icon: "Calendar", href: "/agenda" },
-    { label: term(terms, "service_plural"), value: serviceCount, icon: "Tag", href: "/servicos" },
-    { label: "Receita do mês", value: formatCurrency(monthIncome._sum.amount ?? 0), icon: "Wallet", href: "/financeiro" },
+  const lowStock = inventoryItems.filter((i) => i.quantity <= i.minQuantity).length;
+
+  type Stat = { label: string; value: string | number; icon: string; href: string; module: ModuleId };
+
+  const stats: Stat[] = [
+    { label: term(terms, "customer_plural"), value: customerCount, icon: "Users", href: "/clientes", module: "clients" },
+    {
+      label: term(terms, "appointment_plural") + " hoje",
+      value: todayAppointments,
+      icon: "Calendar",
+      href: "/agenda",
+      module: "scheduling",
+    },
+    { label: term(terms, "service_plural"), value: serviceCount, icon: "Tag", href: "/servicos", module: "services" },
+    {
+      label: "Receita do mês",
+      value: formatCurrency(monthIncome._sum.amount ?? 0),
+      icon: "Wallet",
+      href: "/financeiro",
+      module: "financial",
+    },
+    {
+      label: "OS em aberto",
+      value: openWorkOrders,
+      icon: "ClipboardList",
+      href: "/ordens-de-servico",
+      module: "work_orders",
+    },
+    {
+      label: "Estoque baixo",
+      value: lowStock,
+      icon: "Package",
+      href: "/estoque",
+      module: "inventory",
+    },
+    {
+      label: "Financeiro vencido",
+      value: overdueCount,
+      icon: "Bell",
+      href: "/financeiro",
+      module: "financial",
+    },
+    {
+      label: "Caixa aberto",
+      value: openCashShift > 0 ? "Sim" : "Não",
+      icon: "CreditCard",
+      href: "/caixa",
+      module: "financial",
+    },
   ];
 
-  // ACTIVE (novo padrao) e TRIALING (contas legadas) liberam o sistema.
+  const visibleStats = stats.filter((s) => modules.has(s.module));
+
   const subscriptionActive =
     org.subscriptionStatus === "ACTIVE" || org.subscriptionStatus === "TRIALING";
 
@@ -77,7 +163,7 @@ export default async function DashboardPage() {
       )}
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {stats.map((s) => (
+        {visibleStats.map((s) => (
           <Link key={s.label} href={s.href} className="card p-5 transition-all hover:-translate-y-0.5 hover:shadow-md">
             <div className="flex items-center justify-between">
               <span className="text-sm text-slate-500">{s.label}</span>

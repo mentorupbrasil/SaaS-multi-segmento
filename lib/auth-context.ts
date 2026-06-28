@@ -10,6 +10,10 @@ export interface AuthContext {
   role: Role;
   organization: Organization;
   isPlatformAdmin: boolean;
+  /** Segmento exibido no painel (preview ou org real). */
+  effectiveSegmentId: string;
+  /** Modo preview: interface de outro segmento na org ativa. */
+  isSegmentPreview: boolean;
 }
 
 async function resolveOrganization(
@@ -69,12 +73,29 @@ export const getAuthContext = cache(async (): Promise<AuthContext> => {
     throw new Error("Sem organizacao ativa");
   }
 
+  const previewSegmentId = isPlatformAdmin
+    ? session.user.previewSegmentId ?? session.previewSegmentId
+    : undefined;
+  const effectiveSegmentId =
+    previewSegmentId && previewSegmentId !== resolved.org.segmentId
+      ? previewSegmentId
+      : resolved.org.segmentId;
+
+  const organization =
+    effectiveSegmentId === resolved.org.segmentId
+      ? resolved.org
+      : { ...resolved.org, segmentId: effectiveSegmentId };
+
   return {
     userId: session.user.id,
     orgId: resolved.org.id,
     role: resolved.role,
-    organization: resolved.org,
+    organization,
     isPlatformAdmin,
+    effectiveSegmentId,
+    isSegmentPreview: Boolean(
+      isPlatformAdmin && previewSegmentId && previewSegmentId !== resolved.org.segmentId,
+    ),
   };
 });
 

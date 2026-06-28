@@ -13,20 +13,29 @@ interface Option {
   label: string;
 }
 
+interface ServiceOption extends Option {
+  staffIds: string[];
+}
+
 export function AppointmentForm({
   appointmentLabel,
   customerLabel,
   serviceLabel,
+  professionalLabel,
   customers,
   services,
+  staff,
 }: {
   appointmentLabel: string;
   customerLabel: string;
   serviceLabel: string;
+  professionalLabel: string;
   customers: Option[];
-  services: Option[];
+  services: ServiceOption[];
+  staff: Option[];
 }) {
   const [open, setOpen] = useState(false);
+  const [selectedStaff, setSelectedStaff] = useState("");
   const [state, action] = useActionState(createAppointment, initial);
   const formRef = useRef<HTMLFormElement>(null);
   const router = useRouter();
@@ -38,6 +47,11 @@ export function AppointmentForm({
       router.refresh();
     }
   }, [state, router]);
+
+  const filteredServices =
+    selectedStaff.length === 0
+      ? services
+      : services.filter((s) => s.staffIds.length === 0 || s.staffIds.includes(selectedStaff));
 
   if (!open) {
     return (
@@ -72,7 +86,23 @@ export function AppointmentForm({
             <label className="label">{serviceLabel}</label>
             <select name="serviceId" className="input">
               <option value="">Sem {serviceLabel.toLowerCase()}</option>
-              {services.map((s) => (
+              {filteredServices.map((s) => (
+                <option key={s.id} value={s.id}>
+                  {s.label}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <label className="label">{professionalLabel}</label>
+            <select
+              name="staffId"
+              className="input"
+              value={selectedStaff}
+              onChange={(e) => setSelectedStaff(e.target.value)}
+            >
+              <option value="">Sem {professionalLabel.toLowerCase()}</option>
+              {staff.map((s) => (
                 <option key={s.id} value={s.id}>
                   {s.label}
                 </option>

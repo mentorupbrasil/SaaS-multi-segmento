@@ -6,6 +6,7 @@ import { Layers } from "lucide-react";
 import { Icon } from "@/components/icon";
 import { signOutAction } from "@/app/(app)/actions";
 import { OrgSwitcher, type OrgOption } from "@/components/org-switcher";
+import { SegmentSwitcher, type SegmentOption } from "@/components/segment-switcher";
 import { cn } from "@/lib/utils";
 
 const PLATFORM_NAV = [
@@ -21,6 +22,8 @@ interface AdminSidebarProps {
   userName: string;
   organizations: OrgOption[];
   activeOrgId: string;
+  segments: SegmentOption[];
+  activeSegmentId: string;
   operationalNav: { href: string; label: string; icon: string; comingSoon?: boolean }[];
 }
 
@@ -28,6 +31,8 @@ export function AdminSidebar({
   userName,
   organizations,
   activeOrgId,
+  segments,
+  activeSegmentId,
   operationalNav,
 }: AdminSidebarProps) {
   const pathname = usePathname();
@@ -79,6 +84,7 @@ export function AdminSidebar({
       </div>
 
       <div className="border-b border-slate-100 py-3">
+        <SegmentSwitcher segments={segments} activeSegmentId={activeSegmentId} />
         <OrgSwitcher organizations={organizations} activeOrgId={activeOrgId} />
       </div>
 

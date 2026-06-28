@@ -18,6 +18,11 @@ export const oficina: SegmentTemplate = {
     work_order: "Ordem de Serviço",
     work_order_plural: "Ordens de Serviço",
     inventory: "Peças / Estoque",
+    quote: "Orçamento",
+    quote_plural: "Orçamentos",
+    vehicle: "Veículo",
+    vehicle_plural: "Veículos",
+    supplier_plural: "Fornecedores",
   },
   customerFields: [
     { key: "veiculo", label: "Veículo", type: "text", placeholder: "Ex.: Gol 1.6" },

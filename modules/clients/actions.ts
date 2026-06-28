@@ -58,3 +58,53 @@ export async function createCustomer(
   revalidatePath("/clientes");
   return { ok: true };
 }
+
+export async function updateCustomer(
+  id: string,
+  _prev: FormResult,
+  formData: FormData,
+): Promise<FormResult> {
+  const ctx = await getAuthContext();
+
+  const parsed = schema.safeParse({
+    name: formData.get("name"),
+    phone: formData.get("phone") ?? undefined,
+    email: formData.get("email") ?? undefined,
+    notes: formData.get("notes") ?? undefined,
+  });
+  if (!parsed.success) {
+    return { error: parsed.error.issues[0]?.message ?? "Dados inválidos" };
+  }
+
+  const existing = await prisma.customer.findFirst({
+    where: { id, organizationId: ctx.orgId },
+  });
+  if (!existing) return { error: "Cliente não encontrado" };
+
+  const segment = getSegment(ctx.organization.segmentId);
+  const customFields: Record<string, string> = {
+    ...((existing.customFields as Record<string, string>) ?? {}),
+  };
+  for (const field of segment?.customerFields ?? []) {
+    const value = formData.get(`cf_${field.key}`);
+    if (typeof value === "string") {
+      if (value.trim()) customFields[field.key] = value.trim();
+      else delete customFields[field.key];
+    }
+  }
+
+  await prisma.customer.updateMany({
+    where: { id, organizationId: ctx.orgId },
+    data: {
+      name: parsed.data.name,
+      phone: parsed.data.phone || null,
+      email: parsed.data.email || null,
+      notes: parsed.data.notes || null,
+      customFields,
+    },
+  });
+
+  revalidatePath("/clientes");
+  revalidatePath(`/clientes/${id}`);
+  return { ok: true };
+}

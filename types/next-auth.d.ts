@@ -6,9 +6,12 @@ declare module "next-auth" {
       id: string;
       orgId: string;
       activeOrgId: string;
+      previewSegmentId?: string;
       role: string;
       isPlatformAdmin?: boolean;
     } & DefaultSession["user"];
+    activeOrgId?: string;
+    previewSegmentId?: string;
   }
 
   interface User {
@@ -24,23 +27,13 @@ declare module "next-auth/jwt" {
     id?: string;
     orgId?: string;
     activeOrgId?: string;
+    previewSegmentId?: string;
     role?: string;
     isPlatformAdmin?: boolean;
   }
 }
 
-declare module "next-auth/react" {
-  interface Session {
-    activeOrgId?: string;
-  }
-}
-
 export interface SessionUpdatePayload {
   activeOrgId?: string;
-}
-
-declare module "next-auth" {
-  interface Session {
-    activeOrgId?: string;
-  }
+  previewSegmentId?: string;
 }

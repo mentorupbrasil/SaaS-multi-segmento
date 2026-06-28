@@ -30,14 +30,41 @@ export async function createService(
     return { error: parsed.error.issues[0]?.message ?? "Dados inválidos" };
   }
 
+  const staffIds = formData.getAll("staffIds").filter((v): v is string => typeof v === "string" && v.length > 0);
+
   await prisma.service.create({
     data: {
       organizationId: ctx.orgId,
       name: parsed.data.name,
       price: parsed.data.price,
       durationMin: parsed.data.durationMin,
+      staffLinks: staffIds.length
+        ? { create: staffIds.map((membershipId) => ({ membershipId })) }
+        : undefined,
     },
   });
+
+  revalidatePath("/servicos");
+  return { ok: true };
+}
+
+export async function updateServiceStaff(serviceId: string, staffIds: string[]): Promise<FormResult> {
+  const ctx = await getAuthContext();
+  const service = await prisma.service.findFirst({
+    where: { id: serviceId, organizationId: ctx.orgId },
+  });
+  if (!service) return { error: "Serviço não encontrado" };
+
+  await prisma.$transaction([
+    prisma.serviceStaff.deleteMany({ where: { serviceId } }),
+    ...(staffIds.length
+      ? [
+          prisma.serviceStaff.createMany({
+            data: staffIds.map((membershipId) => ({ serviceId, membershipId })),
+          }),
+        ]
+      : []),
+  ]);
 
   revalidatePath("/servicos");
   return { ok: true };

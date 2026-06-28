@@ -43,6 +43,64 @@ enum FinancialStatus {
   OVERDUE
 }
 
+enum WorkOrderStatus {
+  DRAFT
+  OPEN
+  IN_PROGRESS
+  DONE
+  CANCELED
+}
+
+enum QuoteStatus {
+  DRAFT
+  SENT
+  APPROVED
+  REJECTED
+  CONVERTED
+}
+
+enum WorkOrderItemType {
+  SERVICE
+  PART
+  LABOR
+}
+
+enum InventoryMovementType {
+  IN
+  OUT
+  ADJUST
+}
+
+enum SaleStatus {
+  OPEN
+  PAID
+  CANCELED
+}
+
+enum RoomStatus {
+  AVAILABLE
+  RESERVED
+  OCCUPIED
+  MAINTENANCE
+  BLOCKED
+}
+
+enum ReservationStatus {
+  PENDING
+  CONFIRMED
+  CHECKED_IN
+  CHECKED_OUT
+  CANCELED
+}
+
+enum BusinessEventStatus {
+  PLANNING
+  CONFIRMED
+  IN_PROGRESS
+  DONE
+  CANCELED
+}
+
 model User {
   id           String       @id @default(cuid())
   email        String       @unique
@@ -52,36 +110,58 @@ model User {
   memberships  Membership[]
 }
 
-// Tenant. Cada organizacao = um cliente isolado.
 model Organization {
   id                 String             @id @default(cuid())
   name               String
   slug               String             @unique
-  segmentId          String // referencia ao template de segmento (codigo)
-  config             Json               @default("{}") // overrides por tenant (termos, modulos extras)
+  segmentId          String
+  config             Json               @default("{}")
   plan               String             @default("starter")
   subscriptionStatus SubscriptionStatus @default(TRIALING)
   trialEndsAt        DateTime?
   createdAt          DateTime           @default(now())
 
-  memberships      Membership[]
-  customers        Customer[]
-  services         Service[]
-  appointments     Appointment[]
-  financialEntries FinancialEntry[]
+  memberships       Membership[]
+  customers         Customer[]
+  services          Service[]
+  appointments      Appointment[]
+  financialEntries  FinancialEntry[]
+  inventoryItems    InventoryItem[]
+  inventoryMovements InventoryMovement[]
+  workOrders        WorkOrder[]
+  customerRecords   CustomerRecord[]
+  suppliers         Supplier[]
+  quotes            Quote[]
+  vehicles          Vehicle[]
+  pets              Pet[]
+  sales             Sale[]
+  rooms             Room[]
+  reservations      Reservation[]
+  businessEvents    BusinessEvent[]
+  donations         Donation[]
+  groups            Group[]
+  blockedSlots      BlockedSlot[]
+  cashShifts        CashShift[]
+  vaccinations      Vaccination[]
+  sessionPackages   SessionPackage[]
+  commissionEntries CommissionEntry[]
 }
 
-// Liga User <-> Organization com papel (RBAC).
 model Membership {
   id             String  @id @default(cuid())
   userId         String
   organizationId String
   role           Role    @default(OWNER)
-  title          String? // ex.: "Barbeiro", "Medico" - rotulo profissional
+  title          String?
 
   user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   organization Organization  @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   appointments Appointment[] @relation("StaffAppointments")
+  workOrders   WorkOrder[]   @relation("StaffWorkOrders")
+  serviceLinks ServiceStaff[]
+  cashShifts   CashShift[]
+  blockedSlots BlockedSlot[]
+  commissions  CommissionEntry[]
 
   @@unique([userId, organizationId])
   @@index([organizationId])
@@ -94,11 +174,23 @@ model Customer {
   phone          String?
   email          String?
   notes          String?
-  customFields   Json     @default("{}") // campos especificos do segmento
+  customFields   Json     @default("{}")
   createdAt      DateTime @default(now())
 
-  organization Organization  @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organization Organization     @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   appointments Appointment[]
+  workOrders   WorkOrder[]
+  records      CustomerRecord[]
+  quotes       Quote[]
+  vehicles     Vehicle[]
+  pets         Pet[]
+  sales        Sale[]
+  reservations Reservation[]
+  businessEvents BusinessEvent[]
+  donations    Donation[]
+  groupLinks   GroupMember[]
+  sessionPackages SessionPackage[]
+  commissionEntries CommissionEntry[]
 
   @@index([organizationId])
 }
@@ -110,12 +202,27 @@ model Service {
   price          Float    @default(0)
   durationMin    Int      @default(30)
   active         Boolean  @default(true)
+  category       String?
   createdAt      DateTime @default(now())
 
-  organization Organization  @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organization Organization   @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   appointments Appointment[]
+  staffLinks   ServiceStaff[]
+  quoteItems   QuoteItem[]
+  workOrderItems WorkOrderItem[]
+  saleItems    SaleItem[]
 
   @@index([organizationId])
+}
+
+model ServiceStaff {
+  serviceId    String
+  membershipId String
+
+  service    Service    @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  membership Membership @relation(fields: [membershipId], references: [id], onDelete: Cascade)
+
+  @@id([serviceId, membershipId])
 }
 
 model Appointment {
@@ -141,6 +248,10 @@ model Appointment {
 model FinancialEntry {
   id             String          @id @default(cuid())
   organizationId String
+  customerId     String?
+  workOrderId    String?
+  quoteId        String?
+  saleId         String?
   type           FinancialType
   description    String
   amount         Float           @default(0)
@@ -150,6 +261,434 @@ model FinancialEntry {
   createdAt      DateTime        @default(now())
 
   organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId])
+  @@index([customerId])
+}
+
+model Supplier {
+  id             String   @id @default(cuid())
+  organizationId String
+  name           String
+  email          String?
+  phone          String?
+  document       String?
+  notes          String?
+  createdAt      DateTime @default(now())
+
+  organization Organization        @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  movements    InventoryMovement[]
+
+  @@index([organizationId])
+}
+
+model InventoryItem {
+  id             String   @id @default(cuid())
+  organizationId String
+  name           String
+  sku            String?
+  barcode        String?
+  brand          String?
+  quantity       Int      @default(0)
+  minQuantity    Int      @default(0)
+  unit           String   @default("un")
+  price          Float    @default(0)
+  category       String?
+  createdAt      DateTime @default(now())
+
+  organization Organization        @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  movements    InventoryMovement[]
+  quoteItems   QuoteItem[]
+  workOrderItems WorkOrderItem[]
+  saleItems    SaleItem[]
+
+  @@index([organizationId])
+}
+
+model InventoryMovement {
+  id              String                @id @default(cuid())
+  organizationId  String
+  inventoryItemId String
+  type            InventoryMovementType
+  quantity        Int
+  reason          String?
+  supplierId      String?
+  workOrderId     String?
+  createdAt       DateTime              @default(now())
+
+  organization  Organization  @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  inventoryItem InventoryItem @relation(fields: [inventoryItemId], references: [id], onDelete: Cascade)
+  supplier      Supplier?     @relation(fields: [supplierId], references: [id], onDelete: SetNull)
+  workOrder     WorkOrder?    @relation(fields: [workOrderId], references: [id], onDelete: SetNull)
+
+  @@index([organizationId])
+  @@index([inventoryItemId])
+}
+
+model Quote {
+  id             String      @id @default(cuid())
+  organizationId String
+  customerId     String?
+  vehicleId      String?
+  title          String
+  status         QuoteStatus @default(DRAFT)
+  total          Float       @default(0)
+  notes          String?
+  validUntil     DateTime?
+  createdAt      DateTime    @default(now())
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  customer     Customer?    @relation(fields: [customerId], references: [id], onDelete: SetNull)
+  vehicle      Vehicle?     @relation(fields: [vehicleId], references: [id], onDelete: SetNull)
+  items        QuoteItem[]
+  workOrders   WorkOrder[]
+
+  @@index([organizationId])
+}
+
+model QuoteItem {
+  id              String            @id @default(cuid())
+  quoteId         String
+  type            WorkOrderItemType @default(SERVICE)
+  description     String
+  quantity        Float             @default(1)
+  unitPrice       Float             @default(0)
+  serviceId       String?
+  inventoryItemId String?
+
+  quote         Quote          @relation(fields: [quoteId], references: [id], onDelete: Cascade)
+  service       Service?       @relation(fields: [serviceId], references: [id], onDelete: SetNull)
+  inventoryItem InventoryItem? @relation(fields: [inventoryItemId], references: [id], onDelete: SetNull)
+
+  @@index([quoteId])
+}
+
+model WorkOrder {
+  id             String          @id @default(cuid())
+  organizationId String
+  customerId     String?
+  vehicleId      String?
+  staffId        String?
+  quoteId        String?
+  title          String
+  description    String?
+  status         WorkOrderStatus @default(OPEN)
+  total          Float           @default(0)
+  dueDate        DateTime?
+  createdAt      DateTime        @default(now())
+
+  organization Organization        @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  customer     Customer?           @relation(fields: [customerId], references: [id], onDelete: SetNull)
+  vehicle      Vehicle?            @relation(fields: [vehicleId], references: [id], onDelete: SetNull)
+  staff        Membership?         @relation("StaffWorkOrders", fields: [staffId], references: [id], onDelete: SetNull)
+  quote        Quote?              @relation(fields: [quoteId], references: [id], onDelete: SetNull)
+  items        WorkOrderItem[]
+  movements    InventoryMovement[]
+
+  @@index([organizationId])
+}
+
+model WorkOrderItem {
+  id              String            @id @default(cuid())
+  workOrderId     String
+  type            WorkOrderItemType @default(SERVICE)
+  description     String
+  quantity        Float             @default(1)
+  unitPrice       Float             @default(0)
+  serviceId       String?
+  inventoryItemId String?
+
+  workOrder     WorkOrder      @relation(fields: [workOrderId], references: [id], onDelete: Cascade)
+  service       Service?       @relation(fields: [serviceId], references: [id], onDelete: SetNull)
+  inventoryItem InventoryItem? @relation(fields: [inventoryItemId], references: [id], onDelete: SetNull)
+
+  @@index([workOrderId])
+}
+
+model CustomerRecord {
+  id             String   @id @default(cuid())
+  organizationId String
+  customerId     String
+  petId          String?
+  title          String
+  content        String?
+  createdAt      DateTime @default(now())
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  customer     Customer     @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  pet          Pet?         @relation(fields: [petId], references: [id], onDelete: SetNull)
+  attachments  RecordAttachment[]
+
+  @@index([organizationId])
+  @@index([customerId])
+}
+
+model Vehicle {
+  id             String   @id @default(cuid())
+  organizationId String
+  customerId     String
+  plate          String
+  brand          String?
+  model          String
+  year           Int?
+  mileage        Int?
+  color          String?
+  notes          String?
+  createdAt      DateTime @default(now())
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  customer     Customer     @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  workOrders   WorkOrder[]
+  quotes       Quote[]
+
+  @@index([organizationId])
+  @@index([customerId])
+}
+
+model Pet {
+  id             String   @id @default(cuid())
+  organizationId String
+  customerId     String
+  name           String
+  species        String?
+  breed          String?
+  sex            String?
+  weight         Float?
+  birthDate      DateTime?
+  allergies      String?
+  notes          String?
+  createdAt      DateTime @default(now())
+
+  organization Organization     @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  customer     Customer         @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  records      CustomerRecord[]
+  vaccinations Vaccination[]
+
+  @@index([organizationId])
+  @@index([customerId])
+}
+
+model Sale {
+  id             String     @id @default(cuid())
+  organizationId String
+  customerId     String?
+  status         SaleStatus @default(OPEN)
+  total          Float      @default(0)
+  paymentMethod  String?
+  tableLabel     String?
+  notes          String?
+  createdAt      DateTime   @default(now())
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  customer     Customer?    @relation(fields: [customerId], references: [id], onDelete: SetNull)
+  items        SaleItem[]
+
+  @@index([organizationId])
+}
+
+model SaleItem {
+  id              String  @id @default(cuid())
+  saleId          String
+  description     String
+  quantity        Float   @default(1)
+  unitPrice       Float   @default(0)
+  serviceId       String?
+  inventoryItemId String?
+
+  sale          Sale           @relation(fields: [saleId], references: [id], onDelete: Cascade)
+  service       Service?       @relation(fields: [serviceId], references: [id], onDelete: SetNull)
+  inventoryItem InventoryItem? @relation(fields: [inventoryItemId], references: [id], onDelete: SetNull)
+
+  @@index([saleId])
+}
+
+model Room {
+  id             String     @id @default(cuid())
+  organizationId String
+  number         String
+  type           String?
+  status         RoomStatus @default(AVAILABLE)
+  dailyRate      Float      @default(0)
+  notes          String?
+  createdAt      DateTime   @default(now())
+
+  organization Organization  @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  reservations Reservation[]
+
+  @@index([organizationId])
+}
+
+model Reservation {
+  id             String            @id @default(cuid())
+  organizationId String
+  roomId         String
+  customerId     String
+  checkIn        DateTime
+  checkOut       DateTime
+  status         ReservationStatus @default(PENDING)
+  total          Float             @default(0)
+  notes          String?
+  createdAt      DateTime          @default(now())
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  room         Room         @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  customer     Customer     @relation(fields: [customerId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId])
+}
+
+model BusinessEvent {
+  id             String              @id @default(cuid())
+  organizationId String
+  customerId     String?
+  name           String
+  eventType      String?
+  eventDate      DateTime?
+  location       String?
+  status         BusinessEventStatus @default(PLANNING)
+  total          Float               @default(0)
+  notes          String?
+  createdAt      DateTime            @default(now())
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  customer     Customer?    @relation(fields: [customerId], references: [id], onDelete: SetNull)
+
+  @@index([organizationId])
+}
+
+model Donation {
+  id             String   @id @default(cuid())
+  organizationId String
+  customerId     String?
+  amount         Float    @default(0)
+  donationType   String?
+  description    String?
+  receivedAt     DateTime @default(now())
+  createdAt      DateTime @default(now())
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  customer     Customer?    @relation(fields: [customerId], references: [id], onDelete: SetNull)
+
+  @@index([organizationId])
+}
+
+model Group {
+  id             String   @id @default(cuid())
+  organizationId String
+  name           String
+  groupType      String?
+  description    String?
+  createdAt      DateTime @default(now())
+
+  organization Organization  @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  members      GroupMember[]
+
+  @@index([organizationId])
+}
+
+model GroupMember {
+  id         String @id @default(cuid())
+  groupId    String
+  customerId String
+
+  group    Group    @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  customer Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+
+  @@unique([groupId, customerId])
+}
+
+model BlockedSlot {
+  id             String   @id @default(cuid())
+  organizationId String
+  staffId        String?
+  startAt        DateTime
+  endAt          DateTime
+  reason         String?
+  createdAt      DateTime @default(now())
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  staff        Membership?  @relation(fields: [staffId], references: [id], onDelete: SetNull)
+
+  @@index([organizationId, startAt])
+}
+
+model CashShift {
+  id             String    @id @default(cuid())
+  organizationId String
+  operatorId     String
+  openedAt       DateTime  @default(now())
+  closedAt       DateTime?
+  openingFloat   Float     @default(0)
+  closingCash    Float?
+  notes          String?
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  operator     Membership   @relation(fields: [operatorId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId])
+}
+
+model Vaccination {
+  id             String    @id @default(cuid())
+  organizationId String
+  petId          String
+  vaccine        String
+  appliedAt      DateTime  @default(now())
+  nextDueAt      DateTime?
+  notes          String?
+  createdAt      DateTime  @default(now())
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  pet          Pet          @relation(fields: [petId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId])
+  @@index([petId])
+}
+
+model SessionPackage {
+  id             String   @id @default(cuid())
+  organizationId String
+  customerId     String
+  name           String
+  totalSessions  Int
+  usedSessions   Int      @default(0)
+  expiresAt      DateTime?
+  price          Float    @default(0)
+  createdAt      DateTime @default(now())
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  customer     Customer     @relation(fields: [customerId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId])
+  @@index([customerId])
+}
+
+model RecordAttachment {
+  id       String @id @default(cuid())
+  recordId String
+  fileName String
+  fileUrl  String
+  mimeType String?
+
+  record CustomerRecord @relation(fields: [recordId], references: [id], onDelete: Cascade)
+
+  @@index([recordId])
+}
+
+model CommissionEntry {
+  id             String   @id @default(cuid())
+  organizationId String
+  staffId        String
+  customerId     String?
+  workOrderId    String?
+  description    String
+  amount         Float    @default(0)
+  paidAt         DateTime?
+  createdAt      DateTime @default(now())
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  staff        Membership   @relation(fields: [staffId], references: [id], onDelete: Cascade)
+  customer     Customer?    @relation(fields: [customerId], references: [id], onDelete: SetNull)
 
   @@index([organizationId])
 }

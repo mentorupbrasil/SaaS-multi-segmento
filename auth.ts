@@ -62,9 +62,14 @@ export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth({
       } else if (token.email && token.isPlatformAdmin === undefined) {
         token.isPlatformAdmin = isPlatformAdminEmail(token.email);
       }
-      if (trigger === "update" && session?.activeOrgId) {
-        token.activeOrgId = session.activeOrgId as string;
-        token.orgId = session.activeOrgId as string;
+      if (trigger === "update" && session) {
+        if (session.activeOrgId) {
+          token.activeOrgId = session.activeOrgId as string;
+          token.orgId = session.activeOrgId as string;
+        }
+        if ("previewSegmentId" in session) {
+          token.previewSegmentId = session.previewSegmentId as string | undefined;
+        }
       }
       return token;
     },
@@ -73,9 +78,11 @@ export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth({
         session.user.id = (token.id as string) ?? token.sub ?? "";
         session.user.orgId = (token.activeOrgId as string) ?? (token.orgId as string) ?? "";
         session.user.activeOrgId = (token.activeOrgId as string) ?? (token.orgId as string) ?? "";
+        session.user.previewSegmentId = token.previewSegmentId as string | undefined;
         session.user.role = (token.role as string) ?? "STAFF";
         session.user.isPlatformAdmin = Boolean(token.isPlatformAdmin);
       }
+      session.previewSegmentId = token.previewSegmentId as string | undefined;
       return session;
     },
   },
