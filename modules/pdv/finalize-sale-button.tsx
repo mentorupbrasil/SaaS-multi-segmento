@@ -20,11 +20,16 @@ export function FinalizeSaleButton({
 }) {
   const methods = paymentMethods.length > 0 ? paymentMethods : FALLBACK_METHODS;
   const [method, setMethod] = useState(methods[0]?.value ?? "cash");
+  const [error, setError] = useState<string | null>(null);
   const [pending, start] = useTransition();
   const router = useRouter();
 
   return (
-    <div className="mt-2 flex flex-wrap items-center justify-end gap-2">
+    <div className="mt-2 flex flex-col items-end gap-2">
+      {error && (
+        <p className="w-full rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p>
+      )}
+      <div className="flex flex-wrap items-center justify-end gap-2">
       <select
         className="input w-auto text-sm"
         value={method}
@@ -43,13 +48,19 @@ export function FinalizeSaleButton({
         className="btn-primary"
         onClick={() =>
           start(async () => {
+            setError(null);
             const result = await finalizeSale(saleId, method);
+            if (result.error) {
+              setError(result.error);
+              return;
+            }
             if (result.ok) router.refresh();
           })
         }
       >
         {pending ? "Finalizando..." : "Finalizar venda"}
       </button>
+      </div>
     </div>
   );
 }

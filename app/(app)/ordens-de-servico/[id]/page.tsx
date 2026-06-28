@@ -7,7 +7,9 @@ import { PageHeader } from "@/components/page-header";
 import { LineItemForm } from "@/components/line-item-form";
 import { WorkOrderStatusButtons } from "@/components/work-order-status-buttons";
 import { DeleteButton } from "@/components/delete-button";
+import { PortalShareLink } from "@/components/portal-share-link";
 import { addWorkOrderItem, deleteWorkOrder } from "@/modules/work-orders/actions";
+import { portalWorkOrderUrl } from "@/lib/portal-token";
 import { formatCurrency, formatDate } from "@/lib/utils";
 
 const STATUS_LABEL: Record<string, string> = {
@@ -65,6 +67,10 @@ export default async function WorkOrderDetailPage({
           ← Voltar
         </Link>
         <div className="flex flex-wrap items-center gap-2">
+          <PortalShareLink
+            url={portalWorkOrderUrl(ctx.organization.slug, order.id, ctx.orgId)}
+            label="Link do portal (cliente)"
+          />
           <Link
             href={`/ordens-de-servico/${order.id}/print`}
             className="btn-secondary text-sm"

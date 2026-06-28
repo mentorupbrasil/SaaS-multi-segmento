@@ -8,7 +8,9 @@ import { LineItemForm } from "@/components/line-item-form";
 import { ApproveQuoteButton, QuoteWorkOrderLink } from "@/components/approve-quote-button";
 import { QuoteStatusButtons } from "@/components/quote-status-buttons";
 import { DeleteButton } from "@/components/delete-button";
+import { PortalShareLink } from "@/components/portal-share-link";
 import { addQuoteItem, deleteQuote } from "@/modules/quotes/actions";
+import { portalQuoteUrl } from "@/lib/portal-token";
 import { formatCurrency, formatDate } from "@/lib/utils";
 
 const STATUS_LABEL: Record<string, string> = {
@@ -68,6 +70,10 @@ export default async function QuoteDetailPage({
           ← Voltar
         </Link>
         <div className="flex flex-wrap items-center gap-2">
+          <PortalShareLink
+            url={portalQuoteUrl(ctx.organization.slug, quote.id, ctx.orgId)}
+            label="Link do portal (cliente)"
+          />
           <Link
             href={`/orcamentos/${quote.id}/print`}
             className="btn-secondary text-sm"

@@ -3,6 +3,8 @@ import { notFound } from "next/navigation";
 import { getAuthContext } from "@/lib/auth-context";
 import { prisma } from "@/lib/db";
 import { getSegment } from "@/segments";
+import { resolveSegmentModules } from "@/lib/segment-modules";
+import type { ModuleId } from "@/modules/types";
 import { resolveTerms, term } from "@/lib/terms";
 import { PageHeader } from "@/components/page-header";
 import { CustomerEditForm } from "@/modules/clients/customer-edit-form";
@@ -60,6 +62,8 @@ export default async function CustomerDetailPage({
   const ctx = await getAuthContext();
   const org = ctx.organization;
   const segment = getSegment(org.segmentId);
+  const activeModules = new Set(resolveSegmentModules(org.segmentId));
+  const hasModule = (id: ModuleId) => activeModules.has(id);
   const terms = resolveTerms(org.segmentId, (org.config as { terms?: Record<string, string> })?.terms);
   const customerFields = segment?.customerFields ?? [];
 
@@ -89,6 +93,45 @@ export default async function CustomerDetailPage({
   });
 
   if (!customer) notFound();
+
+  const [paidIncome, openIncome, enrollments, recentAttendance] = await Promise.all([
+    prisma.financialEntry.aggregate({
+      where: {
+        organizationId: ctx.orgId,
+        customerId: id,
+        type: "INCOME",
+        status: "PAID",
+      },
+      _sum: { amount: true },
+    }),
+    prisma.financialEntry.findMany({
+      where: {
+        organizationId: ctx.orgId,
+        customerId: id,
+        type: "INCOME",
+        status: { in: ["PENDING", "OVERDUE"] },
+      },
+      orderBy: { dueDate: "asc" },
+      take: 8,
+    }),
+    hasModule("education")
+      ? prisma.enrollment.findMany({
+          where: { organizationId: ctx.orgId, customerId: id, status: "ACTIVE" },
+          include: { class: { select: { name: true, grade: true, shift: true } } },
+        })
+      : Promise.resolve([]),
+    hasModule("education")
+      ? prisma.attendanceRecord.findMany({
+          where: { organizationId: ctx.orgId, customerId: id },
+          orderBy: { date: "desc" },
+          take: 8,
+          include: { class: { select: { name: true } } },
+        })
+      : Promise.resolve([]),
+  ]);
+
+  const totalRevenue = paidIncome._sum.amount ?? 0;
+  const openTotal = openIncome.reduce((s, e) => s + e.amount, 0);
 
   const customFields = (customer.customFields as Record<string, string | number | null>) ?? {};
 
@@ -139,6 +182,94 @@ export default async function CustomerDetailPage({
         )}
       </div>
 
+      <div className="mb-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="card p-4">
+          <p className="text-xs text-slate-500">Receita total (paga)</p>
+          <p className="text-xl font-bold text-green-600">{formatCurrency(totalRevenue)}</p>
+        </div>
+        <div className="card p-4">
+          <p className="text-xs text-slate-500">Em aberto</p>
+          <p className="text-xl font-bold text-amber-600">{formatCurrency(openTotal)}</p>
+        </div>
+        <div className="card p-4">
+          <p className="text-xs text-slate-500">Agendamentos</p>
+          <p className="text-xl font-bold text-slate-900">{customer.appointments.length}</p>
+        </div>
+        <div className="card p-4">
+          <p className="text-xs text-slate-500">{term(terms, "work_order_plural")}</p>
+          <p className="text-xl font-bold text-slate-900">{customer.workOrders.length}</p>
+        </div>
+      </div>
+
+      {openIncome.length > 0 && (
+        <section className="mb-8">
+          <div className="mb-2 flex items-center justify-between">
+            <h2 className="text-lg font-semibold">Financeiro em aberto</h2>
+            <Link href="/financeiro" className="text-sm text-brand-600 hover:underline">
+              Ver financeiro
+            </Link>
+          </div>
+          <div className="card divide-y divide-slate-100">
+            {openIncome.map((entry) => (
+              <div key={entry.id} className="flex items-center justify-between px-4 py-3 text-sm">
+                <span>{entry.description}</span>
+                <span className="font-medium text-amber-600">
+                  {formatCurrency(entry.amount)}
+                  {entry.dueDate ? ` · ${formatDate(entry.dueDate)}` : ""}
+                </span>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {hasModule("education") && (enrollments.length > 0 || recentAttendance.length > 0) && (
+        <div className="mb-8 grid gap-8 lg:grid-cols-2">
+          {enrollments.length > 0 && (
+            <section>
+              <div className="mb-2 flex items-center justify-between">
+                <h2 className="text-lg font-semibold">Matrículas</h2>
+                <Link href="/matriculas" className="text-sm text-brand-600 hover:underline">
+                  Ver matrículas
+                </Link>
+              </div>
+              <div className="card divide-y divide-slate-100">
+                {enrollments.map((e) => (
+                  <div key={e.id} className="px-4 py-3 text-sm">
+                    <p className="font-medium">{e.class.name}</p>
+                    <p className="text-slate-500">
+                      {[e.class.grade, e.class.shift].filter(Boolean).join(" · ") || "Ativa"}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
+          {recentAttendance.length > 0 && (
+            <section>
+              <div className="mb-2 flex items-center justify-between">
+                <h2 className="text-lg font-semibold">Frequência recente</h2>
+                <Link href="/frequencia" className="text-sm text-brand-600 hover:underline">
+                  Ver frequência
+                </Link>
+              </div>
+              <div className="card divide-y divide-slate-100">
+                {recentAttendance.map((a) => (
+                  <div key={a.id} className="flex justify-between px-4 py-3 text-sm">
+                    <span>
+                      {formatDate(a.date)} · {a.class.name}
+                    </span>
+                    <span className={a.present ? "text-green-600" : "text-red-600"}>
+                      {a.present ? "Presente" : "Falta"}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
+        </div>
+      )}
+
       {customerFields.length > 0 && Object.keys(customFields).length > 0 && (
         <>
           <h2 className="mb-2 text-lg font-semibold">Campos personalizados</h2>
@@ -158,6 +289,7 @@ export default async function CustomerDetailPage({
       )}
 
       <div className="mb-8 grid gap-8 lg:grid-cols-2">
+        {hasModule("scheduling") && (
         <section>
           <div className="mb-2 flex items-center justify-between">
             <h2 className="text-lg font-semibold">{term(terms, "appointment_plural")}</h2>
@@ -186,7 +318,9 @@ export default async function CustomerDetailPage({
             </div>
           )}
         </section>
+        )}
 
+        {hasModule("work_orders") && (
         <section>
           <div className="mb-2 flex items-center justify-between">
             <h2 className="text-lg font-semibold">{term(terms, "work_order_plural")}</h2>
@@ -217,8 +351,10 @@ export default async function CustomerDetailPage({
             </div>
           )}
         </section>
+        )}
       </div>
 
+      {hasModule("records") && (
       <section className="mb-8">
         <div className="mb-2 flex items-center justify-between">
           <h2 className="text-lg font-semibold">{term(terms, "records")}</h2>
@@ -240,8 +376,10 @@ export default async function CustomerDetailPage({
           </div>
         )}
       </section>
+      )}
 
       <div className="mb-8 grid gap-8 lg:grid-cols-2">
+        {hasModule("quotes") && (
         <section>
           <div className="mb-2 flex items-center justify-between">
             <h2 className="text-lg font-semibold">{term(terms, "quote_plural")}</h2>
@@ -272,7 +410,9 @@ export default async function CustomerDetailPage({
             </div>
           )}
         </section>
+        )}
 
+        {hasModule("pdv") && (
         <section>
           <div className="mb-2 flex items-center justify-between">
             <h2 className="text-lg font-semibold">Vendas (PDV)</h2>
@@ -299,9 +439,12 @@ export default async function CustomerDetailPage({
             </div>
           )}
         </section>
+        )}
       </div>
 
+      {(hasModule("rooms") || hasModule("donations")) && (
       <div className="mb-8 grid gap-8 lg:grid-cols-2">
+        {hasModule("rooms") && (
         <section>
           <div className="mb-2 flex items-center justify-between">
             <h2 className="text-lg font-semibold">{term(terms, "reservation_plural")}</h2>
@@ -327,7 +470,9 @@ export default async function CustomerDetailPage({
             </div>
           )}
         </section>
+        )}
 
+        {hasModule("donations") && (
         <section>
           <div className="mb-2 flex items-center justify-between">
             <h2 className="text-lg font-semibold">{term(terms, "donation_plural")}</h2>
@@ -351,9 +496,12 @@ export default async function CustomerDetailPage({
             </div>
           )}
         </section>
+        )}
       </div>
+      )}
 
       <div className="mb-8 grid gap-8 lg:grid-cols-2">
+        {hasModule("events") && (
         <section>
           <div className="mb-2 flex items-center justify-between">
             <h2 className="text-lg font-semibold">{term(terms, "event_plural")}</h2>
@@ -377,6 +525,7 @@ export default async function CustomerDetailPage({
             </div>
           )}
         </section>
+        )}
 
         <section>
           <div className="mb-2 flex items-center justify-between">
@@ -405,7 +554,9 @@ export default async function CustomerDetailPage({
         </section>
       </div>
 
+      {(hasModule("vehicles") || hasModule("pets")) && (
       <div className="grid gap-8 lg:grid-cols-2">
+        {hasModule("vehicles") && (
         <section>
           <div className="mb-2 flex items-center justify-between">
             <h2 className="text-lg font-semibold">{term(terms, "vehicle_plural")}</h2>
@@ -428,7 +579,9 @@ export default async function CustomerDetailPage({
             </div>
           )}
         </section>
+        )}
 
+        {hasModule("pets") && (
         <section>
           <div className="mb-2 flex items-center justify-between">
             <h2 className="text-lg font-semibold">{term(terms, "pet_plural")}</h2>
@@ -451,7 +604,9 @@ export default async function CustomerDetailPage({
             </div>
           )}
         </section>
+        )}
       </div>
+      )}
     </div>
   );
 }

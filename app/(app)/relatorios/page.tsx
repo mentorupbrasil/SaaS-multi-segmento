@@ -1,6 +1,9 @@
+import Link from "next/link";
 import { getAuthContext } from "@/lib/auth-context";
 import { prisma } from "@/lib/db";
+import { canAccessFeature } from "@/lib/plan-limits";
 import { PageHeader } from "@/components/page-header";
+import { ExportButtons } from "@/components/export-link";
 import { formatCurrency } from "@/lib/utils";
 
 function parseDateParam(value: string | undefined, fallback: Date): Date {
@@ -21,6 +24,28 @@ export default async function RelatoriosPage({
   const { from: fromParam, to: toParam } = await searchParams;
   const ctx = await getAuthContext();
   const orgId = ctx.orgId;
+  const plan = ctx.organization.plan;
+  const hasAdvanced = canAccessFeature(plan, "advanced_reports");
+  const hasConsolidated = canAccessFeature(plan, "consolidated_reports");
+
+  if (!hasAdvanced) {
+    return (
+      <div>
+        <PageHeader
+          title="Relatórios"
+          description="Indicadores avançados do desempenho do negócio."
+        />
+        <div className="card p-10 text-center">
+          <p className="text-slate-600">
+            Relatórios avançados estão disponíveis a partir do plano Profissional.
+          </p>
+          <Link href="/assinatura" className="btn-primary mt-4 inline-flex">
+            Ver planos
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   const defaultTo = new Date();
   const defaultFrom = new Date();
@@ -35,7 +60,8 @@ export default async function RelatoriosPage({
   const rangeStart = fromDate <= toDate ? fromDate : toDate;
   const rangeEnd = fromDate <= toDate ? toDate : fromDate;
 
-  const [paidIncome, appointments, topServicesRaw, lowStock] = await Promise.all([
+  const [paidIncome, appointments, topServicesRaw, lowStock, pdvSales, openCashShift] =
+    await Promise.all([
     prisma.financialEntry.findMany({
       where: {
         organizationId: orgId,
@@ -70,6 +96,19 @@ export default async function RelatoriosPage({
         minQuantity: { gt: 0 },
       },
       orderBy: { quantity: "asc" },
+    }),
+    prisma.sale.aggregate({
+      where: {
+        organizationId: orgId,
+        status: "PAID",
+        createdAt: { gte: rangeStart, lte: rangeEnd },
+      },
+      _sum: { total: true },
+      _count: true,
+    }),
+    prisma.cashShift.findFirst({
+      where: { organizationId: orgId, closedAt: null },
+      select: { id: true, openedAt: true },
     }),
   ]);
 
@@ -118,6 +157,12 @@ export default async function RelatoriosPage({
       <PageHeader
         title="Relatórios"
         description="Visão geral do desempenho do negócio."
+        action={
+          <ExportButtons
+            module="financial"
+            searchParams={{ from: toInputDate(rangeStart), to: toInputDate(rangeEnd) }}
+          />
+        }
       />
 
       <form method="get" className="mb-6 flex flex-wrap items-end gap-3">
@@ -150,7 +195,7 @@ export default async function RelatoriosPage({
         </button>
       </form>
 
-      <div className="mb-8 grid gap-4 sm:grid-cols-3">
+      <div className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
         <div className="card p-4">
           <p className="text-xs text-slate-500">Agendamentos (período)</p>
           <p className="text-2xl font-bold text-slate-900">{appointmentTotal}</p>
@@ -159,6 +204,19 @@ export default async function RelatoriosPage({
           <p className="text-xs text-slate-500">Receita (período)</p>
           <p className="text-2xl font-bold text-green-600">
             {formatCurrency(revenueRows.reduce((s, r) => s + r.total, 0))}
+          </p>
+        </div>
+        <div className="card p-4">
+          <p className="text-xs text-slate-500">Vendas PDV (período)</p>
+          <p className="text-2xl font-bold text-slate-900">
+            {formatCurrency(pdvSales._sum.total ?? 0)}
+          </p>
+          <p className="text-xs text-slate-500">{pdvSales._count} venda(s)</p>
+        </div>
+        <div className="card p-4">
+          <p className="text-xs text-slate-500">Caixa</p>
+          <p className={`text-2xl font-bold ${openCashShift ? "text-green-600" : "text-slate-500"}`}>
+            {openCashShift ? "Aberto" : "Fechado"}
           </p>
         </div>
         <div className="card p-4">
@@ -284,6 +342,36 @@ export default async function RelatoriosPage({
           </table>
         </section>
       </div>
+
+      {hasConsolidated && (
+        <section className="card mt-8 overflow-hidden">
+          <h2 className="border-b border-slate-100 px-4 py-3 text-lg font-semibold">
+            Visão consolidada (Premium)
+          </h2>
+          <div className="grid gap-4 p-4 sm:grid-cols-3">
+            <div className="rounded-xl bg-slate-50 p-4">
+              <p className="text-xs text-slate-500">Receita financeira</p>
+              <p className="text-xl font-bold text-green-600">
+                {formatCurrency(revenueRows.reduce((s, r) => s + r.total, 0))}
+              </p>
+            </div>
+            <div className="rounded-xl bg-slate-50 p-4">
+              <p className="text-xs text-slate-500">PDV no período</p>
+              <p className="text-xl font-bold text-slate-900">
+                {formatCurrency(pdvSales._sum.total ?? 0)}
+              </p>
+            </div>
+            <div className="rounded-xl bg-slate-50 p-4">
+              <p className="text-xs text-slate-500">Ticket médio PDV</p>
+              <p className="text-xl font-bold text-slate-900">
+                {pdvSales._count > 0
+                  ? formatCurrency((pdvSales._sum.total ?? 0) / pdvSales._count)
+                  : formatCurrency(0)}
+              </p>
+            </div>
+          </div>
+        </section>
+      )}
     </div>
   );
 }

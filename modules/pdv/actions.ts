@@ -13,6 +13,7 @@ import { requireMutationRole } from "@/lib/action-auth";
 import { logAudit } from "@/lib/audit-log";
 
 import { addInventoryMovement, recalcSaleTotal } from "@/lib/inventory-utils";
+import { requireOpenCashShift } from "@/lib/cash-shift-utils";
 
 
 
@@ -212,7 +213,8 @@ export async function finalizeSale(
 
   if (sale.total <= 0) return { error: "Adicione itens antes de finalizar" };
 
-
+  const cashShift = await requireOpenCashShift(ctx.orgId);
+  if (!cashShift.ok) return { error: cashShift.error };
 
   await prisma.sale.update({
 

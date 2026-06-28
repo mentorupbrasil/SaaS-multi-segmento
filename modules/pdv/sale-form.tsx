@@ -13,8 +13,14 @@ interface Option {
   label: string;
 }
 
-export function SaleForm({ customers }: { customers: Option[] }) {
-  const [open, setOpen] = useState(false);
+export function SaleForm({
+  customers,
+  defaultTableLabel,
+}: {
+  customers: Option[];
+  defaultTableLabel?: string;
+}) {
+  const [open, setOpen] = useState(Boolean(defaultTableLabel));
   const [state, action] = useActionState(createSale, initial);
   const formRef = useRef<HTMLFormElement>(null);
   const router = useRouter();
@@ -53,7 +59,12 @@ export function SaleForm({ customers }: { customers: Option[] }) {
         </div>
         <div>
           <label className="label">Mesa / identificador</label>
-          <input name="tableLabel" className="input" placeholder="Mesa 1, Balcão..." />
+          <input
+            name="tableLabel"
+            className="input"
+            placeholder="Mesa 1, Balcão..."
+            defaultValue={defaultTableLabel}
+          />
         </div>
         {state.error && (
           <p className="sm:col-span-2 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">{state.error}</p>

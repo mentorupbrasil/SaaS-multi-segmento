@@ -38,6 +38,7 @@ export async function getOrganizationByPortalSlug(orgSlug: string) {
       id: true,
       name: true,
       slug: true,
+      segmentId: true,
       publicBookingSlug: true,
       publicBookingEnabled: true,
     },

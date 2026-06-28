@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { getAuthContext } from "@/lib/auth-context";
 import { PageHeader } from "@/components/page-header";
 import { getRestaurantTables } from "@/modules/restaurant/table-actions";
@@ -38,6 +39,12 @@ export default async function MesasPage() {
                   >
                     <p className="font-semibold text-slate-900">{table.label}</p>
                     <p className="text-xs text-slate-500">{table.seats} lugares</p>
+                    <Link
+                      href={`/pdv?table=${encodeURIComponent(table.label)}`}
+                      className="mt-2 inline-block text-xs font-medium text-brand-600 hover:underline"
+                    >
+                      Abrir no PDV
+                    </Link>
                     <div className="mt-3">
                       <TableStatusSelect id={table.id} status={table.status} />
                     </div>

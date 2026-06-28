@@ -1,5 +1,7 @@
+import Link from "next/link";
 import { getAuthContext } from "@/lib/auth-context";
 import { prisma } from "@/lib/db";
+import { getOpenCashShift } from "@/lib/cash-shift-utils";
 import { getMasterDataOptions } from "@/lib/master-data";
 import { PageHeader } from "@/components/page-header";
 import { SaleForm } from "@/modules/pdv/sale-form";
@@ -10,10 +12,17 @@ import { DeleteButton } from "@/components/delete-button";
 import { deleteSale } from "@/modules/pdv/actions";
 import { formatCurrency, formatDate } from "@/lib/utils";
 
-export default async function PdvPage() {
+export default async function PdvPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ table?: string }>;
+}) {
   const ctx = await getAuthContext();
+  const { table: tableParam } = await searchParams;
+  const defaultTableLabel = tableParam?.trim() || undefined;
 
-  const [openSales, customers, services, inventory, paymentMethods] = await Promise.all([
+  const [openSales, customers, services, inventory, paymentMethods, openShift] =
+    await Promise.all([
     prisma.sale.findMany({
       where: { organizationId: ctx.orgId, status: "OPEN" },
       include: {
@@ -36,6 +45,7 @@ export default async function PdvPage() {
       select: { id: true, name: true, quantity: true, price: true },
     }),
     getMasterDataOptions(ctx.orgId, "PAYMENT_METHOD"),
+    getOpenCashShift(ctx.orgId),
   ]);
 
   const serviceOptions = services.map((s) => ({
@@ -52,8 +62,28 @@ export default async function PdvPage() {
       <PageHeader
         title="PDV"
         description="Ponto de venda — vendas abertas e finalização."
-        action={<SaleForm customers={customers.map((c) => ({ id: c.id, label: c.name }))} />}
+        action={
+          <div className="flex flex-wrap gap-2">
+            <Link href="/pdv/vendas" className="btn-secondary">
+              Histórico de vendas
+            </Link>
+            <SaleForm
+              customers={customers.map((c) => ({ id: c.id, label: c.name }))}
+              defaultTableLabel={defaultTableLabel}
+            />
+          </div>
+        }
       />
+
+      {!openShift && (
+        <div className="mb-6 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+          Caixa fechado.{" "}
+          <Link href="/caixa" className="font-medium text-amber-900 underline">
+            Abra o caixa
+          </Link>{" "}
+          antes de finalizar vendas.
+        </div>
+      )}
 
       {openSales.length === 0 ? (
         <div className="card p-10 text-center text-slate-500">

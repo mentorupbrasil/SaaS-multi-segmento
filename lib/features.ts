@@ -127,7 +127,7 @@ export const FEATURE_GROUPS: FeatureGroup[] = [
         icon: "Globe",
         short: "Agendamento e acompanhamento online.",
         description:
-          "Link público para o cliente agendar, acompanhar serviços e acessar informações do negócio.",
+          "Link público para agendar, acompanhar OS e orçamentos, e acessar a área do responsável (educação).",
         status: "available",
         planGated: true,
       },

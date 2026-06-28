@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Icon } from "@/components/icon";
 import { getOrganizationByPortalSlug } from "@/lib/public-booking";
+import { getSegment } from "@/segments";
 
 export default async function PortalLandingPage({
   params,
@@ -12,6 +13,10 @@ export default async function PortalLandingPage({
   const org = await getOrganizationByPortalSlug(orgSlug);
   if (!org) notFound();
 
+  const segment = getSegment(org.segmentId);
+  const isEducation = segment?.category === "educacao";
+  const isAutomotiveOrServices =
+    segment?.category === "automotivo" || segment?.category === "servicos";
   const bookingSlug = org.publicBookingSlug ?? org.slug;
 
   return (
@@ -49,6 +54,26 @@ export default async function PortalLandingPage({
               Ver meus agendamentos
             </Link>
 
+            {isAutomotiveOrServices && (
+              <Link
+                href={`/portal/${org.slug}/os`}
+                className="flex w-full items-center justify-center gap-2 rounded-xl border border-slate-200 px-4 py-3 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
+              >
+                <Icon name="ClipboardList" className="h-4 w-4" />
+                Acompanhar OS e orçamentos
+              </Link>
+            )}
+
+            {isEducation && (
+              <Link
+                href={`/portal/${org.slug}/responsavel`}
+                className="flex w-full items-center justify-center gap-2 rounded-xl border border-slate-200 px-4 py-3 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
+              >
+                <Icon name="GraduationCap" className="h-4 w-4" />
+                Área do responsável
+              </Link>
+            )}
+
             <Link
               href="/login"
               className="flex w-full items-center justify-center gap-2 rounded-xl border border-dashed border-slate-200 px-4 py-3 text-sm font-medium text-slate-500 transition hover:border-brand-200 hover:text-brand-700"
@@ -59,9 +84,7 @@ export default async function PortalLandingPage({
           </div>
         </div>
 
-        <p className="mt-6 text-center text-xs text-slate-400">
-          Powered by GestorPro
-        </p>
+        <p className="mt-6 text-center text-xs text-slate-400">Powered by GestorPro</p>
       </div>
     </div>
   );

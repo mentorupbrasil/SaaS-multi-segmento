@@ -1649,8 +1649,9 @@ const EDUCACAO: SegmentExtras = {
       title: "Portal do aluno / responsável",
       icon: "Globe",
       items: [
-        s("Boletim e frequência"),
-        s("Mensalidades e documentos"),
+        a("Frequência e mensalidades"),
+        a("Turmas matriculadas"),
+        s("Boletim completo"),
         s("Comunicados"),
       ],
     },
