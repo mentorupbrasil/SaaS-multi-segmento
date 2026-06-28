@@ -2,6 +2,7 @@ import Link from "next/link";
 import { getAuthContext } from "@/lib/auth-context";
 import { prisma } from "@/lib/db";
 import { PageHeader } from "@/components/page-header";
+import { EmptyState } from "@/components/empty-state";
 import { AttendanceForm } from "@/modules/education/attendance-form";
 import { listAttendanceRecords } from "@/modules/education/actions";
 
@@ -79,12 +80,10 @@ export default async function FrequenciaPage({
       </form>
 
       {classes.length === 0 ? (
-        <div className="card p-10 text-center text-slate-500">
-          Cadastre uma turma ativa para registrar frequência.{" "}
-          <Link href="/turmas" className="text-brand-600 hover:underline">
+        <EmptyState icon="CalendarCheck" description="Cadastre uma turma ativa para registrar frequência. 
+          <Link href=/turmas className=text-brand-600 hover:underline>
             Ir para turmas
-          </Link>
-        </div>
+          </Link>" />
       ) : selectedClassId && attendance.class ? (
         <>
           <p className="mb-4 text-sm text-slate-600">

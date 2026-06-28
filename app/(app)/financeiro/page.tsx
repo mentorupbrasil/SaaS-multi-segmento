@@ -153,7 +153,11 @@ export default async function FinanceiroPage({
               <tbody className="divide-y divide-slate-100">
                 {entries.map((e) => (
                   <tr key={e.id} className="hover:bg-slate-50">
-                    <td className="px-4 py-3 font-medium text-slate-900">{e.description}</td>
+                    <td className="px-4 py-3 font-medium text-slate-900">
+                      <Link href={`/financeiro/${e.id}`} className="hover:text-brand-600">
+                        {e.description}
+                      </Link>
+                    </td>
                     <td className="px-4 py-3">
                       <span className={e.type === "INCOME" ? "text-green-600" : "text-red-600"}>
                         {e.type === "INCOME" ? "Receita" : "Despesa"}

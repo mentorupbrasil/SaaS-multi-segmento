@@ -4,6 +4,7 @@ import { prisma } from "@/lib/db";
 import { parseListParams } from "@/lib/list-params";
 import { resolveTerms, term } from "@/lib/terms";
 import { PageHeader } from "@/components/page-header";
+import { EmptyState } from "@/components/empty-state";
 import { ListToolbar } from "@/components/list-toolbar";
 import { Pagination } from "@/components/pagination";
 import { DeleteButton } from "@/components/delete-button";
@@ -65,9 +66,7 @@ export default async function PetsPage({
       <ListToolbar searchValue={params.q} searchPlaceholder="Buscar pet por nome..." />
 
       {pets.length === 0 ? (
-        <div className="card p-10 text-center text-slate-500">
-          {params.q ? "Nenhum resultado para a busca." : "Nenhum pet cadastrado ainda."}
-        </div>
+        <EmptyState icon="PawPrint" description={params.q ? "Nenhum resultado para a busca." : "Nenhum pet cadastrado ainda."} />
       ) : (
         <>
           <div className="card overflow-hidden">

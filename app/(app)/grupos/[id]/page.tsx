@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { getAuthContext } from "@/lib/auth-context";
 import { prisma } from "@/lib/db";
 import { PageHeader } from "@/components/page-header";
+import { EmptyState } from "@/components/empty-state";
 import { MemberForm } from "@/modules/groups/member-form";
 import { DeleteButton } from "@/components/delete-button";
 import { deleteGroup, removeGroupMember } from "@/modules/groups/actions";
@@ -74,7 +75,10 @@ export default async function GrupoDetailPage({
       </div>
 
       {group.members.length === 0 ? (
-        <div className="card p-10 text-center text-slate-500">Nenhum membro ainda.</div>
+        <EmptyState
+          icon="UsersRound"
+          description="Nenhum membro ainda. Adicione clientes ao grupo."
+        />
       ) : (
         <div className="card overflow-hidden">
           <table className="w-full text-sm">

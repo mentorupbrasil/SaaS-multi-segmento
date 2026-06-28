@@ -53,6 +53,22 @@ export async function createFinancialEntry(
   return { ok: true };
 }
 
+export async function deleteFinancialEntry(id: string): Promise<FormResult> {
+  const ctx = await getAuthContext();
+  const existing = await prisma.financialEntry.findFirst({
+    where: { id, organizationId: ctx.orgId },
+  });
+  if (!existing) return { error: "Lançamento não encontrado" };
+
+  await prisma.financialEntry.deleteMany({
+    where: { id, organizationId: ctx.orgId },
+  });
+
+  revalidatePath("/financeiro");
+  revalidatePath(`/financeiro/${id}`);
+  return { ok: true };
+}
+
 export async function markEntryPaid(id: string): Promise<void> {
   const ctx = await getAuthContext();
   await prisma.financialEntry.updateMany({
@@ -60,6 +76,7 @@ export async function markEntryPaid(id: string): Promise<void> {
     data: { status: "PAID", paidAt: new Date() },
   });
   revalidatePath("/financeiro");
+  revalidatePath(`/financeiro/${id}`);
 }
 
 /** Sincroniza vencidos na carga da página financeiro. */

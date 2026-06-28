@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { getAuthContext } from "@/lib/auth-context";
 import { prisma } from "@/lib/db";
 import { PageHeader } from "@/components/page-header";
+import { EmptyState } from "@/components/empty-state";
 import { DeleteButton } from "@/components/delete-button";
 import { ClassForm } from "@/modules/education/class-form";
 import { EnrollmentForm } from "@/modules/education/enrollment-form";
@@ -128,7 +129,10 @@ export default async function TurmaDetailPage({
       </div>
 
       {schoolClass.enrollments.length === 0 ? (
-        <div className="card p-10 text-center text-slate-500">Nenhuma matrícula ainda.</div>
+        <EmptyState
+          icon="GraduationCap"
+          description="Nenhuma matrícula ainda. Use o botão acima para matricular um aluno."
+        />
       ) : (
         <div className="card overflow-hidden">
           <table className="w-full text-sm">
@@ -146,7 +150,7 @@ export default async function TurmaDetailPage({
               {schoolClass.enrollments.map((e) => (
                 <tr key={e.id} className="hover:bg-slate-50">
                   <td className="px-4 py-3 font-medium text-slate-900">
-                    <Link href={`/clientes/${e.customer.id}`} className="hover:text-brand-600">
+                    <Link href={`/matriculas/${e.id}`} className="hover:text-brand-600">
                       {e.customer.name}
                     </Link>
                   </td>

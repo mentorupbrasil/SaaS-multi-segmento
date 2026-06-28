@@ -4,6 +4,7 @@ import { prisma } from "@/lib/db";
 import { parseListParams } from "@/lib/list-params";
 import { resolveTerms, term } from "@/lib/terms";
 import { PageHeader } from "@/components/page-header";
+import { EmptyState } from "@/components/empty-state";
 import { ListToolbar } from "@/components/list-toolbar";
 import { Pagination } from "@/components/pagination";
 import { ExportCsvLink } from "@/components/export-csv-link";
@@ -70,11 +71,9 @@ export default async function ServicosPage({
       </div>
 
       {services.length === 0 ? (
-        <div className="card p-10 text-center text-slate-500">
-          {params.q
+        <EmptyState icon="Scissors" description={params.q
             ? "Nenhum resultado para a busca."
-            : `Nenhum ${serviceLabel.toLowerCase()} cadastrado ainda.`}
-        </div>
+            : `Nenhum ${serviceLabel.toLowerCase()} cadastrado ainda.`} />
       ) : (
         <>
           <div className="card overflow-hidden">

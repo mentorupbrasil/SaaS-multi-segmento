@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { getAuthContext } from "@/lib/auth-context";
 import { prisma } from "@/lib/db";
 import { parseListParams } from "@/lib/list-params";
@@ -122,7 +123,11 @@ export default async function EstoquePage({
               <tbody className="divide-y divide-slate-100">
                 {items.map((item) => (
                   <tr key={item.id} className="hover:bg-slate-50">
-                    <td className="px-4 py-3 font-medium text-slate-900">{item.name}</td>
+                    <td className="px-4 py-3 font-medium text-slate-900">
+                      <Link href={`/estoque/${item.id}`} className="hover:text-brand-600">
+                        {item.name}
+                      </Link>
+                    </td>
                     <td className="px-4 py-3 text-slate-600">{item.sku ?? "—"}</td>
                     <td className="px-4 py-3 text-slate-600">
                       {item.quantity} {item.unit}

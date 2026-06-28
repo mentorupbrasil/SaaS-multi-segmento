@@ -4,6 +4,7 @@ import { prisma } from "@/lib/db";
 import { getOpenCashShift } from "@/lib/cash-shift-utils";
 import { getMasterDataOptions } from "@/lib/master-data";
 import { PageHeader } from "@/components/page-header";
+import { EmptyState } from "@/components/empty-state";
 import { SaleForm } from "@/modules/pdv/sale-form";
 import { SaleItemForm } from "@/modules/pdv/sale-item-form";
 import { FinalizeSaleButton } from "@/modules/pdv/finalize-sale-button";
@@ -86,9 +87,7 @@ export default async function PdvPage({
       )}
 
       {openSales.length === 0 ? (
-        <div className="card p-10 text-center text-slate-500">
-          Nenhuma venda aberta. Clique em &quot;Nova venda&quot; para começar.
-        </div>
+        <EmptyState icon="ShoppingCart" description="Nenhuma venda aberta. Clique em Nova venda para começar." />
       ) : (
         <div className="space-y-6">
           {openSales.map((sale) => (

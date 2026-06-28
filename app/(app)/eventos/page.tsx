@@ -5,6 +5,7 @@ import { parseListParams } from "@/lib/list-params";
 import { getMasterDataOptions } from "@/lib/master-data";
 import { resolveTerms, term } from "@/lib/terms";
 import { PageHeader } from "@/components/page-header";
+import { EmptyState } from "@/components/empty-state";
 import { ListToolbar } from "@/components/list-toolbar";
 import { Pagination } from "@/components/pagination";
 import { EventForm } from "@/modules/events/event-form";
@@ -75,9 +76,7 @@ export default async function EventosPage({
       <ListToolbar searchValue={params.q} searchPlaceholder="Buscar evento por nome..." />
 
       {events.length === 0 ? (
-        <div className="card p-10 text-center text-slate-500">
-          {params.q ? "Nenhum resultado para a busca." : "Nenhum evento cadastrado ainda."}
-        </div>
+        <EmptyState icon="PartyPopper" description={params.q ? "Nenhum resultado para a busca." : "Nenhum evento cadastrado ainda."} />
       ) : (
         <>
           <div className="card overflow-hidden">

@@ -296,6 +296,29 @@ export async function deleteEnrollment(id: string): Promise<FormResult> {
   return { ok: true };
 }
 
+export async function updateEnrollmentStatus(
+  id: string,
+  status: "ACTIVE" | "SUSPENDED" | "COMPLETED" | "CANCELED",
+): Promise<FormResult> {
+  const ctx = await getAuthContext();
+  requireMutationRole(ctx, ["OWNER", "ADMIN"]);
+
+  const existing = await prisma.enrollment.findFirst({
+    where: { id, organizationId: ctx.orgId },
+  });
+  if (!existing) return { error: "Matrícula não encontrada" };
+
+  await prisma.enrollment.update({
+    where: { id },
+    data: { status },
+  });
+
+  revalidatePath("/matriculas");
+  revalidatePath(`/matriculas/${id}`);
+  revalidatePath(`/turmas/${existing.classId}`);
+  return { ok: true };
+}
+
 export async function recordAttendance(
   _prev: FormResult,
   formData: FormData,

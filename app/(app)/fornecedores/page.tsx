@@ -3,6 +3,7 @@ import { getAuthContext } from "@/lib/auth-context";
 import { prisma } from "@/lib/db";
 import { parseListParams } from "@/lib/list-params";
 import { PageHeader } from "@/components/page-header";
+import { EmptyState } from "@/components/empty-state";
 import { ListToolbar } from "@/components/list-toolbar";
 import { Pagination } from "@/components/pagination";
 import { ExportCsvLink } from "@/components/export-csv-link";
@@ -53,9 +54,7 @@ export default async function FornecedoresPage({
       </div>
 
       {suppliers.length === 0 ? (
-        <div className="card p-10 text-center text-slate-500">
-          {params.q ? "Nenhum resultado para a busca." : "Nenhum fornecedor cadastrado ainda."}
-        </div>
+        <EmptyState icon="Truck" description={params.q ? "Nenhum resultado para a busca." : "Nenhum fornecedor cadastrado ainda."} />
       ) : (
         <>
           <div className="card overflow-hidden">

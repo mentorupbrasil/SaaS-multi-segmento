@@ -56,6 +56,7 @@ export async function markCommissionPaid(id: string): Promise<void> {
     data: { paidAt: new Date() },
   });
   revalidatePath("/comissoes");
+  revalidatePath(`/comissoes/${id}`);
 }
 
 export async function deleteCommissionEntry(id: string): Promise<FormResult> {
@@ -73,6 +74,7 @@ export async function deleteCommissionEntry(id: string): Promise<FormResult> {
 
   await logAudit(ctx, "commission.delete", { id });
   revalidatePath("/comissoes");
+  revalidatePath(`/comissoes/${id}`);
   return { ok: true };
 }
 

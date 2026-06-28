@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { Icon } from "@/components/icon";
 import { getOrganizationByPortalSlug } from "@/lib/public-booking";
 import { findCustomerByEmail, listParentPortalData } from "@/lib/public-portal";
+import { checkPortalLookupRateLimit } from "@/lib/portal-rate-limit";
 import { formatCurrency, formatDate } from "@/lib/utils";
 
 export default async function PortalResponsavelPage({
@@ -16,6 +17,19 @@ export default async function PortalResponsavelPage({
   const { email } = await searchParams;
   const org = await getOrganizationByPortalSlug(orgSlug);
   if (!org) notFound();
+
+  if (email?.trim()) {
+    const rl = checkPortalLookupRateLimit(`${orgSlug}:${email}`);
+    if (!rl.ok) {
+      return (
+        <Shell orgSlug={org.slug} orgName={org.name}>
+          <p className="rounded-xl bg-amber-50 px-4 py-3 text-sm text-amber-800">
+            Muitas tentativas. Aguarde alguns minutos e tente novamente.
+          </p>
+        </Shell>
+      );
+    }
+  }
 
   if (!email?.trim()) {
     return (

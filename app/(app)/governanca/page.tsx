@@ -1,6 +1,7 @@
 import { getAuthContext } from "@/lib/auth-context";
 import { prisma } from "@/lib/db";
 import { PageHeader } from "@/components/page-header";
+import { EmptyState } from "@/components/empty-state";
 import { HousekeepingTaskForm } from "@/modules/housekeeping/task-form";
 import { HousekeepingTaskStatusButtons } from "@/components/housekeeping-task-status-buttons";
 import { listHousekeepingTasks } from "@/modules/housekeeping/actions";
@@ -83,9 +84,7 @@ export default async function GovernancaPage() {
       />
 
       {rooms.length === 0 ? (
-        <div className="card p-10 text-center text-slate-500">
-          Cadastre quartos em <strong>Quartos</strong> para usar o painel de governança.
-        </div>
+        <EmptyState icon="BedDouble" description="Cadastre quartos em <strong>Quartos</strong> para usar o painel de governança." />
       ) : (
         <div className="space-y-6">
           <section>

@@ -16,11 +16,15 @@ interface Option {
 export function MovementForm({
   items,
   suppliers,
+  defaultItemId,
+  defaultOpen = false,
 }: {
   items: Option[];
   suppliers: Option[];
+  defaultItemId?: string;
+  defaultOpen?: boolean;
 }) {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(defaultOpen);
   const [state, action] = useActionState(registerInventoryMovement, initial);
   const formRef = useRef<HTMLFormElement>(null);
   const router = useRouter();
@@ -51,7 +55,7 @@ export function MovementForm({
         <form ref={formRef} action={action} className="grid gap-4 sm:grid-cols-2">
           <div>
             <label className="label">Item</label>
-            <select name="inventoryItemId" className="input" required>
+            <select name="inventoryItemId" className="input" required defaultValue={defaultItemId}>
               <option value="">Selecione</option>
               {items.map((i) => (
                 <option key={i.id} value={i.id}>

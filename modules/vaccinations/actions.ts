@@ -72,6 +72,7 @@ export async function deleteVaccination(id: string): Promise<FormResult> {
 
   await logAudit(ctx, "vaccination.delete", { id });
   revalidatePath("/vacinas");
+  revalidatePath(`/vacinas/${id}`);
   revalidatePath("/pets");
   return { ok: true };
 }

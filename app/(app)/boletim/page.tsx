@@ -1,6 +1,7 @@
 import { getAuthContext } from "@/lib/auth-context";
 import { prisma } from "@/lib/db";
 import { PageHeader } from "@/components/page-header";
+import { EmptyState } from "@/components/empty-state";
 import { formatDate } from "@/lib/utils";
 
 export default async function BoletimPage() {
@@ -45,9 +46,7 @@ export default async function BoletimPage() {
       />
 
       {byClass.size === 0 ? (
-        <div className="card p-10 text-center text-slate-500">
-          Nenhuma matrícula ativa. Cadastre turmas e matrículas primeiro.
-        </div>
+        <EmptyState icon="BookOpen" description="Nenhuma matrícula ativa. Cadastre turmas e matrículas primeiro." />
       ) : (
         <div className="space-y-6">
           {[...byClass.entries()].map(([className, students]) => (

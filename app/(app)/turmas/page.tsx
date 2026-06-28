@@ -3,6 +3,7 @@ import { getAuthContext } from "@/lib/auth-context";
 import { prisma } from "@/lib/db";
 import { parseListParams } from "@/lib/list-params";
 import { PageHeader } from "@/components/page-header";
+import { EmptyState } from "@/components/empty-state";
 import { ListToolbar } from "@/components/list-toolbar";
 import { Pagination } from "@/components/pagination";
 import { ExportButtons } from "@/components/export-link";
@@ -51,9 +52,7 @@ export default async function TurmasPage({
       </div>
 
       {classes.length === 0 ? (
-        <div className="card p-10 text-center text-slate-500">
-          {params.q ? "Nenhuma turma encontrada." : "Nenhuma turma cadastrada ainda."}
-        </div>
+        <EmptyState icon="GraduationCap" description={params.q ? "Nenhuma turma encontrada." : "Nenhuma turma cadastrada ainda."} />
       ) : (
         <>
           <div className="card overflow-hidden">

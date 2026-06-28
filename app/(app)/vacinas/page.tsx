@@ -1,9 +1,11 @@
+import Link from "next/link";
 import { getAuthContext } from "@/lib/auth-context";
 import { prisma } from "@/lib/db";
 import { parseListParams } from "@/lib/list-params";
 import { getMasterDataOptions } from "@/lib/master-data";
 import { resolveTerms, term } from "@/lib/terms";
 import { PageHeader } from "@/components/page-header";
+import { EmptyState } from "@/components/empty-state";
 import { ListToolbar } from "@/components/list-toolbar";
 import { Pagination } from "@/components/pagination";
 import { ExportButtons } from "@/components/export-link";
@@ -76,9 +78,7 @@ export default async function VacinasPage({
       </div>
 
       {vaccinations.length === 0 ? (
-        <div className="card p-10 text-center text-slate-500">
-          {params.q ? "Nenhum resultado." : "Nenhuma vacina registrada ainda."}
-        </div>
+        <EmptyState icon="Syringe" description={params.q ? "Nenhum resultado." : "Nenhuma vacina registrada ainda."} />
       ) : (
         <>
           <div className="card overflow-hidden">
@@ -96,7 +96,11 @@ export default async function VacinasPage({
               <tbody className="divide-y divide-slate-100">
                 {vaccinations.map((v) => (
                   <tr key={v.id} className="hover:bg-slate-50">
-                    <td className="px-4 py-3 font-medium text-slate-900">{v.pet.name}</td>
+                    <td className="px-4 py-3 font-medium text-slate-900">
+                      <Link href={`/vacinas/${v.id}`} className="hover:text-brand-600">
+                        {v.pet.name}
+                      </Link>
+                    </td>
                     <td className="px-4 py-3 text-slate-600">{v.pet.customer.name}</td>
                     <td className="px-4 py-3 text-slate-600">{v.vaccine}</td>
                     <td className="px-4 py-3 text-slate-600">{formatDate(v.appliedAt)}</td>

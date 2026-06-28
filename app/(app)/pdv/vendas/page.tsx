@@ -3,6 +3,7 @@ import { getAuthContext } from "@/lib/auth-context";
 import { prisma } from "@/lib/db";
 import { parseListParams } from "@/lib/list-params";
 import { PageHeader } from "@/components/page-header";
+import { EmptyState } from "@/components/empty-state";
 import { Pagination } from "@/components/pagination";
 import { formatCurrency, formatDate } from "@/lib/utils";
 
@@ -64,7 +65,7 @@ export default async function PdvVendasPage({
       </form>
 
       {sales.length === 0 ? (
-        <div className="card p-10 text-center text-slate-500">Nenhuma venda encontrada.</div>
+        <EmptyState icon="Receipt" description="Nenhuma venda encontrada." />
       ) : (
         <div className="card overflow-hidden">
           <table className="w-full text-sm">

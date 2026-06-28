@@ -4,6 +4,7 @@ import { prisma } from "@/lib/db";
 import { parseListParams } from "@/lib/list-params";
 import { getMasterDataOptions } from "@/lib/master-data";
 import { PageHeader } from "@/components/page-header";
+import { EmptyState } from "@/components/empty-state";
 import { ListToolbar } from "@/components/list-toolbar";
 import { Pagination } from "@/components/pagination";
 import { ExportCsvLink } from "@/components/export-csv-link";
@@ -68,9 +69,7 @@ export default async function QuartosPage({
       </div>
 
       {rooms.length === 0 ? (
-        <div className="card p-10 text-center text-slate-500">
-          {params.q ? "Nenhum resultado." : "Nenhum quarto cadastrado ainda."}
-        </div>
+        <EmptyState icon="Bed" description={params.q ? "Nenhum resultado." : "Nenhum quarto cadastrado ainda."} />
       ) : (
         <>
           <div className="card overflow-hidden">

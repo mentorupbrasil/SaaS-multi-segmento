@@ -8,6 +8,7 @@ import {
   listCustomerWorkOrders,
 } from "@/lib/public-portal";
 import { portalQuoteUrl, portalWorkOrderUrl } from "@/lib/portal-token";
+import { checkPortalLookupRateLimit } from "@/lib/portal-rate-limit";
 import { formatCurrency, formatDate } from "@/lib/utils";
 
 const WO_STATUS: Record<string, string> = {
@@ -37,6 +38,19 @@ export default async function PortalOsLookupPage({
   const { email } = await searchParams;
   const org = await getOrganizationByPortalSlug(orgSlug);
   if (!org) notFound();
+
+  if (email?.trim()) {
+    const rl = checkPortalLookupRateLimit(`${orgSlug}:${email}`);
+    if (!rl.ok) {
+      return (
+        <PortalShell orgName={org.name} orgSlug={org.slug} title="Acompanhar serviços">
+          <p className="rounded-xl bg-amber-50 px-4 py-3 text-sm text-amber-800">
+            Muitas tentativas. Aguarde alguns minutos e tente novamente.
+          </p>
+        </PortalShell>
+      );
+    }
+  }
 
   if (!email?.trim()) {
     return (
