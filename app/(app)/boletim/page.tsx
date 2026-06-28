@@ -17,15 +17,16 @@ export default async function BoletimPage() {
 
   const attendance = await prisma.attendanceRecord.findMany({
     where: { organizationId: ctx.orgId },
-    select: { enrollmentId: true, present: true },
+    select: { classId: true, customerId: true, present: true },
   });
 
   const stats = new Map<string, { present: number; total: number }>();
   for (const row of attendance) {
-    const current = stats.get(row.enrollmentId) ?? { present: 0, total: 0 };
+    const key = `${row.classId}:${row.customerId}`;
+    const current = stats.get(key) ?? { present: 0, total: 0 };
     current.total += 1;
     if (row.present) current.present += 1;
-    stats.set(row.enrollmentId, current);
+    stats.set(key, current);
   }
 
   const byClass = new Map<string, typeof enrollments>();
@@ -64,7 +65,7 @@ export default async function BoletimPage() {
                   </thead>
                   <tbody className="divide-y divide-slate-100">
                     {students.map((e) => {
-                      const s = stats.get(e.id);
+                      const s = stats.get(`${e.classId}:${e.customerId}`);
                       const rate = s && s.total > 0 ? Math.round((s.present / s.total) * 100) : null;
                       return (
                         <tr key={e.id} className="hover:bg-slate-50">
@@ -85,7 +86,7 @@ export default async function BoletimPage() {
                           <td className="px-4 py-3 text-slate-600">
                             {s ? `${s.present}/${s.total}` : "0/0"}
                           </td>
-                          <td className="px-4 py-3 text-slate-600">{formatDate(e.createdAt)}</td>
+                          <td className="px-4 py-3 text-slate-600">{formatDate(e.enrolledAt)}</td>
                         </tr>
                       );
                     })}
