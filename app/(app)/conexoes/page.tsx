@@ -25,7 +25,7 @@ const INTEGRATION_UI = [
   },
 ];
 
-export default async function IntegracoesPage() {
+export default async function ConexoesPage() {
   const ctx = await getAuthContext();
   requireRole(ctx, ["OWNER", "ADMIN"]);
 

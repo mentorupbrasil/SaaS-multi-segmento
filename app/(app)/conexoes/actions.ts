@@ -2,7 +2,6 @@
 
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
-import { prisma } from "@/lib/db";
 import { getAuthContext, requireRole } from "@/lib/auth-context";
 import { setIntegration } from "@/lib/integrations-service";
 
@@ -36,6 +35,6 @@ export async function toggleIntegrationAction(
     enabled: parsed.data.enabled === "true",
   });
 
-  revalidatePath("/integracoes");
+  revalidatePath("/conexoes");
   return { ok: true };
 }

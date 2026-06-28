@@ -46,7 +46,7 @@ export function buildNav(org: OrgLike): NavItem[] {
   const premiumPlans = ["pro", "premium", "enterprise"];
   if (org.plan && premiumPlans.includes(org.plan)) {
     items.push(
-      { href: "/integracoes", label: "Integrações", icon: "Plug" },
+      { href: "/conexoes", label: "Integrações", icon: "Plug" },
       { href: "/ia", label: "IA", icon: "Sparkles" },
     );
   }

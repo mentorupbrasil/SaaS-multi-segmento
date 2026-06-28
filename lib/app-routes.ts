@@ -26,7 +26,7 @@ export const ALL_APP_ROUTE_PREFIXES = [
   "/vacinas",
   "/comissoes",
   "/relatorios",
-  "/integracoes",
+  "/conexoes",
   "/ia",
   "/onboarding",
 ] as const;
