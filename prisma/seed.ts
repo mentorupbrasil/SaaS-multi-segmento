@@ -10,8 +10,11 @@ async function main() {
   const email = "demo@barbearia.com";
 
   const existing = await prisma.user.findUnique({ where: { email } });
+  const adminHash = await bcrypt.hash("admin123", 10);
+
   if (existing) {
-    console.log("Seed ja aplicado (usuario demo existe). Pulando.");
+    await ensurePlatformAdmin(adminHash);
+    console.log("Seed ja aplicado (usuario demo existe). Admin verificado.");
     return;
   }
 
@@ -56,8 +59,41 @@ async function main() {
     ],
   });
 
+  await ensurePlatformAdmin(adminHash);
+
   console.log("Seed concluido!");
   console.log("Login demo:  email: demo@barbearia.com  senha: 123456");
+  console.log("Admin plataforma: admin@gestorpro.com / admin123 (requer PLATFORM_ADMIN_EMAILS no .env)");
+}
+
+async function ensurePlatformAdmin(adminHash: string) {
+  const adminEmail = "admin@gestorpro.com";
+  const exists = await prisma.user.findUnique({ where: { email: adminEmail } });
+  if (exists) return;
+
+  const segment = SEGMENTS.barbearia;
+  await prisma.organization.create({
+    data: {
+      name: "GestorPro Admin",
+      slug: "gestorpro-admin",
+      segmentId: segment.id,
+      plan: "enterprise",
+      subscriptionStatus: "ACTIVE",
+      memberships: {
+        create: {
+          role: "OWNER",
+          title: "Administrador",
+          user: {
+            create: {
+              name: "Admin Plataforma",
+              email: adminEmail,
+              passwordHash: adminHash,
+            },
+          },
+        },
+      },
+    },
+  });
 }
 
 main()

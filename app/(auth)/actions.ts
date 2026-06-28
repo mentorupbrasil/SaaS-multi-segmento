@@ -107,6 +107,12 @@ export async function signupAction(
     });
   } catch (error) {
     if (error instanceof AuthError) {
+      if (String(error.type) === "Configuration") {
+        return {
+          error:
+            "Conta criada, mas falhou ao entrar (configuração do servidor). Tente fazer login manualmente.",
+        };
+      }
       return { error: "Conta criada, mas falhou ao entrar. Tente fazer login." };
     }
     throw error;
@@ -140,6 +146,15 @@ export async function loginAction(
     });
   } catch (error) {
     if (error instanceof AuthError) {
+      if (error.type === "CredentialsSignin") {
+        return { error: "E-mail ou senha incorretos" };
+      }
+      if (String(error.type) === "Configuration") {
+        return {
+          error:
+            "Erro de configuração do servidor (AUTH_SECRET ou URL). Reinicie o dev server após ajustar o .env.",
+        };
+      }
       return { error: "E-mail ou senha incorretos" };
     }
     throw error;

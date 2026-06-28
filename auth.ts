@@ -4,6 +4,7 @@ import bcrypt from "bcryptjs";
 import { z } from "zod";
 import { authConfig } from "./auth.config";
 import { prisma } from "@/lib/db";
+import { isPlatformAdminEmail } from "@/lib/platform-admin";
 
 const credentialsSchema = z.object({
   email: z.string().email(),
@@ -44,6 +45,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           name: user.name,
           orgId: membership.organizationId,
           role: membership.role,
+          isPlatformAdmin: isPlatformAdminEmail(user.email),
         };
       },
     }),
@@ -55,6 +57,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         token.id = user.id;
         token.orgId = user.orgId;
         token.role = user.role;
+        token.isPlatformAdmin = user.isPlatformAdmin ?? isPlatformAdminEmail(user.email);
+      } else if (token.email && token.isPlatformAdmin === undefined) {
+        token.isPlatformAdmin = isPlatformAdminEmail(token.email);
       }
       return token;
     },
@@ -63,6 +68,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         session.user.id = (token.id as string) ?? token.sub ?? "";
         session.user.orgId = (token.orgId as string) ?? "";
         session.user.role = (token.role as string) ?? "STAFF";
+        session.user.isPlatformAdmin = Boolean(token.isPlatformAdmin);
       }
       return session;
     },

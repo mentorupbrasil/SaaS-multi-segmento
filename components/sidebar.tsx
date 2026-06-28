@@ -14,6 +14,7 @@ interface SidebarProps {
   segmentIcon: string;
   userName: string;
   navItems: NavItem[];
+  isPlatformAdmin?: boolean;
 }
 
 export function Sidebar({
@@ -22,6 +23,7 @@ export function Sidebar({
   segmentIcon,
   userName,
   navItems,
+  isPlatformAdmin = false,
 }: SidebarProps) {
   const pathname = usePathname();
 
@@ -96,6 +98,14 @@ export function Sidebar({
           Conta
         </div>
         {bottomItems.map(renderItem)}
+        {isPlatformAdmin && (
+          <>
+            <div className="px-3 pb-1 pt-4 text-xs font-semibold uppercase tracking-wider text-slate-400">
+              Plataforma
+            </div>
+            {renderItem({ href: "/admin", label: "Admin", icon: "Server" })}
+          </>
+        )}
       </nav>
 
       <div className="border-t border-slate-100 p-3">

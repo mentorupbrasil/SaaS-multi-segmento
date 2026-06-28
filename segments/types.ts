@@ -8,7 +8,11 @@ export type SegmentCategory =
   | "alimentacao"
   | "servicos"
   | "educacao"
-  | "pet";
+  | "pet"
+  | "comercio"
+  | "hotelaria"
+  | "eventos"
+  | "organizacoes";
 
 export const CATEGORY_LABELS: Record<SegmentCategory, string> = {
   beleza: "Beleza & Estética",
@@ -18,6 +22,10 @@ export const CATEGORY_LABELS: Record<SegmentCategory, string> = {
   servicos: "Serviços & Profissionais",
   educacao: "Educação",
   pet: "Pet",
+  comercio: "Comércio",
+  hotelaria: "Hotelaria",
+  eventos: "Eventos",
+  organizacoes: "Organizações",
 };
 
 export interface CategoryMeta {
@@ -59,8 +67,28 @@ export const CATEGORY_META: Record<SegmentCategory, CategoryMeta> = {
   },
   pet: {
     label: "Pet",
-    description: "Banho, tosa, agenda, tutores e venda de produtos.",
+    description: "Clínica veterinária, pet shop, banho e tosa, hotel e prontuário.",
     icon: "PawPrint",
+  },
+  comercio: {
+    label: "Comércio",
+    description: "PDV, estoque, compras, CRM e multilojas.",
+    icon: "Store",
+  },
+  hotelaria: {
+    label: "Hotelaria",
+    description: "Reservas, quartos, check-in, governança e tarifas.",
+    icon: "Bed",
+  },
+  eventos: {
+    label: "Eventos",
+    description: "Orçamentos, contratos, cronograma e fornecedores.",
+    icon: "PartyPopper",
+  },
+  organizacoes: {
+    label: "Organizações",
+    description: "Membros, doações, eventos, voluntários e prestação de contas.",
+    icon: "HeartHandshake",
   },
 };
 
@@ -70,6 +98,10 @@ export const CATEGORY_ORDER: SegmentCategory[] = [
   "saude",
   "automotivo",
   "alimentacao",
+  "comercio",
+  "hotelaria",
+  "eventos",
+  "organizacoes",
   "servicos",
   "educacao",
   "pet",

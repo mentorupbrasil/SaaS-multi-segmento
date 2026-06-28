@@ -25,6 +25,7 @@ export default async function AppLayout({
         segmentIcon={segment?.icon ?? "Building2"}
         userName={session?.user?.name ?? session?.user?.email ?? ""}
         navItems={navItems}
+        isPlatformAdmin={session?.user?.isPlatformAdmin}
       />
       <main className="h-screen flex-1 overflow-y-auto">
         <div className="mx-auto max-w-6xl px-6 py-8">{children}</div>

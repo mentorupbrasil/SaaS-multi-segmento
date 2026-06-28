@@ -2,6 +2,8 @@ import type { NextAuthConfig } from "next-auth";
 
 // Config edge-safe (sem Prisma/bcrypt) usada pelo middleware.
 export const authConfig = {
+  secret: process.env.AUTH_SECRET,
+  trustHost: true,
   pages: {
     signIn: "/login",
   },
@@ -22,6 +24,7 @@ export const authConfig = {
         "/prontuario",
         "/configuracoes",
         "/assinatura",
+        "/admin",
       ];
       const isProtected = protectedPrefixes.some((p) =>
         nextUrl.pathname.startsWith(p),
