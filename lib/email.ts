@@ -11,15 +11,44 @@ export interface SendEmailResult {
 }
 
 function smtpConfigured(): boolean {
-  return Boolean(
-    process.env.SMTP_HOST &&
-      process.env.SMTP_PORT &&
-      process.env.SMTP_FROM,
-  );
+  return Boolean(process.env.SMTP_HOST && process.env.SMTP_PORT && process.env.SMTP_FROM);
 }
 
-/** Envia e-mail via SMTP (env) ou registra no console em desenvolvimento. */
+async function sendViaResend(options: SendEmailOptions): Promise<SendEmailResult | null> {
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) return null;
+
+  const from = process.env.SMTP_FROM ?? "GestorPro <noreply@gestorpro.app>";
+  const response = await fetch("https://api.resend.com/emails", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      from,
+      to: [options.to],
+      subject: options.subject,
+      text: options.text,
+      html: options.html ?? options.text.replace(/\n/g, "<br>"),
+    }),
+  });
+
+  if (!response.ok) {
+    const err = await response.text().catch(() => "");
+    return { ok: false, error: err || `Resend HTTP ${response.status}` };
+  }
+
+  return { ok: true };
+}
+
+/** Envia e-mail via Resend, SMTP (log) ou console em desenvolvimento. */
 export async function sendEmail(options: SendEmailOptions): Promise<SendEmailResult> {
+  if (process.env.RESEND_API_KEY) {
+    const result = await sendViaResend(options);
+    if (result) return result;
+  }
+
   const payload = {
     from: process.env.SMTP_FROM ?? "noreply@gestorpro.local",
     ...options,
@@ -32,16 +61,10 @@ export async function sendEmail(options: SendEmailOptions): Promise<SendEmailRes
 
   try {
     const port = Number(process.env.SMTP_PORT ?? 587);
-    const body = {
-      from: payload.from,
+    console.log(`[email:smtp] ${process.env.SMTP_HOST}:${port}`, {
       to: options.to,
       subject: options.subject,
-      text: options.text,
-      html: options.html ?? options.text.replace(/\n/g, "<br>"),
-    };
-
-    // Scaffolding: integração SMTP real entra com nodemailer/resend nas próximas fases.
-    console.log(`[email:smtp] ${process.env.SMTP_HOST}:${port}`, body);
+    });
     return { ok: true };
   } catch (error) {
     const message = error instanceof Error ? error.message : "Falha ao enviar e-mail";

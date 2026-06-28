@@ -5,6 +5,8 @@ import { z } from "zod";
 import { prisma } from "@/lib/db";
 import { slugify } from "@/lib/utils";
 import { queueAutomation } from "@/lib/automations";
+import { isFeatureEnabled } from "@/lib/feature-flags";
+import { canUsePublicBooking } from "@/lib/plan-enforcement";
 
 export interface PublicBookingOrg {
   id: string;
@@ -15,6 +17,8 @@ export interface PublicBookingOrg {
 }
 
 export async function getOrganizationByBookingSlug(slug: string): Promise<PublicBookingOrg | null> {
+  if (!isFeatureEnabled("PUBLIC_BOOKING")) return null;
+
   const org = await prisma.organization.findFirst({
     where: {
       OR: [{ publicBookingSlug: slug }, { slug }],
@@ -26,9 +30,19 @@ export async function getOrganizationByBookingSlug(slug: string): Promise<Public
       slug: true,
       publicBookingSlug: true,
       publicBookingEnabled: true,
+      plan: true,
     },
   });
-  return org;
+
+  if (!org || !canUsePublicBooking(org.plan)) return null;
+
+  return {
+    id: org.id,
+    name: org.name,
+    slug: org.slug,
+    publicBookingSlug: org.publicBookingSlug,
+    publicBookingEnabled: org.publicBookingEnabled,
+  };
 }
 
 export async function getOrganizationByPortalSlug(orgSlug: string) {

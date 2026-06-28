@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { getAuthContext } from "@/lib/auth-context";
+import { checkApiRateLimit, apiRateLimitResponse } from "@/lib/api-rate-limit";
+import { isFeatureEnabled } from "@/lib/feature-flags";
 
 const MOCK_SUMMARY =
   "Resumo simulado: receita estável, 12 agendamentos na semana e taxa de no-show em 8%. Ative OPENAI_API_KEY para insights reais.";
@@ -41,7 +43,7 @@ async function generateOpenAiSummary(prompt: string): Promise<string> {
 }
 
 export async function POST(request: Request) {
-  if (process.env.FEATURE_IA !== "true") {
+  if (!isFeatureEnabled("IA")) {
     return NextResponse.json(
       { error: "Recurso de IA não habilitado (FEATURE_IA)." },
       { status: 403 },
@@ -52,6 +54,9 @@ export async function POST(request: Request) {
   if (!session?.user?.id) {
     return NextResponse.json({ error: "Não autenticado." }, { status: 401 });
   }
+
+  const rl = checkApiRateLimit(`ai:${session.user.id}`, 30, 60_000);
+  if (!rl.ok) return apiRateLimitResponse(rl.retryAfterMs);
 
   let body: { prompt?: string } = {};
   try {

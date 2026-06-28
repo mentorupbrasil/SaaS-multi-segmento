@@ -1,3 +1,4 @@
+import { isFeatureEnabled } from "@/lib/feature-flags";
 import { getSegment } from "@/segments";
 import { ALL_MODULES, MODULES } from "@/modules";
 import { resolveSegmentModules } from "./segment-modules";
@@ -49,10 +50,10 @@ export function buildNav(org: OrgLike): NavItem[] {
 
   const premiumPlans = ["pro", "premium", "enterprise"];
   if (org.plan && premiumPlans.includes(org.plan)) {
-    items.push(
-      { href: "/conexoes", label: "Integrações", icon: "Plug" },
-      { href: "/ia", label: "IA", icon: "Sparkles" },
-    );
+    if (isFeatureEnabled("IA")) {
+      items.push({ href: "/ia", label: "IA", icon: "Sparkles" });
+    }
+    items.push({ href: "/conexoes", label: "Integrações", icon: "Plug" });
   }
 
   return items;

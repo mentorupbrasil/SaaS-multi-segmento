@@ -1,4 +1,6 @@
 import { prisma } from "@/lib/db";
+import { isFeatureEnabled } from "@/lib/feature-flags";
+import { canAccessFeature } from "@/lib/plan-limits";
 
 export interface WhatsAppSendInput {
   organizationId: string;
@@ -8,7 +10,7 @@ export interface WhatsAppSendInput {
 
 export interface WhatsAppSendResult {
   ok: boolean;
-  mode: "api" | "log";
+  mode: "api" | "log" | "disabled";
   error?: string;
 }
 
@@ -18,6 +20,18 @@ function normalizePhone(phone: string): string {
 
 /** Envia WhatsApp via integração configurada ou registra em log (dev). */
 export async function sendWhatsApp(input: WhatsAppSendInput): Promise<WhatsAppSendResult> {
+  if (!isFeatureEnabled("WHATSAPP")) {
+    return { ok: false, mode: "disabled", error: "WhatsApp desabilitado (FEATURE_WHATSAPP)." };
+  }
+
+  const org = await prisma.organization.findUnique({
+    where: { id: input.organizationId },
+    select: { plan: true },
+  });
+  if (!org || !canAccessFeature(org.plan, "whatsapp_reminders")) {
+    return { ok: false, mode: "disabled", error: "Plano não inclui lembretes por WhatsApp." };
+  }
+
   const phone = normalizePhone(input.phone);
   if (!phone) {
     return { ok: false, mode: "log", error: "Telefone inválido" };
@@ -31,12 +45,14 @@ export async function sendWhatsApp(input: WhatsAppSendInput): Promise<WhatsAppSe
     },
   });
 
-  const apiUrl = config?.config && typeof config.config === "object"
-    ? String((config.config as Record<string, unknown>).apiUrl ?? "")
-    : "";
-  const apiToken = config?.config && typeof config.config === "object"
-    ? String((config.config as Record<string, unknown>).apiToken ?? "")
-    : "";
+  const apiUrl =
+    config?.config && typeof config.config === "object"
+      ? String((config.config as Record<string, unknown>).apiUrl ?? "")
+      : "";
+  const apiToken =
+    config?.config && typeof config.config === "object"
+      ? String((config.config as Record<string, unknown>).apiToken ?? "")
+      : "";
 
   if (apiUrl && apiToken) {
     try {
@@ -65,8 +81,6 @@ export async function sendWhatsApp(input: WhatsAppSendInput): Promise<WhatsAppSe
     }
   }
 
-  console.log(
-    `[whatsapp] org=${input.organizationId} to=${phone}\n${input.message}`,
-  );
+  console.log(`[whatsapp] org=${input.organizationId} to=${phone}\n${input.message}`);
   return { ok: true, mode: "log" };
 }

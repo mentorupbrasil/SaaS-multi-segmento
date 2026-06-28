@@ -1,5 +1,6 @@
 import { auth } from "@/auth";
 import { prisma } from "@/lib/db";
+import { checkApiRateLimit, apiRateLimitResponse } from "@/lib/api-rate-limit";
 import { exportTableResponse, type ExportFormat } from "@/lib/export-excel";
 import { formatCurrency, formatDate, formatDateTime } from "@/lib/utils";
 
@@ -25,6 +26,10 @@ const ALLOWED = new Set([
   "vacinas",
   "pacotes",
   "comissoes",
+  "prontuario",
+  "frequencia",
+  "pdv",
+  "boletim",
 ]);
 
 function respond(
@@ -51,6 +56,9 @@ export async function GET(request: Request) {
   if (!ALLOWED.has(exportModule)) {
     return new Response("Módulo inválido", { status: 400 });
   }
+
+  const rl = checkApiRateLimit(`export:${session.user.id}`);
+  if (!rl.ok) return apiRateLimitResponse(rl.retryAfterMs);
 
   const membership = await prisma.membership.findFirst({
     where: { userId: session.user.id },
@@ -540,6 +548,108 @@ export async function GET(request: Request) {
           r.paidAt ? "Pago" : "Pendente",
           formatDate(r.createdAt),
         ]),
+      );
+    }
+
+    case "prontuario": {
+      const rows = await prisma.customerRecord.findMany({
+        where: { organizationId: orgId },
+        include: { customer: { select: { name: true } } },
+        orderBy: { createdAt: "desc" },
+      });
+      return respond(
+        format,
+        "prontuario",
+        date,
+        ["Título", "Cliente", "Data", "Conteúdo"],
+        rows.map((r) => [
+          r.title,
+          r.customer.name,
+          formatDate(r.createdAt),
+          (r.content ?? "").slice(0, 200),
+        ]),
+      );
+    }
+
+    case "frequencia": {
+      const rows = await prisma.attendanceRecord.findMany({
+        where: { organizationId: orgId },
+        include: {
+          customer: { select: { name: true } },
+          class: { select: { name: true } },
+        },
+        orderBy: { date: "desc" },
+      });
+      return respond(
+        format,
+        "frequencia",
+        date,
+        ["Data", "Aluno", "Turma", "Presente"],
+        rows.map((r) => [
+          formatDate(r.date),
+          r.customer.name,
+          r.class.name,
+          r.present ? "Sim" : "Não",
+        ]),
+      );
+    }
+
+    case "pdv": {
+      const rows = await prisma.sale.findMany({
+        where: { organizationId: orgId, status: "PAID" },
+        include: { customer: { select: { name: true } } },
+        orderBy: { createdAt: "desc" },
+      });
+      return respond(
+        format,
+        "pdv",
+        date,
+        ["Data", "Identificador", "Cliente", "Pagamento", "Total"],
+        rows.map((r) => [
+          formatDate(r.createdAt),
+          r.tableLabel ?? r.id.slice(-6),
+          r.customer?.name ?? "",
+          r.paymentMethod ?? "",
+          formatCurrency(r.total),
+        ]),
+      );
+    }
+
+    case "boletim": {
+      const enrollments = await prisma.enrollment.findMany({
+        where: { organizationId: orgId, status: "ACTIVE" },
+        include: {
+          customer: { select: { name: true } },
+          class: { select: { name: true } },
+        },
+      });
+      const attendance = await prisma.attendanceRecord.findMany({
+        where: { organizationId: orgId },
+        select: { classId: true, customerId: true, present: true },
+      });
+      const stats = new Map<string, { present: number; total: number }>();
+      for (const row of attendance) {
+        const key = `${row.classId}:${row.customerId}`;
+        const cur = stats.get(key) ?? { present: 0, total: 0 };
+        cur.total += 1;
+        if (row.present) cur.present += 1;
+        stats.set(key, cur);
+      }
+      return respond(
+        format,
+        "boletim",
+        date,
+        ["Aluno", "Turma", "Presenças", "Frequência %"],
+        enrollments.map((e) => {
+          const s = stats.get(`${e.classId}:${e.customerId}`);
+          const rate = s && s.total > 0 ? Math.round((s.present / s.total) * 100) : 0;
+          return [
+            e.customer.name,
+            e.class.name,
+            s ? `${s.present}/${s.total}` : "0/0",
+            s && s.total > 0 ? `${rate}%` : "—",
+          ];
+        }),
       );
     }
 

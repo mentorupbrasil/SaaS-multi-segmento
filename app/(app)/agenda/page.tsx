@@ -5,6 +5,7 @@ import { prisma } from "@/lib/db";
 import { parseListParams } from "@/lib/list-params";
 import { resolveTerms, term } from "@/lib/terms";
 import { PageHeader } from "@/components/page-header";
+import { EmptyState } from "@/components/empty-state";
 import { ListToolbar } from "@/components/list-toolbar";
 import { Pagination } from "@/components/pagination";
 import { ExportCsvLink } from "@/components/export-csv-link";
@@ -159,11 +160,14 @@ export default async function AgendaPage({
       </Suspense>
 
       {appointments.length === 0 ? (
-        <div className="card p-10 text-center text-slate-500">
-          {params.q || staffFilter || statusFilter
-            ? "Nenhum resultado."
-            : `Nenhum ${term(terms, "appointment").toLowerCase()} cadastrado ainda.`}
-        </div>
+        <EmptyState
+          icon="Calendar"
+          description={
+            params.q || staffFilter || statusFilter
+              ? "Nenhum resultado para os filtros."
+              : `Nenhum ${term(terms, "appointment").toLowerCase()} cadastrado ainda.`
+          }
+        />
       ) : (
         <>
           <div className="card mb-8 overflow-hidden">

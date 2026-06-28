@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
-import { writeFile, mkdir } from "fs/promises";
 import path from "path";
 import { auth } from "@/auth";
+import { checkApiRateLimit, apiRateLimitResponse } from "@/lib/api-rate-limit";
+import { storeUploadedFile } from "@/lib/file-upload";
 
 const MAX_SIZE = 5 * 1024 * 1024;
 const ALLOWED_TYPES = [
@@ -17,6 +18,9 @@ export async function POST(request: Request) {
   if (!session?.user) {
     return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
   }
+
+  const rl = checkApiRateLimit(`upload:${session.user.id}`, 20, 60_000);
+  if (!rl.ok) return apiRateLimitResponse(rl.retryAfterMs);
 
   const formData = await request.formData();
   const file = formData.get("file");
@@ -35,13 +39,12 @@ export async function POST(request: Request) {
 
   const ext = path.extname(file.name) || ".bin";
   const safeName = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}${ext}`;
-  const uploadsDir = path.join(process.cwd(), "public", "uploads");
-
-  await mkdir(uploadsDir, { recursive: true });
-
   const buffer = Buffer.from(await file.arrayBuffer());
-  await writeFile(path.join(uploadsDir, safeName), buffer);
+  const stored = await storeUploadedFile(buffer, safeName, file.type);
 
-  const url = `/uploads/${safeName}`;
-  return NextResponse.json({ url });
+  if (!stored.ok || !stored.url) {
+    return NextResponse.json({ error: stored.error ?? "Falha no upload" }, { status: 500 });
+  }
+
+  return NextResponse.json({ url: stored.url });
 }

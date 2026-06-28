@@ -288,7 +288,8 @@ const ALIMENTACAO: SegmentExtras = {
       title: "Gestão de mesas",
       icon: "UtensilsCrossed",
       items: [
-        s("Mapa do salão e status das mesas"),
+        a("Mapa do salão e status das mesas"),
+        a("Abrir venda no PDV pela mesa"),
         s("Reserva e lista de espera"),
         s("Transferência e junção de mesas"),
         s("Tempo de permanência"),
@@ -323,9 +324,9 @@ const ALIMENTACAO: SegmentExtras = {
       title: "Cozinha (KDS)",
       icon: "ChefHat",
       items: [
-        s("Painel de produção e fila de pedidos"),
+        a("Painel de produção e fila de pedidos"),
+        a("Status do pedido (pendente, preparando, pronto)"),
         s("Tempo de preparo e prioridade"),
-        s("Status do pedido"),
         s("Impressão por setor (cozinha, bar, pizzaria)"),
       ],
     },
@@ -1411,8 +1412,8 @@ const HOTELARIA: SegmentExtras = {
       title: "Governança (housekeeping)",
       icon: "Sparkles",
       items: [
-        s("Controle de limpeza e camareiras"),
-        s("Checklists e prioridades"),
+        a("Controle de limpeza e camareiras"),
+        a("Checklists e prioridades por quarto"),
         s("Produtos utilizados e tempo de limpeza"),
         s("Histórico por quarto"),
       ],

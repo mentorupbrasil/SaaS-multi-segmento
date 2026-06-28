@@ -127,7 +127,7 @@ export const FEATURE_GROUPS: FeatureGroup[] = [
         icon: "Globe",
         short: "Agendamento e acompanhamento online.",
         description:
-          "Link público para agendar, acompanhar OS e orçamentos, e acessar a área do responsável (educação).",
+          "Link público para agendar, acompanhar OS/orçamentos e área do responsável (educação). Ative com FEATURE_PORTAL.",
         status: "available",
         planGated: true,
       },
@@ -135,9 +135,9 @@ export const FEATURE_GROUPS: FeatureGroup[] = [
         id: "ia",
         name: "Inteligência artificial",
         icon: "Sparkles",
-        short: "Sugestões e insights automáticos.",
+        short: "Resumos e insights (OpenAI opcional).",
         description:
-          "Resumos do dia, sugestões de horários e insights sobre clientes que ajudam a tomar decisões melhores.",
+          "Resumos do negócio com IA. Requer FEATURE_IA e plano Profissional+. Sem OPENAI_API_KEY, exibe insights simulados.",
         status: "available",
         planGated: true,
       },
@@ -163,9 +163,9 @@ export const FEATURE_GROUPS: FeatureGroup[] = [
         id: "integracoes",
         name: "Integrações",
         icon: "Layers",
-        short: "Conecte com as ferramentas que usa.",
+        short: "Conecte WhatsApp, PIX e calendário.",
         description:
-          "WhatsApp, PIX, pagamentos online, Google Agenda e mais. Conecte o que você já usa no dia a dia.",
+          "Painel de conexões por organização. WhatsApp e NF-e dependem de provedor externo configurado.",
         status: "available",
         planGated: true,
       },

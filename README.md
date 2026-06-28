@@ -34,7 +34,9 @@ chama `getAuthContext()`, que le `userId`/`orgId` da **sessao** (nunca do client
 o membership. Nunca confie em ids vindos do formulario.
 
 Limites de plano (usuarios, filiais, modulos extras, features) sao aplicados via
-`lib/plan-limits.ts`.
+`lib/plan-limits.ts` e enforced em rotas (`lib/require-module.ts`).
+
+Automacoes: configure `CRON_SECRET` e Vercel Cron em `/api/cron/automations` (ver `vercel.json`).
 
 ## Stack
 Next.js (App Router) + TypeScript, Prisma + PostgreSQL (Neon), NextAuth/Auth.js v5
@@ -110,23 +112,26 @@ npx auth secret
 
 ## Roadmap
 
-### Implementado
+### Implementado (ondas 1–6)
 - **131 segmentos** com landing SEO, signup e demo por nicho
-- Modulos core: clientes, agenda, servicos, financeiro, caixa, equipe, relatorios
+- Modulos core: clientes, agenda, servicos, financeiro, caixa, equipe, relatorios (Pro+)
 - Modulos avancados: estoque, PDV, ordens de servico, orcamentos, comissoes, pacotes, prontuario
-- Link publico de agendamento (`/agendar/[slug]`, plan Pro+)
-- Portal do cliente (scaffold em `/portal/[orgSlug]`, flag `FEATURE_PORTAL`)
-- IA — resumos e insights (scaffold em `/ia`, flag `FEATURE_IA`)
-- Integracoes — WhatsApp, PIX, Google Agenda (painel em `/conexoes`, plan-gated; marketing em `/integracoes`)
-- Billing — checkout Mercado Pago + webhook stub (`/api/billing/webhook`)
-- Limites de plano aplicados (`lib/plan-limits.ts`)
+- Verticais: hotel (quartos, reservas, governanca, tarifas), educacao (turmas, matriculas, frequencia, boletim), alimentacao (mesas, cozinha/KDS)
+- Link publico de agendamento (`/agendar/[slug]`, plan Pro+, flag `FEATURE_PUBLIC_BOOKING`)
+- Portal do cliente (OS, orcamentos, responsavel, agenda — flag `FEATURE_PORTAL`)
+- IA — resumos (`/ia`, flag `FEATURE_IA`, OpenAI opcional)
+- Integracoes — painel `/conexoes` (Pro+)
+- Enforcement de plano em rotas + flags em nav/APIs
+- Automacoes — fila + cron `/api/cron/automations`
+- Export CSV/Excel (25+ modulos)
+- Rate limit em auth e APIs sensiveis
+- Upload: disco local (dev) ou Vercel Blob (producao)
 
 ### Proximas fases
-- Checkout recorrente (assinatura mensal) completo no Mercado Pago
-- Validacao de webhook com `MERCADOPAGO_WEBHOOK_SECRET`
-- Integracoes reais (WhatsApp Business API, PIX conciliado, Google Calendar OAuth)
-- App mobile dedicado
-- NFS-e / emissao fiscal
+- Checkout recorrente Mercado Pago completo + validacao robusta de webhook
+- NF-e / channel manager (integracao real ou parceiro)
+- RLS no Neon (`npm run db:rls`)
+- App mobile / PWA
 
 ## Seguranca
 A senha do banco Neon foi exposta em chat durante o desenvolvimento. **Rotacione-a** no
