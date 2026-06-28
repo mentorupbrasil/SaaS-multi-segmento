@@ -14,7 +14,7 @@ export async function GET(req: NextRequest) {
     }
   }
 
-  const processed = await processPendingAutomations(25);
+  const processed = await processPendingAutomations(50);
   return NextResponse.json({ ok: true, processed });
 }
 

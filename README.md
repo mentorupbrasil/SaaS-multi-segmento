@@ -36,7 +36,7 @@ o membership. Nunca confie em ids vindos do formulario.
 Limites de plano (usuarios, filiais, modulos extras, features) sao aplicados via
 `lib/plan-limits.ts` e enforced em rotas (`lib/require-module.ts`).
 
-Automacoes: configure `CRON_SECRET` e Vercel Cron em `/api/cron/automations` (ver `vercel.json`).
+Automacoes: configure `CRON_SECRET` e Vercel Cron em `/api/cron/automations` (ver `vercel.json`). No plano **Hobby** da Vercel o cron roda **1x por dia**; no **Pro** voce pode aumentar a frequencia.
 
 ## Stack
 Next.js (App Router) + TypeScript, Prisma + PostgreSQL (Neon), NextAuth/Auth.js v5
