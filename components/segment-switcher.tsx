@@ -1,12 +1,13 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useTransition } from "react";
+import { useMemo, useState, useTransition } from "react";
 import { switchSegmentAction } from "@/app/admin/actions";
 
 export interface SegmentOption {
   id: string;
   label: string;
+  tagline: string;
   category: string;
 }
 
@@ -15,15 +16,38 @@ interface SegmentSwitcherProps {
   activeSegmentId: string;
 }
 
+function normalize(text: string): string {
+  return text
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+}
+
 export function SegmentSwitcher({ segments, activeSegmentId }: SegmentSwitcherProps) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
+  const [query, setQuery] = useState("");
+
+  const filtered = useMemo(() => {
+    const q = normalize(query.trim());
+    if (!q) return segments;
+    return segments.filter(
+      (s) => normalize(s.label).includes(q) || normalize(s.tagline).includes(q),
+    );
+  }, [query, segments]);
 
   return (
     <div className="mb-4 px-3">
       <p className="mb-1.5 px-1 text-xs font-semibold uppercase tracking-wider text-slate-400">
         Sistema / segmento
       </p>
+      <input
+        type="search"
+        placeholder="Buscar segmento..."
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        className="input mb-2 text-sm"
+      />
       <select
         className="input text-sm"
         value={activeSegmentId}
@@ -36,7 +60,12 @@ export function SegmentSwitcher({ segments, activeSegmentId }: SegmentSwitcherPr
           });
         }}
       >
-        {segments.map((seg) => (
+        {filtered.length === 0 && (
+          <option value="" disabled>
+            Nenhum segmento encontrado
+          </option>
+        )}
+        {filtered.map((seg) => (
           <option key={seg.id} value={seg.id}>
             {seg.label} ({seg.category})
           </option>

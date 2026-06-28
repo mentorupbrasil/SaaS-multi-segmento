@@ -23,6 +23,9 @@ export const lojaUtilidades: SegmentTemplate = {
   tagline: "PDV, categorias e estoque.",
   modules: [...baseModules],
   terms: baseTerms,
+  customerFields: [
+    { key: "categoria_interesse", label: "Categoria de interesse", type: "text", placeholder: "Ex.: cozinha, banheiro" },
+  ],
   defaultServices: [
     { name: "Panela antiaderente", price: 89, durationMin: 0 },
     { name: "Jogo de copos", price: 45, durationMin: 0 },
@@ -57,6 +60,10 @@ export const lojaFerragens: SegmentTemplate = {
   tagline: "PDV, peças, peso e estoque.",
   modules: [...baseModules],
   terms: baseTerms,
+  customerFields: [
+    { key: "tipo_obra", label: "Tipo de obra", type: "select", options: ["Reforma", "Construção", "Manutenção"] },
+    { key: "cnpj", label: "CNPJ (PJ)", type: "text" },
+  ],
   defaultServices: [
     { name: "Parafuso (cx)", price: 12, durationMin: 0 },
     { name: "Tinta 18L", price: 189, durationMin: 0 },
@@ -167,6 +174,10 @@ export const supermercado: SegmentTemplate = {
   tagline: "PDV rápido, validade e multilojas.",
   modules: [...baseModules],
   terms: baseTerms,
+  customerFields: [
+    { key: "cartao_fidelidade", label: "Cartão fidelidade", type: "text" },
+    { key: "convenio", label: "Convênio / vale", type: "text" },
+  ],
   defaultServices: [
     { name: "Produto pesável (kg)", price: 0, durationMin: 0 },
     { name: "Produto unitário", price: 0, durationMin: 0 },
@@ -201,6 +212,10 @@ export const mercearia: SegmentTemplate = {
   tagline: "PDV, estoque e crediário.",
   modules: [...baseModules],
   terms: baseTerms,
+  customerFields: [
+    { key: "crediario", label: "Crediário", type: "select", options: ["Sim", "Não"] },
+    { key: "limite", label: "Limite de crédito", type: "number" },
+  ],
   defaultServices: [
     { name: "Arroz 5kg", price: 28, durationMin: 0 },
     { name: "Feijão 1kg", price: 9, durationMin: 0 },
@@ -235,6 +250,10 @@ export const minimercado: SegmentTemplate = {
   tagline: "PDV enxuto, estoque e caixa.",
   modules: [...baseModules],
   terms: baseTerms,
+  customerFields: [
+    { key: "bairro", label: "Bairro", type: "text" },
+    { key: "frequencia", label: "Frequência de compra", type: "select", options: ["Diária", "Semanal", "Quinzenal", "Mensal"] },
+  ],
   defaultServices: [
     { name: "Produto unitário", price: 0, durationMin: 0 },
     { name: "Produto pesável", price: 0, durationMin: 0 },

@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { auth, unstable_update } from "@/auth";
 import { prisma } from "@/lib/db";
 import { isPlatformAdminEmail } from "@/lib/platform-admin";
-import { getSegment } from "@/segments";
+import { ALL_SEGMENTS } from "@/segments";
 import { getOrCreateDemoOrganization } from "@/lib/demo-org";
 
 async function assertPlatformAdmin() {
@@ -30,13 +30,12 @@ export async function switchOrganizationAction(orgId: string) {
   return { ok: true };
 }
 
-/** Alterna a interface operacional para qualquer um dos 114 segmentos. */
+/** Alterna a interface operacional para qualquer segmento registrado ({@link ALL_SEGMENTS}). */
 export async function switchSegmentAction(segmentId: string) {
   const check = await assertPlatformAdmin();
   if ("error" in check) return check;
 
-  const segment = getSegment(segmentId);
-  if (!segment) {
+  if (!ALL_SEGMENTS.some((s) => s.id === segmentId)) {
     return { error: "Segmento inválido" };
   }
 

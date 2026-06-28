@@ -9,6 +9,8 @@ import { z } from "zod";
 import { prisma } from "@/lib/db";
 
 import { getAuthContext } from "@/lib/auth-context";
+import { requireMutationRole } from "@/lib/action-auth";
+import { logAudit } from "@/lib/audit-log";
 
 import { addInventoryMovement, recalcSaleTotal } from "@/lib/inventory-utils";
 
@@ -309,6 +311,72 @@ export async function cancelSale(saleId: string): Promise<FormResult> {
   });
 
 
+
+  revalidatePath("/pdv");
+
+  revalidatePath("/estoque");
+
+  return { ok: true };
+
+}
+
+
+
+export async function deleteSale(saleId: string): Promise<FormResult> {
+
+  const ctx = await getAuthContext();
+
+  requireMutationRole(ctx, ["OWNER", "ADMIN"]);
+
+
+
+  const sale = await prisma.sale.findFirst({
+
+    where: { id: saleId, organizationId: ctx.orgId },
+
+    include: { items: true },
+
+  });
+
+  if (!sale) return { error: "Venda não encontrada" };
+
+  if (sale.status !== "OPEN") return { error: "Somente vendas abertas podem ser excluídas" };
+
+
+
+  for (const item of sale.items) {
+
+    if (item.inventoryItemId) {
+
+      await addInventoryMovement({
+
+        organizationId: ctx.orgId,
+
+        inventoryItemId: item.inventoryItemId,
+
+        type: "IN",
+
+        quantity: Math.ceil(item.quantity),
+
+        reason: "Exclusão venda PDV",
+
+      });
+
+    }
+
+  }
+
+
+
+  await prisma.sale.deleteMany({
+
+    where: { id: saleId, organizationId: ctx.orgId },
+
+  });
+
+
+
+  await logAudit(ctx, "sale.delete", { id: saleId });
 
   revalidatePath("/pdv");
 

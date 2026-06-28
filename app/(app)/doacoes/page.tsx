@@ -2,7 +2,9 @@ import { getAuthContext } from "@/lib/auth-context";
 import { prisma } from "@/lib/db";
 import { resolveTerms, term } from "@/lib/terms";
 import { PageHeader } from "@/components/page-header";
+import { DeleteButton } from "@/components/delete-button";
 import { DonationForm } from "@/modules/donations/donation-form";
+import { deleteDonation } from "@/modules/donations/actions";
 import { formatCurrency, formatDate } from "@/lib/utils";
 
 export default async function DoacoesPage() {
@@ -51,6 +53,7 @@ export default async function DoacoesPage() {
                 <th className="px-4 py-3">{customerLabel}</th>
                 <th className="px-4 py-3">Descrição</th>
                 <th className="px-4 py-3">Recebida em</th>
+                <th className="px-4 py-3">Ações</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
@@ -61,6 +64,9 @@ export default async function DoacoesPage() {
                   <td className="px-4 py-3 text-slate-600">{d.customer?.name ?? "Anônimo"}</td>
                   <td className="px-4 py-3 text-slate-600">{d.description ?? "—"}</td>
                   <td className="px-4 py-3 text-slate-600">{formatDate(d.receivedAt)}</td>
+                  <td className="px-4 py-3">
+                    <DeleteButton onConfirm={() => deleteDonation(d.id)} />
+                  </td>
                 </tr>
               ))}
             </tbody>

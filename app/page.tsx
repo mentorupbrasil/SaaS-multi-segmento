@@ -42,6 +42,8 @@ const SECURITY = [
 ];
 
 export default function HomePage() {
+  const featureIaEnabled = process.env.FEATURE_IA === "true";
+
   return (
     <div className="bg-white">
       <SiteHeader />
@@ -220,9 +222,16 @@ export default function HomePage() {
               A IA do GestorPro resume o seu dia, sugere horários e aponta clientes para retornar —
               ajudando você a vender mais sem esforço extra.
             </p>
-            <span className="mt-5 inline-flex items-center gap-2 rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-amber-700">
-              Em breve
-            </span>
+            {featureIaEnabled ? (
+              <Link href="/funcionalidades#ia" className="btn-secondary mt-5 inline-flex">
+                Conhecer a IA
+                <Icon name="ArrowRight" className="h-4 w-4" />
+              </Link>
+            ) : (
+              <span className="mt-5 inline-flex items-center gap-2 rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-amber-700">
+                Em breve
+              </span>
+            )}
           </div>
         </div>
       </section>

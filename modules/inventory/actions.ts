@@ -4,6 +4,8 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { prisma } from "@/lib/db";
 import { getAuthContext } from "@/lib/auth-context";
+import { requireMutationRole } from "@/lib/action-auth";
+import { logAudit } from "@/lib/audit-log";
 
 import { addInventoryMovement } from "@/lib/inventory-utils";
 
@@ -59,6 +61,72 @@ export async function createInventoryItem(
     },
   });
 
+  revalidatePath("/estoque");
+  return { ok: true };
+}
+
+export async function updateInventoryItem(
+  id: string,
+  _prev: FormResult,
+  formData: FormData,
+): Promise<FormResult> {
+  const ctx = await getAuthContext();
+  requireMutationRole(ctx, ["OWNER", "ADMIN"]);
+
+  const parsed = schema.safeParse({
+    name: formData.get("name"),
+    sku: formData.get("sku") ?? undefined,
+    barcode: formData.get("barcode") ?? undefined,
+    brand: formData.get("brand") ?? undefined,
+    category: formData.get("category") ?? undefined,
+    quantity: formData.get("quantity") ?? 0,
+    minQuantity: formData.get("minQuantity") ?? 0,
+    unit: formData.get("unit") ?? "un",
+    price: formData.get("price") ?? 0,
+  });
+  if (!parsed.success) {
+    return { error: parsed.error.issues[0]?.message ?? "Dados inválidos" };
+  }
+
+  const existing = await prisma.inventoryItem.findFirst({
+    where: { id, organizationId: ctx.orgId },
+  });
+  if (!existing) return { error: "Item não encontrado" };
+
+  await prisma.inventoryItem.updateMany({
+    where: { id, organizationId: ctx.orgId },
+    data: {
+      name: parsed.data.name,
+      sku: parsed.data.sku || null,
+      barcode: parsed.data.barcode || null,
+      brand: parsed.data.brand || null,
+      category: parsed.data.category || null,
+      quantity: parsed.data.quantity,
+      minQuantity: parsed.data.minQuantity ?? 0,
+      unit: parsed.data.unit || "un",
+      price: parsed.data.price ?? 0,
+    },
+  });
+
+  await logAudit(ctx, "inventory.update", { id });
+  revalidatePath("/estoque");
+  return { ok: true };
+}
+
+export async function deleteInventoryItem(id: string): Promise<FormResult> {
+  const ctx = await getAuthContext();
+  requireMutationRole(ctx, ["OWNER", "ADMIN"]);
+
+  const existing = await prisma.inventoryItem.findFirst({
+    where: { id, organizationId: ctx.orgId },
+  });
+  if (!existing) return { error: "Item não encontrado" };
+
+  await prisma.inventoryItem.deleteMany({
+    where: { id, organizationId: ctx.orgId },
+  });
+
+  await logAudit(ctx, "inventory.delete", { id, name: existing.name });
   revalidatePath("/estoque");
   return { ok: true };
 }

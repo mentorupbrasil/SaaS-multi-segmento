@@ -16,7 +16,7 @@ export default function IntegracoesPage() {
       <PageHero
         eyebrow="Integrações"
         title="Conecte com as ferramentas que você já usa"
-        description="As integrações chegam para automatizar a rotina e centralizar tudo em um só lugar."
+        description="WhatsApp e PIX já disponíveis no plano Profissional ou superior. Outras integrações chegam em breve."
       />
 
       <section className="section py-16">
@@ -27,15 +27,32 @@ export default function IntegracoesPage() {
                 <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-slate-100 text-slate-600">
                   <Icon name={i.icon} className="h-5 w-5" />
                 </span>
-                <span className="rounded-full bg-amber-100 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-amber-700">
-                  Em breve
-                </span>
+                {i.status === "available" ? (
+                  i.planGated ? (
+                    <span className="rounded-full bg-brand-100 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-brand-700">
+                      Plano Pro+
+                    </span>
+                  ) : (
+                    <span className="rounded-full bg-green-100 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-green-700">
+                      Disponível
+                    </span>
+                  )
+                ) : (
+                  <span className="rounded-full bg-amber-100 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-amber-700">
+                    Em breve
+                  </span>
+                )}
               </div>
               <h3 className="mt-4 font-semibold text-slate-900">{i.name}</h3>
               <p className="text-xs font-medium uppercase tracking-wide text-brand-600">
                 {i.category}
               </p>
               <p className="mt-1.5 text-sm leading-relaxed text-slate-600">{i.description}</p>
+              {i.status === "available" && i.planGated && (
+                <Link href="/signup" className="btn-primary mt-4 inline-flex w-full justify-center text-sm">
+                  Assinar plano Profissional
+                </Link>
+              )}
             </div>
           ))}
         </div>

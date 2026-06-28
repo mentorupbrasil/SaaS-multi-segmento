@@ -4,6 +4,8 @@ import { resolveTerms, term } from "@/lib/terms";
 import { PageHeader } from "@/components/page-header";
 import { ReservationForm } from "@/modules/reservations/reservation-form";
 import { ReservationStatusButtons } from "@/components/reservation-status-buttons";
+import { DeleteButton } from "@/components/delete-button";
+import { deleteReservation } from "@/modules/reservations/actions";
 import { formatCurrency, formatDate } from "@/lib/utils";
 
 const STATUS_LABEL: Record<string, string> = {
@@ -90,7 +92,10 @@ export default async function ReservasPage() {
                   </td>
                   <td className="px-4 py-3 text-slate-600">{formatCurrency(r.total)}</td>
                   <td className="px-4 py-3">
-                    <ReservationStatusButtons id={r.id} status={r.status} />
+                    <div className="flex flex-wrap items-center gap-2">
+                      <ReservationStatusButtons id={r.id} status={r.status} />
+                      <DeleteButton onConfirm={() => deleteReservation(r.id)} />
+                    </div>
                   </td>
                 </tr>
               ))}

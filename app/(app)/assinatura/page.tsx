@@ -3,7 +3,7 @@ import { PLANS, getPlan } from "@/lib/plans";
 import { PageHeader } from "@/components/page-header";
 import { Icon } from "@/components/icon";
 import { formatCurrency, cn } from "@/lib/utils";
-import { subscribeFake, cancelFake } from "./actions";
+import { subscribePlan, cancelFake } from "./actions";
 
 const STATUS_LABELS: Record<string, string> = {
   TRIALING: "Em teste",
@@ -38,8 +38,9 @@ export default async function AssinaturaPage() {
       </div>
 
       <div className="rounded-lg border border-blue-200 bg-blue-50 px-4 py-3 text-sm text-blue-800">
-        Pagamento simulado nesta versão. A integração real com o Mercado Pago (checkout + webhook)
-        entra nas próximas fases.
+        {process.env.MERCADOPAGO_ACCESS_TOKEN
+          ? "Pagamentos processados via Mercado Pago (PIX e cartão)."
+          : "Pagamento simulado nesta versão. Configure MERCADOPAGO_ACCESS_TOKEN para checkout real."}
       </div>
 
       <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
@@ -89,7 +90,7 @@ export default async function AssinaturaPage() {
                   Falar com vendas
                 </a>
               ) : (
-                <form action={subscribeFake.bind(null, plan.id)} className="mt-6">
+                <form action={subscribePlan.bind(null, plan.id)} className="mt-6">
                   <button
                     type="submit"
                     disabled={isCurrent}

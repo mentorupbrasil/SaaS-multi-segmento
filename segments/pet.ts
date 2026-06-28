@@ -36,6 +36,12 @@ export const petshop: SegmentTemplate = {
     inventory: "Produtos / Estoque",
   },
   customerFields: petFields,
+  specialties: [
+    { id: "banho-tosa", label: "Banho e tosa" },
+    { id: "clinica", label: "Clínica veterinária" },
+    { id: "adestramento", label: "Adestramento" },
+    { id: "hotel-pet", label: "Hotel para pets" },
+  ],
   defaultServices: [
     { name: "Banho", price: 50, durationMin: 60 },
     { name: "Banho e tosa", price: 90, durationMin: 90 },

@@ -2,7 +2,9 @@ import Link from "next/link";
 import { getAuthContext } from "@/lib/auth-context";
 import { prisma } from "@/lib/db";
 import { PageHeader } from "@/components/page-header";
+import { DeleteButton } from "@/components/delete-button";
 import { GroupForm } from "@/modules/groups/group-form";
+import { deleteGroup } from "@/modules/groups/actions";
 import { formatDate } from "@/lib/utils";
 
 export default async function GruposPage() {
@@ -33,7 +35,7 @@ export default async function GruposPage() {
                 <th className="px-4 py-3">Tipo</th>
                 <th className="px-4 py-3">Membros</th>
                 <th className="px-4 py-3">Cadastro</th>
-                <th className="px-4 py-3"></th>
+                <th className="px-4 py-3">Ações</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
@@ -43,10 +45,13 @@ export default async function GruposPage() {
                   <td className="px-4 py-3 text-slate-600">{g.groupType ?? "—"}</td>
                   <td className="px-4 py-3 text-slate-600">{g._count.members}</td>
                   <td className="px-4 py-3 text-slate-600">{formatDate(g.createdAt)}</td>
-                  <td className="px-4 py-3 text-right">
-                    <Link href={`/grupos/${g.id}`} className="text-sm text-brand-600 hover:underline">
-                      Ver membros
-                    </Link>
+                  <td className="px-4 py-3">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <Link href={`/grupos/${g.id}`} className="text-sm text-brand-600 hover:underline">
+                        Ver membros
+                      </Link>
+                      <DeleteButton onConfirm={() => deleteGroup(g.id)} />
+                    </div>
                   </td>
                 </tr>
               ))}

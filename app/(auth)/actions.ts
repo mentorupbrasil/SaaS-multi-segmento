@@ -9,6 +9,11 @@ import { getSegment } from "@/segments";
 import { getPlan, PLANS } from "@/lib/plans";
 import { slugify } from "@/lib/utils";
 import { isPlatformAdminEmail } from "@/lib/platform-admin";
+import {
+  checkLoginRateLimit,
+  checkSignupRateLimit,
+  rateLimitErrorMessage,
+} from "@/lib/rate-limit";
 
 export interface ActionState {
   error?: string;
@@ -52,6 +57,11 @@ export async function signupAction(
   }
 
   const { name, email, password, businessName, segmentId, planId } = parsed.data;
+
+  const signupLimit = checkSignupRateLimit(email);
+  if (!signupLimit.ok) {
+    return { error: rateLimitErrorMessage(signupLimit.retryAfterMs) };
+  }
 
   const segment = getSegment(segmentId);
   if (!segment) return { error: "Segmento inválido" };
@@ -104,7 +114,7 @@ export async function signupAction(
     await signIn("credentials", {
       email: email.toLowerCase(),
       password,
-      redirectTo: "/dashboard",
+      redirectTo: "/onboarding",
     });
   } catch (error) {
     if (error instanceof AuthError) {
@@ -139,8 +149,13 @@ export async function loginAction(
     return { error: parsed.error.issues[0]?.message ?? "Dados inválidos" };
   }
 
+  const email = parsed.data.email.toLowerCase();
+  const loginLimit = checkLoginRateLimit(email);
+  if (!loginLimit.ok) {
+    return { error: rateLimitErrorMessage(loginLimit.retryAfterMs) };
+  }
+
   try {
-    const email = parsed.data.email.toLowerCase();
     await signIn("credentials", {
       email,
       password: parsed.data.password,

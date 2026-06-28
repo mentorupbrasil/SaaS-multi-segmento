@@ -101,50 +101,87 @@ enum BusinessEventStatus {
   CANCELED
 }
 
+enum SupportTicketStatus {
+  OPEN
+  IN_PROGRESS
+  RESOLVED
+  CLOSED
+}
+
+enum AutomationJobStatus {
+  PENDING
+  RUNNING
+  COMPLETED
+  FAILED
+  CANCELED
+}
+
 model User {
-  id           String       @id @default(cuid())
-  email        String       @unique
-  name         String
-  passwordHash String
-  createdAt    DateTime     @default(now())
-  memberships  Membership[]
+  id                   String    @id @default(cuid())
+  email                String    @unique
+  name                 String
+  passwordHash         String
+  emailVerified        DateTime?
+  verificationToken    String?
+  passwordResetToken   String?
+  passwordResetExpires DateTime?
+  createdAt            DateTime  @default(now())
+
+  memberships        Membership[]
+  auditLogs          AuditLog[]
+  supportTickets     SupportTicket[]
+  createdRecords     CustomerRecord[] @relation("RecordCreatedBy")
 }
 
 model Organization {
-  id                 String             @id @default(cuid())
-  name               String
-  slug               String             @unique
-  segmentId          String
-  config             Json               @default("{}")
-  plan               String             @default("starter")
-  subscriptionStatus SubscriptionStatus @default(TRIALING)
-  trialEndsAt        DateTime?
-  createdAt          DateTime           @default(now())
+  id                   String             @id @default(cuid())
+  name                 String
+  slug                 String             @unique
+  segmentId            String
+  config               Json               @default("{}")
+  plan                 String             @default("starter")
+  subscriptionStatus   SubscriptionStatus @default(TRIALING)
+  trialEndsAt          DateTime?
+  parentOrganizationId String?
+  publicBookingSlug    String?            @unique
+  publicBookingEnabled Boolean            @default(false)
+  createdAt            DateTime           @default(now())
 
-  memberships       Membership[]
-  customers         Customer[]
-  services          Service[]
-  appointments      Appointment[]
-  financialEntries  FinancialEntry[]
-  inventoryItems    InventoryItem[]
+  parentOrganization Organization?  @relation("OrgHierarchy", fields: [parentOrganizationId], references: [id], onDelete: SetNull)
+  childOrganizations Organization[] @relation("OrgHierarchy")
+
+  memberships        Membership[]
+  branches           Branch[]
+  customers          Customer[]
+  services           Service[]
+  appointments       Appointment[]
+  financialEntries   FinancialEntry[]
+  inventoryItems     InventoryItem[]
   inventoryMovements InventoryMovement[]
-  workOrders        WorkOrder[]
-  customerRecords   CustomerRecord[]
-  suppliers         Supplier[]
-  quotes            Quote[]
-  vehicles          Vehicle[]
-  pets              Pet[]
-  sales             Sale[]
-  rooms             Room[]
-  reservations      Reservation[]
-  businessEvents    BusinessEvent[]
-  donations         Donation[]
-  groups            Group[]
-  blockedSlots      BlockedSlot[]
-  cashShifts        CashShift[]
-  vaccinations      Vaccination[]
-  sessionPackages   SessionPackage[]
-  commissionEntries CommissionEntry[]
+  workOrders         WorkOrder[]
+  customerRecords    CustomerRecord[]
+  suppliers          Supplier[]
+  quotes             Quote[]
+  vehicles           Vehicle[]
+  pets               Pet[]
+  sales              Sale[]
+  rooms              Room[]
+  reservations       Reservation[]
+  businessEvents     BusinessEvent[]
+  donations          Donation[]
+  groups             Group[]
+  blockedSlots       BlockedSlot[]
+  cashShifts         CashShift[]
+  vaccinations       Vaccination[]
+  sessionPackages    SessionPackage[]
+  commissionEntries  CommissionEntry[]
+  auditLogs          AuditLog[]
+  integrationConfigs IntegrationConfig[]
+  supportTickets     SupportTicket[]
+  bookingLinks       PublicBookingLink?
+  automationJobs     AutomationJob[]
+
+  @@index([parentOrganizationId])
 }
 
 model Membership {
@@ -176,6 +213,7 @@ model Customer {
   notes          String?
   customFields   Json     @default("{}")
   createdAt      DateTime @default(now())
+  updatedAt      DateTime @default(now()) @updatedAt
 
   organization Organization     @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   appointments Appointment[]
@@ -191,6 +229,7 @@ model Customer {
   groupLinks   GroupMember[]
   sessionPackages SessionPackage[]
   commissionEntries CommissionEntry[]
+  financialEntries  FinancialEntry[]
 
   @@index([organizationId])
 }
@@ -204,6 +243,7 @@ model Service {
   active         Boolean  @default(true)
   category       String?
   createdAt      DateTime @default(now())
+  updatedAt      DateTime @default(now()) @updatedAt
 
   organization Organization   @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   appointments Appointment[]
@@ -261,6 +301,10 @@ model FinancialEntry {
   createdAt      DateTime        @default(now())
 
   organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  customer     Customer?    @relation(fields: [customerId], references: [id], onDelete: SetNull)
+  workOrder    WorkOrder?   @relation(fields: [workOrderId], references: [id], onDelete: SetNull)
+  quote        Quote?       @relation(fields: [quoteId], references: [id], onDelete: SetNull)
+  sale         Sale?        @relation(fields: [saleId], references: [id], onDelete: SetNull)
 
   @@index([organizationId])
   @@index([customerId])
@@ -340,8 +384,9 @@ model Quote {
   organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   customer     Customer?    @relation(fields: [customerId], references: [id], onDelete: SetNull)
   vehicle      Vehicle?     @relation(fields: [vehicleId], references: [id], onDelete: SetNull)
-  items        QuoteItem[]
-  workOrders   WorkOrder[]
+  items            QuoteItem[]
+  workOrders       WorkOrder[]
+  financialEntries FinancialEntry[]
 
   @@index([organizationId])
 }
@@ -382,8 +427,10 @@ model WorkOrder {
   vehicle      Vehicle?            @relation(fields: [vehicleId], references: [id], onDelete: SetNull)
   staff        Membership?         @relation("StaffWorkOrders", fields: [staffId], references: [id], onDelete: SetNull)
   quote        Quote?              @relation(fields: [quoteId], references: [id], onDelete: SetNull)
-  items        WorkOrderItem[]
-  movements    InventoryMovement[]
+  items             WorkOrderItem[]
+  movements         InventoryMovement[]
+  financialEntries  FinancialEntry[]
+  commissionEntries CommissionEntry[]
 
   @@index([organizationId])
 }
@@ -406,21 +453,25 @@ model WorkOrderItem {
 }
 
 model CustomerRecord {
-  id             String   @id @default(cuid())
-  organizationId String
-  customerId     String
-  petId          String?
-  title          String
-  content        String?
-  createdAt      DateTime @default(now())
+  id              String   @id @default(cuid())
+  organizationId  String
+  customerId      String
+  petId           String?
+  createdByUserId String?
+  title           String
+  content         String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @default(now()) @updatedAt
 
-  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  customer     Customer     @relation(fields: [customerId], references: [id], onDelete: Cascade)
-  pet          Pet?         @relation(fields: [petId], references: [id], onDelete: SetNull)
-  attachments  RecordAttachment[]
+  organization  Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  customer      Customer     @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  pet           Pet?         @relation(fields: [petId], references: [id], onDelete: SetNull)
+  createdByUser User?        @relation("RecordCreatedBy", fields: [createdByUserId], references: [id], onDelete: SetNull)
+  attachments   RecordAttachment[]
 
   @@index([organizationId])
   @@index([customerId])
+  @@index([createdByUserId])
 }
 
 model Vehicle {
@@ -435,6 +486,7 @@ model Vehicle {
   color          String?
   notes          String?
   createdAt      DateTime @default(now())
+  updatedAt      DateTime @default(now()) @updatedAt
 
   organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   customer     Customer     @relation(fields: [customerId], references: [id], onDelete: Cascade)
@@ -458,6 +510,7 @@ model Pet {
   allergies      String?
   notes          String?
   createdAt      DateTime @default(now())
+  updatedAt      DateTime @default(now()) @updatedAt
 
   organization Organization     @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   customer     Customer         @relation(fields: [customerId], references: [id], onDelete: Cascade)
@@ -480,8 +533,9 @@ model Sale {
   createdAt      DateTime   @default(now())
 
   organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  customer     Customer?    @relation(fields: [customerId], references: [id], onDelete: SetNull)
-  items        SaleItem[]
+  customer         Customer?        @relation(fields: [customerId], references: [id], onDelete: SetNull)
+  items            SaleItem[]
+  financialEntries FinancialEntry[]
 
   @@index([organizationId])
 }
@@ -689,6 +743,93 @@ model CommissionEntry {
   organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   staff        Membership   @relation(fields: [staffId], references: [id], onDelete: Cascade)
   customer     Customer?    @relation(fields: [customerId], references: [id], onDelete: SetNull)
+  workOrder    WorkOrder?   @relation(fields: [workOrderId], references: [id], onDelete: SetNull)
 
   @@index([organizationId])
+  @@index([workOrderId])
+}
+
+model Branch {
+  id             String   @id @default(cuid())
+  organizationId String
+  name           String
+  address        String?
+  isDefault      Boolean  @default(false)
+  createdAt      DateTime @default(now())
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId])
+}
+
+model AuditLog {
+  id             String   @id @default(cuid())
+  organizationId String?
+  userId         String?
+  action         String
+  metadata       Json     @default("{}")
+  ip             String?
+  createdAt      DateTime @default(now())
+
+  organization Organization? @relation(fields: [organizationId], references: [id], onDelete: SetNull)
+  user         User?         @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([organizationId])
+  @@index([userId])
+  @@index([createdAt])
+}
+
+model SupportTicket {
+  id             String              @id @default(cuid())
+  organizationId String?
+  userId         String?
+  subject        String
+  body           String
+  status         SupportTicketStatus @default(OPEN)
+  createdAt      DateTime            @default(now())
+
+  organization Organization? @relation(fields: [organizationId], references: [id], onDelete: SetNull)
+  user         User?         @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([organizationId])
+  @@index([userId])
+  @@index([status])
+}
+
+model IntegrationConfig {
+  id             String   @id @default(cuid())
+  organizationId String
+  provider       String
+  config         Json     @default("{}")
+  enabled        Boolean  @default(true)
+  createdAt      DateTime @default(now())
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@unique([organizationId, provider])
+  @@index([organizationId])
+}
+
+model PublicBookingLink {
+  id             String  @id @default(cuid())
+  organizationId String  @unique
+  slug           String  @unique
+  enabled        Boolean @default(false)
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+}
+
+model AutomationJob {
+  id             String              @id @default(cuid())
+  organizationId String
+  type           String
+  payload        Json                @default("{}")
+  runAt          DateTime
+  status         AutomationJobStatus @default(PENDING)
+  createdAt      DateTime            @default(now())
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId])
+  @@index([runAt, status])
 }

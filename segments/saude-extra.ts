@@ -23,6 +23,12 @@ export const odontologia: SegmentTemplate = {
     { key: "data_nascimento", label: "Data de nascimento", type: "date" },
     { key: "convenio", label: "Convênio", type: "text" },
   ],
+  specialties: [
+    { id: "clinica-geral", label: "Clínica geral" },
+    { id: "ortodontia", label: "Ortodontia" },
+    { id: "implantes", label: "Implantes" },
+    { id: "estetica-dental", label: "Estética dental" },
+  ],
   defaultServices: [
     { name: "Avaliação", price: 0, durationMin: 30 },
     { name: "Limpeza", price: 150, durationMin: 40 },
@@ -67,6 +73,10 @@ export const psicologia: SegmentTemplate = {
     appointment_plural: "Agenda",
     records: "Evolução",
   },
+  customerFields: [
+    { key: "convenio", label: "Convênio / plano", type: "text" },
+    { key: "contato_emergencia", label: "Contato de emergência", type: "text" },
+  ],
   defaultServices: [
     { name: "Sessão individual", price: 150, durationMin: 50 },
     { name: "Sessão casal", price: 220, durationMin: 60 },
@@ -109,6 +119,10 @@ export const personal: SegmentTemplate = {
     appointment: "Treino",
     appointment_plural: "Agenda",
   },
+  customerFields: [
+    { key: "objetivo", label: "Objetivo", type: "select", options: ["Emagrecimento", "Hipertrofia", "Condicionamento", "Reabilitação"] },
+    { key: "restricoes", label: "Restrições médicas", type: "text" },
+  ],
   defaultServices: [
     { name: "Aula avulsa", price: 80, durationMin: 60 },
     { name: "Plano mensal 3x", price: 400, durationMin: 60 },
@@ -151,6 +165,10 @@ export const academia: SegmentTemplate = {
     appointment: "Aula",
     appointment_plural: "Aulas",
   },
+  customerFields: [
+    { key: "plano", label: "Plano atual", type: "text" },
+    { key: "data_matricula", label: "Data de matrícula", type: "date" },
+  ],
   defaultServices: [
     { name: "Plano mensal", price: 99, durationMin: 0 },
     { name: "Plano trimestral", price: 270, durationMin: 0 },

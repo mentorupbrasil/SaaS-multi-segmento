@@ -29,6 +29,7 @@ export const MODULES: Record<ModuleId, ModuleDef> = {
     nav: [
       { href: "/financeiro", labelKey: "financial", fallback: "Financeiro", icon: "Wallet" },
       { href: "/caixa", labelKey: "cash_register", fallback: "Caixa", icon: "CreditCard" },
+      { href: "/relatorios", labelKey: "reports", fallback: "Relatórios", icon: "BarChart3" },
     ],
   },
   team: {

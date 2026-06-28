@@ -1,5 +1,6 @@
-// Planos de assinatura. O billing real (Mercado Pago) entra nas proximas fases;
-// por enquanto a assinatura e simulada.
+// Planos de assinatura (marketing e UI).
+// Limites efetivos (usuários, filiais, módulos extras) são aplicados em lib/plan-limits.ts.
+// O billing real (Mercado Pago) usa MERCADOPAGO_ACCESS_TOKEN; sem token, a assinatura é simulada.
 
 export interface Plan {
   id: string;

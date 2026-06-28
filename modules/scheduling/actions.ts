@@ -4,6 +4,8 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { prisma } from "@/lib/db";
 import { getAuthContext } from "@/lib/auth-context";
+import { requireMutationRole } from "@/lib/action-auth";
+import { logAudit } from "@/lib/audit-log";
 
 export interface FormResult {
   error?: string;
@@ -173,4 +175,22 @@ export async function deleteBlockedSlot(id: string): Promise<void> {
     where: { id, organizationId: ctx.orgId },
   });
   revalidatePath("/agenda");
+}
+
+export async function deleteAppointment(id: string): Promise<FormResult> {
+  const ctx = await getAuthContext();
+  requireMutationRole(ctx, ["OWNER", "ADMIN"]);
+
+  const existing = await prisma.appointment.findFirst({
+    where: { id, organizationId: ctx.orgId },
+  });
+  if (!existing) return { error: "Agendamento não encontrado" };
+
+  await prisma.appointment.deleteMany({
+    where: { id, organizationId: ctx.orgId },
+  });
+
+  await logAudit(ctx, "appointment.delete", { id });
+  revalidatePath("/agenda");
+  return { ok: true };
 }

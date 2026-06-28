@@ -4,6 +4,8 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { prisma } from "@/lib/db";
 import { getAuthContext } from "@/lib/auth-context";
+import { requireMutationRole } from "@/lib/action-auth";
+import { logAudit } from "@/lib/audit-log";
 
 export interface FormResult {
   error?: string;
@@ -50,6 +52,25 @@ export async function createVaccination(
     },
   });
 
+  revalidatePath("/vacinas");
+  revalidatePath("/pets");
+  return { ok: true };
+}
+
+export async function deleteVaccination(id: string): Promise<FormResult> {
+  const ctx = await getAuthContext();
+  requireMutationRole(ctx, ["OWNER", "ADMIN"]);
+
+  const existing = await prisma.vaccination.findFirst({
+    where: { id, organizationId: ctx.orgId },
+  });
+  if (!existing) return { error: "Vacinação não encontrada" };
+
+  await prisma.vaccination.deleteMany({
+    where: { id, organizationId: ctx.orgId },
+  });
+
+  await logAudit(ctx, "vaccination.delete", { id });
   revalidatePath("/vacinas");
   revalidatePath("/pets");
   return { ok: true };

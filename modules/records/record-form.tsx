@@ -16,16 +16,37 @@ interface RecordFormProps {
 export function RecordForm({ customers, customerLabel }: RecordFormProps) {
   const [open, setOpen] = useState(false);
   const [state, action] = useActionState(createCustomerRecord, initial);
+  const [uploading, setUploading] = useState(false);
+  const [attachmentUrl, setAttachmentUrl] = useState("");
   const formRef = useRef<HTMLFormElement>(null);
   const router = useRouter();
 
   useEffect(() => {
     if (state.ok) {
       formRef.current?.reset();
+      setAttachmentUrl("");
       setOpen(false);
       router.refresh();
     }
   }, [state, router]);
+
+  async function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      const res = await fetch("/api/upload", { method: "POST", body: formData });
+      const data = await res.json();
+      if (data.url) {
+        setAttachmentUrl(data.url);
+      }
+    } finally {
+      setUploading(false);
+    }
+  }
 
   if (!open) {
     return (
@@ -60,8 +81,13 @@ export function RecordForm({ customers, customerLabel }: RecordFormProps) {
           <textarea name="content" className="input min-h-[100px]" rows={4} />
         </div>
         <div>
-          <label className="label">URL do anexo (opcional)</label>
-          <input name="attachmentUrl" type="url" className="input" placeholder="https://..." />
+          <label className="label">Anexo (opcional)</label>
+          <input type="file" className="input" accept="image/*,.pdf" onChange={handleFileChange} />
+          <input type="hidden" name="attachmentUrl" value={attachmentUrl} />
+          {uploading && <p className="mt-1 text-xs text-slate-500">Enviando...</p>}
+          {attachmentUrl && (
+            <p className="mt-1 text-xs text-green-600">Arquivo enviado: {attachmentUrl}</p>
+          )}
         </div>
         {state.error && (
           <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">{state.error}</p>

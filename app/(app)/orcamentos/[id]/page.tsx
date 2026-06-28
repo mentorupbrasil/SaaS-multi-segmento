@@ -6,7 +6,8 @@ import { resolveTerms, term } from "@/lib/terms";
 import { PageHeader } from "@/components/page-header";
 import { LineItemForm } from "@/components/line-item-form";
 import { ApproveQuoteButton, QuoteWorkOrderLink } from "@/components/approve-quote-button";
-import { addQuoteItem } from "@/modules/quotes/actions";
+import { DeleteButton } from "@/components/delete-button";
+import { addQuoteItem, deleteQuote } from "@/modules/quotes/actions";
 import { formatCurrency, formatDate } from "@/lib/utils";
 
 const STATUS_LABEL: Record<string, string> = {
@@ -61,10 +62,16 @@ export default async function QuoteDetailPage({
         description={`${term(terms, "quote")} · ${STATUS_LABEL[quote.status] ?? quote.status}`}
       />
 
-      <div className="mb-4">
+      <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
         <Link href="/orcamentos" className="text-sm text-brand-600 hover:underline">
           ← Voltar
         </Link>
+        {quote.status !== "CONVERTED" && (
+          <DeleteButton
+            onConfirm={() => deleteQuote(quote.id)}
+            redirectTo="/orcamentos"
+          />
+        )}
       </div>
 
       <div className="mb-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">

@@ -45,7 +45,7 @@ import {
   foodtruck,
   delivery,
 } from "./alimentacao-extra";
-import { escola } from "./educacao";
+import { escola, cursoLivre, escolaInfantil, escolaTecnica, universidade, cursinho, idiomas, musicaEscola, reforcoEscolar } from "./educacao";
 import {
   lojaRoupas,
   lojaCalcados,
@@ -257,6 +257,14 @@ const LIST: SegmentTemplate[] = [
   agencia,
   obras,
   escola,
+  cursoLivre,
+  escolaInfantil,
+  escolaTecnica,
+  universidade,
+  cursinho,
+  idiomas,
+  musicaEscola,
+  reforcoEscolar,
 ];
 
 export const SEGMENTS: Record<string, SegmentTemplate> = Object.fromEntries(

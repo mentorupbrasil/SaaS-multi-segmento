@@ -4,6 +4,8 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { prisma } from "@/lib/db";
 import { getAuthContext } from "@/lib/auth-context";
+import { requireMutationRole } from "@/lib/action-auth";
+import { logAudit } from "@/lib/audit-log";
 
 export interface FormResult {
   error?: string;
@@ -77,4 +79,58 @@ export async function toggleService(id: string, active: boolean): Promise<void> 
     data: { active },
   });
   revalidatePath("/servicos");
+}
+
+export async function updateService(
+  id: string,
+  _prev: FormResult,
+  formData: FormData,
+): Promise<FormResult> {
+  const ctx = await getAuthContext();
+  requireMutationRole(ctx, ["OWNER", "ADMIN"]);
+
+  const parsed = schema.safeParse({
+    name: formData.get("name"),
+    price: formData.get("price"),
+    durationMin: formData.get("durationMin"),
+  });
+  if (!parsed.success) {
+    return { error: parsed.error.issues[0]?.message ?? "Dados inválidos" };
+  }
+
+  const existing = await prisma.service.findFirst({
+    where: { id, organizationId: ctx.orgId },
+  });
+  if (!existing) return { error: "Serviço não encontrado" };
+
+  await prisma.service.updateMany({
+    where: { id, organizationId: ctx.orgId },
+    data: {
+      name: parsed.data.name,
+      price: parsed.data.price,
+      durationMin: parsed.data.durationMin,
+    },
+  });
+
+  await logAudit(ctx, "service.update", { id });
+  revalidatePath("/servicos");
+  return { ok: true };
+}
+
+export async function deleteService(id: string): Promise<FormResult> {
+  const ctx = await getAuthContext();
+  requireMutationRole(ctx, ["OWNER", "ADMIN"]);
+
+  const existing = await prisma.service.findFirst({
+    where: { id, organizationId: ctx.orgId },
+  });
+  if (!existing) return { error: "Serviço não encontrado" };
+
+  await prisma.service.deleteMany({
+    where: { id, organizationId: ctx.orgId },
+  });
+
+  await logAudit(ctx, "service.delete", { id, name: existing.name });
+  revalidatePath("/servicos");
+  return { ok: true };
 }

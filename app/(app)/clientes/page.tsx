@@ -4,7 +4,10 @@ import { prisma } from "@/lib/db";
 import { getSegment } from "@/segments";
 import { resolveTerms, term } from "@/lib/terms";
 import { PageHeader } from "@/components/page-header";
+import { EmptyState } from "@/components/empty-state";
+import { DeleteButton } from "@/components/delete-button";
 import { CustomerForm } from "@/modules/clients/customer-form";
+import { deleteCustomer } from "@/modules/clients/actions";
 import { formatDate } from "@/lib/utils";
 
 export default async function ClientesPage() {
@@ -13,6 +16,7 @@ export default async function ClientesPage() {
   const segment = getSegment(org.segmentId);
   const terms = resolveTerms(org.segmentId, (org.config as { terms?: Record<string, string> })?.terms);
   const customerLabel = term(terms, "customer");
+  const customerPlural = term(terms, "customer_plural");
 
   const customers = await prisma.customer.findMany({
     where: { organizationId: org.id },
@@ -22,17 +26,20 @@ export default async function ClientesPage() {
   return (
     <div>
       <PageHeader
-        title={term(terms, "customer_plural")}
-        description={`Gerencie os ${term(terms, "customer_plural").toLowerCase()} do seu negócio.`}
+        title={customerPlural}
+        description={`Gerencie os ${customerPlural.toLowerCase()} do seu negócio.`}
         action={
           <CustomerForm customerLabel={customerLabel} customFields={segment?.customerFields ?? []} />
         }
       />
 
       {customers.length === 0 ? (
-        <div className="card p-10 text-center text-slate-500">
-          Nenhum {customerLabel.toLowerCase()} cadastrado ainda.
-        </div>
+        <EmptyState
+          description={`Nenhum ${customerLabel.toLowerCase()} cadastrado ainda.`}
+          action={
+            <CustomerForm customerLabel={customerLabel} customFields={segment?.customerFields ?? []} />
+          }
+        />
       ) : (
         <div className="card overflow-hidden">
           <table className="w-full text-sm">
@@ -42,6 +49,7 @@ export default async function ClientesPage() {
                 <th className="px-4 py-3">Telefone</th>
                 <th className="px-4 py-3">E-mail</th>
                 <th className="px-4 py-3">Cadastro</th>
+                <th className="px-4 py-3">Ações</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
@@ -55,6 +63,9 @@ export default async function ClientesPage() {
                   <td className="px-4 py-3 text-slate-600">{c.phone ?? "-"}</td>
                   <td className="px-4 py-3 text-slate-600">{c.email ?? "-"}</td>
                   <td className="px-4 py-3 text-slate-600">{formatDate(c.createdAt)}</td>
+                  <td className="px-4 py-3">
+                    <DeleteButton onConfirm={() => deleteCustomer(c.id)} />
+                  </td>
                 </tr>
               ))}
             </tbody>

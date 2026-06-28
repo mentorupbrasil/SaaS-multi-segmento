@@ -3,7 +3,9 @@ import { getAuthContext } from "@/lib/auth-context";
 import { prisma } from "@/lib/db";
 import { resolveTerms, term } from "@/lib/terms";
 import { PageHeader } from "@/components/page-header";
+import { DeleteButton } from "@/components/delete-button";
 import { QuoteForm } from "@/modules/quotes/quote-form";
+import { deleteQuote } from "@/modules/quotes/actions";
 import { formatCurrency, formatDate } from "@/lib/utils";
 
 const STATUS_LABEL: Record<string, string> = {
@@ -64,6 +66,7 @@ export default async function OrcamentosPage() {
                 <th className="px-4 py-3">Status</th>
                 <th className="px-4 py-3">Valor</th>
                 <th className="px-4 py-3">Data</th>
+                <th className="px-4 py-3">Ações</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
@@ -82,6 +85,11 @@ export default async function OrcamentosPage() {
                   </td>
                   <td className="px-4 py-3 text-slate-600">{formatCurrency(q.total)}</td>
                   <td className="px-4 py-3 text-slate-600">{formatDate(q.createdAt)}</td>
+                  <td className="px-4 py-3">
+                    {q.status !== "CONVERTED" && (
+                      <DeleteButton onConfirm={() => deleteQuote(q.id)} />
+                    )}
+                  </td>
                 </tr>
               ))}
             </tbody>

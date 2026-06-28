@@ -6,7 +6,8 @@ import { resolveTerms, term } from "@/lib/terms";
 import { PageHeader } from "@/components/page-header";
 import { LineItemForm } from "@/components/line-item-form";
 import { WorkOrderStatusButtons } from "@/components/work-order-status-buttons";
-import { addWorkOrderItem } from "@/modules/work-orders/actions";
+import { DeleteButton } from "@/components/delete-button";
+import { addWorkOrderItem, deleteWorkOrder } from "@/modules/work-orders/actions";
 import { formatCurrency, formatDate } from "@/lib/utils";
 
 const STATUS_LABEL: Record<string, string> = {
@@ -59,10 +60,14 @@ export default async function WorkOrderDetailPage({
         description={`${term(terms, "work_order")} · ${STATUS_LABEL[order.status] ?? order.status}`}
       />
 
-      <div className="mb-4">
+      <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
         <Link href="/ordens-de-servico" className="text-sm text-brand-600 hover:underline">
           ← Voltar
         </Link>
+        <DeleteButton
+          onConfirm={() => deleteWorkOrder(order.id)}
+          redirectTo="/ordens-de-servico"
+        />
       </div>
 
       <div className="mb-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">

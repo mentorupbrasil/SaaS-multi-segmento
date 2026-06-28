@@ -159,6 +159,11 @@ export const obras: SegmentTemplate = {
     appointment: "Visita",
     appointment_plural: "Agenda",
   },
+  customerFields: [
+    { key: "endereco_obra", label: "Endereço da obra", type: "text" },
+    { key: "tipo_obra", label: "Tipo de obra", type: "select", options: ["Reforma", "Construção", "Pintura", "Elétrica/Hidráulica"] },
+    { key: "metragem", label: "Metragem (m²)", type: "number" },
+  ],
   defaultServices: [
     { name: "Visita técnica", price: 0, durationMin: 60 },
     { name: "Reforma (m²)", price: 0, durationMin: 0 },

@@ -24,6 +24,12 @@ export const clinica: SegmentTemplate = {
     { key: "convenio", label: "Convênio", type: "text", placeholder: "Ex.: Unimed" },
     { key: "cpf", label: "CPF", type: "text" },
   ],
+  specialties: [
+    { id: "clinica-geral", label: "Clínica Geral" },
+    { id: "pediatria", label: "Pediatria" },
+    { id: "ginecologia", label: "Ginecologia" },
+    { id: "cardiologia", label: "Cardiologia" },
+  ],
   defaultServices: [
     { name: "Consulta", price: 250, durationMin: 30 },
     { name: "Retorno", price: 0, durationMin: 20 },

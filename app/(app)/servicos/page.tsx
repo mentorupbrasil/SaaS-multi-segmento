@@ -2,7 +2,9 @@ import { getAuthContext } from "@/lib/auth-context";
 import { prisma } from "@/lib/db";
 import { resolveTerms, term } from "@/lib/terms";
 import { PageHeader } from "@/components/page-header";
+import { DeleteButton } from "@/components/delete-button";
 import { ServiceForm } from "@/modules/services/service-form";
+import { deleteService } from "@/modules/services/actions";
 import { formatCurrency } from "@/lib/utils";
 
 export default async function ServicosPage() {
@@ -43,6 +45,7 @@ export default async function ServicosPage() {
                 <th className="px-4 py-3">Preço</th>
                 <th className="px-4 py-3">Duração</th>
                 <th className="px-4 py-3">Status</th>
+                <th className="px-4 py-3">Ações</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
@@ -61,6 +64,9 @@ export default async function ServicosPage() {
                     >
                       {s.active ? "Ativo" : "Inativo"}
                     </span>
+                  </td>
+                  <td className="px-4 py-3">
+                    <DeleteButton onConfirm={() => deleteService(s.id)} />
                   </td>
                 </tr>
               ))}

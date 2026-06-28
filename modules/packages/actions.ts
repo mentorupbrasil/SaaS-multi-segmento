@@ -4,6 +4,8 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { prisma } from "@/lib/db";
 import { getAuthContext } from "@/lib/auth-context";
+import { requireMutationRole } from "@/lib/action-auth";
+import { logAudit } from "@/lib/audit-log";
 
 export interface FormResult {
   error?: string;
@@ -67,6 +69,24 @@ export async function useSessionPackage(id: string): Promise<FormResult> {
     data: { usedSessions: pkg.usedSessions + 1 },
   });
 
+  revalidatePath("/pacotes");
+  return { ok: true };
+}
+
+export async function deleteSessionPackage(id: string): Promise<FormResult> {
+  const ctx = await getAuthContext();
+  requireMutationRole(ctx, ["OWNER", "ADMIN"]);
+
+  const existing = await prisma.sessionPackage.findFirst({
+    where: { id, organizationId: ctx.orgId },
+  });
+  if (!existing) return { error: "Pacote não encontrado" };
+
+  await prisma.sessionPackage.deleteMany({
+    where: { id, organizationId: ctx.orgId },
+  });
+
+  await logAudit(ctx, "session_package.delete", { id, name: existing.name });
   revalidatePath("/pacotes");
   return { ok: true };
 }

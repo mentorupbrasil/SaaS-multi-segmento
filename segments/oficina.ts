@@ -29,6 +29,12 @@ export const oficina: SegmentTemplate = {
     { key: "placa", label: "Placa", type: "text" },
     { key: "ano", label: "Ano", type: "number" },
   ],
+  specialties: [
+    { id: "mecanica-geral", label: "Mecânica geral" },
+    { id: "eletrica", label: "Elétrica automotiva" },
+    { id: "funilaria", label: "Funilaria e pintura" },
+    { id: "suspensao", label: "Suspensão e freios" },
+  ],
   defaultServices: [
     { name: "Troca de óleo", price: 120, durationMin: 40 },
     { name: "Revisão completa", price: 350, durationMin: 120 },

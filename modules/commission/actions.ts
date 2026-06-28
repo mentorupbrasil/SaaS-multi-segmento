@@ -4,6 +4,8 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { prisma } from "@/lib/db";
 import { getAuthContext } from "@/lib/auth-context";
+import { requireMutationRole } from "@/lib/action-auth";
+import { logAudit } from "@/lib/audit-log";
 
 export interface FormResult {
   error?: string;
@@ -53,4 +55,22 @@ export async function markCommissionPaid(id: string): Promise<void> {
     data: { paidAt: new Date() },
   });
   revalidatePath("/comissoes");
+}
+
+export async function deleteCommissionEntry(id: string): Promise<FormResult> {
+  const ctx = await getAuthContext();
+  requireMutationRole(ctx, ["OWNER", "ADMIN"]);
+
+  const existing = await prisma.commissionEntry.findFirst({
+    where: { id, organizationId: ctx.orgId },
+  });
+  if (!existing) return { error: "Comissão não encontrada" };
+
+  await prisma.commissionEntry.deleteMany({
+    where: { id, organizationId: ctx.orgId },
+  });
+
+  await logAudit(ctx, "commission.delete", { id });
+  revalidatePath("/comissoes");
+  return { ok: true };
 }

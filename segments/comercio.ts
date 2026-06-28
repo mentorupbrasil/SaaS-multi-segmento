@@ -210,6 +210,10 @@ export const lojaEletronicos: SegmentTemplate = {
   tagline: "PDV, categorias e controle de estoque.",
   modules: [...baseModules],
   terms: baseTerms,
+  customerFields: [
+    { key: "interesse", label: "Interesse", type: "select", options: ["TV e áudio", "Informática", "Smartphones", "Games"] },
+    { key: "garantia", label: "Nº da garantia", type: "text" },
+  ],
   defaultServices: [
     { name: "Smart TV 55\"", price: 2499, durationMin: 0 },
     { name: "Caixa de som Bluetooth", price: 299, durationMin: 0 },
@@ -285,6 +289,10 @@ export const papelaria: SegmentTemplate = {
   tagline: "PDV rápido, estoque e escolar.",
   modules: [...baseModules],
   terms: baseTerms,
+  customerFields: [
+    { key: "escola", label: "Escola do filho", type: "text" },
+    { key: "lista_escolar", label: "Lista escolar recebida", type: "select", options: ["Sim", "Não"] },
+  ],
   defaultServices: [
     { name: "Caderno 96 folhas", price: 18, durationMin: 0 },
     { name: "Kit escolar", price: 89, durationMin: 0 },

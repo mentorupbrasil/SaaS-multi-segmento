@@ -22,6 +22,12 @@ export const barbearia: SegmentTemplate = {
     { key: "data_nascimento", label: "Data de nascimento", type: "date" },
     { key: "preferencia_corte", label: "Preferência de corte", type: "text", placeholder: "Ex.: máquina 2, tesoura" },
   ],
+  specialties: [
+    { id: "corte", label: "Corte masculino" },
+    { id: "barba", label: "Barba e bigode" },
+    { id: "coloracao", label: "Coloração" },
+    { id: "sobrancelha", label: "Sobrancelha" },
+  ],
   defaultServices: [
     { name: "Corte", price: 40, durationMin: 30 },
     { name: "Barba", price: 30, durationMin: 20 },

@@ -5,6 +5,7 @@ import { z } from "zod";
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/db";
 import { getAuthContext, requireRole } from "@/lib/auth-context";
+import { canAddUser } from "@/lib/plan-limits";
 
 export interface FormResult {
   error?: string;
@@ -35,6 +36,14 @@ export async function inviteMember(
   });
   if (!parsed.success) {
     return { error: parsed.error.issues[0]?.message ?? "Dados inválidos" };
+  }
+
+  const canAdd = await canAddUser(ctx.orgId);
+  if (!canAdd) {
+    return {
+      error:
+        "Limite de usuários do plano atingido. Faça upgrade para adicionar mais membros à equipe.",
+    };
   }
 
   const email = parsed.data.email.toLowerCase();

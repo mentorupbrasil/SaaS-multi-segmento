@@ -39,6 +39,7 @@ export const DEFAULT_TERMS: Record<string, string> = {
   package_plural: "Pacotes",
   vaccination_plural: "Vacinas",
   commission_plural: "Comissões",
+  reports: "Relatórios",
 };
 
 export type Terms = Record<string, string>;

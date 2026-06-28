@@ -3,7 +3,9 @@ import { getAuthContext } from "@/lib/auth-context";
 import { prisma } from "@/lib/db";
 import { resolveTerms, term } from "@/lib/terms";
 import { PageHeader } from "@/components/page-header";
+import { DeleteButton } from "@/components/delete-button";
 import { VehicleForm } from "@/modules/vehicles/vehicle-form";
+import { deleteVehicle } from "@/modules/vehicles/actions";
 import { formatDate } from "@/lib/utils";
 
 export default async function VeiculosPage() {
@@ -53,6 +55,7 @@ export default async function VeiculosPage() {
                 <th className="px-4 py-3">Marca</th>
                 <th className="px-4 py-3">Ano</th>
                 <th className="px-4 py-3">Cadastro</th>
+                <th className="px-4 py-3">Ações</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
@@ -72,6 +75,9 @@ export default async function VeiculosPage() {
                   <td className="px-4 py-3 text-slate-600">{v.brand ?? "—"}</td>
                   <td className="px-4 py-3 text-slate-600">{v.year ?? "—"}</td>
                   <td className="px-4 py-3 text-slate-600">{formatDate(v.createdAt)}</td>
+                  <td className="px-4 py-3">
+                    <DeleteButton onConfirm={() => deleteVehicle(v.id)} />
+                  </td>
                 </tr>
               ))}
             </tbody>

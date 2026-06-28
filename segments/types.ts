@@ -148,6 +148,8 @@ export interface SegmentTemplate {
   terms: Record<string, string>;
   /** campos especificos do nicho aplicados ao cadastro de clientes */
   customerFields?: FieldDef[];
+  /** especialidades / sub-nichos dentro do segmento */
+  specialties?: { id: string; label: string; fields?: FieldDef[] }[];
   /** servicos pre-cadastrados ao criar a conta */
   defaultServices?: DefaultService[];
   /** beneficios em destaque na landing do segmento */

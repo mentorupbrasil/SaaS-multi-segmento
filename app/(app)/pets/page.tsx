@@ -3,7 +3,9 @@ import { getAuthContext } from "@/lib/auth-context";
 import { prisma } from "@/lib/db";
 import { resolveTerms, term } from "@/lib/terms";
 import { PageHeader } from "@/components/page-header";
+import { DeleteButton } from "@/components/delete-button";
 import { PetForm } from "@/modules/pets/pet-form";
+import { deletePet } from "@/modules/pets/actions";
 import { formatDate } from "@/lib/utils";
 
 export default async function PetsPage() {
@@ -52,6 +54,7 @@ export default async function PetsPage() {
                 <th className="px-4 py-3">Raça</th>
                 <th className="px-4 py-3">{customerLabel}</th>
                 <th className="px-4 py-3">Cadastro</th>
+                <th className="px-4 py-3">Ações</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
@@ -66,6 +69,9 @@ export default async function PetsPage() {
                     </Link>
                   </td>
                   <td className="px-4 py-3 text-slate-600">{formatDate(p.createdAt)}</td>
+                  <td className="px-4 py-3">
+                    <DeleteButton onConfirm={() => deletePet(p.id)} />
+                  </td>
                 </tr>
               ))}
             </tbody>

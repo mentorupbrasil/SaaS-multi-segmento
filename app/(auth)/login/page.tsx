@@ -30,6 +30,11 @@ export default function LoginPage() {
               Senha
             </label>
             <input id="password" name="password" type="password" className="input" placeholder="Sua senha" required />
+            <p className="mt-1.5 text-right text-xs">
+              <Link href="/forgot-password" className="text-brand-700 hover:underline">
+                Esqueci minha senha
+              </Link>
+            </p>
           </div>
 
           {state.error && (

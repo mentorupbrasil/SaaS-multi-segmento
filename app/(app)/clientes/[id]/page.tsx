@@ -6,6 +6,8 @@ import { getSegment } from "@/segments";
 import { resolveTerms, term } from "@/lib/terms";
 import { PageHeader } from "@/components/page-header";
 import { CustomerEditForm } from "@/modules/clients/customer-edit-form";
+import { DeleteButton } from "@/components/delete-button";
+import { deleteCustomer } from "@/modules/clients/actions";
 import { formatCurrency, formatDate, formatDateTime } from "@/lib/utils";
 
 const WO_STATUS: Record<string, string> = {
@@ -109,6 +111,10 @@ export default async function CustomerDetailPage({
             notes: customer.notes,
             customFields,
           }}
+        />
+        <DeleteButton
+          onConfirm={() => deleteCustomer(customer.id)}
+          redirectTo="/clientes"
         />
       </div>
 

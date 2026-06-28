@@ -4,12 +4,14 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { prisma } from "@/lib/db";
 import { getAuthContext } from "@/lib/auth-context";
+import { requireMutationRole } from "@/lib/action-auth";
+import { logAudit } from "@/lib/audit-log";
 
 const schema = z.object({
   customerId: z.string().min(1, "Selecione o cliente"),
   title: z.string().min(1, "Informe o título"),
   content: z.string().optional(),
-  attachmentUrl: z.string().url().optional().or(z.literal("")),
+  attachmentUrl: z.string().optional(),
 });
 
 export interface FormResult {
@@ -53,6 +55,24 @@ export async function createCustomerRecord(
     });
   }
 
+  revalidatePath("/prontuario");
+  return { ok: true };
+}
+
+export async function deleteCustomerRecord(id: string): Promise<FormResult> {
+  const ctx = await getAuthContext();
+  requireMutationRole(ctx, ["OWNER", "ADMIN"]);
+
+  const existing = await prisma.customerRecord.findFirst({
+    where: { id, organizationId: ctx.orgId },
+  });
+  if (!existing) return { error: "Registro não encontrado" };
+
+  await prisma.customerRecord.deleteMany({
+    where: { id, organizationId: ctx.orgId },
+  });
+
+  await logAudit(ctx, "record.delete", { id, title: existing.title });
   revalidatePath("/prontuario");
   return { ok: true };
 }

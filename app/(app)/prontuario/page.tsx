@@ -2,7 +2,9 @@ import { getAuthContext } from "@/lib/auth-context";
 import { prisma } from "@/lib/db";
 import { resolveTerms, term } from "@/lib/terms";
 import { PageHeader } from "@/components/page-header";
+import { DeleteButton } from "@/components/delete-button";
 import { RecordForm } from "@/modules/records/record-form";
+import { deleteCustomerRecord } from "@/modules/records/actions";
 import { formatDate } from "@/lib/utils";
 
 export default async function ProntuarioPage() {
@@ -47,6 +49,7 @@ export default async function ProntuarioPage() {
                     {r.customer.name} · {formatDate(r.createdAt)}
                   </p>
                 </div>
+                <DeleteButton onConfirm={() => deleteCustomerRecord(r.id)} />
               </div>
               {r.content && <p className="mt-3 whitespace-pre-wrap text-sm text-slate-700">{r.content}</p>}
             </div>

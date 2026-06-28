@@ -9,6 +9,8 @@ export interface FeatureItem {
   short: string;
   description: string;
   status: FeatureStatus;
+  /** Recurso disponível, mas liberado conforme o plano (ex.: Profissional+). */
+  planGated?: boolean;
 }
 
 export interface FeatureGroup {
@@ -101,7 +103,7 @@ export const FEATURE_GROUPS: FeatureGroup[] = [
         short: "Controle de produtos e peças.",
         description:
           "Controle de entrada e saída de produtos, alertas de estoque baixo e custo por item.",
-        status: "soon",
+        status: "available",
       },
       {
         id: "vendas",
@@ -110,7 +112,7 @@ export const FEATURE_GROUPS: FeatureGroup[] = [
         short: "Venda de produtos e pacotes.",
         description:
           "Frente de caixa para vender produtos, pacotes e serviços avulsos com poucos cliques.",
-        status: "soon",
+        status: "available",
       },
     ],
   },
@@ -120,13 +122,24 @@ export const FEATURE_GROUPS: FeatureGroup[] = [
     description: "O que coloca o seu negócio à frente.",
     items: [
       {
+        id: "portal",
+        name: "Portal do cliente",
+        icon: "Globe",
+        short: "Agendamento e acompanhamento online.",
+        description:
+          "Link público para o cliente agendar, acompanhar serviços e acessar informações do negócio.",
+        status: "available",
+        planGated: true,
+      },
+      {
         id: "ia",
         name: "Inteligência artificial",
         icon: "Sparkles",
         short: "Sugestões e insights automáticos.",
         description:
           "Resumos do dia, sugestões de horários e insights sobre clientes que ajudam a tomar decisões melhores.",
-        status: "soon",
+        status: "available",
+        planGated: true,
       },
       {
         id: "automacoes",
@@ -153,7 +166,8 @@ export const FEATURE_GROUPS: FeatureGroup[] = [
         short: "Conecte com as ferramentas que usa.",
         description:
           "WhatsApp, PIX, pagamentos online, Google Agenda e mais. Conecte o que você já usa no dia a dia.",
-        status: "soon",
+        status: "available",
+        planGated: true,
       },
     ],
   },

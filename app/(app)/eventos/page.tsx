@@ -4,6 +4,8 @@ import { resolveTerms, term } from "@/lib/terms";
 import { PageHeader } from "@/components/page-header";
 import { EventForm } from "@/modules/events/event-form";
 import { EventStatusButtons } from "@/components/event-status-buttons";
+import { DeleteButton } from "@/components/delete-button";
+import { deleteBusinessEvent } from "@/modules/events/actions";
 import { formatCurrency, formatDate } from "@/lib/utils";
 
 const STATUS_LABEL: Record<string, string> = {
@@ -74,7 +76,10 @@ export default async function EventosPage() {
                   </td>
                   <td className="px-4 py-3 text-slate-600">{formatCurrency(e.total)}</td>
                   <td className="px-4 py-3">
-                    <EventStatusButtons id={e.id} status={e.status} />
+                    <div className="flex flex-wrap items-center gap-2">
+                      <EventStatusButtons id={e.id} status={e.status} />
+                      <DeleteButton onConfirm={() => deleteBusinessEvent(e.id)} />
+                    </div>
                   </td>
                 </tr>
               ))}

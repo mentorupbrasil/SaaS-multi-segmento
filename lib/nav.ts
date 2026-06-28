@@ -1,5 +1,5 @@
 import { getSegment } from "@/segments";
-import { MODULES } from "@/modules";
+import { ALL_MODULES, MODULES } from "@/modules";
 import { resolveSegmentModules } from "./segment-modules";
 import { resolveTerms, type Terms } from "./terms";
 
@@ -13,6 +13,7 @@ export interface NavItem {
 interface OrgLike {
   segmentId: string;
   config?: unknown;
+  plan?: string;
 }
 
 function extractTermOverrides(config: unknown): Record<string, string> {
@@ -41,11 +42,39 @@ export function buildNav(org: OrgLike): NavItem[] {
       });
     }
   }
+
+  const premiumPlans = ["pro", "premium", "enterprise"];
+  if (org.plan && premiumPlans.includes(org.plan)) {
+    items.push(
+      { href: "/integracoes", label: "Integrações", icon: "Plug" },
+      { href: "/ia", label: "IA", icon: "Sparkles" },
+    );
+  }
+
   return items;
 }
 
-export function buildSuperAdminNav(): NavItem[] {
-  return buildNav({ segmentId: "barbearia" });
+/** Nav com todos os módulos da plataforma (super admin). */
+export function buildAllModulesNav(segmentId = "barbearia"): NavItem[] {
+  const terms: Terms = resolveTerms(segmentId, {});
+  const items: NavItem[] = [];
+
+  for (const mod of ALL_MODULES) {
+    for (const navItem of mod.nav) {
+      items.push({
+        href: navItem.href,
+        label: terms[navItem.labelKey] ?? navItem.fallback,
+        icon: navItem.icon,
+        comingSoon: mod.comingSoon,
+      });
+    }
+  }
+
+  return items;
+}
+
+export function buildSuperAdminNav(segmentId?: string): NavItem[] {
+  return buildAllModulesNav(segmentId ?? "barbearia");
 }
 
 export function buildNavForUser(org: OrgLike, _isPlatformAdmin?: boolean): NavItem[] {

@@ -9,12 +9,29 @@ export const metadata: Metadata = {
     "Planos do GestorPro a partir de R$ 39,90/mês. Sem fidelidade, conta ativa na hora. Escolha o plano ideal para o seu negócio.",
 };
 
-const PRICING_FAQ = [
-  { q: "Posso trocar de plano depois?", a: "Sim. Você pode subir ou descer de plano quando quiser, direto nas configurações da sua conta." },
-  { q: "Tem fidelidade ou multa de cancelamento?", a: "Não. A cobrança é mensal e você cancela quando quiser, sem multa." },
-  { q: "Como funciona o plano Enterprise?", a: "O Enterprise é sob medida para redes e franquias. Fale com o nosso time para um orçamento e onboarding personalizados." },
-  { q: "Quais formas de pagamento?", a: "Em breve teremos PIX e cartão. Nesta fase a assinatura é simulada para você testar o produto." },
-];
+function buildPricingFaq() {
+  const mpConfigured = Boolean(process.env.MERCADOPAGO_ACCESS_TOKEN?.trim());
+  return [
+    {
+      q: "Posso trocar de plano depois?",
+      a: "Sim. Você pode subir ou descer de plano quando quiser, direto nas configurações da sua conta.",
+    },
+    {
+      q: "Tem fidelidade ou multa de cancelamento?",
+      a: "Não. A cobrança é mensal e você cancela quando quiser, sem multa.",
+    },
+    {
+      q: "Como funciona o plano Enterprise?",
+      a: "O Enterprise é sob medida para redes e franquias. Fale com o nosso time para um orçamento e onboarding personalizados.",
+    },
+    {
+      q: "Quais formas de pagamento?",
+      a: mpConfigured
+        ? "Aceitamos PIX e cartão via Mercado Pago. A confirmação do pagamento é automática após a aprovação."
+        : "Em breve teremos PIX e cartão via Mercado Pago. Nesta fase a assinatura é simulada para você testar o produto.",
+    },
+  ];
+}
 
 export default function PrecosPage() {
   return (
@@ -26,7 +43,7 @@ export default function PrecosPage() {
       />
       <Pricing />
       <div className="border-t border-slate-100 bg-slate-50/60">
-        <Faq items={PRICING_FAQ} title="Dúvidas sobre planos" />
+        <Faq items={buildPricingFaq()} title="Dúvidas sobre planos" />
       </div>
     </MarketingShell>
   );

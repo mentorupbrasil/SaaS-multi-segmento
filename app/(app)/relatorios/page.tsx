@@ -1,0 +1,227 @@
+import { getAuthContext } from "@/lib/auth-context";
+import { prisma } from "@/lib/db";
+import { PageHeader } from "@/components/page-header";
+import { formatCurrency } from "@/lib/utils";
+
+export default async function RelatoriosPage() {
+  const ctx = await getAuthContext();
+  const orgId = ctx.orgId;
+
+  const sixMonthsAgo = new Date();
+  sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 5);
+  sixMonthsAgo.setDate(1);
+  sixMonthsAgo.setHours(0, 0, 0, 0);
+
+  const [paidIncome, appointments, topServicesRaw, lowStock] = await Promise.all([
+    prisma.financialEntry.findMany({
+      where: {
+        organizationId: orgId,
+        type: "INCOME",
+        status: "PAID",
+        paidAt: { gte: sixMonthsAgo },
+      },
+      select: { amount: true, paidAt: true },
+    }),
+    prisma.appointment.groupBy({
+      by: ["status"],
+      where: { organizationId: orgId },
+      _count: { id: true },
+    }),
+    prisma.appointment.groupBy({
+      by: ["serviceId"],
+      where: { organizationId: orgId, serviceId: { not: null } },
+      _count: { id: true },
+      orderBy: { _count: { id: "desc" } },
+      take: 10,
+    }),
+    prisma.inventoryItem.findMany({
+      where: {
+        organizationId: orgId,
+        minQuantity: { gt: 0 },
+      },
+      orderBy: { quantity: "asc" },
+    }),
+  ]);
+
+  const serviceIds = topServicesRaw
+    .map((s) => s.serviceId)
+    .filter((id): id is string => id !== null);
+  const services = serviceIds.length
+    ? await prisma.service.findMany({
+        where: { id: { in: serviceIds } },
+        select: { id: true, name: true },
+      })
+    : [];
+  const serviceNameMap = new Map(services.map((s) => [s.id, s.name]));
+
+  const monthLabels: string[] = [];
+  const revenueByMonth = new Map<string, number>();
+  for (let i = 0; i < 6; i++) {
+    const d = new Date();
+    d.setMonth(d.getMonth() - (5 - i));
+    const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+    const label = d.toLocaleDateString("pt-BR", { month: "short", year: "numeric" });
+    monthLabels.push(label);
+    revenueByMonth.set(key, 0);
+  }
+
+  for (const entry of paidIncome) {
+    if (!entry.paidAt) continue;
+    const key = `${entry.paidAt.getFullYear()}-${String(entry.paidAt.getMonth() + 1).padStart(2, "0")}`;
+    if (revenueByMonth.has(key)) {
+      revenueByMonth.set(key, (revenueByMonth.get(key) ?? 0) + entry.amount);
+    }
+  }
+
+  const revenueRows = Array.from(revenueByMonth.entries()).map(([key, total], i) => ({
+    month: monthLabels[i] ?? key,
+    total,
+  }));
+
+  const appointmentTotal = appointments.reduce((sum, a) => sum + a._count.id, 0);
+  const lowStockItems = lowStock.filter((i) => i.quantity <= i.minQuantity);
+
+  return (
+    <div>
+      <PageHeader
+        title="Relatórios"
+        description="Visão geral do desempenho do negócio."
+      />
+
+      <div className="mb-8 grid gap-4 sm:grid-cols-3">
+        <div className="card p-4">
+          <p className="text-xs text-slate-500">Agendamentos (total)</p>
+          <p className="text-2xl font-bold text-slate-900">{appointmentTotal}</p>
+        </div>
+        <div className="card p-4">
+          <p className="text-xs text-slate-500">Receita (6 meses)</p>
+          <p className="text-2xl font-bold text-green-600">
+            {formatCurrency(revenueRows.reduce((s, r) => s + r.total, 0))}
+          </p>
+        </div>
+        <div className="card p-4">
+          <p className="text-xs text-slate-500">Itens em estoque baixo</p>
+          <p className="text-2xl font-bold text-amber-600">{lowStockItems.length}</p>
+        </div>
+      </div>
+
+      <div className="grid gap-6 lg:grid-cols-2">
+        <section className="card overflow-hidden">
+          <h2 className="border-b border-slate-100 px-4 py-3 text-lg font-semibold">
+            Receita por mês
+          </h2>
+          <table className="w-full text-sm">
+            <thead className="bg-slate-50 text-left text-xs uppercase tracking-wider text-slate-500">
+              <tr>
+                <th className="px-4 py-3">Mês</th>
+                <th className="px-4 py-3 text-right">Receita</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-100">
+              {revenueRows.map((row) => (
+                <tr key={row.month}>
+                  <td className="px-4 py-3 font-medium capitalize text-slate-900">{row.month}</td>
+                  <td className="px-4 py-3 text-right text-green-600">{formatCurrency(row.total)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </section>
+
+        <section className="card overflow-hidden">
+          <h2 className="border-b border-slate-100 px-4 py-3 text-lg font-semibold">
+            Agendamentos por status
+          </h2>
+          <table className="w-full text-sm">
+            <thead className="bg-slate-50 text-left text-xs uppercase tracking-wider text-slate-500">
+              <tr>
+                <th className="px-4 py-3">Status</th>
+                <th className="px-4 py-3 text-right">Quantidade</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-100">
+              {appointments.length === 0 ? (
+                <tr>
+                  <td colSpan={2} className="px-4 py-6 text-center text-slate-500">
+                    Nenhum agendamento.
+                  </td>
+                </tr>
+              ) : (
+                appointments.map((a) => (
+                  <tr key={a.status}>
+                    <td className="px-4 py-3 font-medium text-slate-900">{a.status}</td>
+                    <td className="px-4 py-3 text-right">{a._count.id}</td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </section>
+
+        <section className="card overflow-hidden">
+          <h2 className="border-b border-slate-100 px-4 py-3 text-lg font-semibold">
+            Top serviços (agendamentos)
+          </h2>
+          <table className="w-full text-sm">
+            <thead className="bg-slate-50 text-left text-xs uppercase tracking-wider text-slate-500">
+              <tr>
+                <th className="px-4 py-3">Serviço</th>
+                <th className="px-4 py-3 text-right">Agendamentos</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-100">
+              {topServicesRaw.length === 0 ? (
+                <tr>
+                  <td colSpan={2} className="px-4 py-6 text-center text-slate-500">
+                    Sem dados.
+                  </td>
+                </tr>
+              ) : (
+                topServicesRaw.map((s) => (
+                  <tr key={s.serviceId ?? "unknown"}>
+                    <td className="px-4 py-3 font-medium text-slate-900">
+                      {s.serviceId ? (serviceNameMap.get(s.serviceId) ?? "—") : "—"}
+                    </td>
+                    <td className="px-4 py-3 text-right">{s._count.id}</td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </section>
+
+        <section className="card overflow-hidden">
+          <h2 className="border-b border-slate-100 px-4 py-3 text-lg font-semibold">
+            Estoque baixo
+          </h2>
+          <table className="w-full text-sm">
+            <thead className="bg-slate-50 text-left text-xs uppercase tracking-wider text-slate-500">
+              <tr>
+                <th className="px-4 py-3">Item</th>
+                <th className="px-4 py-3 text-right">Qtd</th>
+                <th className="px-4 py-3 text-right">Mín.</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-100">
+              {lowStockItems.length === 0 ? (
+                <tr>
+                  <td colSpan={3} className="px-4 py-6 text-center text-slate-500">
+                    Nenhum item abaixo do mínimo.
+                  </td>
+                </tr>
+              ) : (
+                lowStockItems.map((item) => (
+                  <tr key={item.id}>
+                    <td className="px-4 py-3 font-medium text-slate-900">{item.name}</td>
+                    <td className="px-4 py-3 text-right text-amber-600">{item.quantity}</td>
+                    <td className="px-4 py-3 text-right text-slate-600">{item.minQuantity}</td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </section>
+      </div>
+    </div>
+  );
+}

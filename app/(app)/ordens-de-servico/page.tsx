@@ -3,7 +3,9 @@ import { getAuthContext } from "@/lib/auth-context";
 import { prisma } from "@/lib/db";
 import { resolveTerms, term } from "@/lib/terms";
 import { PageHeader } from "@/components/page-header";
+import { DeleteButton } from "@/components/delete-button";
 import { WorkOrderForm } from "@/modules/work-orders/order-form";
+import { deleteWorkOrder } from "@/modules/work-orders/actions";
 import { formatCurrency, formatDate } from "@/lib/utils";
 
 const STATUS_LABEL: Record<string, string> = {
@@ -70,6 +72,7 @@ export default async function OrdensDeServicoPage() {
                 <th className="px-4 py-3">Status</th>
                 <th className="px-4 py-3">Valor</th>
                 <th className="px-4 py-3">Data</th>
+                <th className="px-4 py-3">Ações</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
@@ -88,6 +91,9 @@ export default async function OrdensDeServicoPage() {
                   </td>
                   <td className="px-4 py-3 text-slate-600">{formatCurrency(o.total)}</td>
                   <td className="px-4 py-3 text-slate-600">{formatDate(o.createdAt)}</td>
+                  <td className="px-4 py-3">
+                    <DeleteButton onConfirm={() => deleteWorkOrder(o.id)} />
+                  </td>
                 </tr>
               ))}
             </tbody>

@@ -7,6 +7,7 @@ import { Icon } from "@/components/icon";
 import { signOutAction } from "@/app/(app)/actions";
 import { OrgSwitcher, type OrgOption } from "@/components/org-switcher";
 import { SegmentSwitcher, type SegmentOption } from "@/components/segment-switcher";
+import { buildAllModulesNav } from "@/lib/nav";
 import { cn } from "@/lib/utils";
 
 const PLATFORM_NAV = [
@@ -24,7 +25,6 @@ interface AdminSidebarProps {
   activeOrgId: string;
   segments: SegmentOption[];
   activeSegmentId: string;
-  operationalNav: { href: string; label: string; icon: string; comingSoon?: boolean }[];
 }
 
 export function AdminSidebar({
@@ -33,9 +33,9 @@ export function AdminSidebar({
   activeOrgId,
   segments,
   activeSegmentId,
-  operationalNav,
 }: AdminSidebarProps) {
   const pathname = usePathname();
+  const operationalNav = buildAllModulesNav(activeSegmentId);
 
   const renderItem = (item: {
     href: string;

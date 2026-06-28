@@ -4,6 +4,8 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { prisma } from "@/lib/db";
 import { getAuthContext } from "@/lib/auth-context";
+import { requireMutationRole } from "@/lib/action-auth";
+import { logAudit } from "@/lib/audit-log";
 import { getSegment } from "@/segments";
 
 const schema = z.object({
@@ -106,5 +108,23 @@ export async function updateCustomer(
 
   revalidatePath("/clientes");
   revalidatePath(`/clientes/${id}`);
+  return { ok: true };
+}
+
+export async function deleteCustomer(id: string): Promise<FormResult> {
+  const ctx = await getAuthContext();
+  requireMutationRole(ctx, ["OWNER", "ADMIN"]);
+
+  const existing = await prisma.customer.findFirst({
+    where: { id, organizationId: ctx.orgId },
+  });
+  if (!existing) return { error: "Cliente não encontrado" };
+
+  await prisma.customer.deleteMany({
+    where: { id, organizationId: ctx.orgId },
+  });
+
+  await logAudit(ctx, "customer.delete", { id, name: existing.name });
+  revalidatePath("/clientes");
   return { ok: true };
 }

@@ -19,6 +19,9 @@ export async function ensureDemoOrganizations(prisma: PrismaClient) {
         plan: "pro",
         subscriptionStatus: "ACTIVE",
         trialEndsAt: null,
+        publicBookingEnabled: true,
+        publicBookingSlug: slug,
+        config: { onboardingCompleted: true },
         services: {
           create: (segment.defaultServices ?? []).slice(0, 3).map((s) => ({
             name: s.name,

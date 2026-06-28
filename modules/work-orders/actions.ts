@@ -9,6 +9,8 @@ import { z } from "zod";
 import { prisma } from "@/lib/db";
 
 import { getAuthContext } from "@/lib/auth-context";
+import { requireMutationRole } from "@/lib/action-auth";
+import { logAudit } from "@/lib/audit-log";
 
 import {
 
@@ -484,6 +486,42 @@ export async function convertQuoteToWorkOrder(quoteId: string): Promise<FormResu
   revalidatePath("/estoque");
 
   return { ok: true, id: wo.id };
+
+}
+
+
+
+export async function deleteWorkOrder(id: string): Promise<FormResult> {
+
+  const ctx = await getAuthContext();
+
+  requireMutationRole(ctx, ["OWNER", "ADMIN"]);
+
+
+
+  const existing = await prisma.workOrder.findFirst({
+
+    where: { id, organizationId: ctx.orgId },
+
+  });
+
+  if (!existing) return { error: "Ordem não encontrada" };
+
+
+
+  await prisma.workOrder.deleteMany({
+
+    where: { id, organizationId: ctx.orgId },
+
+  });
+
+
+
+  await logAudit(ctx, "work_order.delete", { id, title: existing.title });
+
+  revalidatePath("/ordens-de-servico");
+
+  return { ok: true };
 
 }
 

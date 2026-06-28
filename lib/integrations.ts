@@ -1,4 +1,4 @@
-// Integracoes da plataforma (pagina /integracoes). A maioria entra nas proximas fases.
+// Integrações da plataforma (página /integracoes).
 
 export type IntegrationStatus = "available" | "soon";
 
@@ -8,6 +8,8 @@ export interface Integration {
   category: string;
   description: string;
   status: IntegrationStatus;
+  /** Disponível no produto, mas liberado conforme o plano (ex.: Profissional+). */
+  planGated?: boolean;
 }
 
 export const INTEGRATIONS: Integration[] = [
@@ -16,14 +18,16 @@ export const INTEGRATIONS: Integration[] = [
     icon: "MessageCircle",
     category: "Comunicação",
     description: "Envie lembretes, confirmações e mensagens automáticas para os seus clientes.",
-    status: "soon",
+    status: "available",
+    planGated: true,
   },
   {
     name: "PIX",
     icon: "Wallet",
     category: "Pagamentos",
     description: "Receba por PIX e concilie os pagamentos direto no financeiro.",
-    status: "soon",
+    status: "available",
+    planGated: true,
   },
   {
     name: "Cartão e pagamentos online",

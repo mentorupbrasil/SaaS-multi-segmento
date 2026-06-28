@@ -5,6 +5,8 @@ import { SaleForm } from "@/modules/pdv/sale-form";
 import { SaleItemForm } from "@/modules/pdv/sale-item-form";
 import { FinalizeSaleButton } from "@/modules/pdv/finalize-sale-button";
 import { CancelSaleButton } from "@/modules/pdv/cancel-sale-button";
+import { DeleteButton } from "@/components/delete-button";
+import { deleteSale } from "@/modules/pdv/actions";
 import { formatCurrency, formatDate } from "@/lib/utils";
 
 export default async function PdvPage() {
@@ -72,6 +74,7 @@ export default async function PdvPage() {
                   <p className="text-2xl font-bold text-slate-900">{formatCurrency(sale.total)}</p>
                   <FinalizeSaleButton saleId={sale.id} />
                   <CancelSaleButton saleId={sale.id} />
+                  <DeleteButton onConfirm={() => deleteSale(sale.id)} />
                 </div>
               </div>
 

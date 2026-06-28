@@ -38,6 +38,11 @@ export default function FuncionalidadesPage() {
                         Em breve
                       </span>
                     )}
+                    {item.status === "available" && item.planGated && (
+                      <span className="rounded-full bg-brand-100 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-brand-700">
+                        Plano Pro+
+                      </span>
+                    )}
                   </div>
                   <h3 className="mt-4 font-semibold text-slate-900">{item.name}</h3>
                   <p className="mt-1.5 text-sm leading-relaxed text-slate-600">{item.description}</p>

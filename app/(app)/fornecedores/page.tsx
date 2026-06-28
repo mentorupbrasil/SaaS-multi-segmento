@@ -1,7 +1,9 @@
 import { getAuthContext } from "@/lib/auth-context";
 import { prisma } from "@/lib/db";
 import { PageHeader } from "@/components/page-header";
+import { DeleteButton } from "@/components/delete-button";
 import { SupplierForm } from "@/modules/suppliers/supplier-form";
+import { deleteSupplier } from "@/modules/suppliers/actions";
 import { formatDate } from "@/lib/utils";
 
 export default async function FornecedoresPage() {
@@ -32,6 +34,7 @@ export default async function FornecedoresPage() {
                 <th className="px-4 py-3">E-mail</th>
                 <th className="px-4 py-3">Documento</th>
                 <th className="px-4 py-3">Cadastro</th>
+                <th className="px-4 py-3">Ações</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
@@ -42,6 +45,9 @@ export default async function FornecedoresPage() {
                   <td className="px-4 py-3 text-slate-600">{s.email ?? "—"}</td>
                   <td className="px-4 py-3 text-slate-600">{s.document ?? "—"}</td>
                   <td className="px-4 py-3 text-slate-600">{formatDate(s.createdAt)}</td>
+                  <td className="px-4 py-3">
+                    <DeleteButton onConfirm={() => deleteSupplier(s.id)} />
+                  </td>
                 </tr>
               ))}
             </tbody>

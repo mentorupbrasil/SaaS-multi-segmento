@@ -9,6 +9,8 @@ import { z } from "zod";
 import { prisma } from "@/lib/db";
 
 import { getAuthContext } from "@/lib/auth-context";
+import { requireMutationRole } from "@/lib/action-auth";
+import { logAudit } from "@/lib/audit-log";
 
 
 
@@ -115,6 +117,80 @@ export async function addGroupMember(groupId: string, customerId: string): Promi
 
 
   revalidatePath("/grupos");
+  revalidatePath(`/grupos/${groupId}`);
+
+  return { ok: true };
+
+}
+
+
+
+export async function deleteGroup(id: string): Promise<FormResult> {
+
+  const ctx = await getAuthContext();
+
+  requireMutationRole(ctx, ["OWNER", "ADMIN"]);
+
+
+
+  const existing = await prisma.group.findFirst({
+
+    where: { id, organizationId: ctx.orgId },
+
+  });
+
+  if (!existing) return { error: "Grupo não encontrado" };
+
+
+
+  await prisma.group.deleteMany({
+
+    where: { id, organizationId: ctx.orgId },
+
+  });
+
+
+
+  await logAudit(ctx, "group.delete", { id, name: existing.name });
+
+  revalidatePath("/grupos");
+
+  return { ok: true };
+
+}
+
+
+
+export async function removeGroupMember(groupId: string, customerId: string): Promise<FormResult> {
+
+  const ctx = await getAuthContext();
+
+  requireMutationRole(ctx, ["OWNER", "ADMIN"]);
+
+
+
+  const group = await prisma.group.findFirst({
+
+    where: { id: groupId, organizationId: ctx.orgId },
+
+  });
+
+  if (!group) return { error: "Grupo não encontrado" };
+
+
+
+  await prisma.groupMember.deleteMany({
+
+    where: { groupId, customerId },
+
+  });
+
+
+
+  await logAudit(ctx, "group.member.remove", { groupId, customerId });
+
+  revalidatePath("/grupos");
+
   revalidatePath(`/grupos/${groupId}`);
 
   return { ok: true };

@@ -1,11 +1,23 @@
+import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { getOptionalAuthContext, listOrganizationsForSwitcher } from "@/lib/auth-context";
 import { getSegment } from "@/segments";
 import { buildNavForUser } from "@/lib/nav";
+import { requireActiveSubscription } from "@/lib/subscription";
 import { Sidebar } from "@/components/sidebar";
 import { auth } from "@/auth";
 import { isPlatformAdminEmail } from "@/lib/platform-admin";
 import { listSegmentsForSwitcher } from "@/lib/segment-switcher-data";
+
+function isOnboardingCompleted(config: unknown): boolean {
+  if (!config || (typeof config === "object" && Object.keys(config as object).length === 0)) {
+    return true;
+  }
+  if (config && typeof config === "object" && "onboardingCompleted" in config) {
+    return (config as { onboardingCompleted?: boolean }).onboardingCompleted === true;
+  }
+  return false;
+}
 
 export default async function AppLayout({
   children,
@@ -15,13 +27,25 @@ export default async function AppLayout({
   const ctx = await getOptionalAuthContext();
   if (!ctx) redirect("/login");
 
+  const headersList = await headers();
+  const pathname = headersList.get("x-pathname") ?? "";
+  requireActiveSubscription(ctx, pathname);
+
   const session = await auth();
   const isPlatformAdmin =
     ctx.isPlatformAdmin ?? session?.user?.isPlatformAdmin ?? isPlatformAdminEmail(session?.user?.email);
 
+  if (
+    !isPlatformAdmin &&
+    !isOnboardingCompleted(ctx.organization.config) &&
+    pathname !== "/onboarding"
+  ) {
+    redirect("/onboarding");
+  }
+
   const segment = getSegment(ctx.effectiveSegmentId);
   const navItems = buildNavForUser(
-    { ...ctx.organization, segmentId: ctx.effectiveSegmentId },
+    { ...ctx.organization, segmentId: ctx.effectiveSegmentId, plan: ctx.organization.plan },
     isPlatformAdmin,
   );
   const organizations = isPlatformAdmin ? await listOrganizationsForSwitcher() : [];

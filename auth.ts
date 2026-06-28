@@ -4,6 +4,7 @@ import bcrypt from "bcryptjs";
 import { z } from "zod";
 import { authConfig } from "./auth.config";
 import { prisma } from "@/lib/db";
+import { getOAuthProviders } from "@/lib/oauth-providers";
 import { isPlatformAdminEmail } from "@/lib/platform-admin";
 
 const credentialsSchema = z.object({
@@ -17,6 +18,7 @@ export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth({
   trustHost: true,
   session: { strategy: "jwt" },
   providers: [
+    ...getOAuthProviders(),
     Credentials({
       credentials: {
         email: { label: "E-mail", type: "email" },

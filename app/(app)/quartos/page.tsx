@@ -3,6 +3,8 @@ import { prisma } from "@/lib/db";
 import { PageHeader } from "@/components/page-header";
 import { RoomForm } from "@/modules/rooms/room-form";
 import { RoomStatusButtons } from "@/components/room-status-buttons";
+import { DeleteButton } from "@/components/delete-button";
+import { deleteRoom } from "@/modules/rooms/actions";
 import { formatCurrency, formatDate } from "@/lib/utils";
 
 const STATUS_LABEL: Record<string, string> = {
@@ -65,7 +67,10 @@ export default async function QuartosPage() {
                   <td className="px-4 py-3 text-slate-600">{formatCurrency(r.dailyRate)}</td>
                   <td className="px-4 py-3 text-slate-600">{formatDate(r.createdAt)}</td>
                   <td className="px-4 py-3">
-                    <RoomStatusButtons id={r.id} status={r.status} />
+                    <div className="flex flex-wrap items-center gap-2">
+                      <RoomStatusButtons id={r.id} status={r.status} />
+                      <DeleteButton onConfirm={() => deleteRoom(r.id)} />
+                    </div>
                   </td>
                 </tr>
               ))}
