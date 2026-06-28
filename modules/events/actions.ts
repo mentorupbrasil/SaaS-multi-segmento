@@ -67,6 +67,7 @@ export async function updateEventStatus(
     data: { status },
   });
   revalidatePath("/eventos");
+  revalidatePath(`/eventos/${id}`);
 }
 
 export async function updateBusinessEvent(
@@ -110,7 +111,62 @@ export async function updateBusinessEvent(
 
   await logAudit(ctx, "event.update", { id });
   revalidatePath("/eventos");
+  revalidatePath(`/eventos/${id}`);
   return { ok: true };
+}
+
+const taskSchema = z.object({
+  title: z.string().min(1),
+  dueAt: z.string().optional(),
+});
+
+export async function createEventTask(
+  eventId: string,
+  _prev: FormResult,
+  formData: FormData,
+): Promise<FormResult> {
+  const ctx = await getAuthContext();
+  const parsed = taskSchema.safeParse({
+    title: formData.get("title"),
+    dueAt: formData.get("dueAt") ?? undefined,
+  });
+  if (!parsed.success) {
+    return { error: parsed.error.issues[0]?.message ?? "Dados inválidos" };
+  }
+
+  const event = await prisma.businessEvent.findFirst({
+    where: { id: eventId, organizationId: ctx.orgId },
+  });
+  if (!event) return { error: "Evento não encontrado" };
+
+  const count = await prisma.eventTask.count({ where: { businessEventId: eventId } });
+
+  await prisma.eventTask.create({
+    data: {
+      businessEventId: eventId,
+      title: parsed.data.title,
+      dueAt: parsed.data.dueAt ? new Date(parsed.data.dueAt) : null,
+      sortOrder: count,
+    },
+  });
+
+  revalidatePath(`/eventos/${eventId}`);
+  return { ok: true };
+}
+
+export async function toggleEventTaskDone(taskId: string, done: boolean): Promise<void> {
+  const ctx = await getAuthContext();
+  const task = await prisma.eventTask.findFirst({
+    where: { id: taskId },
+    include: { businessEvent: { select: { id: true, organizationId: true } } },
+  });
+  if (!task || task.businessEvent.organizationId !== ctx.orgId) return;
+
+  await prisma.eventTask.update({
+    where: { id: taskId },
+    data: { done },
+  });
+  revalidatePath(`/eventos/${task.businessEvent.id}`);
 }
 
 export async function deleteBusinessEvent(id: string): Promise<FormResult> {

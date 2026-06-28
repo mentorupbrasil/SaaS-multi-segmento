@@ -3,14 +3,37 @@ import { prisma } from "@/lib/db";
 import { PageHeader } from "@/components/page-header";
 import { formatCurrency } from "@/lib/utils";
 
-export default async function RelatoriosPage() {
+function parseDateParam(value: string | undefined, fallback: Date): Date {
+  if (!value) return fallback;
+  const parsed = new Date(value);
+  return Number.isNaN(parsed.getTime()) ? fallback : parsed;
+}
+
+function toInputDate(date: Date): string {
+  return date.toISOString().slice(0, 10);
+}
+
+export default async function RelatoriosPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ from?: string; to?: string }>;
+}) {
+  const { from: fromParam, to: toParam } = await searchParams;
   const ctx = await getAuthContext();
   const orgId = ctx.orgId;
 
-  const sixMonthsAgo = new Date();
-  sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 5);
-  sixMonthsAgo.setDate(1);
-  sixMonthsAgo.setHours(0, 0, 0, 0);
+  const defaultTo = new Date();
+  const defaultFrom = new Date();
+  defaultFrom.setMonth(defaultFrom.getMonth() - 5);
+  defaultFrom.setDate(1);
+  defaultFrom.setHours(0, 0, 0, 0);
+
+  const fromDate = parseDateParam(fromParam, defaultFrom);
+  const toDate = parseDateParam(toParam, defaultTo);
+  toDate.setHours(23, 59, 59, 999);
+
+  const rangeStart = fromDate <= toDate ? fromDate : toDate;
+  const rangeEnd = fromDate <= toDate ? toDate : fromDate;
 
   const [paidIncome, appointments, topServicesRaw, lowStock] = await Promise.all([
     prisma.financialEntry.findMany({
@@ -18,18 +41,25 @@ export default async function RelatoriosPage() {
         organizationId: orgId,
         type: "INCOME",
         status: "PAID",
-        paidAt: { gte: sixMonthsAgo },
+        paidAt: { gte: rangeStart, lte: rangeEnd },
       },
       select: { amount: true, paidAt: true },
     }),
     prisma.appointment.groupBy({
       by: ["status"],
-      where: { organizationId: orgId },
+      where: {
+        organizationId: orgId,
+        startAt: { gte: rangeStart, lte: rangeEnd },
+      },
       _count: { id: true },
     }),
     prisma.appointment.groupBy({
       by: ["serviceId"],
-      where: { organizationId: orgId, serviceId: { not: null } },
+      where: {
+        organizationId: orgId,
+        serviceId: { not: null },
+        startAt: { gte: rangeStart, lte: rangeEnd },
+      },
       _count: { id: true },
       orderBy: { _count: { id: "desc" } },
       take: 10,
@@ -56,13 +86,15 @@ export default async function RelatoriosPage() {
 
   const monthLabels: string[] = [];
   const revenueByMonth = new Map<string, number>();
-  for (let i = 0; i < 6; i++) {
-    const d = new Date();
-    d.setMonth(d.getMonth() - (5 - i));
-    const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
-    const label = d.toLocaleDateString("pt-BR", { month: "short", year: "numeric" });
+  const cursor = new Date(rangeStart.getFullYear(), rangeStart.getMonth(), 1);
+  const endMonth = new Date(rangeEnd.getFullYear(), rangeEnd.getMonth(), 1);
+
+  while (cursor <= endMonth) {
+    const key = `${cursor.getFullYear()}-${String(cursor.getMonth() + 1).padStart(2, "0")}`;
+    const label = cursor.toLocaleDateString("pt-BR", { month: "short", year: "numeric" });
     monthLabels.push(label);
     revenueByMonth.set(key, 0);
+    cursor.setMonth(cursor.getMonth() + 1);
   }
 
   for (const entry of paidIncome) {
@@ -88,13 +120,43 @@ export default async function RelatoriosPage() {
         description="Visão geral do desempenho do negócio."
       />
 
+      <form method="get" className="mb-6 flex flex-wrap items-end gap-3">
+        <div>
+          <label htmlFor="from" className="label">
+            De
+          </label>
+          <input
+            id="from"
+            name="from"
+            type="date"
+            defaultValue={toInputDate(rangeStart)}
+            className="input"
+          />
+        </div>
+        <div>
+          <label htmlFor="to" className="label">
+            Até
+          </label>
+          <input
+            id="to"
+            name="to"
+            type="date"
+            defaultValue={toInputDate(rangeEnd)}
+            className="input"
+          />
+        </div>
+        <button type="submit" className="btn-secondary">
+          Filtrar
+        </button>
+      </form>
+
       <div className="mb-8 grid gap-4 sm:grid-cols-3">
         <div className="card p-4">
-          <p className="text-xs text-slate-500">Agendamentos (total)</p>
+          <p className="text-xs text-slate-500">Agendamentos (período)</p>
           <p className="text-2xl font-bold text-slate-900">{appointmentTotal}</p>
         </div>
         <div className="card p-4">
-          <p className="text-xs text-slate-500">Receita (6 meses)</p>
+          <p className="text-xs text-slate-500">Receita (período)</p>
           <p className="text-2xl font-bold text-green-600">
             {formatCurrency(revenueRows.reduce((s, r) => s + r.total, 0))}
           </p>
@@ -143,7 +205,7 @@ export default async function RelatoriosPage() {
               {appointments.length === 0 ? (
                 <tr>
                   <td colSpan={2} className="px-4 py-6 text-center text-slate-500">
-                    Nenhum agendamento.
+                    Nenhum agendamento no período.
                   </td>
                 </tr>
               ) : (
@@ -173,7 +235,7 @@ export default async function RelatoriosPage() {
               {topServicesRaw.length === 0 ? (
                 <tr>
                   <td colSpan={2} className="px-4 py-6 text-center text-slate-500">
-                    Sem dados.
+                    Sem dados no período.
                   </td>
                 </tr>
               ) : (

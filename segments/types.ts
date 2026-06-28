@@ -144,6 +144,8 @@ export interface SegmentTemplate {
   tagline: string;
   /** modulos ligados para este segmento */
   modules: ModuleId[];
+  /** modulos removidos mesmo que venham da categoria ou base */
+  excludeModules?: ModuleId[];
   /** nomenclatura: sobrescreve termos padrao (ex.: professional -> "Barbeiro") */
   terms: Record<string, string>;
   /** campos especificos do nicho aplicados ao cadastro de clientes */

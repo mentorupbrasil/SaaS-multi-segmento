@@ -4,11 +4,13 @@ import { useActionState, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createRoom, type FormResult } from "./actions";
 import { SubmitButton } from "@/components/submit-button";
+import { LookupSelect } from "@/components/lookup-select";
 import { Icon } from "@/components/icon";
+import type { MasterDataOption } from "@/lib/master-data";
 
 const initial: FormResult = {};
 
-export function RoomForm() {
+export function RoomForm({ roomTypeItems = [] }: { roomTypeItems?: MasterDataOption[] }) {
   const [open, setOpen] = useState(false);
   const [state, action] = useActionState(createRoom, initial);
   const formRef = useRef<HTMLFormElement>(null);
@@ -41,7 +43,13 @@ export function RoomForm() {
         </div>
         <div>
           <label className="label">Tipo</label>
-          <input name="type" className="input" placeholder="Standard, suite..." />
+          <LookupSelect
+            name="type"
+            type="ROOM_TYPE"
+            items={roomTypeItems}
+            allowCustom
+            placeholder="Selecione o tipo"
+          />
         </div>
         <div>
           <label className="label">Diária (R$)</label>

@@ -24,7 +24,12 @@ const ROUTE_MODULE: Record<string, ModuleId> = {
   "/pacotes": "scheduling",
   "/vacinas": "pets",
   "/comissoes": "work_orders",
+  "/governanca": "housekeeping",
+  "/cozinha": "kitchen",
   "/relatorios": "financial",
+  "/turmas": "education",
+  "/matriculas": "education",
+  "/frequencia": "education",
 };
 
 /** Verifica se o segmento tem acesso ao módulo da rota. */

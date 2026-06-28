@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getAuthContext } from "@/lib/auth-context";
 import { prisma } from "@/lib/db";
+import { getMasterDataOptions } from "@/lib/master-data";
 import { PageHeader } from "@/components/page-header";
 import { DeleteButton } from "@/components/delete-button";
 import { GroupForm } from "@/modules/groups/group-form";
@@ -10,18 +11,21 @@ import { formatDate } from "@/lib/utils";
 export default async function GruposPage() {
   const ctx = await getAuthContext();
 
-  const groups = await prisma.group.findMany({
-    where: { organizationId: ctx.orgId },
-    include: { _count: { select: { members: true } } },
-    orderBy: { name: "asc" },
-  });
+  const [groups, groupTypeItems] = await Promise.all([
+    prisma.group.findMany({
+      where: { organizationId: ctx.orgId },
+      include: { _count: { select: { members: true } } },
+      orderBy: { name: "asc" },
+    }),
+    getMasterDataOptions(ctx.orgId, "GROUP_TYPE"),
+  ]);
 
   return (
     <div>
       <PageHeader
         title="Grupos"
         description="Turmas, células e grupos de participantes."
-        action={<GroupForm />}
+        action={<GroupForm groupTypeItems={groupTypeItems} />}
       />
 
       {groups.length === 0 ? (

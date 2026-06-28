@@ -1556,6 +1556,151 @@ const HOTELARIA: SegmentExtras = {
   ],
 };
 
+const EDUCACAO: SegmentExtras = {
+  intro:
+    "Gestão escolar e de cursos — do cadastro de alunos às mensalidades, turmas e frequência. Da escola pequena às instituições com várias turmas.",
+  groups: [
+    {
+      id: "alunos",
+      title: "Cadastro de alunos",
+      icon: "Users",
+      items: [
+        a("Cadastro completo e responsáveis"),
+        a("Histórico e observações"),
+        a("Campos do segmento"),
+        s("Documentos e anexos"),
+        s("Portal do aluno / responsável"),
+      ],
+    },
+    {
+      id: "turmas",
+      title: "Turmas",
+      icon: "GraduationCap",
+      items: [
+        a("Cadastro de turmas"),
+        a("Capacidade e turno"),
+        a("Professor responsável"),
+        s("Grade horária completa"),
+        s("Transferência entre turmas"),
+      ],
+    },
+    {
+      id: "matriculas",
+      title: "Matrículas",
+      icon: "ClipboardList",
+      items: [
+        a("Matrícula por turma"),
+        a("Status ativo / trancado"),
+        a("Histórico por aluno"),
+        s("Rematrícula automática"),
+        s("Lista de espera"),
+      ],
+    },
+    {
+      id: "frequencia",
+      title: "Frequência",
+      icon: "CalendarCheck",
+      items: [
+        a("Chamada por turma e data"),
+        a("Registro de presença e falta"),
+        s("Justificativas e anexos"),
+        s("Relatório de frequência"),
+        s("Alertas de evasão"),
+      ],
+    },
+    {
+      id: "agenda",
+      title: "Agenda de aulas",
+      icon: "Calendar",
+      items: [
+        a("Aulas e horários por turma"),
+        a("Agenda por professor"),
+        s("Substituições e reposições"),
+        s("Calendário escolar"),
+      ],
+    },
+    {
+      id: "financeiro",
+      title: "Financeiro",
+      icon: "Wallet",
+      items: [
+        a("Mensalidades e matrículas"),
+        a("Contas a pagar e a receber"),
+        a("Controle de inadimplência"),
+        s("Cobrança recorrente"),
+        s("Bolsas e descontos"),
+      ],
+    },
+    {
+      id: "professores",
+      title: "Professores e equipe",
+      icon: "UserCog",
+      items: [
+        a("Cadastro de professores"),
+        a("Turmas vinculadas"),
+        s("Escalas e substituições"),
+        s("Produtividade"),
+      ],
+    },
+  ],
+  premium: [
+    {
+      id: "portal",
+      title: "Portal do aluno / responsável",
+      icon: "Globe",
+      items: [
+        s("Boletim e frequência"),
+        s("Mensalidades e documentos"),
+        s("Comunicados"),
+      ],
+    },
+    {
+      id: "ia",
+      title: "Inteligência artificial",
+      icon: "Bot",
+      items: [
+        s("Alertas de evasão"),
+        s("Sugestão de rematrícula"),
+        s("Resumo de desempenho"),
+      ],
+    },
+    {
+      id: "comunicacao",
+      title: "Comunicação",
+      icon: "MessageCircle",
+      items: [
+        s("WhatsApp e e-mail para responsáveis"),
+        s("Comunicados por turma"),
+        s("Lembretes de mensalidade"),
+      ],
+    },
+  ],
+  dashboards: [
+    "Alunos ativos e novos alunos",
+    "Turmas e vagas disponíveis",
+    "Matrículas do período",
+    "Frequência média por turma",
+    "Inadimplência",
+    "Faturamento de mensalidades",
+    "Professores e turmas vinculadas",
+  ],
+  integrations: [
+    { label: "WhatsApp", icon: "MessageCircle" },
+    { label: "E-mail", icon: "Mail" },
+    { label: "PIX", icon: "Wallet" },
+    { label: "Cartões", icon: "CreditCard" },
+    { label: "Google Agenda", icon: "Calendar" },
+    { label: "Contabilidade / ERP", icon: "Layers" },
+  ],
+  differentials: [
+    "Turmas, matrículas e frequência integrados ao financeiro",
+    "Cadastro de alunos com responsáveis e campos do segmento",
+    "Controle de mensalidades e inadimplência por turma",
+    "Chamada digital por turma e data",
+    "Relatórios de matrículas, frequência e receita",
+  ],
+};
+
 const PET: SegmentExtras = {
   intro:
     "Uma plataforma completa para o mercado pet — clínica veterinária, pet shop, banho e tosa, hotel e creche em um único ERP. Do pet shop às redes e franquias.",
@@ -2276,6 +2421,7 @@ const BY_CATEGORY: Partial<Record<SegmentCategory, SegmentExtras>> = {
   automotivo: AUTOMOTIVO,
   comercio: COMERCIO,
   hotelaria: HOTELARIA,
+  educacao: EDUCACAO,
   eventos: EVENTOS,
   organizacoes: ORGANIZACOES,
   pet: PET,

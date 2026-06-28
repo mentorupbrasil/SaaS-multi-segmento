@@ -4,7 +4,9 @@ import { useActionState, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createBusinessEvent, type FormResult } from "./actions";
 import { SubmitButton } from "@/components/submit-button";
+import { LookupSelect } from "@/components/lookup-select";
 import { Icon } from "@/components/icon";
+import type { MasterDataOption } from "@/lib/master-data";
 
 const initial: FormResult = {};
 
@@ -13,7 +15,13 @@ interface Option {
   label: string;
 }
 
-export function EventForm({ customers }: { customers: Option[] }) {
+export function EventForm({
+  customers,
+  eventTypeItems = [],
+}: {
+  customers: Option[];
+  eventTypeItems?: MasterDataOption[];
+}) {
   const [open, setOpen] = useState(false);
   const [state, action] = useActionState(createBusinessEvent, initial);
   const formRef = useRef<HTMLFormElement>(null);
@@ -57,7 +65,13 @@ export function EventForm({ customers }: { customers: Option[] }) {
         </div>
         <div>
           <label className="label">Tipo</label>
-          <input name="eventType" className="input" placeholder="Casamento, festa..." />
+          <LookupSelect
+            name="eventType"
+            type="EVENT_TYPE"
+            items={eventTypeItems}
+            allowCustom
+            placeholder="Selecione o tipo"
+          />
         </div>
         <div>
           <label className="label">Data</label>

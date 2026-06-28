@@ -10,6 +10,7 @@ const memberFields = [
 ];
 
 const baseModules = ["clients", "scheduling", "services", "financial", "team", "work_orders", "records"] as const;
+const noScheduling = { excludeModules: ["scheduling"] as const };
 
 const baseTerms = {
   customer: "Participante",
@@ -33,6 +34,7 @@ export const institutoSocial: SegmentTemplate = {
   category: "organizacoes",
   tagline: "Projetos, atendimentos e indicadores de impacto.",
   modules: [...baseModules],
+  ...noScheduling,
   terms: {
     ...baseTerms,
     customer: "Beneficiário",
@@ -78,6 +80,7 @@ export const osfl: SegmentTemplate = {
   category: "organizacoes",
   tagline: "Gestão administrativa, financeira e operacional.",
   modules: [...baseModules, "inventory"],
+  ...noScheduling,
   terms: {
     ...baseTerms,
     customer: "Participante",
@@ -160,6 +163,7 @@ export const projetosSociais: SegmentTemplate = {
   category: "organizacoes",
   tagline: "Metas, equipe e indicadores de impacto.",
   modules: [...baseModules],
+  ...noScheduling,
   terms: {
     ...baseTerms,
     customer: "Beneficiário",
@@ -205,6 +209,7 @@ export const gruposMovimentos: SegmentTemplate = {
   category: "organizacoes",
   tagline: "Participantes, atividades e engajamento.",
   modules: [...baseModules],
+  ...noScheduling,
   terms: {
     ...baseTerms,
     professional: "Coordenador",

@@ -90,6 +90,7 @@ export async function updatePet(
   await prisma.pet.updateMany({
     where: { id, organizationId: ctx.orgId },
     data: {
+      customerId: parsed.data.customerId,
       name: parsed.data.name,
       species: parsed.data.species || null,
       breed: parsed.data.breed || null,
@@ -102,6 +103,7 @@ export async function updatePet(
 
   await logAudit(ctx, "pet.update", { id });
   revalidatePath("/pets");
+  revalidatePath(`/pets/${id}`);
   return { ok: true };
 }
 

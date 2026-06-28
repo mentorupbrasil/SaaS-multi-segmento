@@ -13,6 +13,7 @@ export const MODULES: Record<ModuleId, ModuleDef> = {
     description: "Agenda online por profissional, com horários, status e confirmação de atendimento.",
     nav: [
       { href: "/agenda", labelKey: "appointment_plural", fallback: "Agenda", icon: "Calendar" },
+      { href: "/agenda/calendario", labelKey: "calendar", fallback: "Calendário", icon: "CalendarCheck" },
       { href: "/pacotes", labelKey: "package_plural", fallback: "Pacotes", icon: "Package" },
     ],
   },
@@ -126,6 +127,28 @@ export const MODULES: Record<ModuleId, ModuleDef> = {
     name: "Grupos",
     description: "Ministérios, departamentos e equipes.",
     nav: [{ href: "/grupos", labelKey: "group_plural", fallback: "Grupos", icon: "UsersRound" }],
+  },
+  education: {
+    id: "education",
+    name: "Educação",
+    description: "Turmas, matrículas e controle de frequência.",
+    nav: [
+      { href: "/turmas", labelKey: "class_plural", fallback: "Turmas", icon: "GraduationCap" },
+      { href: "/matriculas", labelKey: "enrollment_plural", fallback: "Matrículas", icon: "UserPlus" },
+      { href: "/frequencia", labelKey: "attendance", fallback: "Frequência", icon: "ClipboardCheck" },
+    ],
+  },
+  housekeeping: {
+    id: "housekeeping",
+    name: "Governança",
+    description: "Checklist de limpeza e status dos quartos.",
+    nav: [{ href: "/governanca", labelKey: "housekeeping", fallback: "Governança", icon: "Sparkles" }],
+  },
+  kitchen: {
+    id: "kitchen",
+    name: "Cozinha",
+    description: "Painel de produção e pedidos da cozinha (KDS).",
+    nav: [{ href: "/cozinha", labelKey: "kitchen", fallback: "Cozinha", icon: "ChefHat" }],
   },
 };
 

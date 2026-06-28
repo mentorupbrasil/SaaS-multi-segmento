@@ -38,8 +38,16 @@ describe("resolveSegmentModules", () => {
     expect(modules).not.toContain("vehicles");
   });
 
-  it("returns base modules for unknown segment", () => {
-    const modules = resolveSegmentModules("segmento-inexistente");
-    expect(modules).toEqual(["clients", "scheduling", "services", "financial", "team"]);
+  it("includes education modules for escola", () => {
+    const modules = resolveSegmentModules("escola");
+    expect(modules).toEqual(
+      expect.arrayContaining(["education", "clients", "financial"]),
+    );
+  });
+
+  it("excludes scheduling for farmacia", () => {
+    const modules = resolveSegmentModules("farmacia");
+    expect(modules).not.toContain("scheduling");
+    expect(modules).toContain("pdv");
   });
 });

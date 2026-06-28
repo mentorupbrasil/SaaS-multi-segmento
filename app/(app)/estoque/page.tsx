@@ -1,12 +1,18 @@
 import { getAuthContext } from "@/lib/auth-context";
 import { prisma } from "@/lib/db";
+import { parseListParams } from "@/lib/list-params";
+import { getMasterDataOptions } from "@/lib/master-data";
 import { resolveTerms, term } from "@/lib/terms";
 import { PageHeader } from "@/components/page-header";
+import { ListToolbar } from "@/components/list-toolbar";
+import { Pagination } from "@/components/pagination";
 import { DeleteButton } from "@/components/delete-button";
 import { InventoryForm } from "@/modules/inventory/item-form";
 import { deleteInventoryItem } from "@/modules/inventory/actions";
 import { MovementForm } from "@/modules/inventory/movement-form";
 import { formatCurrency, formatDate } from "@/lib/utils";
+
+const PAGE_SIZE = 20;
 
 const MOVEMENT_LABEL: Record<string, string> = {
   IN: "Entrada",
@@ -14,7 +20,12 @@ const MOVEMENT_LABEL: Record<string, string> = {
   ADJUST: "Ajuste",
 };
 
-export default async function EstoquePage() {
+export default async function EstoquePage({
+  searchParams,
+}: {
+  searchParams: Promise<{ q?: string; page?: string }>;
+}) {
+  const params = parseListParams(await searchParams);
   const ctx = await getAuthContext();
   const terms = resolveTerms(
     ctx.organization.segmentId,
@@ -22,28 +33,45 @@ export default async function EstoquePage() {
   );
   const label = terms.inventory ?? "Estoque";
 
-  const [items, movements, suppliers] = await Promise.all([
-    prisma.inventoryItem.findMany({
-      where: { organizationId: ctx.orgId },
-      orderBy: { name: "asc" },
-    }),
-    prisma.inventoryMovement.findMany({
-      where: { organizationId: ctx.orgId },
-      include: {
-        inventoryItem: { select: { name: true } },
-        supplier: { select: { name: true } },
-      },
-      orderBy: { createdAt: "desc" },
-      take: 20,
-    }),
-    prisma.supplier.findMany({
-      where: { organizationId: ctx.orgId },
-      select: { id: true, name: true },
-      orderBy: { name: "asc" },
-    }),
-  ]);
+  const where = {
+    organizationId: ctx.orgId,
+    ...(params.q
+      ? { name: { contains: params.q, mode: "insensitive" as const } }
+      : {}),
+  };
 
-  const lowStock = items.filter((i) => i.minQuantity > 0 && i.quantity <= i.minQuantity);
+  const [total, items, allItems, movements, suppliers, categoryItems, unitItems] =
+    await Promise.all([
+      prisma.inventoryItem.count({ where }),
+      prisma.inventoryItem.findMany({
+        where,
+        orderBy: { name: "asc" },
+        skip: (params.page - 1) * PAGE_SIZE,
+        take: PAGE_SIZE,
+      }),
+      prisma.inventoryItem.findMany({
+        where: { organizationId: ctx.orgId },
+        orderBy: { name: "asc" },
+      }),
+      prisma.inventoryMovement.findMany({
+        where: { organizationId: ctx.orgId },
+        include: {
+          inventoryItem: { select: { name: true } },
+          supplier: { select: { name: true } },
+        },
+        orderBy: { createdAt: "desc" },
+        take: 20,
+      }),
+      prisma.supplier.findMany({
+        where: { organizationId: ctx.orgId },
+        select: { id: true, name: true },
+        orderBy: { name: "asc" },
+      }),
+      getMasterDataOptions(ctx.orgId, "PRODUCT_CATEGORY"),
+      getMasterDataOptions(ctx.orgId, "PRODUCT_UNIT"),
+    ]);
+
+  const lowStock = allItems.filter((i) => i.minQuantity > 0 && i.quantity <= i.minQuantity);
 
   return (
     <div>
@@ -53,10 +81,10 @@ export default async function EstoquePage() {
         action={
           <div className="flex flex-wrap gap-2">
             <MovementForm
-              items={items.map((i) => ({ id: i.id, label: `${i.name} (qtd: ${i.quantity})` }))}
+              items={allItems.map((i) => ({ id: i.id, label: `${i.name} (qtd: ${i.quantity})` }))}
               suppliers={suppliers.map((s) => ({ id: s.id, label: s.name }))}
             />
-            <InventoryForm />
+            <InventoryForm categoryItems={categoryItems} unitItems={unitItems} />
           </div>
         }
       />
@@ -67,39 +95,53 @@ export default async function EstoquePage() {
         </div>
       )}
 
+      <ListToolbar searchValue={params.q} searchPlaceholder="Buscar item por nome..." />
+
       {items.length === 0 ? (
-        <div className="card p-10 text-center text-slate-500">Nenhum item cadastrado ainda.</div>
-      ) : (
-        <div className="card overflow-hidden">
-          <table className="w-full text-sm">
-            <thead className="bg-slate-50 text-left text-xs uppercase tracking-wider text-slate-500">
-              <tr>
-                <th className="px-4 py-3">Item</th>
-                <th className="px-4 py-3">SKU</th>
-                <th className="px-4 py-3">Qtd</th>
-                <th className="px-4 py-3">Mín.</th>
-                <th className="px-4 py-3">Preço</th>
-                <th className="px-4 py-3">Ações</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100">
-              {items.map((item) => (
-                <tr key={item.id} className="hover:bg-slate-50">
-                  <td className="px-4 py-3 font-medium text-slate-900">{item.name}</td>
-                  <td className="px-4 py-3 text-slate-600">{item.sku ?? "—"}</td>
-                  <td className="px-4 py-3 text-slate-600">
-                    {item.quantity} {item.unit}
-                  </td>
-                  <td className="px-4 py-3 text-slate-600">{item.minQuantity}</td>
-                  <td className="px-4 py-3 text-slate-600">{formatCurrency(item.price)}</td>
-                  <td className="px-4 py-3">
-                    <DeleteButton action={deleteInventoryItem.bind(null, item.id)} />
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        <div className="card p-10 text-center text-slate-500">
+          {params.q ? "Nenhum resultado para a busca." : "Nenhum item cadastrado ainda."}
         </div>
+      ) : (
+        <>
+          <div className="card overflow-hidden">
+            <table className="w-full text-sm">
+              <thead className="bg-slate-50 text-left text-xs uppercase tracking-wider text-slate-500">
+                <tr>
+                  <th className="px-4 py-3">Item</th>
+                  <th className="px-4 py-3">SKU</th>
+                  <th className="px-4 py-3">Qtd</th>
+                  <th className="px-4 py-3">Mín.</th>
+                  <th className="px-4 py-3">Preço</th>
+                  <th className="px-4 py-3">Ações</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                {items.map((item) => (
+                  <tr key={item.id} className="hover:bg-slate-50">
+                    <td className="px-4 py-3 font-medium text-slate-900">{item.name}</td>
+                    <td className="px-4 py-3 text-slate-600">{item.sku ?? "—"}</td>
+                    <td className="px-4 py-3 text-slate-600">
+                      {item.quantity} {item.unit}
+                    </td>
+                    <td className="px-4 py-3 text-slate-600">{item.minQuantity}</td>
+                    <td className="px-4 py-3 text-slate-600">{formatCurrency(item.price)}</td>
+                    <td className="px-4 py-3">
+                      <DeleteButton action={deleteInventoryItem.bind(null, item.id)} />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <Pagination
+            total={total}
+            page={params.page}
+            pageSize={PAGE_SIZE}
+            basePath="/estoque"
+            searchParams={{ q: params.q || undefined }}
+          />
+        </>
       )}
 
       <h2 className="mb-2 mt-8 text-lg font-semibold">Movimentações recentes</h2>

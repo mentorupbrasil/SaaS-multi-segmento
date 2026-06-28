@@ -4,11 +4,19 @@ import { useActionState, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createInventoryItem, type FormResult } from "./actions";
 import { SubmitButton } from "@/components/submit-button";
+import { LookupSelect } from "@/components/lookup-select";
 import { Icon } from "@/components/icon";
+import type { MasterDataOption } from "@/lib/master-data";
 
 const initial: FormResult = {};
 
-export function InventoryForm() {
+export function InventoryForm({
+  categoryItems = [],
+  unitItems = [],
+}: {
+  categoryItems?: MasterDataOption[];
+  unitItems?: MasterDataOption[];
+}) {
   const [open, setOpen] = useState(false);
   const [state, action] = useActionState(createInventoryItem, initial);
   const formRef = useRef<HTMLFormElement>(null);
@@ -53,11 +61,24 @@ export function InventoryForm() {
         </div>
         <div>
           <label className="label">Categoria</label>
-          <input name="category" className="input" />
+          <LookupSelect
+            name="category"
+            type="PRODUCT_CATEGORY"
+            items={categoryItems}
+            allowCustom
+            placeholder="Selecione a categoria"
+          />
         </div>
         <div>
           <label className="label">Unidade</label>
-          <input name="unit" className="input" defaultValue="un" />
+          <LookupSelect
+            name="unit"
+            type="PRODUCT_UNIT"
+            items={unitItems}
+            allowCustom
+            defaultValue="un"
+            placeholder="Selecione a unidade"
+          />
         </div>
         <div>
           <label className="label">Quantidade</label>

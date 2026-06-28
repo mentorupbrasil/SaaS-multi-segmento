@@ -90,6 +90,7 @@ export async function updateVehicle(
   await prisma.vehicle.updateMany({
     where: { id, organizationId: ctx.orgId },
     data: {
+      customerId: parsed.data.customerId,
       plate: parsed.data.plate.toUpperCase(),
       model: parsed.data.model,
       brand: parsed.data.brand || null,

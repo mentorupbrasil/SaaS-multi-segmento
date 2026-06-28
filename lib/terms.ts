@@ -10,6 +10,7 @@ export const DEFAULT_TERMS: Record<string, string> = {
   service_plural: "Serviços",
   appointment: "Agendamento",
   appointment_plural: "Agenda",
+  calendar: "Calendário",
   work_order: "Ordem de Serviço",
   work_order_plural: "Ordens de Serviço",
   financial: "Financeiro",
@@ -40,6 +41,11 @@ export const DEFAULT_TERMS: Record<string, string> = {
   vaccination_plural: "Vacinas",
   commission_plural: "Comissões",
   reports: "Relatórios",
+  class_plural: "Turmas",
+  enrollment_plural: "Matrículas",
+  attendance: "Frequência",
+  housekeeping: "Governança",
+  kitchen: "Cozinha",
 };
 
 export type Terms = Record<string, string>;

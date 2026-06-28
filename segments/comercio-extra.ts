@@ -13,6 +13,7 @@ const baseTerms = {
 };
 
 const baseModules = ["clients", "services", "inventory", "financial", "team"] as const;
+const noScheduling = { excludeModules: ["scheduling"] as const };
 
 export const lojaUtilidades: SegmentTemplate = {
   id: "loja-utilidades",
@@ -59,6 +60,7 @@ export const lojaFerragens: SegmentTemplate = {
   category: "comercio",
   tagline: "PDV, peças, peso e estoque.",
   modules: [...baseModules],
+  ...noScheduling,
   terms: baseTerms,
   customerFields: [
     { key: "tipo_obra", label: "Tipo de obra", type: "select", options: ["Reforma", "Construção", "Manutenção"] },
@@ -135,7 +137,14 @@ export const farmacia: SegmentTemplate = {
   category: "comercio",
   tagline: "PDV, validade, lotes e convênios.",
   modules: [...baseModules],
+  ...noScheduling,
   terms: baseTerms,
+  specialties: [
+    { id: "genericos", label: "Genéricos e similares" },
+    { id: "controlados", label: "Medicamentos controlados" },
+    { id: "manipulacao", label: "Manipulação" },
+    { id: "perfumaria", label: "Perfumaria e dermocosméticos" },
+  ],
   customerFields: [
     { key: "convenio", label: "Convênio", type: "text" },
     { key: "cpf", label: "CPF", type: "text" },
@@ -173,6 +182,7 @@ export const supermercado: SegmentTemplate = {
   category: "comercio",
   tagline: "PDV rápido, validade e multilojas.",
   modules: [...baseModules],
+  ...noScheduling,
   terms: baseTerms,
   customerFields: [
     { key: "cartao_fidelidade", label: "Cartão fidelidade", type: "text" },
@@ -211,6 +221,7 @@ export const mercearia: SegmentTemplate = {
   category: "comercio",
   tagline: "PDV, estoque e crediário.",
   modules: [...baseModules],
+  ...noScheduling,
   terms: baseTerms,
   customerFields: [
     { key: "crediario", label: "Crediário", type: "select", options: ["Sim", "Não"] },
@@ -249,6 +260,7 @@ export const minimercado: SegmentTemplate = {
   category: "comercio",
   tagline: "PDV enxuto, estoque e caixa.",
   modules: [...baseModules],
+  ...noScheduling,
   terms: baseTerms,
   customerFields: [
     { key: "bairro", label: "Bairro", type: "text" },
@@ -286,6 +298,7 @@ export const distribuidora: SegmentTemplate = {
   category: "comercio",
   tagline: "Pedidos, separação, entrega e estoque.",
   modules: [...baseModules, "work_orders"],
+  ...noScheduling,
   terms: {
     ...baseTerms,
     work_order: "Pedido",
@@ -329,6 +342,7 @@ export const atacado: SegmentTemplate = {
   category: "comercio",
   tagline: "Preço por quantidade, pedidos e estoque.",
   modules: [...baseModules, "work_orders"],
+  ...noScheduling,
   terms: {
     ...baseTerms,
     work_order: "Pedido",
@@ -372,6 +386,7 @@ export const depositoMateriais: SegmentTemplate = {
   category: "comercio",
   tagline: "Orçamentos, entrega e estoque pesado.",
   modules: [...baseModules, "work_orders"],
+  ...noScheduling,
   terms: {
     ...baseTerms,
     work_order: "Pedido",

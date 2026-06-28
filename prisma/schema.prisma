@@ -116,6 +116,59 @@ enum AutomationJobStatus {
   CANCELED
 }
 
+enum HousekeepingTaskStatus {
+  PENDING
+  IN_PROGRESS
+  DONE
+  CANCELED
+}
+
+enum HousekeepingTaskType {
+  CLEANING
+  DEEP_CLEAN
+  TURNDOWN
+  INSPECTION
+  OTHER
+}
+
+enum HousekeepingPriority {
+  LOW
+  NORMAL
+  HIGH
+  URGENT
+}
+
+enum KitchenOrderStatus {
+  PENDING
+  PREPARING
+  DONE
+  CANCELED
+}
+
+enum MasterDataType {
+  PAYMENT_METHOD
+  FINANCIAL_CATEGORY
+  SERVICE_CATEGORY
+  PRODUCT_CATEGORY
+  PRODUCT_UNIT
+  ROOM_TYPE
+  EVENT_TYPE
+  GROUP_TYPE
+  DONATION_TYPE
+  VACCINE
+  PET_SPECIES
+  PET_BREED
+  VEHICLE_BRAND
+  COMMISSION_RATE
+}
+
+enum EnrollmentStatus {
+  ACTIVE
+  SUSPENDED
+  COMPLETED
+  CANCELED
+}
+
 model User {
   id                   String    @id @default(cuid())
   email                String    @unique
@@ -180,6 +233,12 @@ model Organization {
   supportTickets     SupportTicket[]
   bookingLinks       PublicBookingLink?
   automationJobs     AutomationJob[]
+  masterData         MasterData[]
+  schoolClasses      SchoolClass[]
+  enrollments        Enrollment[]
+  attendanceRecords  AttendanceRecord[]
+  housekeepingTasks  HousekeepingTask[]
+  kitchenOrders      KitchenOrder[]
 
   @@index([parentOrganizationId])
 }
@@ -198,7 +257,9 @@ model Membership {
   serviceLinks ServiceStaff[]
   cashShifts   CashShift[]
   blockedSlots BlockedSlot[]
-  commissions  CommissionEntry[]
+  commissions       CommissionEntry[]
+  schoolClasses     SchoolClass[] @relation("ClassTeacher")
+  housekeepingTasks HousekeepingTask[]
 
   @@unique([userId, organizationId])
   @@index([organizationId])
@@ -230,6 +291,8 @@ model Customer {
   sessionPackages SessionPackage[]
   commissionEntries CommissionEntry[]
   financialEntries  FinancialEntry[]
+  enrollments       Enrollment[]
+  attendanceRecords AttendanceRecord[]
 
   @@index([organizationId])
 }
@@ -431,6 +494,7 @@ model WorkOrder {
   movements         InventoryMovement[]
   financialEntries  FinancialEntry[]
   commissionEntries CommissionEntry[]
+  kitchenOrders     KitchenOrder[]
 
   @@index([organizationId])
 }
@@ -566,8 +630,9 @@ model Room {
   notes          String?
   createdAt      DateTime   @default(now())
 
-  organization Organization  @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organization Organization      @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   reservations Reservation[]
+  housekeepingTasks HousekeepingTask[]
 
   @@index([organizationId])
 }
@@ -606,6 +671,7 @@ model BusinessEvent {
 
   organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   customer     Customer?    @relation(fields: [customerId], references: [id], onDelete: SetNull)
+  tasks        EventTask[]
 
   @@index([organizationId])
 }
@@ -832,4 +898,130 @@ model AutomationJob {
 
   @@index([organizationId])
   @@index([runAt, status])
+}
+
+model HousekeepingTask {
+  id              String                 @id @default(cuid())
+  organizationId  String
+  roomId          String
+  taskType        HousekeepingTaskType   @default(CLEANING)
+  status          HousekeepingTaskStatus @default(PENDING)
+  priority        HousekeepingPriority   @default(NORMAL)
+  assignedStaffId String?
+  notes           String?
+  dueAt           DateTime?
+  completedAt     DateTime?
+  createdAt       DateTime               @default(now())
+
+  organization  Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  room          Room         @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  assignedStaff Membership?  @relation(fields: [assignedStaffId], references: [id], onDelete: SetNull)
+
+  @@index([organizationId])
+  @@index([roomId])
+  @@index([status])
+}
+
+model KitchenOrder {
+  id             String             @id @default(cuid())
+  organizationId String
+  workOrderId    String?
+  tableLabel     String?
+  status         KitchenOrderStatus @default(PENDING)
+  items          Json               @default("[]")
+  notes          String?
+  startedAt      DateTime?
+  completedAt    DateTime?
+  createdAt      DateTime           @default(now())
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  workOrder    WorkOrder?   @relation(fields: [workOrderId], references: [id], onDelete: SetNull)
+
+  @@index([organizationId])
+  @@index([status])
+}
+
+model MasterData {
+  id             String         @id @default(cuid())
+  organizationId String
+  type           MasterDataType
+  label          String
+  value          String?
+  sortOrder      Int            @default(0)
+  active         Boolean        @default(true)
+  metadata       Json           @default("{}")
+  createdAt      DateTime       @default(now())
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId, type])
+}
+
+model SchoolClass {
+  id             String   @id @default(cuid())
+  organizationId String
+  name           String
+  grade          String?
+  shift          String?
+  capacity       Int      @default(30)
+  room           String?
+  teacherId      String?
+  active         Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @default(now()) @updatedAt
+
+  organization      Organization       @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  teacher           Membership?        @relation("ClassTeacher", fields: [teacherId], references: [id], onDelete: SetNull)
+  enrollments       Enrollment[]
+  attendanceRecords AttendanceRecord[]
+
+  @@index([organizationId])
+}
+
+model Enrollment {
+  id             String           @id @default(cuid())
+  organizationId String
+  classId        String
+  customerId     String
+  status         EnrollmentStatus @default(ACTIVE)
+  enrolledAt     DateTime         @default(now())
+  notes          String?
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  class        SchoolClass  @relation(fields: [classId], references: [id], onDelete: Cascade)
+  customer     Customer     @relation(fields: [customerId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId])
+  @@index([classId])
+  @@index([customerId])
+}
+
+model AttendanceRecord {
+  id             String   @id @default(cuid())
+  organizationId String
+  classId        String
+  customerId     String
+  date           DateTime
+  present        Boolean
+  notes          String?
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  class        SchoolClass  @relation(fields: [classId], references: [id], onDelete: Cascade)
+  customer     Customer     @relation(fields: [customerId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId])
+  @@index([classId, date])
+}
+
+model EventTask {
+  id              String    @id @default(cuid())
+  businessEventId String
+  title           String
+  dueAt           DateTime?
+  done            Boolean   @default(false)
+  sortOrder       Int       @default(0)
+
+  businessEvent BusinessEvent @relation(fields: [businessEventId], references: [id], onDelete: Cascade)
+
+  @@index([businessEventId])
 }

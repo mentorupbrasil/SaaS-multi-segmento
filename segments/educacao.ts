@@ -22,6 +22,12 @@ export const escola: SegmentTemplate = {
   tagline: "Alunos, turmas e mensalidades.",
   modules: [...baseModules],
   terms: alunoTerms,
+  specialties: [
+    { id: "fundamental", label: "Ensino fundamental" },
+    { id: "medio", label: "Ensino médio" },
+    { id: "curso-livre", label: "Curso livre / profissionalizante" },
+    { id: "pre-vestibular", label: "Pré-vestibular / reforço" },
+  ],
   customerFields: [
     { key: "responsavel", label: "Responsável", type: "text" },
     { key: "turma", label: "Turma", type: "text" },

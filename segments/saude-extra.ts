@@ -169,6 +169,12 @@ export const academia: SegmentTemplate = {
     { key: "plano", label: "Plano atual", type: "text" },
     { key: "data_matricula", label: "Data de matrícula", type: "date" },
   ],
+  specialties: [
+    { id: "musculacao", label: "Musculação" },
+    { id: "crossfit", label: "CrossFit / funcional" },
+    { id: "aulas-coletivas", label: "Aulas coletivas" },
+    { id: "personal", label: "Personal / treino individual" },
+  ],
   defaultServices: [
     { name: "Plano mensal", price: 99, durationMin: 0 },
     { name: "Plano trimestral", price: 270, durationMin: 0 },

@@ -6,6 +6,7 @@ import { prisma } from "@/lib/db";
 import { getAuthContext } from "@/lib/auth-context";
 import { requireMutationRole } from "@/lib/action-auth";
 import { logAudit } from "@/lib/audit-log";
+import { canUsePublicBooking } from "@/lib/plan-enforcement";
 import { slugify } from "@/lib/utils";
 import { DEFAULT_TERMS } from "@/lib/terms";
 
@@ -50,6 +51,13 @@ export async function updateOrganizationSettings(
     if (conflict) return { error: "Este slug de agendamento já está em uso" };
   }
 
+  const wantsPublicBooking = parsed.data.publicBookingEnabled === "true";
+  if (wantsPublicBooking && !canUsePublicBooking(ctx.organization.plan)) {
+    return {
+      error: "Agendamento público disponível a partir do plano Profissional.",
+    };
+  }
+
   const existingConfig = (ctx.organization.config as Record<string, unknown>) ?? {};
   const termOverrides: Record<string, string> = {};
   for (const key of Object.keys(DEFAULT_TERMS)) {
@@ -64,7 +72,7 @@ export async function updateOrganizationSettings(
     data: {
       name: parsed.data.name,
       publicBookingSlug: bookingSlug,
-      publicBookingEnabled: parsed.data.publicBookingEnabled === "true",
+      publicBookingEnabled: wantsPublicBooking && canUsePublicBooking(ctx.organization.plan),
       config: {
         ...existingConfig,
         terms: termOverrides,

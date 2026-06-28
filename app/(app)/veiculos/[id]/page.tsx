@@ -4,6 +4,7 @@ import { getAuthContext } from "@/lib/auth-context";
 import { prisma } from "@/lib/db";
 import { resolveTerms, term } from "@/lib/terms";
 import { PageHeader } from "@/components/page-header";
+import { VehicleEditForm } from "@/modules/vehicles/vehicle-edit-form";
 import { DeleteButton } from "@/components/delete-button";
 import { deleteVehicle } from "@/modules/vehicles/actions";
 import { formatCurrency, formatDate } from "@/lib/utils";
@@ -47,6 +48,12 @@ export default async function VehicleDetailPage({
   });
   if (!vehicle) notFound();
 
+  const customers = await prisma.customer.findMany({
+    where: { organizationId: ctx.orgId },
+    select: { id: true, name: true },
+    orderBy: { name: "asc" },
+  });
+
   return (
     <div>
       <PageHeader
@@ -58,10 +65,27 @@ export default async function VehicleDetailPage({
         <Link href="/veiculos" className="text-sm text-brand-600 hover:underline">
           ← Voltar
         </Link>
-        <DeleteButton
-          action={deleteVehicle.bind(null, vehicle.id)}
-          redirectTo="/veiculos"
-        />
+        <div className="flex flex-wrap items-center gap-2">
+          <VehicleEditForm
+            id={vehicle.id}
+            customerLabel={term(terms, "customer")}
+            customers={customers.map((c) => ({ id: c.id, label: c.name }))}
+            defaultValues={{
+              customerId: vehicle.customerId,
+              plate: vehicle.plate,
+              model: vehicle.model,
+              brand: vehicle.brand,
+              year: vehicle.year,
+              mileage: vehicle.mileage,
+              color: vehicle.color,
+              notes: vehicle.notes,
+            }}
+          />
+          <DeleteButton
+            action={deleteVehicle.bind(null, vehicle.id)}
+            redirectTo="/veiculos"
+          />
+        </div>
       </div>
 
       <div className="mb-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">

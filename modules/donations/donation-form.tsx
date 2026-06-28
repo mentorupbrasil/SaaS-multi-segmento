@@ -4,7 +4,9 @@ import { useActionState, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createDonation, type FormResult } from "./actions";
 import { SubmitButton } from "@/components/submit-button";
+import { LookupSelect } from "@/components/lookup-select";
 import { Icon } from "@/components/icon";
+import type { MasterDataOption } from "@/lib/master-data";
 
 const initial: FormResult = {};
 
@@ -16,9 +18,11 @@ interface Option {
 export function DonationForm({
   customers,
   customerLabel,
+  donationTypeItems = [],
 }: {
   customers: Option[];
   customerLabel: string;
+  donationTypeItems?: MasterDataOption[];
 }) {
   const [open, setOpen] = useState(false);
   const [state, action] = useActionState(createDonation, initial);
@@ -52,7 +56,13 @@ export function DonationForm({
         </div>
         <div>
           <label className="label">Tipo</label>
-          <input name="donationType" className="input" placeholder="Dinheiro, PIX..." />
+          <LookupSelect
+            name="donationType"
+            type="DONATION_TYPE"
+            items={donationTypeItems}
+            allowCustom
+            placeholder="Selecione o tipo"
+          />
         </div>
         <div>
           <label className="label">{customerLabel} (opcional)</label>

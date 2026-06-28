@@ -7,6 +7,7 @@ import { prisma } from "@/lib/db";
 import { signIn } from "@/auth";
 import { getSegment } from "@/segments";
 import { getPlan, PLANS } from "@/lib/plans";
+import { seedDefaultMasterData } from "@/lib/master-data";
 import { slugify } from "@/lib/utils";
 import { isPlatformAdminEmail } from "@/lib/platform-admin";
 import {
@@ -76,6 +77,8 @@ export async function signupAction(
   const passwordHash = await bcrypt.hash(password, 10);
   const slug = await uniqueSlug(businessName);
 
+  let organizationId: string;
+
   // Criacao transacional: User + Organization + Membership (+ servicos padrao).
   // Sem periodo de teste: a conta ja nasce assinante do plano escolhido.
   await prisma.$transaction(async (tx) => {
@@ -97,6 +100,8 @@ export async function signupAction(
       },
     });
 
+    organizationId = organization.id;
+
     if (segment.defaultServices?.length) {
       await tx.service.createMany({
         data: segment.defaultServices.map((s) => ({
@@ -108,6 +113,8 @@ export async function signupAction(
       });
     }
   });
+
+  await seedDefaultMasterData(organizationId!, segmentId);
 
   // Loga e redireciona. signIn lanca NEXT_REDIRECT em caso de sucesso.
   try {

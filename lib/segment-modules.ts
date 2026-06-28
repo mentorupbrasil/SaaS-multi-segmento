@@ -6,13 +6,14 @@ import { getSegment } from "@/segments";
 const CATEGORY_MODULES: Partial<Record<SegmentCategory, ModuleId[]>> = {
   automotivo: ["vehicles", "quotes"],
   pet: ["pets"],
-  hotelaria: ["rooms", "reservations"],
+  hotelaria: ["rooms", "reservations", "housekeeping"],
   comercio: ["pdv", "quotes", "suppliers"],
-  alimentacao: ["pdv", "quotes"],
+  alimentacao: ["pdv", "quotes", "kitchen"],
   eventos: ["events", "quotes", "suppliers"],
   organizacoes: ["donations", "groups"],
   saude: ["suppliers", "scheduling"],
   servicos: ["quotes"],
+  educacao: ["education"],
 };
 
 const BASE_MODULES: ModuleId[] = [
@@ -29,11 +30,12 @@ export function resolveSegmentModules(segmentId: string): ModuleId[] {
   if (!segment) return BASE_MODULES;
 
   const fromCategory = CATEGORY_MODULES[segment.category] ?? [];
+  const excluded = new Set<ModuleId>(segment.excludeModules ?? []);
   const merged = new Set<ModuleId>([
     ...BASE_MODULES,
     ...segment.modules,
     ...fromCategory,
   ]);
 
-  return Array.from(merged);
+  return Array.from(merged).filter((moduleId) => !excluded.has(moduleId));
 }

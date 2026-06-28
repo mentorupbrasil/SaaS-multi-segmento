@@ -1,5 +1,6 @@
 import { getAuthContext } from "@/lib/auth-context";
 import { prisma } from "@/lib/db";
+import { getMasterDataOptions } from "@/lib/master-data";
 import { PageHeader } from "@/components/page-header";
 import { SaleForm } from "@/modules/pdv/sale-form";
 import { SaleItemForm } from "@/modules/pdv/sale-item-form";
@@ -12,7 +13,7 @@ import { formatCurrency, formatDate } from "@/lib/utils";
 export default async function PdvPage() {
   const ctx = await getAuthContext();
 
-  const [openSales, customers, services, inventory] = await Promise.all([
+  const [openSales, customers, services, inventory, paymentMethods] = await Promise.all([
     prisma.sale.findMany({
       where: { organizationId: ctx.orgId, status: "OPEN" },
       include: {
@@ -34,6 +35,7 @@ export default async function PdvPage() {
       where: { organizationId: ctx.orgId },
       select: { id: true, name: true, quantity: true, price: true },
     }),
+    getMasterDataOptions(ctx.orgId, "PAYMENT_METHOD"),
   ]);
 
   const serviceOptions = services.map((s) => ({
@@ -72,7 +74,7 @@ export default async function PdvPage() {
                 </div>
                 <div className="text-right">
                   <p className="text-2xl font-bold text-slate-900">{formatCurrency(sale.total)}</p>
-                  <FinalizeSaleButton saleId={sale.id} />
+                  <FinalizeSaleButton saleId={sale.id} paymentMethods={paymentMethods} />
                   <CancelSaleButton saleId={sale.id} />
                   <DeleteButton action={deleteSale.bind(null, sale.id)} />
                 </div>

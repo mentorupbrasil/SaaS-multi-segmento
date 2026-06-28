@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { getAuthContext } from "@/lib/auth-context";
 import { prisma } from "@/lib/db";
 import { resolveTerms, term } from "@/lib/terms";
@@ -81,7 +82,11 @@ export default async function ReservasPage() {
             <tbody className="divide-y divide-slate-100">
               {reservations.map((r) => (
                 <tr key={r.id} className="hover:bg-slate-50">
-                  <td className="px-4 py-3 font-medium text-slate-900">{r.room.number}</td>
+                  <td className="px-4 py-3 font-medium text-slate-900">
+                    <Link href={`/reservas/${r.id}`} className="hover:text-brand-600">
+                      {r.room.number}
+                    </Link>
+                  </td>
                   <td className="px-4 py-3 text-slate-600">{r.customer.name}</td>
                   <td className="px-4 py-3 text-slate-600">{formatDate(r.checkIn)}</td>
                   <td className="px-4 py-3 text-slate-600">{formatDate(r.checkOut)}</td>

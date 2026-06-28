@@ -4,7 +4,9 @@ import { useActionState, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createVaccination, type FormResult } from "./actions";
 import { SubmitButton } from "@/components/submit-button";
+import { LookupSelect } from "@/components/lookup-select";
 import { Icon } from "@/components/icon";
+import type { MasterDataOption } from "@/lib/master-data";
 
 const initial: FormResult = {};
 
@@ -13,7 +15,13 @@ interface Option {
   label: string;
 }
 
-export function VaccinationForm({ pets }: { pets: Option[] }) {
+export function VaccinationForm({
+  pets,
+  vaccineItems = [],
+}: {
+  pets: Option[];
+  vaccineItems?: MasterDataOption[];
+}) {
   const [open, setOpen] = useState(false);
   const [state, action] = useActionState(createVaccination, initial);
   const formRef = useRef<HTMLFormElement>(null);
@@ -53,7 +61,14 @@ export function VaccinationForm({ pets }: { pets: Option[] }) {
         </div>
         <div>
           <label className="label">Vacina</label>
-          <input name="vaccine" className="input" required placeholder="Ex.: V8, Antirrábica" />
+          <LookupSelect
+            name="vaccine"
+            type="VACCINE"
+            items={vaccineItems}
+            allowCustom
+            required
+            placeholder="Selecione a vacina"
+          />
         </div>
         <div>
           <label className="label">Data de aplicação</label>

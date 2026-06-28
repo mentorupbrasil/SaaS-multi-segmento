@@ -36,6 +36,12 @@ export const cerimonialista: SegmentTemplate = {
     work_order_plural: "Eventos",
   },
   customerFields: eventFields,
+  specialties: [
+    { id: "casamento", label: "Casamentos" },
+    { id: "debutante", label: "Debutantes / aniversários" },
+    { id: "corporativo", label: "Eventos corporativos" },
+    { id: "formatura", label: "Formaturas" },
+  ],
   defaultServices: [
     { name: "Assessoria completa (casamento)", price: 8000, durationMin: 0 },
     { name: "Cerimônia e recepção (dia)", price: 3500, durationMin: 0 },

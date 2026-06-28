@@ -1,6 +1,7 @@
 import { getSegment } from "@/segments";
 import { ALL_MODULES, MODULES } from "@/modules";
 import { resolveSegmentModules } from "./segment-modules";
+import { filterModulesByPlan } from "./plan-enforcement";
 import { resolveTerms, type Terms } from "./terms";
 
 export interface NavItem {
@@ -28,7 +29,10 @@ export function buildNav(org: OrgLike): NavItem[] {
   const segment = getSegment(org.segmentId);
   if (!segment) return [];
   const terms: Terms = resolveTerms(org.segmentId, extractTermOverrides(org.config));
-  const moduleIds = resolveSegmentModules(org.segmentId);
+  const moduleIds = filterModulesByPlan(
+    resolveSegmentModules(org.segmentId),
+    org.plan ?? "free",
+  );
 
   const items: NavItem[] = [];
   for (const moduleId of moduleIds) {

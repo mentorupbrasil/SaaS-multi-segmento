@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { getAuthContext } from "@/lib/auth-context";
 import { prisma } from "@/lib/db";
 import { getSegment } from "@/segments";
@@ -34,6 +35,21 @@ export default async function ConfiguracoesPage() {
         defaultBookingEnabled={org.publicBookingEnabled}
         termKeys={termKeys}
       />
+
+      <div className="mb-8">
+        <Link
+          href="/configuracoes/cadastros"
+          className="card flex items-center justify-between p-4 transition-colors hover:border-brand-200 hover:bg-brand-50/30"
+        >
+          <div>
+            <p className="font-medium text-slate-900">Cadastros auxiliares</p>
+            <p className="text-sm text-slate-500">
+              Formas de pagamento, categorias, tipos de quarto e outras listas do sistema.
+            </p>
+          </div>
+          <Icon name="ChevronRight" className="h-5 w-5 text-slate-400" />
+        </Link>
+      </div>
 
       <div className="mt-8 grid gap-6 lg:grid-cols-2">
         <div className="card p-6">

@@ -25,10 +25,15 @@ export const ALL_APP_ROUTE_PREFIXES = [
   "/pacotes",
   "/vacinas",
   "/comissoes",
+  "/governanca",
+  "/cozinha",
   "/relatorios",
   "/conexoes",
   "/ia",
   "/onboarding",
+  "/turmas",
+  "/matriculas",
+  "/frequencia",
 ] as const;
 
 /** Prefixos que exigem sessão autenticada (app + admin). */

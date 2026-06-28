@@ -1,7 +1,9 @@
 import { getAuthContext } from "@/lib/auth-context";
 import { prisma } from "@/lib/db";
+import { getMasterDataOptions } from "@/lib/master-data";
 import { PageHeader } from "@/components/page-header";
 import { RoomForm } from "@/modules/rooms/room-form";
+import { RoomEditForm } from "@/modules/rooms/room-edit-form";
 import { RoomStatusButtons } from "@/components/room-status-buttons";
 import { DeleteButton } from "@/components/delete-button";
 import { deleteRoom } from "@/modules/rooms/actions";
@@ -24,17 +26,20 @@ const STATUS_STYLES: Record<string, string> = {
 export default async function QuartosPage() {
   const ctx = await getAuthContext();
 
-  const rooms = await prisma.room.findMany({
-    where: { organizationId: ctx.orgId },
-    orderBy: { number: "asc" },
-  });
+  const [rooms, roomTypeItems] = await Promise.all([
+    prisma.room.findMany({
+      where: { organizationId: ctx.orgId },
+      orderBy: { number: "asc" },
+    }),
+    getMasterDataOptions(ctx.orgId, "ROOM_TYPE"),
+  ]);
 
   return (
     <div>
       <PageHeader
         title="Quartos"
         description="Gestão de quartos e acomodações."
-        action={<RoomForm />}
+        action={<RoomForm roomTypeItems={roomTypeItems} />}
       />
 
       {rooms.length === 0 ? (
@@ -68,6 +73,16 @@ export default async function QuartosPage() {
                   <td className="px-4 py-3 text-slate-600">{formatDate(r.createdAt)}</td>
                   <td className="px-4 py-3">
                     <div className="flex flex-wrap items-center gap-2">
+                      <RoomEditForm
+                        id={r.id}
+                        roomTypeItems={roomTypeItems}
+                        defaultValues={{
+                          number: r.number,
+                          type: r.type,
+                          dailyRate: r.dailyRate,
+                          notes: r.notes,
+                        }}
+                      />
                       <RoomStatusButtons id={r.id} status={r.status} />
                       <DeleteButton action={deleteRoom.bind(null, r.id)} />
                     </div>

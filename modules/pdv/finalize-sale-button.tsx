@@ -3,15 +3,23 @@
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { finalizeSale } from "./actions";
+import type { MasterDataOption } from "@/lib/master-data";
 
-const METHODS = [
-  { value: "DINHEIRO", label: "Dinheiro" },
-  { value: "PIX", label: "PIX" },
-  { value: "CARTAO", label: "Cartão" },
+const FALLBACK_METHODS: MasterDataOption[] = [
+  { value: "cash", label: "Dinheiro" },
+  { value: "pix", label: "PIX" },
+  { value: "credit_card", label: "Cartão" },
 ];
 
-export function FinalizeSaleButton({ saleId }: { saleId: string }) {
-  const [method, setMethod] = useState("DINHEIRO");
+export function FinalizeSaleButton({
+  saleId,
+  paymentMethods = FALLBACK_METHODS,
+}: {
+  saleId: string;
+  paymentMethods?: MasterDataOption[];
+}) {
+  const methods = paymentMethods.length > 0 ? paymentMethods : FALLBACK_METHODS;
+  const [method, setMethod] = useState(methods[0]?.value ?? "cash");
   const [pending, start] = useTransition();
   const router = useRouter();
 
@@ -23,7 +31,7 @@ export function FinalizeSaleButton({ saleId }: { saleId: string }) {
         onChange={(e) => setMethod(e.target.value)}
         disabled={pending}
       >
-        {METHODS.map((m) => (
+        {methods.map((m) => (
           <option key={m.value} value={m.value}>
             {m.label}
           </option>

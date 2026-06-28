@@ -64,10 +64,18 @@ export default async function WorkOrderDetailPage({
         <Link href="/ordens-de-servico" className="text-sm text-brand-600 hover:underline">
           ← Voltar
         </Link>
-        <DeleteButton
-          action={deleteWorkOrder.bind(null, order.id)}
-          redirectTo="/ordens-de-servico"
-        />
+        <div className="flex flex-wrap items-center gap-2">
+          <Link
+            href={`/ordens-de-servico/${order.id}/print`}
+            className="btn-secondary text-sm"
+          >
+            Imprimir
+          </Link>
+          <DeleteButton
+            action={deleteWorkOrder.bind(null, order.id)}
+            redirectTo="/ordens-de-servico"
+          />
+        </div>
       </div>
 
       <div className="mb-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">

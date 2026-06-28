@@ -19,7 +19,10 @@ export type ModuleId =
   | "reservations"
   | "events"
   | "donations"
-  | "groups";
+  | "groups"
+  | "education"
+  | "housekeeping"
+  | "kitchen";
 
 export interface ModuleNavItem {
   href: string;

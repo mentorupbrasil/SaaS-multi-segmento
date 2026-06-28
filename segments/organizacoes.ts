@@ -10,6 +10,7 @@ const memberFields = [
 ];
 
 const baseModules = ["clients", "scheduling", "services", "financial", "team", "work_orders", "records"] as const;
+const noScheduling = { excludeModules: ["scheduling"] as const };
 
 const baseTerms = {
   customer: "Membro",
@@ -33,6 +34,7 @@ export const igreja: SegmentTemplate = {
   category: "organizacoes",
   tagline: "Membros, ministérios, eventos e contribuições.",
   modules: [...baseModules, "inventory"],
+  ...noScheduling,
   terms: {
     ...baseTerms,
     inventory: "Patrimônio",
@@ -71,6 +73,7 @@ export const comunidadeReligiosa: SegmentTemplate = {
   category: "organizacoes",
   tagline: "Participantes, grupos e atividades comunitárias.",
   modules: [...baseModules],
+  ...noScheduling,
   terms: {
     ...baseTerms,
     customer: "Participante",
@@ -110,6 +113,7 @@ export const ministerio: SegmentTemplate = {
   category: "organizacoes",
   tagline: "Equipes, escalas e atividades do ministério.",
   modules: [...baseModules],
+  ...noScheduling,
   terms: {
     ...baseTerms,
     customer: "Participante",
@@ -153,6 +157,7 @@ export const associacao: SegmentTemplate = {
   category: "organizacoes",
   tagline: "Associados, mensalidades e assembleias.",
   modules: [...baseModules],
+  ...noScheduling,
   terms: {
     ...baseTerms,
     customer: "Associado",
@@ -199,6 +204,7 @@ export const ong: SegmentTemplate = {
   category: "organizacoes",
   tagline: "Beneficiários, projetos e prestação de contas.",
   modules: [...baseModules],
+  ...noScheduling,
   terms: {
     ...baseTerms,
     customer: "Beneficiário",
@@ -245,6 +251,7 @@ export const fundacao: SegmentTemplate = {
   category: "organizacoes",
   tagline: "Projetos, patrimônio e governança.",
   modules: [...baseModules, "inventory"],
+  ...noScheduling,
   terms: {
     ...baseTerms,
     customer: "Beneficiário",

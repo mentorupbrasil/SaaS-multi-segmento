@@ -6,6 +6,7 @@ import { resolveTerms, term } from "@/lib/terms";
 import { PageHeader } from "@/components/page-header";
 import { LineItemForm } from "@/components/line-item-form";
 import { ApproveQuoteButton, QuoteWorkOrderLink } from "@/components/approve-quote-button";
+import { QuoteStatusButtons } from "@/components/quote-status-buttons";
 import { DeleteButton } from "@/components/delete-button";
 import { addQuoteItem, deleteQuote } from "@/modules/quotes/actions";
 import { formatCurrency, formatDate } from "@/lib/utils";
@@ -66,12 +67,20 @@ export default async function QuoteDetailPage({
         <Link href="/orcamentos" className="text-sm text-brand-600 hover:underline">
           ← Voltar
         </Link>
-        {quote.status !== "CONVERTED" && (
-          <DeleteButton
-            action={deleteQuote.bind(null, quote.id)}
-            redirectTo="/orcamentos"
-          />
-        )}
+        <div className="flex flex-wrap items-center gap-2">
+          <Link
+            href={`/orcamentos/${quote.id}/print`}
+            className="btn-secondary text-sm"
+          >
+            Imprimir
+          </Link>
+          {quote.status !== "CONVERTED" && (
+            <DeleteButton
+              action={deleteQuote.bind(null, quote.id)}
+              redirectTo="/orcamentos"
+            />
+          )}
+        </div>
       </div>
 
       <div className="mb-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -98,7 +107,8 @@ export default async function QuoteDetailPage({
       {quote.notes && <p className="mb-4 text-sm text-slate-600">{quote.notes}</p>}
 
       {canEdit && (
-        <div className="mb-6">
+        <div className="mb-6 flex flex-wrap items-center gap-3">
+          <QuoteStatusButtons id={quote.id} status={quote.status} />
           <ApproveQuoteButton quoteId={quote.id} />
         </div>
       )}

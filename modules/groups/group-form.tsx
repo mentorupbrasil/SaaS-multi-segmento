@@ -4,11 +4,13 @@ import { useActionState, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createGroup, type FormResult } from "./actions";
 import { SubmitButton } from "@/components/submit-button";
+import { LookupSelect } from "@/components/lookup-select";
 import { Icon } from "@/components/icon";
+import type { MasterDataOption } from "@/lib/master-data";
 
 const initial: FormResult = {};
 
-export function GroupForm() {
+export function GroupForm({ groupTypeItems = [] }: { groupTypeItems?: MasterDataOption[] }) {
   const [open, setOpen] = useState(false);
   const [state, action] = useActionState(createGroup, initial);
   const formRef = useRef<HTMLFormElement>(null);
@@ -41,7 +43,13 @@ export function GroupForm() {
         </div>
         <div>
           <label className="label">Tipo</label>
-          <input name="groupType" className="input" placeholder="Turma, célula..." />
+          <LookupSelect
+            name="groupType"
+            type="GROUP_TYPE"
+            items={groupTypeItems}
+            allowCustom
+            placeholder="Selecione o tipo"
+          />
         </div>
         <div>
           <label className="label">Descrição</label>

@@ -13,10 +13,12 @@ import type { ModuleId } from "@/modules/types";
 export default async function DashboardPage() {
   const ctx = await getAuthContext();
   const org = ctx.organization;
-  const segment = getSegment(org.segmentId);
-  const terms = resolveTerms(org.segmentId, (org.config as { terms?: Record<string, string> })?.terms);
+  const segmentId = ctx.effectiveSegmentId;
+  const segment = getSegment(segmentId);
+  const terms = resolveTerms(segmentId, (org.config as { terms?: Record<string, string> })?.terms);
   const nav = buildNav(org);
-  const modules = new Set(resolveSegmentModules(org.segmentId));
+  const modules = new Set(resolveSegmentModules(segmentId));
+  const category = segment?.category;
 
   const startOfMonth = new Date();
   startOfMonth.setDate(1);
@@ -38,6 +40,11 @@ export default async function DashboardPage() {
     overdueCount,
     openCashShift,
     inventoryItems,
+    activeReservations,
+    totalRooms,
+    classCount,
+    enrollmentCount,
+    openKitchenOrders,
   ] = await Promise.all([
     prisma.customer.count({ where: { organizationId: org.id } }),
     prisma.service.count({ where: { organizationId: org.id, active: true } }),
@@ -79,6 +86,35 @@ export default async function DashboardPage() {
           select: { quantity: true, minQuantity: true },
         })
       : Promise.resolve([]),
+    category === "hotelaria" && modules.has("reservations")
+      ? prisma.reservation.count({
+          where: {
+            organizationId: org.id,
+            status: { in: ["CONFIRMED", "CHECKED_IN"] },
+            checkIn: { lte: endOfDay },
+            checkOut: { gt: startOfDay },
+          },
+        })
+      : Promise.resolve(0),
+    category === "hotelaria" && modules.has("rooms")
+      ? prisma.room.count({ where: { organizationId: org.id } })
+      : Promise.resolve(0),
+    category === "educacao" && modules.has("education")
+      ? prisma.schoolClass.count({ where: { organizationId: org.id, active: true } })
+      : Promise.resolve(0),
+    category === "educacao" && modules.has("education")
+      ? prisma.enrollment.count({
+          where: { organizationId: org.id, status: "ACTIVE" },
+        })
+      : Promise.resolve(0),
+    category === "alimentacao" && modules.has("kitchen")
+      ? prisma.kitchenOrder.count({
+          where: {
+            organizationId: org.id,
+            status: { in: ["PENDING", "PREPARING"] },
+          },
+        })
+      : Promise.resolve(0),
   ]);
 
   const lowStock = inventoryItems.filter((i) => i.quantity <= i.minQuantity).length;
@@ -129,6 +165,39 @@ export default async function DashboardPage() {
       icon: "CreditCard",
       href: "/caixa",
       module: "financial",
+    },
+    {
+      label: "Ocupação hoje",
+      value:
+        totalRooms > 0
+          ? `${Math.round((activeReservations / totalRooms) * 100)}%`
+          : activeReservations > 0
+            ? `${activeReservations} reservas`
+            : "—",
+      icon: "Bed",
+      href: "/reservas",
+      module: "reservations",
+    },
+    {
+      label: "Turmas ativas",
+      value: classCount,
+      icon: "GraduationCap",
+      href: "/turmas",
+      module: "education",
+    },
+    {
+      label: "Matrículas ativas",
+      value: enrollmentCount,
+      icon: "ClipboardList",
+      href: "/matriculas",
+      module: "education",
+    },
+    {
+      label: "Pedidos na cozinha",
+      value: openKitchenOrders,
+      icon: "ChefHat",
+      href: "/cozinha",
+      module: "kitchen",
     },
   ];
 

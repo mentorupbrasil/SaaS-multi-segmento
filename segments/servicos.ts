@@ -23,6 +23,12 @@ export const advogado: SegmentTemplate = {
     { key: "cpf_cnpj", label: "CPF/CNPJ", type: "text" },
     { key: "area", label: "Área", type: "select", options: ["Cível", "Trabalhista", "Criminal", "Tributário", "Família"] },
   ],
+  specialties: [
+    { id: "civel", label: "Direito cível" },
+    { id: "trabalhista", label: "Direito trabalhista" },
+    { id: "criminal", label: "Direito criminal" },
+    { id: "familia", label: "Direito de família" },
+  ],
   defaultServices: [
     { name: "Consulta jurídica", price: 300, durationMin: 60 },
     { name: "Elaboração de contrato", price: 800, durationMin: 0 },

@@ -1,5 +1,6 @@
 import { getAuthContext } from "@/lib/auth-context";
 import { prisma } from "@/lib/db";
+import { getMasterDataOptions } from "@/lib/master-data";
 import { resolveTerms, term } from "@/lib/terms";
 import { PageHeader } from "@/components/page-header";
 import { DeleteButton } from "@/components/delete-button";
@@ -14,7 +15,7 @@ export default async function VacinasPage() {
     (ctx.organization.config as { terms?: Record<string, string> })?.terms,
   );
 
-  const [vaccinations, pets] = await Promise.all([
+  const [vaccinations, pets, vaccineItems] = await Promise.all([
     prisma.vaccination.findMany({
       where: { organizationId: ctx.orgId },
       include: {
@@ -27,6 +28,7 @@ export default async function VacinasPage() {
       include: { customer: { select: { name: true } } },
       orderBy: { name: "asc" },
     }),
+    getMasterDataOptions(ctx.orgId, "VACCINE"),
   ]);
 
   const petOptions = pets.map((p) => ({
@@ -39,7 +41,7 @@ export default async function VacinasPage() {
       <PageHeader
         title="Vacinas"
         description={`Calendário vacinal dos ${term(terms, "pet_plural").toLowerCase()}.`}
-        action={<VaccinationForm pets={petOptions} />}
+        action={<VaccinationForm pets={petOptions} vaccineItems={vaccineItems} />}
       />
 
       {vaccinations.length === 0 ? (

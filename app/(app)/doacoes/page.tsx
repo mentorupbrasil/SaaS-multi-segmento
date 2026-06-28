@@ -1,5 +1,6 @@
 import { getAuthContext } from "@/lib/auth-context";
 import { prisma } from "@/lib/db";
+import { getMasterDataOptions } from "@/lib/master-data";
 import { resolveTerms, term } from "@/lib/terms";
 import { PageHeader } from "@/components/page-header";
 import { DeleteButton } from "@/components/delete-button";
@@ -15,7 +16,7 @@ export default async function DoacoesPage() {
   );
   const customerLabel = term(terms, "customer");
 
-  const [donations, customers] = await Promise.all([
+  const [donations, customers, donationTypeItems] = await Promise.all([
     prisma.donation.findMany({
       where: { organizationId: ctx.orgId },
       include: { customer: { select: { name: true } } },
@@ -26,6 +27,7 @@ export default async function DoacoesPage() {
       select: { id: true, name: true },
       orderBy: { name: "asc" },
     }),
+    getMasterDataOptions(ctx.orgId, "DONATION_TYPE"),
   ]);
 
   return (
@@ -37,6 +39,7 @@ export default async function DoacoesPage() {
           <DonationForm
             customers={customers.map((c) => ({ id: c.id, label: c.name }))}
             customerLabel={customerLabel}
+            donationTypeItems={donationTypeItems}
           />
         }
       />
