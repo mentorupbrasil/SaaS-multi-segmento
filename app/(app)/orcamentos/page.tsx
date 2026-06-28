@@ -1,12 +1,18 @@
 import Link from "next/link";
 import { getAuthContext } from "@/lib/auth-context";
 import { prisma } from "@/lib/db";
+import { parseListParams } from "@/lib/list-params";
 import { resolveTerms, term } from "@/lib/terms";
 import { PageHeader } from "@/components/page-header";
+import { ListToolbar } from "@/components/list-toolbar";
+import { Pagination } from "@/components/pagination";
+import { ExportCsvLink } from "@/components/export-csv-link";
 import { DeleteButton } from "@/components/delete-button";
 import { QuoteForm } from "@/modules/quotes/quote-form";
 import { deleteQuote } from "@/modules/quotes/actions";
 import { formatCurrency, formatDate } from "@/lib/utils";
+
+const PAGE_SIZE = 20;
 
 const STATUS_LABEL: Record<string, string> = {
   DRAFT: "Rascunho",
@@ -16,18 +22,34 @@ const STATUS_LABEL: Record<string, string> = {
   CONVERTED: "Convertido",
 };
 
-export default async function OrcamentosPage() {
+export default async function OrcamentosPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ q?: string; page?: string; status?: string }>;
+}) {
+  const raw = await searchParams;
+  const params = parseListParams(raw);
+  const statusFilter = raw.status?.trim() || undefined;
   const ctx = await getAuthContext();
   const terms = resolveTerms(
     ctx.organization.segmentId,
     (ctx.organization.config as { terms?: Record<string, string> })?.terms,
   );
 
-  const [quotes, customers, vehicles] = await Promise.all([
+  const where = {
+    organizationId: ctx.orgId,
+    ...(params.q ? { title: { contains: params.q, mode: "insensitive" as const } } : {}),
+    ...(statusFilter ? { status: statusFilter as "DRAFT" | "SENT" | "APPROVED" | "REJECTED" | "CONVERTED" } : {}),
+  };
+
+  const [total, quotes, customers, vehicles] = await Promise.all([
+    prisma.quote.count({ where }),
     prisma.quote.findMany({
-      where: { organizationId: ctx.orgId },
+      where,
       include: { customer: { select: { name: true } } },
       orderBy: { createdAt: "desc" },
+      skip: (params.page - 1) * PAGE_SIZE,
+      take: PAGE_SIZE,
     }),
     prisma.customer.findMany({
       where: { organizationId: ctx.orgId },
@@ -40,6 +62,11 @@ export default async function OrcamentosPage() {
       orderBy: { plate: "asc" },
     }),
   ]);
+
+  const paginationParams = {
+    q: params.q || undefined,
+    status: statusFilter,
+  };
 
   return (
     <div>
@@ -54,47 +81,75 @@ export default async function OrcamentosPage() {
         }
       />
 
+      <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
+        <ListToolbar
+          searchValue={params.q}
+          searchPlaceholder="Buscar por título..."
+          filters={[
+            {
+              name: "status",
+              label: "Status",
+              value: statusFilter,
+              options: Object.entries(STATUS_LABEL).map(([value, label]) => ({ value, label })),
+            },
+          ]}
+        />
+        <ExportCsvLink module="orcamentos" searchParams={paginationParams} />
+      </div>
+
       {quotes.length === 0 ? (
-        <div className="card p-10 text-center text-slate-500">Nenhum orçamento cadastrado ainda.</div>
-      ) : (
-        <div className="card overflow-hidden">
-          <table className="w-full text-sm">
-            <thead className="bg-slate-50 text-left text-xs uppercase tracking-wider text-slate-500">
-              <tr>
-                <th className="px-4 py-3">Título</th>
-                <th className="px-4 py-3">{term(terms, "customer")}</th>
-                <th className="px-4 py-3">Status</th>
-                <th className="px-4 py-3">Valor</th>
-                <th className="px-4 py-3">Data</th>
-                <th className="px-4 py-3">Ações</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100">
-              {quotes.map((q) => (
-                <tr key={q.id} className="hover:bg-slate-50">
-                  <td className="px-4 py-3 font-medium text-slate-900">
-                    <Link href={`/orcamentos/${q.id}`} className="hover:text-brand-600">
-                      {q.title}
-                    </Link>
-                  </td>
-                  <td className="px-4 py-3 text-slate-600">{q.customer?.name ?? "—"}</td>
-                  <td className="px-4 py-3">
-                    <span className="rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-700">
-                      {STATUS_LABEL[q.status] ?? q.status}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3 text-slate-600">{formatCurrency(q.total)}</td>
-                  <td className="px-4 py-3 text-slate-600">{formatDate(q.createdAt)}</td>
-                  <td className="px-4 py-3">
-                    {q.status !== "CONVERTED" && (
-                      <DeleteButton action={deleteQuote.bind(null, q.id)} />
-                    )}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        <div className="card p-10 text-center text-slate-500">
+          {params.q || statusFilter ? "Nenhum resultado." : "Nenhum orçamento cadastrado ainda."}
         </div>
+      ) : (
+        <>
+          <div className="card overflow-hidden">
+            <table className="w-full text-sm">
+              <thead className="bg-slate-50 text-left text-xs uppercase tracking-wider text-slate-500">
+                <tr>
+                  <th className="px-4 py-3">Título</th>
+                  <th className="px-4 py-3">{term(terms, "customer")}</th>
+                  <th className="px-4 py-3">Status</th>
+                  <th className="px-4 py-3">Valor</th>
+                  <th className="px-4 py-3">Data</th>
+                  <th className="px-4 py-3">Ações</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                {quotes.map((q) => (
+                  <tr key={q.id} className="hover:bg-slate-50">
+                    <td className="px-4 py-3 font-medium text-slate-900">
+                      <Link href={`/orcamentos/${q.id}`} className="hover:text-brand-600">
+                        {q.title}
+                      </Link>
+                    </td>
+                    <td className="px-4 py-3 text-slate-600">{q.customer?.name ?? "—"}</td>
+                    <td className="px-4 py-3">
+                      <span className="rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-700">
+                        {STATUS_LABEL[q.status] ?? q.status}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3 text-slate-600">{formatCurrency(q.total)}</td>
+                    <td className="px-4 py-3 text-slate-600">{formatDate(q.createdAt)}</td>
+                    <td className="px-4 py-3">
+                      {q.status !== "CONVERTED" && (
+                        <DeleteButton action={deleteQuote.bind(null, q.id)} />
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <Pagination
+            total={total}
+            page={params.page}
+            pageSize={PAGE_SIZE}
+            basePath="/orcamentos"
+            searchParams={paginationParams}
+          />
+        </>
       )}
     </div>
   );

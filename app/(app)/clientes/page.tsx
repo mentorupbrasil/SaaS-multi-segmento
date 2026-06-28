@@ -6,6 +6,7 @@ import { getSegment } from "@/segments";
 import { resolveTerms, term } from "@/lib/terms";
 import { PageHeader } from "@/components/page-header";
 import { EmptyState } from "@/components/empty-state";
+import { ExportCsvLink } from "@/components/export-csv-link";
 import { ListToolbar } from "@/components/list-toolbar";
 import { Pagination } from "@/components/pagination";
 import { DeleteButton } from "@/components/delete-button";
@@ -55,10 +56,13 @@ export default async function ClientesPage({
         }
       />
 
-      <ListToolbar
-        searchValue={params.q}
-        searchPlaceholder={`Buscar ${customerLabel.toLowerCase()} por nome...`}
-      />
+      <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
+        <ListToolbar
+          searchValue={params.q}
+          searchPlaceholder={`Buscar ${customerLabel.toLowerCase()} por nome...`}
+        />
+        <ExportCsvLink module="clientes" searchParams={{ q: params.q || undefined }} />
+      </div>
 
       {customers.length === 0 ? (
         <EmptyState

@@ -124,6 +124,38 @@ export async function updateAppointment(
   });
 
   revalidatePath("/agenda");
+  revalidatePath("/agenda/calendario");
+  return { ok: true };
+}
+
+/** Move agendamento para outro dia mantendo horário (calendário drag-and-drop). */
+export async function moveAppointmentToDay(
+  id: string,
+  targetDateIso: string,
+): Promise<FormResult> {
+  const ctx = await getAuthContext();
+  const appointment = await prisma.appointment.findFirst({
+    where: { id, organizationId: ctx.orgId },
+    include: { service: true },
+  });
+  if (!appointment) return { error: "Agendamento não encontrado" };
+
+  const target = new Date(targetDateIso);
+  if (Number.isNaN(target.getTime())) return { error: "Data inválida" };
+
+  const startAt = new Date(appointment.startAt);
+  startAt.setFullYear(target.getFullYear(), target.getMonth(), target.getDate());
+
+  const durationMin = appointment.service?.durationMin ?? 30;
+  const endAt = new Date(startAt.getTime() + durationMin * 60000);
+
+  await prisma.appointment.updateMany({
+    where: { id, organizationId: ctx.orgId },
+    data: { startAt, endAt },
+  });
+
+  revalidatePath("/agenda");
+  revalidatePath("/agenda/calendario");
   return { ok: true };
 }
 

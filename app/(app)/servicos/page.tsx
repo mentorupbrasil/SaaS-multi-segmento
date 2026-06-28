@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { getAuthContext } from "@/lib/auth-context";
 import { prisma } from "@/lib/db";
 import { parseListParams } from "@/lib/list-params";
@@ -5,6 +6,7 @@ import { resolveTerms, term } from "@/lib/terms";
 import { PageHeader } from "@/components/page-header";
 import { ListToolbar } from "@/components/list-toolbar";
 import { Pagination } from "@/components/pagination";
+import { ExportCsvLink } from "@/components/export-csv-link";
 import { DeleteButton } from "@/components/delete-button";
 import { ServiceForm } from "@/modules/services/service-form";
 import { ServiceEditForm } from "@/modules/services/service-edit-form";
@@ -59,10 +61,13 @@ export default async function ServicosPage({
         }
       />
 
-      <ListToolbar
-        searchValue={params.q}
-        searchPlaceholder={`Buscar ${serviceLabel.toLowerCase()} por nome...`}
-      />
+      <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
+        <ListToolbar
+          searchValue={params.q}
+          searchPlaceholder={`Buscar ${serviceLabel.toLowerCase()} por nome...`}
+        />
+        <ExportCsvLink module="servicos" searchParams={{ q: params.q || undefined }} />
+      </div>
 
       {services.length === 0 ? (
         <div className="card p-10 text-center text-slate-500">
@@ -86,7 +91,11 @@ export default async function ServicosPage({
               <tbody className="divide-y divide-slate-100">
                 {services.map((s) => (
                   <tr key={s.id} className="hover:bg-slate-50">
-                    <td className="px-4 py-3 font-medium text-slate-900">{s.name}</td>
+                    <td className="px-4 py-3 font-medium text-slate-900">
+                      <Link href={`/servicos/${s.id}`} className="hover:text-brand-600">
+                        {s.name}
+                      </Link>
+                    </td>
                     <td className="px-4 py-3 text-slate-600">{formatCurrency(s.price)}</td>
                     <td className="px-4 py-3 text-slate-600">{s.durationMin} min</td>
                     <td className="px-4 py-3">

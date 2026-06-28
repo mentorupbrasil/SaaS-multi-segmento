@@ -1,9 +1,11 @@
+import Link from "next/link";
 import { getAuthContext } from "@/lib/auth-context";
 import { prisma } from "@/lib/db";
 import { parseListParams } from "@/lib/list-params";
 import { PageHeader } from "@/components/page-header";
 import { ListToolbar } from "@/components/list-toolbar";
 import { Pagination } from "@/components/pagination";
+import { ExportCsvLink } from "@/components/export-csv-link";
 import { DeleteButton } from "@/components/delete-button";
 import { SupplierForm } from "@/modules/suppliers/supplier-form";
 import { SupplierEditForm } from "@/modules/suppliers/supplier-edit-form";
@@ -45,7 +47,10 @@ export default async function FornecedoresPage({
         action={<SupplierForm />}
       />
 
-      <ListToolbar searchValue={params.q} searchPlaceholder="Buscar fornecedor por nome..." />
+      <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
+        <ListToolbar searchValue={params.q} searchPlaceholder="Buscar fornecedor por nome..." />
+        <ExportCsvLink module="fornecedores" searchParams={{ q: params.q || undefined }} />
+      </div>
 
       {suppliers.length === 0 ? (
         <div className="card p-10 text-center text-slate-500">
@@ -68,7 +73,11 @@ export default async function FornecedoresPage({
               <tbody className="divide-y divide-slate-100">
                 {suppliers.map((s) => (
                   <tr key={s.id} className="hover:bg-slate-50">
-                    <td className="px-4 py-3 font-medium text-slate-900">{s.name}</td>
+                    <td className="px-4 py-3 font-medium text-slate-900">
+                      <Link href={`/fornecedores/${s.id}`} className="hover:text-brand-600">
+                        {s.name}
+                      </Link>
+                    </td>
                     <td className="px-4 py-3 text-slate-600">{s.phone ?? "—"}</td>
                     <td className="px-4 py-3 text-slate-600">{s.email ?? "—"}</td>
                     <td className="px-4 py-3 text-slate-600">{s.document ?? "—"}</td>

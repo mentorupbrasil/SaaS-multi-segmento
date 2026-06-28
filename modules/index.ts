@@ -96,13 +96,20 @@ export const MODULES: Record<ModuleId, ModuleDef> = {
     id: "pdv",
     name: "PDV / Vendas",
     description: "Ponto de venda com comanda, mesa e balcão.",
-    nav: [{ href: "/pdv", labelKey: "pdv", fallback: "PDV", icon: "ShoppingCart" }],
+    nav: [
+      { href: "/pdv", labelKey: "pdv", fallback: "PDV", icon: "ShoppingCart" },
+      { href: "/mesas", labelKey: "tables", fallback: "Mesas", icon: "LayoutGrid" },
+      { href: "/fiscal", labelKey: "fiscal", fallback: "Fiscal", icon: "FileCheck" },
+    ],
   },
   rooms: {
     id: "rooms",
     name: "Quartos",
     description: "Cadastro de quartos, tipos e status.",
-    nav: [{ href: "/quartos", labelKey: "room_plural", fallback: "Quartos", icon: "Bed" }],
+    nav: [
+      { href: "/quartos", labelKey: "room_plural", fallback: "Quartos", icon: "Bed" },
+      { href: "/tarifas", labelKey: "rates", fallback: "Tarifas", icon: "BadgeDollarSign" },
+    ],
   },
   reservations: {
     id: "reservations",
@@ -136,6 +143,7 @@ export const MODULES: Record<ModuleId, ModuleDef> = {
       { href: "/turmas", labelKey: "class_plural", fallback: "Turmas", icon: "GraduationCap" },
       { href: "/matriculas", labelKey: "enrollment_plural", fallback: "Matrículas", icon: "UserPlus" },
       { href: "/frequencia", labelKey: "attendance", fallback: "Frequência", icon: "ClipboardCheck" },
+      { href: "/boletim", labelKey: "report_card", fallback: "Boletim", icon: "FileSpreadsheet" },
     ],
   },
   housekeeping: {
@@ -148,7 +156,10 @@ export const MODULES: Record<ModuleId, ModuleDef> = {
     id: "kitchen",
     name: "Cozinha",
     description: "Painel de produção e pedidos da cozinha (KDS).",
-    nav: [{ href: "/cozinha", labelKey: "kitchen", fallback: "Cozinha", icon: "ChefHat" }],
+    nav: [
+      { href: "/cozinha", labelKey: "kitchen", fallback: "Cozinha", icon: "ChefHat" },
+      { href: "/mesas", labelKey: "tables", fallback: "Mesas", icon: "LayoutGrid" },
+    ],
   },
 };
 

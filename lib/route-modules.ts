@@ -30,6 +30,10 @@ const ROUTE_MODULE: Record<string, ModuleId> = {
   "/turmas": "education",
   "/matriculas": "education",
   "/frequencia": "education",
+  "/boletim": "education",
+  "/tarifas": "rooms",
+  "/mesas": "pdv",
+  "/fiscal": "pdv",
 };
 
 /** Verifica se o segmento tem acesso ao módulo da rota. */

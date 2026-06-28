@@ -273,9 +273,13 @@ export const SEGMENTS: Record<string, SegmentTemplate> = Object.fromEntries(
 
 export const ALL_SEGMENTS: SegmentTemplate[] = LIST;
 
+import { withDefaultSpecialties } from "@/lib/segment-specialties";
+
 export function getSegment(id: string | undefined | null): SegmentTemplate | undefined {
   if (!id) return undefined;
-  return SEGMENTS[id];
+  const segment = SEGMENTS[id];
+  if (!segment) return undefined;
+  return withDefaultSpecialties(segment);
 }
 
 export function getSegmentBySlug(slug: string): SegmentTemplate | undefined {

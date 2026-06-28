@@ -1,8 +1,13 @@
+import Link from "next/link";
 import { Suspense } from "react";
 import { getAuthContext } from "@/lib/auth-context";
 import { prisma } from "@/lib/db";
+import { parseListParams } from "@/lib/list-params";
 import { resolveTerms, term } from "@/lib/terms";
 import { PageHeader } from "@/components/page-header";
+import { ListToolbar } from "@/components/list-toolbar";
+import { Pagination } from "@/components/pagination";
+import { ExportCsvLink } from "@/components/export-csv-link";
 import { AppointmentForm } from "@/modules/scheduling/appointment-form";
 import { AppointmentStatusButtons } from "@/components/appointment-status-buttons";
 import { RescheduleForm } from "@/modules/scheduling/reschedule-form";
@@ -12,6 +17,8 @@ import { DeleteBlockButton } from "@/modules/scheduling/delete-block-button";
 import { DeleteButton } from "@/components/delete-button";
 import { deleteAppointment } from "@/modules/scheduling/actions";
 import { formatDateTime } from "@/lib/utils";
+
+const PAGE_SIZE = 20;
 
 const STATUS_LABELS: Record<string, string> = {
   SCHEDULED: "Agendado",
@@ -32,21 +39,40 @@ const STATUS_STYLES: Record<string, string> = {
 export default async function AgendaPage({
   searchParams,
 }: {
-  searchParams: Promise<{ staff?: string }>;
+  searchParams: Promise<{ q?: string; page?: string; staff?: string; status?: string }>;
 }) {
-  const { staff: staffFilter } = await searchParams;
+  const raw = await searchParams;
+  const params = parseListParams(raw);
+  const staffFilter = raw.staff?.trim() || undefined;
+  const statusFilter = raw.status?.trim() || undefined;
   const ctx = await getAuthContext();
   const org = ctx.organization;
   const terms = resolveTerms(org.segmentId, (org.config as { terms?: Record<string, string> })?.terms);
   const professionalLabel = term(terms, "professional");
 
-  const [appointments, customers, servicesRaw, staff, blockedSlots] = await Promise.all([
+  const where = {
+    organizationId: org.id,
+    ...(staffFilter ? { staffId: staffFilter } : {}),
+    ...(statusFilter
+      ? { status: statusFilter as "SCHEDULED" | "CONFIRMED" | "COMPLETED" | "CANCELED" | "NO_SHOW" }
+      : {}),
+    ...(params.q
+      ? {
+          OR: [
+            { customer: { name: { contains: params.q, mode: "insensitive" as const } } },
+            { service: { name: { contains: params.q, mode: "insensitive" as const } } },
+          ],
+        }
+      : {}),
+  };
+
+  const [total, appointments, customers, servicesRaw, staff, blockedSlots] = await Promise.all([
+    prisma.appointment.count({ where }),
     prisma.appointment.findMany({
-      where: {
-        organizationId: org.id,
-        ...(staffFilter ? { staffId: staffFilter } : {}),
-      },
+      where,
       orderBy: { startAt: "asc" },
+      skip: (params.page - 1) * PAGE_SIZE,
+      take: PAGE_SIZE,
       include: {
         customer: true,
         service: true,
@@ -71,6 +97,7 @@ export default async function AgendaPage({
       },
       include: { staff: { include: { user: true } } },
       orderBy: { startAt: "asc" },
+      take: 20,
     }),
   ]);
 
@@ -81,6 +108,12 @@ export default async function AgendaPage({
     staffIds: s.staffLinks.map((l) => l.membershipId),
   }));
 
+  const paginationParams = {
+    q: params.q || undefined,
+    staff: staffFilter,
+    status: statusFilter,
+  };
+
   return (
     <div>
       <PageHeader
@@ -88,6 +121,9 @@ export default async function AgendaPage({
         description="Visualize e crie agendamentos."
         action={
           <div className="flex flex-wrap gap-2">
+            <Link href="/agenda/calendario" className="btn-secondary">
+              Calendário
+            </Link>
             <BlockForm staff={staffOptions} professionalLabel={professionalLabel} />
             <AppointmentForm
               appointmentLabel={term(terms, "appointment")}
@@ -102,58 +138,86 @@ export default async function AgendaPage({
         }
       />
 
+      <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
+        <ListToolbar
+          searchValue={params.q}
+          searchPlaceholder="Buscar cliente ou serviço..."
+          filters={[
+            {
+              name: "status",
+              label: "Status",
+              value: statusFilter,
+              options: Object.entries(STATUS_LABELS).map(([value, label]) => ({ value, label })),
+            },
+          ]}
+        />
+        <ExportCsvLink module="agenda" searchParams={paginationParams} />
+      </div>
+
       <Suspense fallback={null}>
         <StaffFilter staff={staffOptions} label={professionalLabel} />
       </Suspense>
 
       {appointments.length === 0 ? (
         <div className="card p-10 text-center text-slate-500">
-          Nenhum {term(terms, "appointment").toLowerCase()} cadastrado ainda.
+          {params.q || staffFilter || statusFilter
+            ? "Nenhum resultado."
+            : `Nenhum ${term(terms, "appointment").toLowerCase()} cadastrado ainda.`}
         </div>
       ) : (
-        <div className="card mb-8 overflow-hidden">
-          <table className="w-full text-sm">
-            <thead className="bg-slate-50 text-left text-xs uppercase tracking-wider text-slate-500">
-              <tr>
-                <th className="px-4 py-3">Data/Hora</th>
-                <th className="px-4 py-3">{term(terms, "customer")}</th>
-                <th className="px-4 py-3">{term(terms, "service")}</th>
-                <th className="px-4 py-3">{professionalLabel}</th>
-                <th className="px-4 py-3">Status</th>
-                <th className="px-4 py-3">Ações</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100">
-              {appointments.map((a) => (
-                <tr key={a.id} className="hover:bg-slate-50">
-                  <td className="px-4 py-3 text-slate-600">{formatDateTime(a.startAt)}</td>
-                  <td className="px-4 py-3 font-medium text-slate-900">{a.customer.name}</td>
-                  <td className="px-4 py-3 text-slate-600">{a.service?.name ?? "-"}</td>
-                  <td className="px-4 py-3 text-slate-600">{a.staff?.user.name ?? "-"}</td>
-                  <td className="px-4 py-3">
-                    <span
-                      className={`rounded-full px-2 py-0.5 text-xs font-medium ${STATUS_STYLES[a.status]}`}
-                    >
-                      {STATUS_LABELS[a.status]}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3">
-                    <div className="space-y-1">
-                      <AppointmentStatusButtons id={a.id} status={a.status} />
-                      {a.status !== "COMPLETED" && a.status !== "CANCELED" && (
-                        <RescheduleForm id={a.id} startAt={a.startAt} notes={a.notes} />
-                      )}
-                      <DeleteButton action={deleteAppointment.bind(null, a.id)} />
-                    </div>
-                  </td>
+        <>
+          <div className="card mb-8 overflow-hidden">
+            <table className="w-full text-sm">
+              <thead className="bg-slate-50 text-left text-xs uppercase tracking-wider text-slate-500">
+                <tr>
+                  <th className="px-4 py-3">Data/Hora</th>
+                  <th className="px-4 py-3">{term(terms, "customer")}</th>
+                  <th className="px-4 py-3">{term(terms, "service")}</th>
+                  <th className="px-4 py-3">{professionalLabel}</th>
+                  <th className="px-4 py-3">Status</th>
+                  <th className="px-4 py-3">Ações</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                {appointments.map((a) => (
+                  <tr key={a.id} className="hover:bg-slate-50">
+                    <td className="px-4 py-3 text-slate-600">{formatDateTime(a.startAt)}</td>
+                    <td className="px-4 py-3 font-medium text-slate-900">{a.customer.name}</td>
+                    <td className="px-4 py-3 text-slate-600">{a.service?.name ?? "-"}</td>
+                    <td className="px-4 py-3 text-slate-600">{a.staff?.user.name ?? "-"}</td>
+                    <td className="px-4 py-3">
+                      <span
+                        className={`rounded-full px-2 py-0.5 text-xs font-medium ${STATUS_STYLES[a.status]}`}
+                      >
+                        {STATUS_LABELS[a.status]}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3">
+                      <div className="space-y-1">
+                        <AppointmentStatusButtons id={a.id} status={a.status} />
+                        {a.status !== "COMPLETED" && a.status !== "CANCELED" && (
+                          <RescheduleForm id={a.id} startAt={a.startAt} notes={a.notes} />
+                        )}
+                        <DeleteButton action={deleteAppointment.bind(null, a.id)} />
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <Pagination
+            total={total}
+            page={params.page}
+            pageSize={PAGE_SIZE}
+            basePath="/agenda"
+            searchParams={paginationParams}
+          />
+        </>
       )}
 
-      <section>
+      <section className="mt-8">
         <h2 className="mb-3 text-lg font-semibold">Horários bloqueados</h2>
         {blockedSlots.length === 0 ? (
           <div className="card p-6 text-center text-sm text-slate-500">Nenhum bloqueio cadastrado.</div>
@@ -189,4 +253,3 @@ export default async function AgendaPage({
     </div>
   );
 }
-

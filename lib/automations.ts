@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/db";
 import { sendEmail } from "@/lib/email";
+import { sendWhatsApp } from "@/lib/whatsapp";
 import type { AutomationJob, Prisma } from "@prisma/client";
 
 export async function queueAutomation(
@@ -71,7 +72,15 @@ async function processAutomationJob(job: AutomationJob): Promise<void> {
   if (job.type === "whatsapp" || job.type === "appointment_confirmation") {
     const phone = String(data.customerPhone ?? data.phone ?? "");
     if (phone) {
-      console.log(formatWhatsAppMessage(job.type, { ...data, organizationId: job.organizationId }));
+      const message = formatWhatsAppMessage(job.type, { ...data, organizationId: job.organizationId });
+      const result = await sendWhatsApp({
+        organizationId: job.organizationId,
+        phone,
+        message,
+      });
+      if (!result.ok) {
+        throw new Error(result.error ?? "Falha ao enviar WhatsApp");
+      }
     }
   }
 }
