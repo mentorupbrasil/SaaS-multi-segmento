@@ -6,6 +6,7 @@ import { Layers } from "lucide-react";
 import { Icon } from "@/components/icon";
 import { signOutAction } from "@/app/(app)/actions";
 import { cn } from "@/lib/utils";
+import { OrgSwitcher, type OrgOption } from "@/components/org-switcher";
 import type { NavItem } from "@/lib/nav";
 
 interface SidebarProps {
@@ -15,6 +16,8 @@ interface SidebarProps {
   userName: string;
   navItems: NavItem[];
   isPlatformAdmin?: boolean;
+  organizations?: OrgOption[];
+  activeOrgId?: string;
 }
 
 export function Sidebar({
@@ -24,12 +27,14 @@ export function Sidebar({
   userName,
   navItems,
   isPlatformAdmin = false,
+  organizations = [],
+  activeOrgId = "",
 }: SidebarProps) {
   const pathname = usePathname();
 
-  const baseItems: NavItem[] = [
-    { href: "/dashboard", label: "Painel", icon: "LayoutDashboard" },
-  ];
+  const baseItems: NavItem[] = isPlatformAdmin
+    ? [{ href: "/admin", label: "Centro de comando", icon: "LayoutDashboard" }]
+    : [{ href: "/dashboard", label: "Painel", icon: "LayoutDashboard" }];
   const bottomItems: NavItem[] = [
     { href: "/assinatura", label: "Assinatura", icon: "CreditCard" },
     { href: "/configuracoes", label: "Configurações", icon: "Settings" },
@@ -88,10 +93,16 @@ export function Sidebar({
         </div>
       </div>
 
+      {isPlatformAdmin && organizations.length > 0 && (
+        <div className="border-b border-slate-100 py-3">
+          <OrgSwitcher organizations={organizations} activeOrgId={activeOrgId} compact />
+        </div>
+      )}
+
       <nav className="flex-1 space-y-1 overflow-y-auto px-3 py-4">
         {baseItems.map(renderItem)}
         <div className="px-3 pb-1 pt-4 text-xs font-semibold uppercase tracking-wider text-slate-400">
-          Módulos
+          {isPlatformAdmin ? "Todos os módulos" : "Módulos"}
         </div>
         {navItems.map(renderItem)}
         <div className="px-3 pb-1 pt-4 text-xs font-semibold uppercase tracking-wider text-slate-400">
@@ -103,7 +114,7 @@ export function Sidebar({
             <div className="px-3 pb-1 pt-4 text-xs font-semibold uppercase tracking-wider text-slate-400">
               Plataforma
             </div>
-            {renderItem({ href: "/admin", label: "Admin", icon: "Server" })}
+            {renderItem({ href: "/admin", label: "Admin da plataforma", icon: "Server" })}
           </>
         )}
       </nav>

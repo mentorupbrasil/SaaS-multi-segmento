@@ -1,19 +1,28 @@
 import Link from "next/link";
-import { Icon } from "@/components/icon";
+import { getAuthContext, listOrganizationsForSwitcher } from "@/lib/auth-context";
 import { getPlatformStats } from "@/lib/admin-queries";
+import { buildSuperAdminNav } from "@/lib/nav";
+import { getSegment, getSegmentGroups, ALL_SEGMENTS } from "@/segments";
+import { Icon } from "@/components/icon";
 import { formatCurrency } from "@/lib/utils";
 
 export default async function AdminDashboardPage() {
-  const stats = await getPlatformStats();
+  const [stats, ctx, organizations] = await Promise.all([
+    getPlatformStats(),
+    getAuthContext(),
+    listOrganizationsForSwitcher(),
+  ]);
+
+  const segment = getSegment(ctx.organization.segmentId);
+  const opsNav = buildSuperAdminNav();
 
   const cards = [
     { label: "Organizações", value: stats.orgCount, icon: "Building2", href: "/admin/organizacoes" },
     { label: "Usuários", value: stats.userCount, icon: "Users", href: "/admin/usuarios" },
-    { label: "Clientes (tenants)", value: stats.customerCount, icon: "UsersRound", href: "/admin/organizacoes" },
+    { label: "Segmentos", value: ALL_SEGMENTS.length, icon: "Layers", href: "/admin/segmentos" },
     { label: "Assinaturas ativas", value: stats.activeSubscriptions, icon: "BadgeCheck", href: "/admin/faturamento" },
-    { label: "Inadimplentes", value: stats.pastDueSubscriptions, icon: "Clock", href: "/admin/faturamento" },
     {
-      label: "Receita paga (mês, todos tenants)",
+      label: "Receita (mês, todos tenants)",
       value: formatCurrency(stats.monthIncome),
       icon: "Wallet",
       href: "/admin/faturamento",
@@ -23,10 +32,11 @@ export default async function AdminDashboardPage() {
   return (
     <div>
       <div className="mb-8">
-        <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">Plataforma</p>
-        <h1 className="mt-1 text-2xl font-bold text-slate-900">Painel administrativo</h1>
+        <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">Super admin</p>
+        <h1 className="mt-1 text-2xl font-bold text-slate-900">Centro de comando</h1>
         <p className="mt-1 text-sm text-slate-500">
-          Visão central de organizações, usuários, faturamento e suporte.
+          Organização ativa: <strong>{ctx.organization.name}</strong>
+          {segment ? ` · ${segment.label}` : ""} — troque no menu lateral para ver dados de outra conta.
         </p>
       </div>
 
@@ -44,22 +54,50 @@ export default async function AdminDashboardPage() {
         ))}
       </div>
 
-      <div className="mt-8 grid gap-4 lg:grid-cols-2">
-        <div className="card p-6">
-          <h2 className="font-semibold text-slate-900">Verificação por tenant</h2>
-          <p className="mt-2 text-sm text-slate-500">
-            Abra <Link href="/admin/organizacoes" className="font-medium text-brand-700 hover:underline">Organizações</Link>{" "}
-            para inspecionar cada conta: segmento, plano, membros e volume de dados.
-          </p>
+      <div className="mt-8">
+        <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-slate-400">
+          Todos os módulos do sistema
+        </h2>
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          {opsNav.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className="card flex items-center gap-3 p-4 transition-all hover:-translate-y-0.5 hover:shadow-md"
+            >
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-100 text-slate-700">
+                <Icon name={item.icon} className="h-5 w-5" />
+              </div>
+              <div>
+                <p className="text-sm font-medium text-slate-900">{item.label}</p>
+                {item.comingSoon && <p className="text-xs text-amber-600">Em breve</p>}
+              </div>
+            </Link>
+          ))}
         </div>
-        <div className="card p-6">
-          <h2 className="font-semibold text-slate-900">Chamados de suporte</h2>
-          <p className="mt-2 text-sm text-slate-500">
-            Módulo de tickets em construção. Enquanto isso, use a lista de organizações para validar cada sistema.
-          </p>
-          <Link href="/admin/chamados" className="mt-3 inline-flex text-sm font-semibold text-brand-700 hover:underline">
-            Ver chamados →
-          </Link>
+      </div>
+
+      <div className="mt-8">
+        <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-slate-400">
+          Organizações ({organizations.length})
+        </h2>
+        <div className="card divide-y divide-slate-100">
+          {organizations.map((org) => {
+            const seg = getSegment(org.segmentId);
+            return (
+              <Link
+                key={org.id}
+                href={`/admin/organizacoes/${org.id}`}
+                className="flex items-center justify-between px-5 py-3 hover:bg-slate-50"
+              >
+                <div>
+                  <p className="font-medium text-slate-900">{org.name}</p>
+                  <p className="text-xs text-slate-500">{seg?.label ?? org.segmentId}</p>
+                </div>
+                <Icon name="ArrowRight" className="h-4 w-4 text-slate-400" />
+              </Link>
+            );
+          })}
         </div>
       </div>
     </div>

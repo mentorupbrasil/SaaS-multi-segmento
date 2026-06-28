@@ -1,5 +1,5 @@
 import { getSegment } from "@/segments";
-import { MODULES } from "@/modules";
+import { MODULES, ALL_MODULES } from "@/modules";
 import { resolveTerms, type Terms } from "./terms";
 
 export interface NavItem {
@@ -42,6 +42,31 @@ export function buildNav(org: OrgLike): NavItem[] {
     }
   }
   return items;
+}
+
+/** Super admin: todos os modulos do sistema, independente do segmento. */
+export function buildSuperAdminNav(): NavItem[] {
+  const seen = new Set<string>();
+  const items: NavItem[] = [];
+  for (const mod of ALL_MODULES) {
+    for (const navItem of mod.nav) {
+      if (seen.has(navItem.href)) continue;
+      seen.add(navItem.href);
+      items.push({
+        href: navItem.href,
+        label: navItem.fallback,
+        icon: navItem.icon,
+        comingSoon: mod.comingSoon,
+      });
+    }
+  }
+  return items;
+}
+
+/** Monta nav do tenant; super admin ve todos os modulos. */
+export function buildNavForUser(org: OrgLike, isPlatformAdmin: boolean): NavItem[] {
+  if (isPlatformAdmin) return buildSuperAdminNav();
+  return buildNav(org);
 }
 
 /** Verifica se um modulo esta ligado para um segmento. */

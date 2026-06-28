@@ -1,6 +1,7 @@
 import { cache } from "react";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/db";
+import { isPlatformAdminEmail } from "@/lib/platform-admin";
 import type { Organization, Role } from "@prisma/client";
 
 export interface AuthContext {
@@ -8,12 +9,46 @@ export interface AuthContext {
   orgId: string;
   role: Role;
   organization: Organization;
+  isPlatformAdmin: boolean;
+}
+
+async function resolveOrganization(
+  userId: string,
+  sessionOrgId: string | undefined,
+  isPlatformAdmin: boolean,
+): Promise<{ org: Organization; role: Role } | null> {
+  if (isPlatformAdmin) {
+    if (sessionOrgId) {
+      const org = await prisma.organization.findUnique({ where: { id: sessionOrgId } });
+      if (org) return { org, role: "OWNER" };
+    }
+    const org = await prisma.organization.findFirst({ orderBy: { name: "asc" } });
+    if (org) return { org, role: "OWNER" };
+    return null;
+  }
+
+  const membership = await prisma.membership.findFirst({
+    where: { userId, ...(sessionOrgId ? { organizationId: sessionOrgId } : {}) },
+    include: { organization: true },
+  });
+  if (membership) {
+    return { org: membership.organization, role: membership.role };
+  }
+
+  const fallback = await prisma.membership.findFirst({
+    where: { userId },
+    include: { organization: true },
+  });
+  if (fallback) {
+    return { org: fallback.organization, role: fallback.role };
+  }
+
+  return null;
 }
 
 /**
  * Fonte unica de verdade para multi-tenant.
- * Le userId/orgId da SESSAO (nunca do cliente) e valida o membership no banco.
- * Deve ser chamado no inicio de TODA Server Action / query com dados do tenant.
+ * Platform admin pode alternar organizacao via sessao (activeOrgId).
  */
 export const getAuthContext = cache(async (): Promise<AuthContext> => {
   const session = await auth();
@@ -21,24 +56,28 @@ export const getAuthContext = cache(async (): Promise<AuthContext> => {
     throw new Error("Nao autenticado");
   }
 
-  const membership = await prisma.membership.findFirst({
-    where: { userId: session.user.id },
-    include: { organization: true },
-  });
+  const isPlatformAdmin =
+    session.user.isPlatformAdmin ?? isPlatformAdminEmail(session.user.email);
 
-  if (!membership) {
+  const resolved = await resolveOrganization(
+    session.user.id,
+    session.user.activeOrgId || session.user.orgId,
+    isPlatformAdmin,
+  );
+
+  if (!resolved) {
     throw new Error("Sem organizacao ativa");
   }
 
   return {
     userId: session.user.id,
-    orgId: membership.organizationId,
-    role: membership.role,
-    organization: membership.organization,
+    orgId: resolved.org.id,
+    role: resolved.role,
+    organization: resolved.org,
+    isPlatformAdmin,
   };
 });
 
-/** Versao que retorna null em vez de lancar (para layouts/paginas). */
 export const getOptionalAuthContext = cache(async (): Promise<AuthContext | null> => {
   try {
     return await getAuthContext();
@@ -47,9 +86,16 @@ export const getOptionalAuthContext = cache(async (): Promise<AuthContext | null
   }
 });
 
-/** Garante que o papel do usuario esta entre os permitidos. */
 export function requireRole(ctx: AuthContext, roles: Role[]): void {
+  if (ctx.isPlatformAdmin) return;
   if (!roles.includes(ctx.role)) {
     throw new Error("Permissao insuficiente");
   }
+}
+
+export async function listOrganizationsForSwitcher() {
+  return prisma.organization.findMany({
+    orderBy: { name: "asc" },
+    select: { id: true, name: true, segmentId: true, slug: true },
+  });
 }

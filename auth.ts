@@ -11,7 +11,7 @@ const credentialsSchema = z.object({
   password: z.string().min(1),
 });
 
-export const { handlers, auth, signIn, signOut } = NextAuth({
+export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth({
   ...authConfig,
   // Deriva a URL a partir do request (funciona em qualquer porta/dominio).
   trustHost: true,
@@ -36,23 +36,24 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         const valid = await bcrypt.compare(password, user.passwordHash);
         if (!valid) return null;
 
+        const isAdmin = isPlatformAdminEmail(user.email);
         const membership = user.memberships[0];
-        if (!membership) return null;
+        if (!membership && !isAdmin) return null;
 
         return {
           id: user.id,
           email: user.email,
           name: user.name,
-          orgId: membership.organizationId,
-          role: membership.role,
-          isPlatformAdmin: isPlatformAdminEmail(user.email),
+          orgId: membership?.organizationId ?? "",
+          role: membership?.role ?? "OWNER",
+          isPlatformAdmin: isAdmin,
         };
       },
     }),
   ],
   callbacks: {
     ...authConfig.callbacks,
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger, session }) {
       if (user) {
         token.id = user.id;
         token.orgId = user.orgId;
@@ -61,12 +62,17 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       } else if (token.email && token.isPlatformAdmin === undefined) {
         token.isPlatformAdmin = isPlatformAdminEmail(token.email);
       }
+      if (trigger === "update" && session?.activeOrgId) {
+        token.activeOrgId = session.activeOrgId as string;
+        token.orgId = session.activeOrgId as string;
+      }
       return token;
     },
     async session({ session, token }) {
       if (session.user) {
         session.user.id = (token.id as string) ?? token.sub ?? "";
-        session.user.orgId = (token.orgId as string) ?? "";
+        session.user.orgId = (token.activeOrgId as string) ?? (token.orgId as string) ?? "";
+        session.user.activeOrgId = (token.activeOrgId as string) ?? (token.orgId as string) ?? "";
         session.user.role = (token.role as string) ?? "STAFF";
         session.user.isPlatformAdmin = Boolean(token.isPlatformAdmin);
       }

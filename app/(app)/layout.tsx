@@ -1,9 +1,10 @@
 import { redirect } from "next/navigation";
-import { getOptionalAuthContext } from "@/lib/auth-context";
+import { getOptionalAuthContext, listOrganizationsForSwitcher } from "@/lib/auth-context";
 import { getSegment } from "@/segments";
-import { buildNav } from "@/lib/nav";
+import { buildNavForUser } from "@/lib/nav";
 import { Sidebar } from "@/components/sidebar";
 import { auth } from "@/auth";
+import { isPlatformAdminEmail } from "@/lib/platform-admin";
 
 export default async function AppLayout({
   children,
@@ -14,18 +15,24 @@ export default async function AppLayout({
   if (!ctx) redirect("/login");
 
   const session = await auth();
+  const isPlatformAdmin =
+    ctx.isPlatformAdmin ?? session?.user?.isPlatformAdmin ?? isPlatformAdminEmail(session?.user?.email);
+
   const segment = getSegment(ctx.organization.segmentId);
-  const navItems = buildNav(ctx.organization);
+  const navItems = buildNavForUser(ctx.organization, isPlatformAdmin);
+  const organizations = isPlatformAdmin ? await listOrganizationsForSwitcher() : [];
 
   return (
     <div className="flex">
       <Sidebar
         orgName={ctx.organization.name}
-        segmentLabel={segment?.label ?? "Negócio"}
-        segmentIcon={segment?.icon ?? "Building2"}
+        segmentLabel={isPlatformAdmin ? "Super admin · todos os módulos" : (segment?.label ?? "Negócio")}
+        segmentIcon={isPlatformAdmin ? "Server" : (segment?.icon ?? "Building2")}
         userName={session?.user?.name ?? session?.user?.email ?? ""}
         navItems={navItems}
-        isPlatformAdmin={session?.user?.isPlatformAdmin}
+        isPlatformAdmin={isPlatformAdmin}
+        organizations={organizations}
+        activeOrgId={ctx.orgId}
       />
       <main className="h-screen flex-1 overflow-y-auto">
         <div className="mx-auto max-w-6xl px-6 py-8">{children}</div>

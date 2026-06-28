@@ -8,6 +8,7 @@ import { signIn } from "@/auth";
 import { getSegment } from "@/segments";
 import { getPlan, PLANS } from "@/lib/plans";
 import { slugify } from "@/lib/utils";
+import { isPlatformAdminEmail } from "@/lib/platform-admin";
 
 export interface ActionState {
   error?: string;
@@ -139,10 +140,11 @@ export async function loginAction(
   }
 
   try {
+    const email = parsed.data.email.toLowerCase();
     await signIn("credentials", {
-      email: parsed.data.email.toLowerCase(),
+      email,
       password: parsed.data.password,
-      redirectTo: "/dashboard",
+      redirectTo: isPlatformAdminEmail(email) ? "/admin" : "/dashboard",
     });
   } catch (error) {
     if (error instanceof AuthError) {

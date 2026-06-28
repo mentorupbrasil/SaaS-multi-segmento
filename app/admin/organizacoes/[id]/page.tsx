@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { getOrganizationAdminDetail } from "@/lib/admin-queries";
 import { getSegment } from "@/segments";
 import { formatDate } from "@/lib/utils";
+import { EnterOrganizationButton } from "@/components/enter-organization-button";
 
 const STATUS_LABEL: Record<string, string> = {
   ACTIVE: "Ativa",
@@ -37,9 +38,12 @@ export default async function AdminOrganizationDetailPage({
           </p>
         </div>
         {segment && (
-          <Link href={`/${segment.slug}`} className="btn-secondary" target="_blank">
-            Ver landing do segmento
-          </Link>
+          <div className="flex flex-wrap gap-2">
+            <EnterOrganizationButton orgId={org.id} />
+            <Link href={`/${segment.slug}`} className="btn-secondary" target="_blank">
+              Ver landing do segmento
+            </Link>
+          </div>
         )}
       </div>
 
@@ -85,9 +89,9 @@ export default async function AdminOrganizationDetailPage({
         </div>
       </div>
 
-      <div className="mt-6 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
-        Para entrar no painel operacional deste tenant, faça login com um usuário vinculado à organização.
-        Impersonação direta pelo admin será adicionada em breve.
+      <div className="mt-6 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-600">
+        Use <strong>Entrar nesta organização</strong> para operar clientes, agenda e financeiro desta conta com
+        acesso total (super admin).
       </div>
     </div>
   );

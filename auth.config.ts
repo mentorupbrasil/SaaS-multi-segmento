@@ -1,6 +1,9 @@
 import type { NextAuthConfig } from "next-auth";
+import { isPlatformAdminEmail } from "@/lib/platform-admin";
 
-// Config edge-safe (sem Prisma/bcrypt) usada pelo middleware.
+function homeForUser(email: string | null | undefined) {
+  return isPlatformAdminEmail(email) ? "/admin" : "/dashboard";
+}
 export const authConfig = {
   secret: process.env.AUTH_SECRET,
   trustHost: true,
@@ -32,9 +35,9 @@ export const authConfig = {
 
       if (isProtected) return isLoggedIn;
 
-      // Se ja logado e tentando acessar login/signup, manda pro dashboard.
+      // Se ja logado e tentando acessar login/signup, manda pro painel correto.
       if (isLoggedIn && (nextUrl.pathname === "/login" || nextUrl.pathname === "/signup")) {
-        return Response.redirect(new URL("/dashboard", nextUrl));
+        return Response.redirect(new URL(homeForUser(auth.user?.email), nextUrl));
       }
 
       return true;
