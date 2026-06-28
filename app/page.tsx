@@ -1,16 +1,16 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { ALL_SEGMENTS } from "@/segments";
 import { SOLUTIONS } from "@/lib/solutions";
-import { INTEGRATIONS } from "@/lib/integrations";
 import { Icon } from "@/components/icon";
 import { SiteHeader } from "@/components/marketing/site-header";
 import { SiteFooter } from "@/components/marketing/site-footer";
 import { HeroMockup } from "@/components/marketing/hero-mockup";
 import { SegmentsShowcase } from "@/components/marketing/segments-showcase";
+import { IntegrationsShowcase } from "@/components/marketing/integrations-showcase";
+import { SecurityShowcase } from "@/components/marketing/security-showcase";
 import { Testimonials } from "@/components/marketing/testimonials";
-import { Pricing } from "@/components/marketing/pricing";
 import { Faq } from "@/components/marketing/faq";
+import { getHomeFaqGroups } from "@/lib/home-faq";
 
 export const metadata: Metadata = {
   title: "GestorPro | A plataforma de gestão que entende o seu negócio",
@@ -25,20 +25,6 @@ const CONTROL = [
   { icon: "Tag", title: "Serviços e preços", text: "Catálogo com valores e duração, já pré-configurado para o seu nicho." },
   { icon: "UserCog", title: "Equipe", text: "Profissionais com papéis e níveis de acesso diferentes." },
   { icon: "LayoutDashboard", title: "Relatórios", text: "Os números que importam para decidir com segurança." },
-];
-
-const FAQ_ITEMS = [
-  { q: "Preciso instalar algo?", a: "Não. O GestorPro funciona 100% online, no navegador do computador ou do celular. Seus dados ficam seguros na nuvem." },
-  { q: "Serve para o meu tipo de negócio?", a: "Atendemos diversos segmentos e a plataforma é flexível para praticamente qualquer negócio que trabalhe com clientes, agenda, serviços e financeiro." },
-  { q: "Como começo a usar?", a: "É simples: escolha o seu segmento e o plano, crie a conta e o sistema já fica ativo e pronto para usar na hora." },
-  { q: "Tem fidelidade ou multa?", a: "Não. Você assina por mês e pode trocar de plano ou cancelar quando quiser, sem multa." },
-  { q: "Meus dados ficam seguros?", a: "Sim. Cada negócio tem o ambiente isolado e os dados são protegidos, acessíveis apenas pela sua equipe." },
-];
-
-const SECURITY = [
-  { icon: "Lock", title: "Dados isolados", text: "Cada negócio tem o próprio ambiente. Ninguém acessa os seus dados além da sua equipe." },
-  { icon: "ShieldCheck", title: "Acesso por permissão", text: "Defina o que cada pessoa da equipe pode ver e fazer." },
-  { icon: "Server", title: "Backup na nuvem", text: "Seus dados ficam seguros e disponíveis de qualquer lugar, sem risco de perder o caderno." },
 ];
 
 export default function HomePage() {
@@ -70,9 +56,9 @@ export default function HomePage() {
                 Assinar agora
                 <Icon name="ArrowRight" className="h-4 w-4" />
               </Link>
-              <Link href="/demonstracao" className="btn-secondary px-6 py-3 text-base">
-                <Icon name="PlayCircle" className="h-4 w-4" />
-                Ver demonstração
+              <Link href="/precos" className="btn-secondary px-6 py-3 text-base">
+                Ver planos
+                <Icon name="ArrowRight" className="h-4 w-4" />
               </Link>
             </div>
             <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-slate-500">
@@ -160,35 +146,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 5. Demonstração visual */}
-      <section className="border-y border-slate-100 bg-slate-50/60">
-        <div className="section grid items-center gap-12 py-16 lg:grid-cols-2">
-          <div>
-            <span className="eyebrow">Veja na prática</span>
-            <h2 className="mt-4 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
-              Uma interface clara, pensada para o dia a dia
-            </h2>
-            <p className="mt-4 text-slate-600">
-              Painéis objetivos, agenda visual e financeiro fácil de entender. Tudo com a
-              nomenclatura do seu segmento — você não precisa “traduzir” o sistema.
-            </p>
-            <ul className="mt-6 space-y-3">
-              {["Painel com os números do negócio", "Agenda visual por profissional", "Financeiro descomplicado"].map((t) => (
-                <li key={t} className="flex items-center gap-2.5 text-sm text-slate-700">
-                  <Icon name="Check" className="h-5 w-5 text-brand-600" /> {t}
-                </li>
-              ))}
-            </ul>
-            <Link href="/demonstracao" className="btn-primary mt-7">
-              <Icon name="PlayCircle" className="h-4 w-4" />
-              Ver demonstração completa
-            </Link>
-          </div>
-          <HeroMockup />
-        </div>
-      </section>
-
-      {/* 6. Inteligência Artificial */}
+      {/* 5. Inteligência Artificial */}
       <section className="section py-16">
         <div className="grid items-center gap-12 lg:grid-cols-2">
           <div className="order-2 lg:order-1">
@@ -268,70 +226,19 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 8. Integrações */}
-      <section className="section py-16">
-        <div className="text-center">
-          <span className="eyebrow">Integrações</span>
-          <h2 className="mt-4 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
-            Conecte com o que você já usa
-          </h2>
-          <p className="mx-auto mt-3 max-w-2xl text-slate-600">
-            WhatsApp, PIX, pagamentos e mais. As integrações chegam para tirar o trabalho manual da
-            sua rotina.
-          </p>
-        </div>
-        <div className="mx-auto mt-10 grid max-w-4xl grid-cols-2 gap-4 sm:grid-cols-3">
-          {INTEGRATIONS.map((i) => (
-            <div key={i.name} className="card flex items-center gap-3 p-4">
-              <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-100 text-slate-600">
-                <Icon name={i.icon} className="h-5 w-5" />
-              </span>
-              <span className="text-sm font-medium text-slate-700">{i.name}</span>
-            </div>
-          ))}
-        </div>
-        <div className="mt-8 text-center">
-          <Link href="/integracoes" className="btn-secondary">
-            Ver todas as integrações <Icon name="ArrowRight" className="h-4 w-4" />
-          </Link>
-        </div>
-      </section>
+      <IntegrationsShowcase />
 
-      {/* 9. Segurança */}
-      <section className="border-y border-slate-100 bg-slate-50/60">
-        <div className="section py-16">
-          <div className="text-center">
-            <span className="eyebrow">
-              <Icon name="ShieldCheck" className="h-3.5 w-3.5" /> Segurança
-            </span>
-            <h2 className="mt-4 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
-              Seus dados protegidos
-            </h2>
-          </div>
-          <div className="mt-12 grid gap-6 md:grid-cols-3">
-            {SECURITY.map((s) => (
-              <div key={s.title} className="card p-6">
-                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-brand-50 to-violet-50 text-brand-600 ring-1 ring-brand-100">
-                  <Icon name={s.icon} className="h-5 w-5" />
-                </div>
-                <h3 className="mt-4 font-semibold text-slate-900">{s.title}</h3>
-                <p className="mt-1.5 text-sm leading-relaxed text-slate-600">{s.text}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      <SecurityShowcase />
 
-      {/* 10. Depoimentos */}
+      {/* Depoimentos */}
       <Testimonials />
 
-      {/* 11. Comparativo (planos) */}
-      <div className="border-t border-slate-100 bg-slate-50/60">
-        <Pricing />
-      </div>
-
-      {/* 12. FAQ */}
-      <Faq items={FAQ_ITEMS} />
+      <Faq
+        groups={getHomeFaqGroups()}
+        title="Perguntas frequentes"
+        description="O que muda por segmento, limites de cada plano e como funciona na prática."
+        showSupportLinks
+      />
 
       {/* 13. CTA final */}
       <section className="section pb-16">
@@ -350,10 +257,10 @@ export default function HomePage() {
                 <Icon name="ArrowRight" className="h-4 w-4" />
               </Link>
               <Link
-                href="/demonstracao"
+                href="/precos"
                 className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/40 px-6 py-3 text-base font-semibold text-white transition-colors hover:bg-white/10"
               >
-                Ver demonstração
+                Ver planos
               </Link>
             </div>
           </div>

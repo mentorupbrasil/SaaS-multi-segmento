@@ -41,3 +41,10 @@ export function filterSegments(query: string, category?: SegmentCategory): Segme
 export function getSegmentGroupsForVitrine() {
   return getSegmentGroups();
 }
+
+/** Nomes curtos para preview em cards de categoria (home). */
+export function getCategoryPreviewLabels(category: SegmentCategory, limit = 3): string[] {
+  return ALL_SEGMENTS.filter((s) => s.category === category)
+    .slice(0, limit)
+    .map((s) => s.label);
+}

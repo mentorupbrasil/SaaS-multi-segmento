@@ -16,9 +16,6 @@ export function SiteHeader() {
           <Link href="/precos" className="hover:text-slate-900">
             Preços
           </Link>
-          <Link href="/demonstracao" className="hover:text-slate-900">
-            Demonstração
-          </Link>
           <Link href="/blog" className="hover:text-slate-900">
             Blog
           </Link>

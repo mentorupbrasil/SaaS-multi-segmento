@@ -6,6 +6,9 @@ const nextConfig = {
       bodySizeLimit: "2mb",
     },
   },
+  async redirects() {
+    return [{ source: "/demonstracao", destination: "/signup", permanent: true }];
+  },
 };
 
 export default nextConfig;
