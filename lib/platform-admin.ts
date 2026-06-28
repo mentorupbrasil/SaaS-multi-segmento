@@ -1,15 +1,8 @@
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
+import { isPlatformAdminEmail } from "./platform-admin-emails";
 
-/** E-mails com acesso ao painel /admin (separados por vírgula no .env). */
-export function isPlatformAdminEmail(email: string | null | undefined): boolean {
-  if (!email) return false;
-  const list =
-    process.env.PLATFORM_ADMIN_EMAILS?.split(",")
-      .map((e) => e.trim().toLowerCase())
-      .filter(Boolean) ?? [];
-  return list.includes(email.toLowerCase());
-}
+export { isPlatformAdminEmail } from "./platform-admin-emails";
 
 export async function requirePlatformAdmin() {
   const session = await auth();

@@ -1,5 +1,5 @@
 import type { NextAuthConfig } from "next-auth";
-import { isPlatformAdminEmail } from "@/lib/platform-admin";
+import { isPlatformAdminEmail } from "@/lib/platform-admin-emails";
 
 function homeForUser(email: string | null | undefined) {
   return isPlatformAdminEmail(email) ? "/admin" : "/dashboard";
