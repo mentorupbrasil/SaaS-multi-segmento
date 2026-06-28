@@ -1,6 +1,8 @@
 import type { ReactNode } from "react";
+import Link from "next/link";
 import { SiteHeader } from "./site-header";
 import { SiteFooter } from "./site-footer";
+import { Icon } from "@/components/icon";
 
 export function MarketingShell({ children }: { children: ReactNode }) {
   return (
@@ -17,10 +19,14 @@ export function PageHero({
   eyebrow,
   title,
   description,
+  primaryCta,
+  secondaryCta,
 }: {
   eyebrow: string;
   title: string;
   description?: string;
+  primaryCta?: { href: string; label: string };
+  secondaryCta?: { href: string; label: string };
 }) {
   return (
     <section className="relative overflow-hidden border-b border-slate-100">
@@ -32,6 +38,21 @@ export function PageHero({
         </h1>
         {description && (
           <p className="mx-auto mt-4 max-w-2xl text-lg text-slate-600">{description}</p>
+        )}
+        {(primaryCta || secondaryCta) && (
+          <div className="mt-8 flex flex-wrap justify-center gap-3">
+            {primaryCta && (
+              <Link href={primaryCta.href} className="btn-primary px-6 py-3">
+                {primaryCta.label}
+                <Icon name="ArrowRight" className="h-4 w-4" />
+              </Link>
+            )}
+            {secondaryCta && (
+              <Link href={secondaryCta.href} className="btn-secondary px-6 py-3">
+                {secondaryCta.label}
+              </Link>
+            )}
+          </div>
         )}
       </div>
     </section>

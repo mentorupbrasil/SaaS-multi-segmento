@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { SOLUTIONS } from "@/lib/solutions";
+import { PLANS } from "@/lib/plans";
 import { Icon } from "@/components/icon";
 import { SiteHeader } from "@/components/marketing/site-header";
 import { SiteFooter } from "@/components/marketing/site-footer";
@@ -10,6 +11,10 @@ import { IntegrationsShowcase } from "@/components/marketing/integrations-showca
 import { SecurityShowcase } from "@/components/marketing/security-showcase";
 import { Testimonials } from "@/components/marketing/testimonials";
 import { Faq } from "@/components/marketing/faq";
+import { StatsBar } from "@/components/marketing/stats-bar";
+import { SocialProofStrip } from "@/components/marketing/social-proof-strip";
+import { HowItWorks } from "@/components/marketing/how-it-works";
+import { CtaBand } from "@/components/marketing/cta-band";
 import { getHomeFaqGroups } from "@/lib/home-faq";
 
 export const metadata: Metadata = {
@@ -27,6 +32,8 @@ const CONTROL = [
   { icon: "LayoutDashboard", title: "Relatórios", text: "Os números que importam para decidir com segurança." },
 ];
 
+const starterPrice = PLANS.find((p) => p.id === "starter")?.priceMonthly;
+
 export default function HomePage() {
   const featureIaEnabled = process.env.FEATURE_IA === "true";
 
@@ -34,26 +41,27 @@ export default function HomePage() {
     <div className="bg-white">
       <SiteHeader />
 
-      {/* 1. Hero */}
+      {/* Hero — outcome + dual CTA (Notion / ClickUp) */}
       <section className="relative overflow-hidden border-b border-slate-100">
         <div className="absolute inset-0 bg-grid [mask-image:radial-gradient(ellipse_at_top,black,transparent_70%)]" />
         <div className="section relative grid items-center gap-12 py-16 lg:grid-cols-2 lg:py-24">
           <div>
             <span className="eyebrow">
               <Icon name="Sparkles" className="h-3.5 w-3.5" />
-              A plataforma que entende o seu negócio
+              Gestão sob medida para o seu ramo
             </span>
-            <h1 className="mt-5 text-4xl font-bold leading-tight tracking-tight text-slate-900 sm:text-5xl">
-              O sistema feito para o{" "}
-              <span className="gradient-text">seu segmento</span>
+            <h1 className="mt-5 text-4xl font-bold leading-[1.1] tracking-tight text-slate-900 sm:text-5xl lg:text-[3.25rem]">
+              Tudo o que o seu negócio precisa,{" "}
+              <span className="gradient-text">em um só lugar</span>
             </h1>
-            <p className="mt-5 max-w-xl text-lg text-slate-600">
-              Escolha o seu ramo e tenha uma plataforma sob medida: agenda, clientes, serviços e
-              financeiro com a linguagem do seu negócio. Conta ativa na hora, a partir de R$ 39,90/mês.
+            <p className="mt-5 max-w-xl text-lg leading-relaxed text-slate-600">
+              Escolha o seu segmento e tenha agenda, clientes, serviços e financeiro com a linguagem
+              do seu nicho. Conta ativa na hora
+              {starterPrice != null ? `, a partir de R$ ${starterPrice.toFixed(2).replace(".", ",")}/mês` : ""}.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link href="/signup" className="btn-primary px-6 py-3 text-base">
-                Assinar agora
+                Começar grátis
                 <Icon name="ArrowRight" className="h-4 w-4" />
               </Link>
               <Link href="/precos" className="btn-secondary px-6 py-3 text-base">
@@ -61,9 +69,9 @@ export default function HomePage() {
                 <Icon name="ArrowRight" className="h-4 w-4" />
               </Link>
             </div>
-            <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-slate-500">
+            <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-slate-500">
               <span className="inline-flex items-center gap-1.5">
-                <Icon name="Check" className="h-4 w-4 text-green-600" /> Conta ativa na hora
+                <Icon name="Check" className="h-4 w-4 text-green-600" /> Sem cartão para começar
               </span>
               <span className="inline-flex items-center gap-1.5">
                 <Icon name="Check" className="h-4 w-4 text-green-600" /> Sem fidelidade
@@ -77,12 +85,17 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 2. Segmentos atendidos */}
+      <StatsBar />
+      <SocialProofStrip />
+
+      {/* Segmentos — busca + populares (Asana use-case tiles) */}
       <SegmentsShowcase />
 
-      {/* 3. O que você controla */}
+      <HowItWorks />
+
+      {/* Funcionalidades — grid compacto (Monday feature blocks) */}
       <section className="border-y border-slate-100 bg-slate-50/60">
-        <div className="section py-16">
+        <div className="section py-16 lg:py-20">
           <div className="text-center">
             <span className="eyebrow">Tudo em um só lugar</span>
             <h2 className="mt-4 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
@@ -92,7 +105,7 @@ export default function HomePage() {
               Pare de juntar caderno, planilha e WhatsApp. Centralize a operação do seu negócio.
             </p>
           </div>
-          <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {CONTROL.map((f) => (
               <div key={f.title} className="card p-6 transition-shadow hover:shadow-md">
                 <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-brand-50 to-violet-50 text-brand-600 ring-1 ring-brand-100">
@@ -112,23 +125,25 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 4. Problemas que resolve */}
-      <section className="section py-16">
+      <CtaBand variant="light" title="Experimente sem compromisso" description="Crie sua conta em minutos e veja o sistema se adaptar ao seu segmento." />
+
+      {/* Soluções — problemas concretos (Asana workflow tiles) */}
+      <section className="section py-16 lg:py-20">
         <div className="text-center">
           <span className="eyebrow">Soluções</span>
           <h2 className="mt-4 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
-            Resolvemos os problemas do seu dia a dia
+            Problemas reais, resolvidos no dia a dia
           </h2>
           <p className="mx-auto mt-3 max-w-2xl text-slate-600">
-            Mais do que um sistema, uma forma de organizar e crescer o negócio.
+            Mais do que um sistema — uma forma de organizar, vender e crescer o negócio.
           </p>
         </div>
-        <div className="mt-12 grid gap-6 sm:grid-cols-2">
+        <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {SOLUTIONS.map((s) => (
             <Link
               key={s.slug}
               href={`/solucoes#${s.slug}`}
-              className="card group flex flex-col p-6 transition-shadow hover:shadow-md"
+              className="card group flex flex-col p-6 transition-all hover:-translate-y-0.5 hover:shadow-md"
             >
               <div className="flex items-center gap-3">
                 <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-brand-50 to-violet-50 text-brand-600 ring-1 ring-brand-100">
@@ -136,9 +151,9 @@ export default function HomePage() {
                 </span>
                 <h3 className="font-semibold text-slate-900">{s.title}</h3>
               </div>
-              <p className="mt-4 text-sm italic text-slate-500">{s.pain}</p>
-              <p className="mt-2 text-sm leading-relaxed text-slate-600">{s.description}</p>
-              <span className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-brand-700 group-hover:gap-2 transition-all">
+              <p className="mt-4 text-sm italic text-slate-500">&ldquo;{s.pain}&rdquo;</p>
+              <p className="mt-2 flex-1 text-sm leading-relaxed text-slate-600">{s.description}</p>
+              <span className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-brand-700 transition-all group-hover:gap-2">
                 Ver solução <Icon name="ArrowRight" className="h-4 w-4" />
               </span>
             </Link>
@@ -146,16 +161,16 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 5. Inteligência Artificial */}
-      <section className="section py-16">
+      {/* IA — bloco alternado (Notion AI / Monday AI) */}
+      <section className="section py-16 lg:py-20">
         <div className="grid items-center gap-12 lg:grid-cols-2">
           <div className="order-2 lg:order-1">
             <div className="rounded-3xl border border-slate-200 bg-gradient-to-br from-slate-900 to-slate-800 p-8 text-white shadow-xl">
               <Icon name="Sparkles" className="h-8 w-8 text-brand-300" />
               <p className="mt-4 text-sm text-slate-300">Resumo do dia</p>
               <p className="mt-1 text-lg font-semibold">
-                “Hoje você tem 12 atendimentos. 3 clientes inativos há mais de 60 dias — que tal um
-                lembrete?”
+                &ldquo;Hoje você tem 12 atendimentos. 3 clientes inativos há mais de 60 dias — que tal um
+                lembrete?&rdquo;
               </p>
               <div className="mt-6 grid grid-cols-2 gap-3 text-sm">
                 <div className="rounded-xl bg-white/10 p-3">
@@ -194,9 +209,9 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 7. Aplicativo */}
+      {/* Mobile */}
       <section className="border-y border-slate-100 bg-slate-50/60">
-        <div className="section grid items-center gap-12 py-16 lg:grid-cols-2">
+        <div className="section grid items-center gap-12 py-16 lg:grid-cols-2 lg:py-20">
           <div>
             <span className="eyebrow">
               <Icon name="Smartphone" className="h-3.5 w-3.5" /> Aplicativo
@@ -227,10 +242,7 @@ export default function HomePage() {
       </section>
 
       <IntegrationsShowcase />
-
       <SecurityShowcase />
-
-      {/* Depoimentos */}
       <Testimonials />
 
       <Faq
@@ -240,32 +252,7 @@ export default function HomePage() {
         showSupportLinks
       />
 
-      {/* 13. CTA final */}
-      <section className="section pb-16">
-        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-brand-600 via-brand-700 to-violet-700 px-8 py-16 text-center shadow-xl">
-          <div className="absolute inset-0 bg-grid opacity-20" />
-          <div className="relative">
-            <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
-              Pronto para organizar o seu negócio?
-            </h2>
-            <p className="mx-auto mt-3 max-w-xl text-brand-100">
-              Crie sua conta, escolha o plano e veja o sistema se adaptar ao seu segmento em minutos.
-            </p>
-            <div className="mt-7 flex flex-wrap justify-center gap-3">
-              <Link href="/signup" className="btn-white px-6 py-3 text-base">
-                Assinar agora
-                <Icon name="ArrowRight" className="h-4 w-4" />
-              </Link>
-              <Link
-                href="/precos"
-                className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/40 px-6 py-3 text-base font-semibold text-white transition-colors hover:bg-white/10"
-              >
-                Ver planos
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
+      <CtaBand />
 
       <SiteFooter />
     </div>

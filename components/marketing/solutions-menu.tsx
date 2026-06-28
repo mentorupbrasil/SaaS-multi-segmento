@@ -94,28 +94,28 @@ export function SolutionsMenu() {
 
       {open && (
         <div
-          className="absolute left-1/2 top-full z-50 mt-3 w-[min(94vw,720px)] -translate-x-1/2"
+          className="absolute left-0 top-full z-50 mt-2 w-[600px] max-w-[calc(100vw-1.5rem)]"
           onMouseEnter={openMenu}
           onMouseLeave={scheduleClose}
         >
-          <div className="overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-2xl shadow-slate-300/30 ring-1 ring-slate-100">
-            {/* Header */}
-            <div className="border-b border-slate-100 bg-slate-50/80 px-4 py-3">
-              <div className="mb-1">
-                <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">
-                  Soluções
-                </p>
-                <p className="text-sm text-slate-600">Problemas reais do seu negócio, resolvidos.</p>
-              </div>
-              <div className="relative mt-2">
+          <div className="overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-xl shadow-slate-300/25 ring-1 ring-slate-100">
+            <div className="border-b border-slate-100 px-4 pb-4 pt-4">
+              <label htmlFor="solutions-menu-search" className="block text-sm font-semibold text-slate-900">
+                Qual problema você quer resolver?
+              </label>
+              <p className="mt-0.5 text-xs text-slate-500">
+                Financeiro, clientes, vendas… · {total} soluções
+              </p>
+              <div className="relative mt-3">
                 <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
                 <input
+                  id="solutions-menu-search"
                   ref={searchRef}
                   type="search"
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
-                  placeholder="Buscar financeiro, clientes, vendas..."
-                  className="w-full rounded-xl border border-slate-200 bg-white py-2 pl-9 pr-3 text-sm text-slate-800 outline-none placeholder:text-slate-400 focus:border-brand-300 focus:ring-2 focus:ring-brand-100"
+                  placeholder="Ex.: fluxo de caixa, faltas na agenda"
+                  className="w-full rounded-xl border border-slate-200 bg-slate-50 py-2.5 pl-10 pr-3 text-sm text-slate-800 outline-none transition-colors placeholder:text-slate-400 focus:border-brand-300 focus:bg-white focus:ring-2 focus:ring-brand-100"
                 />
               </div>
             </div>
@@ -127,7 +127,7 @@ export function SolutionsMenu() {
               </div>
             ) : (
               <div className="flex">
-                <nav className="w-[200px] shrink-0 border-r border-slate-100 bg-slate-50/50 p-2">
+                <nav className="w-[168px] shrink-0 border-r border-slate-100 bg-slate-50/50 p-2">
                   <ul className="space-y-0.5">
                     {filtered.map((solution) => {
                       const active = !isSearching && solution.slug === activeSlug;

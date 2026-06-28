@@ -127,25 +127,29 @@ export function FeaturesMenu() {
 
       {open && (
         <div
-          className="absolute left-1/2 top-full z-50 mt-3 w-[min(94vw,760px)] -translate-x-1/2"
+          className="absolute left-0 top-full z-50 mt-2 w-[600px] max-w-[calc(100vw-1.5rem)]"
           onMouseEnter={openMenu}
           onMouseLeave={scheduleClose}
         >
-          <div className="rounded-2xl border border-slate-200/80 bg-white shadow-2xl shadow-slate-300/30 ring-1 ring-slate-100">
-            <div className="border-b border-slate-100 bg-slate-50/80 px-4 py-3">
-              <div className="flex items-center gap-3">
-                <div className="relative min-w-0 flex-1">
-                  <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
-                  <input
-                    ref={searchRef}
-                    type="search"
-                    value={query}
-                    onChange={(e) => setQuery(e.target.value)}
-                    placeholder="Buscar agenda, financeiro, PDV..."
-                    className="w-full rounded-xl border border-slate-200 bg-white py-2 pl-9 pr-3 text-sm outline-none placeholder:text-slate-400 focus:border-brand-300 focus:ring-2 focus:ring-brand-100"
-                  />
-                </div>
-                <span className="hidden shrink-0 text-xs text-slate-500 sm:inline">{total} recursos</span>
+          <div className="rounded-2xl border border-slate-200/80 bg-white shadow-xl shadow-slate-300/25 ring-1 ring-slate-100">
+            <div className="border-b border-slate-100 px-4 pb-4 pt-4">
+              <label htmlFor="features-menu-search" className="block text-sm font-semibold text-slate-900">
+                Encontre a funcionalidade que precisa
+              </label>
+              <p className="mt-0.5 text-xs text-slate-500">
+                Agenda, financeiro, PDV, equipe… · {total} recursos
+              </p>
+              <div className="relative mt-3">
+                <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                <input
+                  id="features-menu-search"
+                  ref={searchRef}
+                  type="search"
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  placeholder="Ex.: comissões, estoque, WhatsApp"
+                  className="w-full rounded-xl border border-slate-200 bg-slate-50 py-2.5 pl-10 pr-3 text-sm outline-none transition-colors placeholder:text-slate-400 focus:border-brand-300 focus:bg-white focus:ring-2 focus:ring-brand-100"
+                />
               </div>
             </div>
 
