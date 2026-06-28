@@ -13,6 +13,8 @@
     "db:push": "prisma db push",
     "db:migrate": "prisma migrate dev",
     "db:seed": "tsx prisma/seed.ts",
+    "db:seed-master": "tsx scripts/seed-master-data-all.ts",
+    "db:rls": "tsx scripts/apply-rls.ts",
     "db:studio": "prisma studio",
     "postinstall": "node scripts/postinstall-safe.js"
   },

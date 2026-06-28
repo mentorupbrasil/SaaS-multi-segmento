@@ -1,13 +1,21 @@
 import { prisma } from "@/lib/db";
 import type { IntegrationConfig, Prisma } from "@prisma/client";
 
-export type IntegrationProvider = "whatsapp" | "pix" | "google_calendar" | "mercadopago";
+export type IntegrationProvider =
+  | "whatsapp"
+  | "pix"
+  | "google_calendar"
+  | "mercadopago"
+  | "nfe"
+  | "channel_manager";
 
 export const INTEGRATION_PROVIDERS: IntegrationProvider[] = [
   "whatsapp",
   "pix",
   "google_calendar",
   "mercadopago",
+  "nfe",
+  "channel_manager",
 ];
 
 export async function getIntegration(

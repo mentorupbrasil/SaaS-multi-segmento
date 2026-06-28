@@ -1,6 +1,6 @@
 import { auth } from "@/auth";
 import { prisma } from "@/lib/db";
-import { buildCsv, csvResponse } from "@/lib/export-csv";
+import { exportTableResponse, type ExportFormat } from "@/lib/export-excel";
 import { formatCurrency, formatDate, formatDateTime } from "@/lib/utils";
 
 const ALLOWED = new Set([
@@ -22,7 +22,20 @@ const ALLOWED = new Set([
   "grupos",
   "turmas",
   "matriculas",
+  "vacinas",
+  "pacotes",
+  "comissoes",
 ]);
+
+function respond(
+  format: ExportFormat,
+  slug: string,
+  date: string,
+  headers: string[],
+  rows: string[][],
+) {
+  return exportTableResponse(format, `${slug}-${date}`, headers, rows);
+}
 
 export async function GET(request: Request) {
   const session = await auth();
@@ -33,6 +46,7 @@ export async function GET(request: Request) {
   const url = new URL(request.url);
   const exportModule = url.searchParams.get("module") ?? "";
   const q = url.searchParams.get("q")?.trim() ?? "";
+  const format: ExportFormat = url.searchParams.get("format") === "xlsx" ? "xlsx" : "csv";
 
   if (!ALLOWED.has(exportModule)) {
     return new Response("Módulo inválido", { status: 400 });
@@ -58,12 +72,12 @@ export async function GET(request: Request) {
         },
         orderBy: { name: "asc" },
       });
-      return csvResponse(
-        `clientes-${date}.csv`,
-        buildCsv(
-          ["Nome", "Telefone", "E-mail", "Cadastro"],
-          rows.map((r) => [r.name, r.phone ?? "", r.email ?? "", formatDate(r.createdAt)]),
-        ),
+      return respond(
+        format,
+        "clientes",
+        date,
+        ["Nome", "Telefone", "E-mail", "Cadastro"],
+        rows.map((r) => [r.name, r.phone ?? "", r.email ?? "", formatDate(r.createdAt)]),
       );
     }
 
@@ -75,17 +89,17 @@ export async function GET(request: Request) {
         },
         orderBy: { name: "asc" },
       });
-      return csvResponse(
-        `servicos-${date}.csv`,
-        buildCsv(
-          ["Nome", "Preço", "Duração (min)", "Ativo"],
-          rows.map((r) => [
-            r.name,
-            formatCurrency(r.price),
-            String(r.durationMin),
-            r.active ? "Sim" : "Não",
-          ]),
-        ),
+      return respond(
+        format,
+        "servicos",
+        date,
+        ["Nome", "Preço", "Duração (min)", "Ativo"],
+        rows.map((r) => [
+          r.name,
+          formatCurrency(r.price),
+          String(r.durationMin),
+          r.active ? "Sim" : "Não",
+        ]),
       );
     }
 
@@ -97,12 +111,12 @@ export async function GET(request: Request) {
         },
         orderBy: { name: "asc" },
       });
-      return csvResponse(
-        `fornecedores-${date}.csv`,
-        buildCsv(
-          ["Nome", "Telefone", "E-mail", "CNPJ"],
-          rows.map((r) => [r.name, r.phone ?? "", r.email ?? "", r.document ?? ""]),
-        ),
+      return respond(
+        format,
+        "fornecedores",
+        date,
+        ["Nome", "Telefone", "E-mail", "CNPJ"],
+        rows.map((r) => [r.name, r.phone ?? "", r.email ?? "", r.document ?? ""]),
       );
     }
 
@@ -114,18 +128,18 @@ export async function GET(request: Request) {
         },
         orderBy: { name: "asc" },
       });
-      return csvResponse(
-        `estoque-${date}.csv`,
-        buildCsv(
-          ["Produto", "SKU", "Quantidade", "Mínimo", "Preço"],
-          rows.map((r) => [
-            r.name,
-            r.sku ?? "",
-            String(r.quantity),
-            String(r.minQuantity),
-            formatCurrency(r.unitPrice),
-          ]),
-        ),
+      return respond(
+        format,
+        "estoque",
+        date,
+        ["Produto", "SKU", "Quantidade", "Mínimo", "Preço"],
+        rows.map((r) => [
+          r.name,
+          r.sku ?? "",
+          String(r.quantity),
+          String(r.minQuantity),
+          formatCurrency(r.unitPrice),
+        ]),
       );
     }
 
@@ -138,12 +152,12 @@ export async function GET(request: Request) {
         include: { customer: { select: { name: true } } },
         orderBy: { name: "asc" },
       });
-      return csvResponse(
-        `pets-${date}.csv`,
-        buildCsv(
-          ["Pet", "Tutor", "Espécie", "Raça"],
-          rows.map((r) => [r.name, r.customer.name, r.species ?? "", r.breed ?? ""]),
-        ),
+      return respond(
+        format,
+        "pets",
+        date,
+        ["Pet", "Tutor", "Espécie", "Raça"],
+        rows.map((r) => [r.name, r.customer.name, r.species ?? "", r.breed ?? ""]),
       );
     }
 
@@ -156,18 +170,18 @@ export async function GET(request: Request) {
         include: { customer: { select: { name: true } } },
         orderBy: { eventDate: "desc" },
       });
-      return csvResponse(
-        `eventos-${date}.csv`,
-        buildCsv(
-          ["Título", "Cliente", "Data", "Status", "Valor"],
-          rows.map((r) => [
-            r.title,
-            r.customer?.name ?? "",
-            r.eventDate ? formatDate(r.eventDate) : "",
-            r.status,
-            formatCurrency(r.total),
-          ]),
-        ),
+      return respond(
+        format,
+        "eventos",
+        date,
+        ["Título", "Cliente", "Data", "Status", "Valor"],
+        rows.map((r) => [
+          r.title,
+          r.customer?.name ?? "",
+          r.eventDate ? formatDate(r.eventDate) : "",
+          r.status,
+          formatCurrency(r.total),
+        ]),
       );
     }
 
@@ -191,18 +205,18 @@ export async function GET(request: Request) {
         },
         orderBy: { startAt: "asc" },
       });
-      return csvResponse(
-        `agenda-${date}.csv`,
-        buildCsv(
-          ["Data/Hora", "Cliente", "Serviço", "Profissional", "Status"],
-          rows.map((r) => [
-            formatDateTime(r.startAt),
-            r.customer.name,
-            r.service?.name ?? "",
-            r.staff?.user.name ?? "",
-            r.status,
-          ]),
-        ),
+      return respond(
+        format,
+        "agenda",
+        date,
+        ["Data/Hora", "Cliente", "Serviço", "Profissional", "Status"],
+        rows.map((r) => [
+          formatDateTime(r.startAt),
+          r.customer.name,
+          r.service?.name ?? "",
+          r.staff?.user.name ?? "",
+          r.status,
+        ]),
       );
     }
 
@@ -215,18 +229,18 @@ export async function GET(request: Request) {
         include: { customer: { select: { name: true } } },
         orderBy: { createdAt: "desc" },
       });
-      return csvResponse(
-        `orcamentos-${date}.csv`,
-        buildCsv(
-          ["Título", "Cliente", "Status", "Valor", "Data"],
-          rows.map((r) => [
-            r.title,
-            r.customer?.name ?? "",
-            r.status,
-            formatCurrency(r.total),
-            formatDate(r.createdAt),
-          ]),
-        ),
+      return respond(
+        format,
+        "orcamentos",
+        date,
+        ["Título", "Cliente", "Status", "Valor", "Data"],
+        rows.map((r) => [
+          r.title,
+          r.customer?.name ?? "",
+          r.status,
+          formatCurrency(r.total),
+          formatDate(r.createdAt),
+        ]),
       );
     }
 
@@ -239,18 +253,18 @@ export async function GET(request: Request) {
         include: { customer: { select: { name: true } } },
         orderBy: { createdAt: "desc" },
       });
-      return csvResponse(
-        `ordens-de-servico-${date}.csv`,
-        buildCsv(
-          ["Título", "Cliente", "Status", "Valor", "Data"],
-          rows.map((r) => [
-            r.title,
-            r.customer?.name ?? "",
-            r.status,
-            formatCurrency(r.total),
-            formatDate(r.createdAt),
-          ]),
-        ),
+      return respond(
+        format,
+        "ordens-de-servico",
+        date,
+        ["Título", "Cliente", "Status", "Valor", "Data"],
+        rows.map((r) => [
+          r.title,
+          r.customer?.name ?? "",
+          r.status,
+          formatCurrency(r.total),
+          formatDate(r.createdAt),
+        ]),
       );
     }
 
@@ -262,18 +276,18 @@ export async function GET(request: Request) {
         },
         orderBy: { createdAt: "desc" },
       });
-      return csvResponse(
-        `financeiro-${date}.csv`,
-        buildCsv(
-          ["Descrição", "Tipo", "Valor", "Vencimento", "Status"],
-          rows.map((r) => [
-            r.description,
-            r.type === "INCOME" ? "Receita" : "Despesa",
-            formatCurrency(r.amount),
-            r.dueDate ? formatDate(r.dueDate) : "",
-            r.status,
-          ]),
-        ),
+      return respond(
+        format,
+        "financeiro",
+        date,
+        ["Descrição", "Tipo", "Valor", "Vencimento", "Status"],
+        rows.map((r) => [
+          r.description,
+          r.type === "INCOME" ? "Receita" : "Despesa",
+          formatCurrency(r.amount),
+          r.dueDate ? formatDate(r.dueDate) : "",
+          r.status,
+        ]),
       );
     }
 
@@ -281,19 +295,17 @@ export async function GET(request: Request) {
       const rows = await prisma.membership.findMany({
         where: {
           organizationId: orgId,
-          ...(q
-            ? { user: { name: { contains: q, mode: "insensitive" } } }
-            : {}),
+          ...(q ? { user: { name: { contains: q, mode: "insensitive" } } } : {}),
         },
         include: { user: true },
         orderBy: { role: "asc" },
       });
-      return csvResponse(
-        `equipe-${date}.csv`,
-        buildCsv(
-          ["Nome", "E-mail", "Cargo", "Permissão"],
-          rows.map((r) => [r.user.name, r.user.email ?? "", r.title ?? "", r.role]),
-        ),
+      return respond(
+        format,
+        "equipe",
+        date,
+        ["Nome", "E-mail", "Cargo", "Permissão"],
+        rows.map((r) => [r.user.name, r.user.email ?? "", r.title ?? "", r.role]),
       );
     }
 
@@ -313,18 +325,18 @@ export async function GET(request: Request) {
         include: { customer: { select: { name: true } } },
         orderBy: { plate: "asc" },
       });
-      return csvResponse(
-        `veiculos-${date}.csv`,
-        buildCsv(
-          ["Placa", "Modelo", "Cliente", "Marca", "Ano"],
-          rows.map((r) => [
-            r.plate,
-            r.model,
-            r.customer.name,
-            r.brand ?? "",
-            r.year != null ? String(r.year) : "",
-          ]),
-        ),
+      return respond(
+        format,
+        "veiculos",
+        date,
+        ["Placa", "Modelo", "Cliente", "Marca", "Ano"],
+        rows.map((r) => [
+          r.plate,
+          r.model,
+          r.customer.name,
+          r.brand ?? "",
+          r.year != null ? String(r.year) : "",
+        ]),
       );
     }
 
@@ -336,12 +348,12 @@ export async function GET(request: Request) {
         },
         orderBy: { number: "asc" },
       });
-      return csvResponse(
-        `quartos-${date}.csv`,
-        buildCsv(
-          ["Número", "Tipo", "Status", "Diária"],
-          rows.map((r) => [r.number, r.type ?? "", r.status, formatCurrency(r.dailyRate)]),
-        ),
+      return respond(
+        format,
+        "quartos",
+        date,
+        ["Número", "Tipo", "Status", "Diária"],
+        rows.map((r) => [r.number, r.type ?? "", r.status, formatCurrency(r.dailyRate)]),
       );
     }
 
@@ -354,19 +366,19 @@ export async function GET(request: Request) {
         },
         orderBy: { checkIn: "desc" },
       });
-      return csvResponse(
-        `reservas-${date}.csv`,
-        buildCsv(
-          ["Quarto", "Cliente", "Check-in", "Check-out", "Status", "Total"],
-          rows.map((r) => [
-            r.room.number,
-            r.customer.name,
-            formatDate(r.checkIn),
-            formatDate(r.checkOut),
-            r.status,
-            formatCurrency(r.total),
-          ]),
-        ),
+      return respond(
+        format,
+        "reservas",
+        date,
+        ["Quarto", "Cliente", "Check-in", "Check-out", "Status", "Total"],
+        rows.map((r) => [
+          r.room.number,
+          r.customer.name,
+          formatDate(r.checkIn),
+          formatDate(r.checkOut),
+          r.status,
+          formatCurrency(r.total),
+        ]),
       );
     }
 
@@ -376,18 +388,18 @@ export async function GET(request: Request) {
         include: { customer: { select: { name: true } } },
         orderBy: { receivedAt: "desc" },
       });
-      return csvResponse(
-        `doacoes-${date}.csv`,
-        buildCsv(
-          ["Valor", "Tipo", "Doador", "Descrição", "Recebida em"],
-          rows.map((r) => [
-            formatCurrency(r.amount),
-            r.donationType ?? "",
-            r.customer?.name ?? "Anônimo",
-            r.description ?? "",
-            formatDate(r.receivedAt),
-          ]),
-        ),
+      return respond(
+        format,
+        "doacoes",
+        date,
+        ["Valor", "Tipo", "Doador", "Descrição", "Recebida em"],
+        rows.map((r) => [
+          formatCurrency(r.amount),
+          r.donationType ?? "",
+          r.customer?.name ?? "Anônimo",
+          r.description ?? "",
+          formatDate(r.receivedAt),
+        ]),
       );
     }
 
@@ -400,12 +412,12 @@ export async function GET(request: Request) {
         include: { _count: { select: { members: true } } },
         orderBy: { name: "asc" },
       });
-      return csvResponse(
-        `grupos-${date}.csv`,
-        buildCsv(
-          ["Nome", "Tipo", "Membros"],
-          rows.map((r) => [r.name, r.groupType ?? "", String(r._count.members)]),
-        ),
+      return respond(
+        format,
+        "grupos",
+        date,
+        ["Nome", "Tipo", "Membros"],
+        rows.map((r) => [r.name, r.groupType ?? "", String(r._count.members)]),
       );
     }
 
@@ -417,12 +429,12 @@ export async function GET(request: Request) {
         },
         orderBy: { name: "asc" },
       });
-      return csvResponse(
-        `turmas-${date}.csv`,
-        buildCsv(
-          ["Turma", "Período", "Turno", "Capacidade"],
-          rows.map((r) => [r.name, r.period ?? "", r.shift ?? "", String(r.capacity ?? "")]),
-        ),
+      return respond(
+        format,
+        "turmas",
+        date,
+        ["Turma", "Período", "Turno", "Capacidade"],
+        rows.map((r) => [r.name, r.period ?? "", r.shift ?? "", String(r.capacity ?? "")]),
       );
     }
 
@@ -431,21 +443,103 @@ export async function GET(request: Request) {
         where: { organizationId: orgId },
         include: {
           customer: { select: { name: true } },
-          schoolClass: { select: { name: true } },
+          class: { select: { name: true } },
         },
         orderBy: { createdAt: "desc" },
       });
-      return csvResponse(
-        `matriculas-${date}.csv`,
-        buildCsv(
-          ["Aluno", "Turma", "Status", "Matrícula"],
-          rows.map((r) => [
-            r.customer.name,
-            r.schoolClass.name,
-            r.status,
-            formatDate(r.createdAt),
-          ]),
-        ),
+      return respond(
+        format,
+        "matriculas",
+        date,
+        ["Aluno", "Turma", "Status", "Matrícula"],
+        rows.map((r) => [
+          r.customer.name,
+          r.class.name,
+          r.status,
+          formatDate(r.enrolledAt),
+        ]),
+      );
+    }
+
+    case "vacinas": {
+      const rows = await prisma.vaccination.findMany({
+        where: {
+          organizationId: orgId,
+          ...(q
+            ? {
+                OR: [
+                  { vaccine: { contains: q, mode: "insensitive" } },
+                  { pet: { name: { contains: q, mode: "insensitive" } } },
+                ],
+              }
+            : {}),
+        },
+        include: {
+          pet: { include: { customer: { select: { name: true } } } },
+        },
+        orderBy: { appliedAt: "desc" },
+      });
+      return respond(
+        format,
+        "vacinas",
+        date,
+        ["Pet", "Tutor", "Vacina", "Aplicada em", "Próxima dose"],
+        rows.map((r) => [
+          r.pet.name,
+          r.pet.customer.name,
+          r.vaccine,
+          formatDate(r.appliedAt),
+          r.nextDueAt ? formatDate(r.nextDueAt) : "",
+        ]),
+      );
+    }
+
+    case "pacotes": {
+      const rows = await prisma.sessionPackage.findMany({
+        where: {
+          organizationId: orgId,
+          ...(q ? { name: { contains: q, mode: "insensitive" } } : {}),
+        },
+        include: { customer: { select: { name: true } } },
+        orderBy: { createdAt: "desc" },
+      });
+      return respond(
+        format,
+        "pacotes",
+        date,
+        ["Pacote", "Cliente", "Sessões", "Valor", "Validade"],
+        rows.map((r) => [
+          r.name,
+          r.customer.name,
+          `${r.usedSessions}/${r.totalSessions}`,
+          formatCurrency(r.price),
+          r.expiresAt ? formatDate(r.expiresAt) : "",
+        ]),
+      );
+    }
+
+    case "comissoes": {
+      const rows = await prisma.commissionEntry.findMany({
+        where: { organizationId: orgId },
+        include: {
+          staff: { include: { user: { select: { name: true } } } },
+          customer: { select: { name: true } },
+        },
+        orderBy: { createdAt: "desc" },
+      });
+      return respond(
+        format,
+        "comissoes",
+        date,
+        ["Profissional", "Descrição", "Cliente", "Valor", "Status", "Data"],
+        rows.map((r) => [
+          r.staff.user.name,
+          r.description.replace(/ \[apt:[^\]]+\]/, ""),
+          r.customer?.name ?? "",
+          formatCurrency(r.amount),
+          r.paidAt ? "Pago" : "Pendente",
+          formatDate(r.createdAt),
+        ]),
       );
     }
 

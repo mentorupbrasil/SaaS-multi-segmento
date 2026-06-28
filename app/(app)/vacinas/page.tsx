@@ -1,27 +1,53 @@
 import { getAuthContext } from "@/lib/auth-context";
 import { prisma } from "@/lib/db";
+import { parseListParams } from "@/lib/list-params";
 import { getMasterDataOptions } from "@/lib/master-data";
 import { resolveTerms, term } from "@/lib/terms";
 import { PageHeader } from "@/components/page-header";
+import { ListToolbar } from "@/components/list-toolbar";
+import { Pagination } from "@/components/pagination";
+import { ExportButtons } from "@/components/export-link";
 import { DeleteButton } from "@/components/delete-button";
 import { VaccinationForm } from "@/modules/vaccinations/vaccination-form";
 import { deleteVaccination } from "@/modules/vaccinations/actions";
 import { formatDate } from "@/lib/utils";
 
-export default async function VacinasPage() {
+const PAGE_SIZE = 20;
+
+export default async function VacinasPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ q?: string; page?: string }>;
+}) {
+  const params = parseListParams(await searchParams);
   const ctx = await getAuthContext();
   const terms = resolveTerms(
     ctx.organization.segmentId,
     (ctx.organization.config as { terms?: Record<string, string> })?.terms,
   );
 
-  const [vaccinations, pets, vaccineItems] = await Promise.all([
+  const where = {
+    organizationId: ctx.orgId,
+    ...(params.q
+      ? {
+          OR: [
+            { vaccine: { contains: params.q, mode: "insensitive" as const } },
+            { pet: { name: { contains: params.q, mode: "insensitive" as const } } },
+          ],
+        }
+      : {}),
+  };
+
+  const [total, vaccinations, pets, vaccineItems] = await Promise.all([
+    prisma.vaccination.count({ where }),
     prisma.vaccination.findMany({
-      where: { organizationId: ctx.orgId },
+      where,
       include: {
         pet: { include: { customer: { select: { name: true } } } },
       },
       orderBy: { appliedAt: "desc" },
+      skip: (params.page - 1) * PAGE_SIZE,
+      take: PAGE_SIZE,
     }),
     prisma.pet.findMany({
       where: { organizationId: ctx.orgId },
@@ -44,39 +70,55 @@ export default async function VacinasPage() {
         action={<VaccinationForm pets={petOptions} vaccineItems={vaccineItems} />}
       />
 
+      <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
+        <ListToolbar searchValue={params.q} searchPlaceholder="Buscar pet ou vacina..." />
+        <ExportButtons module="vacinas" searchParams={{ q: params.q || undefined }} />
+      </div>
+
       {vaccinations.length === 0 ? (
-        <div className="card p-10 text-center text-slate-500">Nenhuma vacina registrada ainda.</div>
-      ) : (
-        <div className="card overflow-hidden">
-          <table className="w-full text-sm">
-            <thead className="bg-slate-50 text-left text-xs uppercase tracking-wider text-slate-500">
-              <tr>
-                <th className="px-4 py-3">{term(terms, "pet")}</th>
-                <th className="px-4 py-3">Tutor</th>
-                <th className="px-4 py-3">Vacina</th>
-                <th className="px-4 py-3">Aplicada em</th>
-                <th className="px-4 py-3">Próxima dose</th>
-                <th className="px-4 py-3">Ações</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100">
-              {vaccinations.map((v) => (
-                <tr key={v.id} className="hover:bg-slate-50">
-                  <td className="px-4 py-3 font-medium text-slate-900">{v.pet.name}</td>
-                  <td className="px-4 py-3 text-slate-600">{v.pet.customer.name}</td>
-                  <td className="px-4 py-3 text-slate-600">{v.vaccine}</td>
-                  <td className="px-4 py-3 text-slate-600">{formatDate(v.appliedAt)}</td>
-                  <td className="px-4 py-3 text-slate-600">{v.nextDueAt ? formatDate(v.nextDueAt) : "—"}</td>
-                  <td className="px-4 py-3">
-                    <DeleteButton action={deleteVaccination.bind(null, v.id)} />
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        <div className="card p-10 text-center text-slate-500">
+          {params.q ? "Nenhum resultado." : "Nenhuma vacina registrada ainda."}
         </div>
+      ) : (
+        <>
+          <div className="card overflow-hidden">
+            <table className="w-full text-sm">
+              <thead className="bg-slate-50 text-left text-xs uppercase tracking-wider text-slate-500">
+                <tr>
+                  <th className="px-4 py-3">{term(terms, "pet")}</th>
+                  <th className="px-4 py-3">Tutor</th>
+                  <th className="px-4 py-3">Vacina</th>
+                  <th className="px-4 py-3">Aplicada em</th>
+                  <th className="px-4 py-3">Próxima dose</th>
+                  <th className="px-4 py-3">Ações</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                {vaccinations.map((v) => (
+                  <tr key={v.id} className="hover:bg-slate-50">
+                    <td className="px-4 py-3 font-medium text-slate-900">{v.pet.name}</td>
+                    <td className="px-4 py-3 text-slate-600">{v.pet.customer.name}</td>
+                    <td className="px-4 py-3 text-slate-600">{v.vaccine}</td>
+                    <td className="px-4 py-3 text-slate-600">{formatDate(v.appliedAt)}</td>
+                    <td className="px-4 py-3 text-slate-600">{v.nextDueAt ? formatDate(v.nextDueAt) : "—"}</td>
+                    <td className="px-4 py-3">
+                      <DeleteButton action={deleteVaccination.bind(null, v.id)} />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <Pagination
+            total={total}
+            page={params.page}
+            pageSize={PAGE_SIZE}
+            basePath="/vacinas"
+            searchParams={{ q: params.q || undefined }}
+          />
+        </>
       )}
     </div>
   );
 }
-

@@ -6,6 +6,7 @@ import { prisma } from "@/lib/db";
 import { getAuthContext } from "@/lib/auth-context";
 import { requireMutationRole } from "@/lib/action-auth";
 import { logAudit } from "@/lib/audit-log";
+import { syncAppointmentCommissions } from "@/lib/commission-auto";
 
 export interface FormResult {
   error?: string;
@@ -73,4 +74,12 @@ export async function deleteCommissionEntry(id: string): Promise<FormResult> {
   await logAudit(ctx, "commission.delete", { id });
   revalidatePath("/comissoes");
   return { ok: true };
+}
+
+export async function syncCommissionsFromAppointments(): Promise<{ created: number }> {
+  const ctx = await getAuthContext();
+  requireMutationRole(ctx, ["OWNER", "ADMIN"]);
+  const created = await syncAppointmentCommissions(ctx.orgId);
+  revalidatePath("/comissoes");
+  return { created };
 }

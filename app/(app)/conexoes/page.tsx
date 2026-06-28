@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { getAuthContext, requireRole } from "@/lib/auth-context";
 import { listIntegrations } from "@/lib/integrations-service";
 import { PageHeader } from "@/components/page-header";
@@ -22,6 +23,24 @@ const INTEGRATION_UI = [
     name: "Google Agenda",
     icon: "Calendar",
     description: "Sincronize agendamentos com sua agenda Google.",
+  },
+  {
+    provider: "nfe" as const,
+    name: "NF-e / NFC-e",
+    icon: "FileCheck",
+    description: "Emissão fiscal integrada com SEFAZ (certificado A1).",
+  },
+  {
+    provider: "channel_manager" as const,
+    name: "Channel Manager",
+    icon: "Globe",
+    description: "Sincronize tarifas e disponibilidade com OTAs (Booking, Airbnb).",
+  },
+  {
+    provider: "mercadopago" as const,
+    name: "Mercado Pago",
+    icon: "CreditCard",
+    description: "Cobranças online, assinaturas e webhook de pagamentos.",
   },
 ];
 
@@ -58,6 +77,12 @@ export default async function ConexoesPage() {
                   <IntegrationToggle provider={item.provider} enabled={enabled} />
                 </div>
                 <p className="mt-3 text-xs text-slate-400">
+                  {item.provider === "nfe" && (
+                    <>Configure detalhes em <Link href="/fiscal" className="text-brand-600 hover:underline">Fiscal</Link> · </>
+                  )}
+                  {item.provider === "channel_manager" && (
+                    <>Tarifas em <Link href="/tarifas" className="text-brand-600 hover:underline">Tarifas</Link> · </>
+                  )}
                   Webhook: /api/integrations/webhook/{item.provider === "pix" ? "mercadopago" : item.provider}
                 </p>
               </div>

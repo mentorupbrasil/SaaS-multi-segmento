@@ -10,9 +10,9 @@ export default async function BoletimPage() {
     where: { organizationId: ctx.orgId, status: "ACTIVE" },
     include: {
       customer: { select: { id: true, name: true } },
-      schoolClass: { select: { id: true, name: true } },
+      class: { select: { id: true, name: true } },
     },
-    orderBy: [{ schoolClass: { name: "asc" } }, { customer: { name: "asc" } }],
+    orderBy: [{ class: { name: "asc" } }, { customer: { name: "asc" } }],
   });
 
   const attendance = await prisma.attendanceRecord.findMany({
@@ -30,7 +30,7 @@ export default async function BoletimPage() {
 
   const byClass = new Map<string, typeof enrollments>();
   for (const e of enrollments) {
-    const key = e.schoolClass.name;
+    const key = e.class.name;
     const list = byClass.get(key) ?? [];
     list.push(e);
     byClass.set(key, list);

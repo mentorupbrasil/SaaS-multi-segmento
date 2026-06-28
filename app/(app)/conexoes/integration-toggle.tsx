@@ -2,13 +2,14 @@
 
 import { useTransition } from "react";
 import { useRouter } from "next/navigation";
+import type { IntegrationProvider } from "@/lib/integrations-service";
 import { toggleIntegrationAction } from "./actions";
 
 export function IntegrationToggle({
   provider,
   enabled,
 }: {
-  provider: "whatsapp" | "pix" | "google_calendar";
+  provider: IntegrationProvider;
   enabled: boolean;
 }) {
   const router = useRouter();

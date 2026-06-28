@@ -6,6 +6,7 @@ import { prisma } from "@/lib/db";
 import { getAuthContext } from "@/lib/auth-context";
 import { requireMutationRole } from "@/lib/action-auth";
 import { logAudit } from "@/lib/audit-log";
+import { maybeCreateAppointmentCommission } from "@/lib/commission-auto";
 
 export interface FormResult {
   error?: string;
@@ -82,6 +83,12 @@ export async function updateAppointmentStatus(
     where: { id, organizationId: ctx.orgId },
     data: { status },
   });
+
+  if (status === "COMPLETED") {
+    await maybeCreateAppointmentCommission(ctx.orgId, id);
+    revalidatePath("/comissoes");
+  }
+
   revalidatePath("/agenda");
 }
 

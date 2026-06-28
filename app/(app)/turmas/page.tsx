@@ -1,12 +1,17 @@
 import Link from "next/link";
 import { getAuthContext } from "@/lib/auth-context";
 import { prisma } from "@/lib/db";
-import { parseListParams, paginate } from "@/lib/list-params";
+import { parseListParams } from "@/lib/list-params";
 import { PageHeader } from "@/components/page-header";
+import { ListToolbar } from "@/components/list-toolbar";
+import { Pagination } from "@/components/pagination";
+import { ExportButtons } from "@/components/export-link";
 import { DeleteButton } from "@/components/delete-button";
 import { ClassForm } from "@/modules/education/class-form";
 import { deleteSchoolClass, listSchoolClasses } from "@/modules/education/actions";
 import { formatDate } from "@/lib/utils";
+
+const PAGE_SIZE = 20;
 
 export default async function TurmasPage({
   searchParams,
@@ -16,16 +21,16 @@ export default async function TurmasPage({
   const params = parseListParams(await searchParams);
   const ctx = await getAuthContext();
 
-  const [allClasses, teachers] = await Promise.all([
-    listSchoolClasses(params.q || undefined),
-    prisma.membership.findMany({
-      where: { organizationId: ctx.orgId },
-      include: { user: { select: { name: true } } },
-      orderBy: { user: { name: "asc" } },
-    }),
-  ]);
+  const allClasses = await listSchoolClasses(params.q || undefined);
+  const total = allClasses.length;
+  const start = (params.page - 1) * PAGE_SIZE;
+  const classes = allClasses.slice(start, start + PAGE_SIZE);
 
-  const { items: classes, total, page, totalPages } = paginate(allClasses, params.page, params.pageSize);
+  const teachers = await prisma.membership.findMany({
+    where: { organizationId: ctx.orgId },
+    include: { user: { select: { name: true } } },
+    orderBy: { user: { name: "asc" } },
+  });
 
   const teacherOptions = teachers.map((t) => ({
     id: t.id,
@@ -40,26 +45,14 @@ export default async function TurmasPage({
         action={<ClassForm teachers={teacherOptions} />}
       />
 
-      <form className="mb-4 flex flex-wrap items-center gap-2">
-        <input
-          name="q"
-          defaultValue={params.q}
-          placeholder="Buscar por nome, série, turno ou sala..."
-          className="input min-w-[240px] flex-1"
-        />
-        <button type="submit" className="btn-secondary">
-          Buscar
-        </button>
-        {params.q && (
-          <Link href="/turmas" className="text-sm text-brand-600 hover:underline">
-            Limpar
-          </Link>
-        )}
-      </form>
+      <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
+        <ListToolbar searchValue={params.q} searchPlaceholder="Buscar por nome, série, turno ou sala..." />
+        <ExportButtons module="turmas" searchParams={{ q: params.q || undefined }} />
+      </div>
 
       {classes.length === 0 ? (
         <div className="card p-10 text-center text-slate-500">
-          {params.q ? "Nenhuma turma encontrada para a busca." : "Nenhuma turma cadastrada ainda."}
+          {params.q ? "Nenhuma turma encontrada." : "Nenhuma turma cadastrada ainda."}
         </div>
       ) : (
         <>
@@ -89,18 +82,14 @@ export default async function TurmasPage({
                     <td className="px-4 py-3 text-slate-600">{c.grade ?? "—"}</td>
                     <td className="px-4 py-3 text-slate-600">{c.shift ?? "—"}</td>
                     <td className="px-4 py-3 text-slate-600">{c.room ?? "—"}</td>
-                    <td className="px-4 py-3 text-slate-600">
-                      {c.teacher?.user.name ?? "—"}
-                    </td>
+                    <td className="px-4 py-3 text-slate-600">{c.teacher?.user.name ?? "—"}</td>
                     <td className="px-4 py-3 text-slate-600">
                       {c._count.enrollments}/{c.capacity}
                     </td>
                     <td className="px-4 py-3">
                       <span
                         className={`rounded-full px-2 py-0.5 text-xs font-medium ${
-                          c.active
-                            ? "bg-green-100 text-green-800"
-                            : "bg-slate-100 text-slate-600"
+                          c.active ? "bg-green-100 text-green-800" : "bg-slate-100 text-slate-600"
                         }`}
                       >
                         {c.active ? "Ativa" : "Inativa"}
@@ -108,15 +97,7 @@ export default async function TurmasPage({
                     </td>
                     <td className="px-4 py-3 text-slate-600">{formatDate(c.createdAt)}</td>
                     <td className="px-4 py-3">
-                      <div className="flex flex-wrap items-center gap-2">
-                        <Link
-                          href={`/turmas/${c.id}`}
-                          className="text-sm text-brand-600 hover:underline"
-                        >
-                          Ver matrículas
-                        </Link>
-                        <DeleteButton action={deleteSchoolClass.bind(null, c.id)} />
-                      </div>
+                      <DeleteButton action={deleteSchoolClass.bind(null, c.id)} />
                     </td>
                   </tr>
                 ))}
@@ -124,31 +105,13 @@ export default async function TurmasPage({
             </table>
           </div>
 
-          {totalPages > 1 && (
-            <div className="mt-4 flex items-center justify-between text-sm text-slate-600">
-              <span>
-                {total} turma(s) — página {page} de {totalPages}
-              </span>
-              <div className="flex gap-2">
-                {page > 1 && (
-                  <Link
-                    href={`/turmas?q=${encodeURIComponent(params.q)}&page=${page - 1}`}
-                    className="btn-secondary"
-                  >
-                    Anterior
-                  </Link>
-                )}
-                {page < totalPages && (
-                  <Link
-                    href={`/turmas?q=${encodeURIComponent(params.q)}&page=${page + 1}`}
-                    className="btn-secondary"
-                  >
-                    Próxima
-                  </Link>
-                )}
-              </div>
-            </div>
-          )}
+          <Pagination
+            total={total}
+            page={params.page}
+            pageSize={PAGE_SIZE}
+            basePath="/turmas"
+            searchParams={{ q: params.q || undefined }}
+          />
         </>
       )}
     </div>
