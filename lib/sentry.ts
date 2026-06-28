@@ -1,16 +1,8 @@
 /**
  * Sentry bootstrap stub. Set SENTRY_DSN and install @sentry/nextjs for full tracing.
- * Safe to import when the SDK is not installed.
+ * No runtime dependency until the package is added: npm i @sentry/nextjs
  */
 let initialized = false;
-
-async function loadSentry() {
-  try {
-    return await import("@sentry/nextjs");
-  } catch {
-    return null;
-  }
-}
 
 export function initSentry(): void {
   if (initialized) return;
@@ -19,31 +11,14 @@ export function initSentry(): void {
   const dsn = process.env.SENTRY_DSN;
   if (!dsn) return;
 
-  void loadSentry().then((Sentry) => {
-    if (!Sentry) {
-      if (process.env.NODE_ENV !== "production") {
-        console.info(
-          "[sentry] SENTRY_DSN is set but @sentry/nextjs is not installed. Run: npm i @sentry/nextjs",
-        );
-      }
-      return;
-    }
-    Sentry.init({
-      dsn,
-      tracesSampleRate: Number(process.env.SENTRY_TRACES_SAMPLE_RATE ?? 0.1),
-      environment: process.env.VERCEL_ENV ?? process.env.NODE_ENV,
-    });
-  });
+  if (process.env.NODE_ENV !== "production") {
+    console.info(
+      "[sentry] SENTRY_DSN definido. Para tracing completo: npm i @sentry/nextjs e substitua este stub.",
+    );
+  }
 }
 
 export function captureException(error: unknown, context?: Record<string, unknown>): void {
   if (!process.env.SENTRY_DSN) return;
-
-  void loadSentry().then((Sentry) => {
-    if (!Sentry) {
-      console.error("[sentry]", error, context);
-      return;
-    }
-    Sentry.captureException(error, { extra: context });
-  });
+  console.error("[sentry]", error, context);
 }
