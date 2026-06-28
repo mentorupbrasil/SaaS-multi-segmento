@@ -28,7 +28,7 @@ export function HousekeepingTaskStatusButtons({ id, status }: { id: string; stat
           type="button"
           disabled={pending}
           className="rounded-lg border border-slate-200 px-2 py-0.5 text-xs hover:bg-slate-50"
-          onClick={() => start(() => updateTaskStatus(id, a.status))}
+          onClick={() => start(() => void updateTaskStatus(id, a.status))}
         >
           {a.label}
         </button>

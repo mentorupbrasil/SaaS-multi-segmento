@@ -48,7 +48,7 @@ async function saveTables(tables: RestaurantTable[]): Promise<void> {
   const config = parseConfig(org?.config);
   await prisma.organization.update({
     where: { id: ctx.orgId },
-    data: { config: { ...config, tables } as Prisma.InputJsonValue },
+    data: { config: { ...config, tables } as unknown as Prisma.InputJsonValue },
   });
   revalidatePath("/mesas");
 }

@@ -70,8 +70,8 @@ export default async function ProntuarioDetailPage({
           <ul className="space-y-2">
             {record.attachments.map((a) => (
               <li key={a.id}>
-                <a href={a.url} target="_blank" rel="noopener noreferrer" className="text-sm text-brand-600 hover:underline">
-                  {a.filename}
+                <a href={a.fileUrl} target="_blank" rel="noopener noreferrer" className="text-sm text-brand-600 hover:underline">
+                  {a.fileName}
                 </a>
               </li>
             ))}

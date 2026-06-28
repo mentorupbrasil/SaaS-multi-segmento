@@ -1,4 +1,4 @@
-import type { MasterDataType } from "@prisma/client";
+import type { MasterDataType, Prisma } from "@prisma/client";
 import { prisma } from "@/lib/db";
 import { getSegment } from "@/segments";
 import type { SegmentCategory } from "@/segments/types";
@@ -151,7 +151,7 @@ export async function createMasterData(input: CreateMasterDataInput) {
       label: input.label,
       value: input.value ?? null,
       sortOrder: input.sortOrder ?? 0,
-      metadata: input.metadata ?? {},
+      metadata: (input.metadata ?? {}) as Prisma.InputJsonValue,
     },
   });
 }

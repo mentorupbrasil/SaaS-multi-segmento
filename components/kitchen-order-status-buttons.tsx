@@ -28,7 +28,7 @@ export function KitchenOrderStatusButtons({ id, status }: { id: string; status: 
           type="button"
           disabled={pending}
           className={a.status === "DONE" ? "btn-primary text-sm" : "btn-secondary text-sm"}
-          onClick={() => start(() => updateKitchenStatus(id, a.status))}
+          onClick={() => start(() => void updateKitchenStatus(id, a.status))}
         >
           {a.label}
         </button>

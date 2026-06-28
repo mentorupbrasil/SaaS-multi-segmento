@@ -54,7 +54,7 @@ export async function GET(request: Request) {
 
   const membership = await prisma.membership.findFirst({
     where: { userId: session.user.id },
-    orderBy: { createdAt: "asc" },
+    orderBy: { id: "asc" },
   });
   if (!membership) {
     return new Response("Forbidden", { status: 403 });
@@ -138,7 +138,7 @@ export async function GET(request: Request) {
           r.sku ?? "",
           String(r.quantity),
           String(r.minQuantity),
-          formatCurrency(r.unitPrice),
+          formatCurrency(r.price),
         ]),
       );
     }
@@ -165,7 +165,7 @@ export async function GET(request: Request) {
       const rows = await prisma.businessEvent.findMany({
         where: {
           organizationId: orgId,
-          ...(q ? { title: { contains: q, mode: "insensitive" } } : {}),
+          ...(q ? { name: { contains: q, mode: "insensitive" } } : {}),
         },
         include: { customer: { select: { name: true } } },
         orderBy: { eventDate: "desc" },
@@ -176,7 +176,7 @@ export async function GET(request: Request) {
         date,
         ["Título", "Cliente", "Data", "Status", "Valor"],
         rows.map((r) => [
-          r.title,
+          r.name,
           r.customer?.name ?? "",
           r.eventDate ? formatDate(r.eventDate) : "",
           r.status,
@@ -433,8 +433,8 @@ export async function GET(request: Request) {
         format,
         "turmas",
         date,
-        ["Turma", "Período", "Turno", "Capacidade"],
-        rows.map((r) => [r.name, r.period ?? "", r.shift ?? "", String(r.capacity ?? "")]),
+        ["Turma", "Série", "Turno", "Capacidade"],
+        rows.map((r) => [r.name, r.grade ?? "", r.shift ?? "", String(r.capacity ?? "")]),
       );
     }
 
@@ -445,7 +445,7 @@ export async function GET(request: Request) {
           customer: { select: { name: true } },
           class: { select: { name: true } },
         },
-        orderBy: { createdAt: "desc" },
+        orderBy: { enrolledAt: "desc" },
       });
       return respond(
         format,
