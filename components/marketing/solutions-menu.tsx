@@ -194,7 +194,7 @@ export function SolutionsMenu() {
                   Ver todas
                 </Link>
                 <Link href="/signup" onClick={close} className="btn-primary py-2 text-sm">
-                  Começar grátis
+                  Assinar agora
                 </Link>
               </div>
             </div>

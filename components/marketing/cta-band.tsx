@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { Icon } from "@/components/icon";
+import { PLANS } from "@/lib/plans";
+import { formatCurrency } from "@/lib/utils";
 
 interface CtaBandProps {
   title?: string;
@@ -8,24 +10,26 @@ interface CtaBandProps {
   primaryLabel?: string;
   secondaryHref?: string;
   secondaryLabel?: string;
-  variant?: "light" | "gradient";
+  variant?: "light" | "featured";
 }
+
+const starterPrice = PLANS.find((p) => p.id === "starter")?.priceMonthly;
 
 export function CtaBand({
   title = "Pronto para organizar o seu negócio?",
-  description = "Crie sua conta, escolha o plano e veja o sistema se adaptar ao seu segmento em minutos.",
+  description = "Escolha o plano, assine e veja o sistema se adaptar ao seu segmento em minutos.",
   primaryHref = "/signup",
-  primaryLabel = "Começar grátis",
+  primaryLabel = "Assinar agora",
   secondaryHref = "/precos",
   secondaryLabel = "Ver planos",
-  variant = "gradient",
+  variant = "featured",
 }: CtaBandProps) {
   if (variant === "light") {
     return (
-      <section className="section py-10">
-        <div className="flex flex-col items-center justify-between gap-5 rounded-2xl border border-slate-200 bg-slate-50/80 px-6 py-8 sm:flex-row">
+      <section className="section py-8 lg:py-10">
+        <div className="flex flex-col items-center justify-between gap-5 rounded-2xl border border-slate-200/80 bg-white px-6 py-7 shadow-sm sm:flex-row sm:px-8">
           <div className="text-center sm:text-left">
-            <h2 className="text-xl font-bold text-slate-900">{title}</h2>
+            <h2 className="text-lg font-bold text-slate-900 sm:text-xl">{title}</h2>
             <p className="mt-1 max-w-lg text-sm text-slate-600">{description}</p>
           </div>
           <div className="flex shrink-0 flex-wrap gap-3">
@@ -43,21 +47,44 @@ export function CtaBand({
   }
 
   return (
-    <section className="section py-10">
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-brand-600 via-brand-700 to-violet-700 px-8 py-12 text-center shadow-xl">
-        <div className="absolute inset-0 bg-grid opacity-20" />
-        <div className="relative">
-          <h2 className="text-2xl font-bold tracking-tight text-white sm:text-3xl">{title}</h2>
-          <p className="mx-auto mt-2 max-w-xl text-sm text-brand-100 sm:text-base">{description}</p>
-          <div className="mt-6 flex flex-wrap justify-center gap-3">
-            <Link href={primaryHref} className="btn-white px-6 py-3 text-base">
+    <section className="section py-12 lg:py-16">
+      <div className="card-elevated relative overflow-hidden">
+        <div
+          className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_0%_0%,rgb(99_102_241/0.08),transparent_50%),radial-gradient(ellipse_60%_50%_at_100%_100%,rgb(139_92_246/0.06),transparent_50%)]"
+          aria-hidden
+        />
+
+        <div className="relative grid gap-8 p-8 lg:grid-cols-[1fr_auto] lg:items-center lg:gap-12 lg:p-12">
+          <div>
+            <h2 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">{title}</h2>
+            <p className="mt-3 max-w-xl text-base leading-relaxed text-slate-600">{description}</p>
+            <ul className="mt-5 flex flex-wrap gap-x-6 gap-y-2 text-sm text-slate-500">
+              {starterPrice != null && (
+                <li className="inline-flex items-center gap-1.5">
+                  <Icon name="Check" className="h-4 w-4 text-brand-600" />
+                  A partir de {formatCurrency(starterPrice)}/mês
+                </li>
+              )}
+              <li className="inline-flex items-center gap-1.5">
+                <Icon name="Check" className="h-4 w-4 text-brand-600" />
+                Conta ativa na hora
+              </li>
+              <li className="inline-flex items-center gap-1.5">
+                <Icon name="Check" className="h-4 w-4 text-brand-600" />
+                Sem fidelidade
+              </li>
+            </ul>
+          </div>
+
+          <div className="flex flex-col gap-3 sm:flex-row lg:min-w-[220px] lg:flex-col">
+            <Link
+              href={primaryHref}
+              className="btn-primary justify-center px-6 py-3 text-base shadow-md shadow-brand-600/20"
+            >
               {primaryLabel}
               <Icon name="ArrowRight" className="h-4 w-4" />
             </Link>
-            <Link
-              href={secondaryHref}
-              className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/40 px-6 py-3 text-base font-semibold text-white transition-colors hover:bg-white/10"
-            >
+            <Link href={secondaryHref} className="btn-secondary justify-center px-6 py-3 text-base">
               {secondaryLabel}
             </Link>
           </div>

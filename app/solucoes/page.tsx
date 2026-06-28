@@ -21,6 +21,8 @@ export default async function SolucoesPage({
         eyebrow="Soluções"
         title="Resolvemos os problemas do seu dia a dia"
         description="Mais do que um sistema: uma forma de organizar, profissionalizar e crescer o seu negócio."
+        primaryCta={{ href: "/signup", label: "Assinar agora" }}
+        secondaryCta={{ href: "/precos", label: "Ver planos" }}
       />
 
       <SolutionsDirectory initialQuery={q?.trim() ?? ""} />

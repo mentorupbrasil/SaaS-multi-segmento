@@ -147,17 +147,8 @@ export const FEATURE_GROUPS: FeatureGroup[] = [
         icon: "Zap",
         short: "Lembretes e mensagens automáticas.",
         description:
-          "Lembretes de agendamento, mensagens de aniversário e confirmações automáticas por WhatsApp.",
-        status: "soon",
-      },
-      {
-        id: "app",
-        name: "Aplicativo",
-        icon: "Smartphone",
-        short: "Seu negócio no bolso.",
-        description:
-          "Acesse a agenda, os clientes e o caixa pelo celular, a qualquer hora e de qualquer lugar.",
-        status: "soon",
+          "Lembretes de agendamento, mensagens de aniversário e confirmações automáticas por WhatsApp — processadas em fila pelo cron da plataforma.",
+        status: "available",
       },
       {
         id: "integracoes",

@@ -40,7 +40,7 @@ export function SiteHeader() {
             Entrar
           </Link>
           <Link href="/signup" className="btn-primary whitespace-nowrap">
-            Começar grátis
+            Assinar agora
           </Link>
         </div>
       </div>

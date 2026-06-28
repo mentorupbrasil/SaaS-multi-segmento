@@ -1,22 +1,16 @@
 import Link from "next/link";
 import { ArrowRight, Star } from "lucide-react";
-import { CATEGORY_META } from "@/segments/types";
-import {
-  getFeaturedSegments,
-  getSegmentGroupsForVitrine,
-  getSegmentTotal,
-} from "@/lib/segment-vitrine";
+import { getFeaturedSegments, getSegmentTotal } from "@/lib/segment-vitrine";
 import { Icon } from "@/components/icon";
 import { SegmentSearch } from "./segment-search";
 
 export function SegmentsShowcase() {
-  const groups = getSegmentGroupsForVitrine();
   const featured = getFeaturedSegments();
   const total = getSegmentTotal();
 
   return (
     <section id="segmentos" className="border-b border-slate-100 bg-slate-50/40">
-      <div className="section py-16 lg:py-20">
+      <div className="section py-12 lg:py-16">
         <div className="mx-auto max-w-3xl text-center">
           <span className="eyebrow">Para o seu segmento</span>
           <h2 className="mt-4 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
@@ -29,7 +23,6 @@ export function SegmentsShowcase() {
           </p>
         </div>
 
-        {/* Busca em destaque — padrão ClickUp/Notion */}
         <div className="mx-auto mt-8 max-w-xl">
           <SegmentSearch
             id="home-segment-search"
@@ -40,8 +33,7 @@ export function SegmentsShowcase() {
           />
         </div>
 
-        {/* Populares primeiro */}
-        <div className="mt-10">
+        <div className="mt-8">
           <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
             <div className="flex items-center gap-2">
               <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
@@ -54,7 +46,7 @@ export function SegmentsShowcase() {
               href="/segmentos"
               className="inline-flex items-center gap-1 text-sm font-semibold text-brand-700 hover:text-brand-800"
             >
-              Ver catálogo
+              Ver todos os {total} segmentos
               <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
@@ -75,66 +67,13 @@ export function SegmentsShowcase() {
               </Link>
             ))}
           </div>
-        </div>
 
-        <div className="my-10 flex items-center gap-4">
-          <div className="h-px flex-1 bg-slate-200" />
-          <span className="text-xs font-medium uppercase tracking-wider text-slate-400">
-            Ou navegue por categoria
-          </span>
-          <div className="h-px flex-1 bg-slate-200" />
-        </div>
-
-        {/* Categorias com ícones e descrição */}
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {groups.map((group) => {
-            const meta = CATEGORY_META[group.category];
-            return (
-              <Link
-                key={group.category}
-                href={`/segmentos#${group.category}`}
-                className="group flex flex-col rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm transition-all hover:-translate-y-0.5 hover:border-brand-200 hover:shadow-md"
-              >
-                <div className="flex items-start gap-3">
-                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-brand-50 to-violet-50 text-brand-600 ring-1 ring-brand-100">
-                    <Icon name={meta.icon} className="h-5 w-5" />
-                  </span>
-                  <div className="min-w-0 flex-1">
-                    <h3 className="font-semibold text-slate-900 group-hover:text-brand-700">
-                      {meta.label}
-                    </h3>
-                    <p className="mt-0.5 text-[11px] font-medium text-brand-600">
-                      {group.segments.length} segmentos disponíveis
-                    </p>
-                  </div>
-                </div>
-                <p className="mt-3 line-clamp-2 text-xs leading-relaxed text-slate-500">
-                  {meta.description}
-                </p>
-                <span className="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-brand-700 opacity-0 transition-opacity group-hover:opacity-100">
-                  Explorar
-                  <ArrowRight className="h-3.5 w-3.5" />
-                </span>
-              </Link>
-            );
-          })}
-        </div>
-
-        <div className="mt-12 flex flex-col items-center gap-4 rounded-2xl border border-slate-200 bg-white px-6 py-8 text-center sm:flex-row sm:justify-between sm:text-left">
-          <div>
-            <h3 className="font-semibold text-slate-900">Não encontrou o seu segmento?</h3>
-            <p className="mt-1 max-w-lg text-sm text-slate-600">
-              Qualquer negócio com clientes, agenda e financeiro se encaixa na plataforma.
-            </p>
-          </div>
-          <div className="flex shrink-0 flex-wrap gap-2">
-            <Link href="/segmentos" className="btn-secondary">
-              Explorar {total} segmentos
+          <p className="mt-6 text-center text-sm text-slate-500">
+            Não encontrou o seu?{" "}
+            <Link href="/segmentos" className="font-semibold text-brand-700 hover:text-brand-800">
+              Explore o catálogo completo por categoria →
             </Link>
-            <Link href="/signup" className="btn-primary">
-              Começar grátis
-            </Link>
-          </div>
+          </p>
         </div>
       </div>
     </section>

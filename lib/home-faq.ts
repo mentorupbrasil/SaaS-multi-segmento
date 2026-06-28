@@ -8,7 +8,7 @@ const starter = PLANS.find((p) => p.id === "starter")!;
 const pro = PLANS.find((p) => p.id === "pro")!;
 const premium = PLANS.find((p) => p.id === "premium")!;
 
-/** FAQs da home — específicas do GestorPro, não genéricas. */
+/** FAQs principais da plataforma (suporte, preços, etc.). */
 export function getHomeFaqGroups(): FaqGroup[] {
   return [
     {
@@ -25,7 +25,7 @@ export function getHomeFaqGroups(): FaqGroup[] {
         },
         {
           q: "Funciona no celular?",
-          a: "Sim. O GestorPro é 100% online e responsivo: use no navegador do computador, tablet ou smartphone. Não é necessário baixar aplicativo — o acesso é pelo login, de qualquer lugar com internet.",
+          a: "Sim. O GestorPro é 100% online e responsivo: acesse pelo navegador do celular, tablet ou computador — agenda, clientes e caixa de qualquer lugar com internet. Não é necessário instalar nada.",
         },
       ],
     },
@@ -43,7 +43,7 @@ export function getHomeFaqGroups(): FaqGroup[] {
         },
         {
           q: "Como pago a assinatura?",
-          a: "A cobrança é feita via Mercado Pago (PIX ou cartão), quando o gateway estiver configurado na sua instalação. Sem integração ativa, a assinatura pode operar em modo de teste para você explorar o produto antes de pagar.",
+          a: "A cobrança é feita via Mercado Pago (PIX ou cartão) no momento da assinatura. Você escolhe o plano, conclui o cadastro e o acesso é liberado assim que o pagamento for confirmado.",
         },
       ],
     },

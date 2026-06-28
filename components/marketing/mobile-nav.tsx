@@ -63,7 +63,7 @@ export function MobileNav() {
               onClick={() => setOpen(false)}
               className="btn-primary w-full justify-center"
             >
-              Começar grátis
+              Assinar agora
             </Link>
           </div>
         </nav>

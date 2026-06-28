@@ -9,6 +9,22 @@ export const FEATURED_FEATURE_IDS = [
   "ordens",
 ] as const;
 
+/** Destaques na homepage (grid 3×2). */
+export const HOMEPAGE_FEATURE_IDS = [
+  "agenda",
+  "clientes",
+  "financeiro",
+  "servicos",
+  "equipe",
+  "relatorios",
+] as const;
+
+export function getHomepageFeatures(): FeatureItem[] {
+  return HOMEPAGE_FEATURE_IDS.map((id) => ALL_FEATURES.find((f) => f.id === id)).filter(
+    (f): f is FeatureItem => Boolean(f),
+  );
+}
+
 export const FEATURE_GROUP_ICONS: Record<string, string> = {
   gestao: "Users",
   operacao: "ClipboardList",

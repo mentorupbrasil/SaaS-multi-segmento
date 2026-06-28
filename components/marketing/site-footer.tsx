@@ -70,7 +70,7 @@ export function SiteFooter() {
       <div className="border-b border-slate-800/80 bg-gradient-to-r from-brand-950/40 to-violet-950/30">
         <div className="section flex flex-col items-start justify-between gap-5 py-12 sm:flex-row sm:items-center">
           <div>
-            <p className="text-xl font-bold text-white">Comece grátis hoje</p>
+            <p className="text-xl font-bold text-white">Assine e comece hoje</p>
             <p className="mt-1 text-sm text-slate-400">
               Conta ativa na hora · A partir de R$ 39,90/mês · Sem fidelidade
             </p>
@@ -80,7 +80,7 @@ export function SiteFooter() {
               href="/signup"
               className="inline-flex items-center justify-center gap-2 rounded-xl bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-brand-500"
             >
-              Começar grátis
+              Assinar agora
               <Icon name="ArrowRight" className="h-4 w-4" />
             </Link>
             <Link
