@@ -22,7 +22,7 @@ export function EnterSegmentButton({
       onClick={() => {
         startTransition(async () => {
           await switchSegmentAction(segmentId);
-          router.push("/clientes");
+          router.push("/dashboard");
           router.refresh();
         });
       }}

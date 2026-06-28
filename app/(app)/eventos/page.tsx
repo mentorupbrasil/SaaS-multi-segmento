@@ -78,7 +78,7 @@ export default async function EventosPage() {
                   <td className="px-4 py-3">
                     <div className="flex flex-wrap items-center gap-2">
                       <EventStatusButtons id={e.id} status={e.status} />
-                      <DeleteButton onConfirm={() => deleteBusinessEvent(e.id)} />
+                      <DeleteButton action={deleteBusinessEvent.bind(null, e.id)} />
                     </div>
                   </td>
                 </tr>

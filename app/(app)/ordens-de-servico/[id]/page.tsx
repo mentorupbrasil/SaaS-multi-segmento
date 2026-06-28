@@ -65,7 +65,7 @@ export default async function WorkOrderDetailPage({
           ← Voltar
         </Link>
         <DeleteButton
-          onConfirm={() => deleteWorkOrder(order.id)}
+          action={deleteWorkOrder.bind(null, order.id)}
           redirectTo="/ordens-de-servico"
         />
       </div>

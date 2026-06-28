@@ -2,8 +2,12 @@ import { prisma } from "@/lib/db";
 import { ALL_SEGMENTS } from "@/segments";
 
 export async function getOrCreateDemoOrganization(segmentId: string) {
+  const slug = `demo-${segmentId}`;
+
   const existing = await prisma.organization.findFirst({
-    where: { segmentId },
+    where: {
+      OR: [{ slug }, { slug: { startsWith: `${slug}-` } }],
+    },
     orderBy: { createdAt: "asc" },
   });
   if (existing) return existing;
@@ -11,7 +15,6 @@ export async function getOrCreateDemoOrganization(segmentId: string) {
   const segment = ALL_SEGMENTS.find((s) => s.id === segmentId);
   if (!segment) return null;
 
-  const slug = `demo-${segment.id}`;
   const taken = await prisma.organization.findUnique({ where: { slug } });
   const finalSlug = taken ? `demo-${segment.id}-${Date.now()}` : slug;
 
@@ -22,6 +25,9 @@ export async function getOrCreateDemoOrganization(segmentId: string) {
       segmentId: segment.id,
       plan: "pro",
       subscriptionStatus: "ACTIVE",
+      config: { onboardingCompleted: true },
+      publicBookingEnabled: true,
+      publicBookingSlug: finalSlug,
       services: {
         create: (segment.defaultServices ?? []).slice(0, 2).map((s) => ({
           name: s.name,

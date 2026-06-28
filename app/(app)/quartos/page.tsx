@@ -69,7 +69,7 @@ export default async function QuartosPage() {
                   <td className="px-4 py-3">
                     <div className="flex flex-wrap items-center gap-2">
                       <RoomStatusButtons id={r.id} status={r.status} />
-                      <DeleteButton onConfirm={() => deleteRoom(r.id)} />
+                      <DeleteButton action={deleteRoom.bind(null, r.id)} />
                     </div>
                   </td>
                 </tr>

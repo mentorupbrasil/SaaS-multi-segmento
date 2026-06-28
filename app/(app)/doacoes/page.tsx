@@ -65,7 +65,7 @@ export default async function DoacoesPage() {
                   <td className="px-4 py-3 text-slate-600">{d.description ?? "—"}</td>
                   <td className="px-4 py-3 text-slate-600">{formatDate(d.receivedAt)}</td>
                   <td className="px-4 py-3">
-                    <DeleteButton onConfirm={() => deleteDonation(d.id)} />
+                    <DeleteButton action={deleteDonation.bind(null, d.id)} />
                   </td>
                 </tr>
               ))}

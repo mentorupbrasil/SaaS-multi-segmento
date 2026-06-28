@@ -45,7 +45,7 @@ export default async function GrupoDetailPage({
               customers={availableCustomers.map((c) => ({ id: c.id, label: c.name }))}
             />
             <DeleteButton
-              onConfirm={() => deleteGroup(group.id)}
+              action={deleteGroup.bind(null, group.id)}
               redirectTo="/grupos"
             />
           </div>
@@ -100,7 +100,7 @@ export default async function GrupoDetailPage({
                     <DeleteButton
                       label="Remover"
                       confirmMessage="Remover este membro do grupo?"
-                      onConfirm={() => removeGroupMember(group.id, m.customerId)}
+                      action={removeGroupMember.bind(null, group.id, m.customerId)}
                     />
                   </td>
                 </tr>

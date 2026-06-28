@@ -76,7 +76,7 @@ export default async function VeiculosPage() {
                   <td className="px-4 py-3 text-slate-600">{v.year ?? "—"}</td>
                   <td className="px-4 py-3 text-slate-600">{formatDate(v.createdAt)}</td>
                   <td className="px-4 py-3">
-                    <DeleteButton onConfirm={() => deleteVehicle(v.id)} />
+                    <DeleteButton action={deleteVehicle.bind(null, v.id)} />
                   </td>
                 </tr>
               ))}

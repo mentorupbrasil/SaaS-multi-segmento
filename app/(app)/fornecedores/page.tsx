@@ -46,7 +46,7 @@ export default async function FornecedoresPage() {
                   <td className="px-4 py-3 text-slate-600">{s.document ?? "—"}</td>
                   <td className="px-4 py-3 text-slate-600">{formatDate(s.createdAt)}</td>
                   <td className="px-4 py-3">
-                    <DeleteButton onConfirm={() => deleteSupplier(s.id)} />
+                    <DeleteButton action={deleteSupplier.bind(null, s.id)} />
                   </td>
                 </tr>
               ))}

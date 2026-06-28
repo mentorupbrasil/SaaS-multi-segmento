@@ -87,7 +87,7 @@ export default async function OrcamentosPage() {
                   <td className="px-4 py-3 text-slate-600">{formatDate(q.createdAt)}</td>
                   <td className="px-4 py-3">
                     {q.status !== "CONVERTED" && (
-                      <DeleteButton onConfirm={() => deleteQuote(q.id)} />
+                      <DeleteButton action={deleteQuote.bind(null, q.id)} />
                     )}
                   </td>
                 </tr>

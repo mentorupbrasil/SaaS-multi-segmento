@@ -69,7 +69,7 @@ export default async function PacotesPage() {
                   <td className="px-4 py-3">
                     <div className="flex flex-wrap items-center gap-2">
                       <UseSessionButton id={p.id} disabled={p.usedSessions >= p.totalSessions} />
-                      <DeleteButton onConfirm={() => deleteSessionPackage(p.id)} />
+                      <DeleteButton action={deleteSessionPackage.bind(null, p.id)} />
                     </div>
                   </td>
                 </tr>

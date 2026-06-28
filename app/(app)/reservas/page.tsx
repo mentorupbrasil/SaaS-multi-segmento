@@ -94,7 +94,7 @@ export default async function ReservasPage() {
                   <td className="px-4 py-3">
                     <div className="flex flex-wrap items-center gap-2">
                       <ReservationStatusButtons id={r.id} status={r.status} />
-                      <DeleteButton onConfirm={() => deleteReservation(r.id)} />
+                      <DeleteButton action={deleteReservation.bind(null, r.id)} />
                     </div>
                   </td>
                 </tr>

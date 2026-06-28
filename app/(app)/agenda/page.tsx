@@ -143,7 +143,7 @@ export default async function AgendaPage({
                       {a.status !== "COMPLETED" && a.status !== "CANCELED" && (
                         <RescheduleForm id={a.id} startAt={a.startAt} notes={a.notes} />
                       )}
-                      <DeleteButton onConfirm={() => deleteAppointment(a.id)} />
+                      <DeleteButton action={deleteAppointment.bind(null, a.id)} />
                     </div>
                   </td>
                 </tr>

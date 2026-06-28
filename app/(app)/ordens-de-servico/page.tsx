@@ -92,7 +92,7 @@ export default async function OrdensDeServicoPage() {
                   <td className="px-4 py-3 text-slate-600">{formatCurrency(o.total)}</td>
                   <td className="px-4 py-3 text-slate-600">{formatDate(o.createdAt)}</td>
                   <td className="px-4 py-3">
-                    <DeleteButton onConfirm={() => deleteWorkOrder(o.id)} />
+                    <DeleteButton action={deleteWorkOrder.bind(null, o.id)} />
                   </td>
                 </tr>
               ))}

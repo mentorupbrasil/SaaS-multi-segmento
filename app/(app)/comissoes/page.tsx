@@ -87,7 +87,7 @@ export default async function ComissoesPage() {
                         <span className="rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-700">
                           Pago
                         </span>
-                        <DeleteButton onConfirm={() => deleteCommissionEntry(c.id)} />
+                        <DeleteButton action={deleteCommissionEntry.bind(null, c.id)} />
                       </div>
                     ) : (
                       <div className="flex flex-wrap items-center gap-2">
@@ -95,7 +95,7 @@ export default async function ComissoesPage() {
                           Pendente
                         </span>
                         <MarkCommissionPaidButton id={c.id} />
-                        <DeleteButton onConfirm={() => deleteCommissionEntry(c.id)} />
+                        <DeleteButton action={deleteCommissionEntry.bind(null, c.id)} />
                       </div>
                     )}
                   </td>

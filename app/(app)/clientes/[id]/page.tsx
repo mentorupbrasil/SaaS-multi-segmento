@@ -113,7 +113,7 @@ export default async function CustomerDetailPage({
           }}
         />
         <DeleteButton
-          onConfirm={() => deleteCustomer(customer.id)}
+          action={deleteCustomer.bind(null, customer.id)}
           redirectTo="/clientes"
         />
       </div>

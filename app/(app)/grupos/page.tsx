@@ -50,7 +50,7 @@ export default async function GruposPage() {
                       <Link href={`/grupos/${g.id}`} className="text-sm text-brand-600 hover:underline">
                         Ver membros
                       </Link>
-                      <DeleteButton onConfirm={() => deleteGroup(g.id)} />
+                      <DeleteButton action={deleteGroup.bind(null, g.id)} />
                     </div>
                   </td>
                 </tr>

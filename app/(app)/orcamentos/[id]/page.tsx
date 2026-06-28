@@ -68,7 +68,7 @@ export default async function QuoteDetailPage({
         </Link>
         {quote.status !== "CONVERTED" && (
           <DeleteButton
-            onConfirm={() => deleteQuote(quote.id)}
+            action={deleteQuote.bind(null, quote.id)}
             redirectTo="/orcamentos"
           />
         )}

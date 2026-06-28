@@ -70,7 +70,7 @@ export default async function PetsPage() {
                   </td>
                   <td className="px-4 py-3 text-slate-600">{formatDate(p.createdAt)}</td>
                   <td className="px-4 py-3">
-                    <DeleteButton onConfirm={() => deletePet(p.id)} />
+                    <DeleteButton action={deletePet.bind(null, p.id)} />
                   </td>
                 </tr>
               ))}

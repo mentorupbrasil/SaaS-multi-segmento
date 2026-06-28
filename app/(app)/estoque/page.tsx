@@ -93,7 +93,7 @@ export default async function EstoquePage() {
                   <td className="px-4 py-3 text-slate-600">{item.minQuantity}</td>
                   <td className="px-4 py-3 text-slate-600">{formatCurrency(item.price)}</td>
                   <td className="px-4 py-3">
-                    <DeleteButton onConfirm={() => deleteInventoryItem(item.id)} />
+                    <DeleteButton action={deleteInventoryItem.bind(null, item.id)} />
                   </td>
                 </tr>
               ))}

@@ -74,7 +74,7 @@ export default async function PdvPage() {
                   <p className="text-2xl font-bold text-slate-900">{formatCurrency(sale.total)}</p>
                   <FinalizeSaleButton saleId={sale.id} />
                   <CancelSaleButton saleId={sale.id} />
-                  <DeleteButton onConfirm={() => deleteSale(sale.id)} />
+                  <DeleteButton action={deleteSale.bind(null, sale.id)} />
                 </div>
               </div>
 

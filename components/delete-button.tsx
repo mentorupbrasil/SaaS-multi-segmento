@@ -3,17 +3,20 @@
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 
+type DeleteResult = { error?: string; ok?: boolean } | void;
+
 interface DeleteButtonProps {
   label?: string;
   confirmMessage?: string;
-  onConfirm: () => Promise<{ error?: string; ok?: boolean } | void>;
+  /** Server action já vinculada com .bind(null, id) no Server Component. */
+  action: () => Promise<DeleteResult>;
   redirectTo?: string;
 }
 
 export function DeleteButton({
   label = "Excluir",
   confirmMessage = "Tem certeza que deseja excluir? Esta ação não pode ser desfeita.",
-  onConfirm,
+  action,
   redirectTo,
 }: DeleteButtonProps) {
   const [open, setOpen] = useState(false);
@@ -24,7 +27,7 @@ export function DeleteButton({
   function handleConfirm() {
     setError(null);
     start(async () => {
-      const result = await onConfirm();
+      const result = await action();
       if (result && "error" in result && result.error) {
         setError(result.error);
         return;

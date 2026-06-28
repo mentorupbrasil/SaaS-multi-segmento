@@ -49,7 +49,7 @@ export default async function ProntuarioPage() {
                     {r.customer.name} · {formatDate(r.createdAt)}
                   </p>
                 </div>
-                <DeleteButton onConfirm={() => deleteCustomerRecord(r.id)} />
+                <DeleteButton action={deleteCustomerRecord.bind(null, r.id)} />
               </div>
               {r.content && <p className="mt-3 whitespace-pre-wrap text-sm text-slate-700">{r.content}</p>}
             </div>

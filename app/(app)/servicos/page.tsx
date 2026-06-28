@@ -66,7 +66,7 @@ export default async function ServicosPage() {
                     </span>
                   </td>
                   <td className="px-4 py-3">
-                    <DeleteButton onConfirm={() => deleteService(s.id)} />
+                    <DeleteButton action={deleteService.bind(null, s.id)} />
                   </td>
                 </tr>
               ))}

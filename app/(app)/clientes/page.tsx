@@ -64,7 +64,7 @@ export default async function ClientesPage() {
                   <td className="px-4 py-3 text-slate-600">{c.email ?? "-"}</td>
                   <td className="px-4 py-3 text-slate-600">{formatDate(c.createdAt)}</td>
                   <td className="px-4 py-3">
-                    <DeleteButton onConfirm={() => deleteCustomer(c.id)} />
+                    <DeleteButton action={deleteCustomer.bind(null, c.id)} />
                   </td>
                 </tr>
               ))}

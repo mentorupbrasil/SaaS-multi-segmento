@@ -66,7 +66,7 @@ export default async function VacinasPage() {
                   <td className="px-4 py-3 text-slate-600">{formatDate(v.appliedAt)}</td>
                   <td className="px-4 py-3 text-slate-600">{v.nextDueAt ? formatDate(v.nextDueAt) : "—"}</td>
                   <td className="px-4 py-3">
-                    <DeleteButton onConfirm={() => deleteVaccination(v.id)} />
+                    <DeleteButton action={deleteVaccination.bind(null, v.id)} />
                   </td>
                 </tr>
               ))}

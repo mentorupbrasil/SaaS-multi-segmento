@@ -59,7 +59,7 @@ export default async function VehicleDetailPage({
           ← Voltar
         </Link>
         <DeleteButton
-          onConfirm={() => deleteVehicle(vehicle.id)}
+          action={deleteVehicle.bind(null, vehicle.id)}
           redirectTo="/veiculos"
         />
       </div>
