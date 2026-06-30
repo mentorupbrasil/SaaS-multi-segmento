@@ -10,7 +10,7 @@ Nao sao varios sistemas: e **1 core + modulos reutilizaveis + templates de segme
 
 - **Modulos** (`/modules`): funcionalidades reutilizaveis (clientes, agenda, servicos, financeiro, equipe, estoque, PDV, OS, comissoes, pacotes, prontuario...). Construidas uma vez.
 - **Segmentos** (`/segments`): cada nicho e um template que combina modulos + nomenclatura + campos + SEO. Adicionar um nicho = criar 1 arquivo.
-- **Core**: auth multi-tenant, billing (Mercado Pago scaffold), portal publico, IA (scaffold), integracoes (scaffold), UI compartilhada.
+- **Core**: auth multi-tenant, billing (Asaas), portal publico, IA (scaffold), integracoes (scaffold), UI compartilhada.
 
 ```
 app/
@@ -19,7 +19,7 @@ app/
   (app)/                   area logada (dashboard, clientes, agenda, ...)
   portal/[orgSlug]/        portal publico do cliente (plan-gated)
   agendar/[slug]/          link publico de agendamento (plan Pro+)
-  api/billing/webhook/     webhook Mercado Pago (stub)
+  api/billing/webhook/     webhook Asaas (pagamentos e assinaturas)
   api/auth/[...nextauth]/  rota do NextAuth
 lib/        db, auth-context, terms, nav, plans, plan-limits, features, integrations
 modules/    registry de modulos + actions/forms de cada modulo
@@ -80,10 +80,10 @@ npx auth secret
 - `FEATURE_PUBLIC_BOOKING` — link publico de agendamento
 - `FEATURE_WHATSAPP` — lembretes e integracao WhatsApp
 
-### Billing (Mercado Pago)
-- `MERCADOPAGO_ACCESS_TOKEN` — checkout real; sem token, assinatura simulada
-- `MERCADOPAGO_PUBLIC_KEY` — chave publica (frontend, se necessario)
-- `MERCADOPAGO_WEBHOOK_SECRET` — validacao de assinatura do webhook
+### Billing (Asaas)
+- `ASAAS_API_KEY` — checkout e assinaturas recorrentes; sem chave, assinatura simulada
+- `ASAAS_ENV` — `sandbox` ou `production`
+- `ASAAS_WEBHOOK_TOKEN` — token enviado no header `asaas-access-token` pelo webhook
 
 ### Observabilidade
 - `SENTRY_DSN` — erros em producao (stub em `lib/sentry.ts`; instale `@sentry/nextjs` para ativar)
@@ -97,7 +97,7 @@ npx auth secret
 2. Importe o projeto na Vercel.
 3. Configure as variaveis: `DATABASE_URL`, `DIRECT_URL`, `AUTH_SECRET`, `NEXTAUTH_URL`, `NEXT_PUBLIC_APP_URL` e demais conforme `.env.example`.
 4. O `build` ja roda `prisma generate`. Rode as migrations no banco (`prisma migrate deploy`).
-5. Configure o webhook do Mercado Pago apontando para `https://seu-dominio.com/api/billing/webhook`.
+5. Configure o webhook do Asaas apontando para `https://seu-dominio.com/api/billing/webhook` (eventos de pagamento e assinatura).
 
 ## Como adicionar um novo segmento
 1. Crie `segments/<nicho>.ts` exportando um `SegmentTemplate` (modulos, termos, campos, SEO).

@@ -3,24 +3,33 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
-import { prisma } from "@/lib/db";
 import { getAuthContext, requireRole } from "@/lib/auth-context";
+import { prisma } from "@/lib/db";
 import { getPlan } from "@/lib/plans";
+import {
+  AsaasApiError,
+  cancelAsaasSubscription,
+  createAsaasCheckout,
+  isAsaasConfigured,
+  isValidCpfCnpj,
+  normalizeCpfCnpj,
+} from "@/lib/billing-asaas";
 
 export type CheckoutResult =
   | { ok: true; mode: "fake" }
-  | { ok: true; mode: "mercadopago"; initPoint: string }
+  | { ok: true; mode: "asaas"; paymentUrl: string }
   | { ok: false; error: string };
 
 /**
- * Inicia checkout de assinatura.
- * Com MERCADOPAGO_ACCESS_TOKEN: cria preferência no Mercado Pago e retorna init_point.
- * Sem token: fallback para subscribeFake (assinatura simulada).
+ * Inicia checkout de assinatura recorrente no Asaas.
+ * Sem ASAAS_API_KEY: fallback simulado (apenas desenvolvimento).
  *
- * Webhook: POST /api/billing/webhook — processa eventos do Mercado Pago
- * (payment, subscription_preapproval) e atualiza organization.subscriptionStatus.
+ * Webhook: POST /api/billing/webhook — eventos PAYMENT_CONFIRMED, PAYMENT_OVERDUE, etc.
  */
-export async function createCheckoutSession(planId: string): Promise<CheckoutResult> {
+export async function createCheckoutSession(
+  planId: string,
+  cpfCnpj?: string,
+): Promise<CheckoutResult> {
   const ctx = await getAuthContext();
   requireRole(ctx, ["OWNER", "ADMIN"]);
 
@@ -29,79 +38,88 @@ export async function createCheckoutSession(planId: string): Promise<CheckoutRes
     return { ok: false, error: "Plano inválido ou indisponível para autoatendimento." };
   }
 
-  const accessToken = process.env.MERCADOPAGO_ACCESS_TOKEN?.trim();
-  if (!accessToken) {
+  if (!isAsaasConfigured()) {
     await subscribeFake(planId);
     return { ok: true, mode: "fake" };
   }
 
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
-  const backUrl = `${appUrl}/assinatura`;
+  const digits = normalizeCpfCnpj(cpfCnpj ?? "");
+  if (!isValidCpfCnpj(digits)) {
+    return { ok: false, error: "Informe um CPF ou CNPJ válido para emitir a cobrança." };
+  }
 
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
+  const org = ctx.organization;
   const session = await auth();
-  const payerEmail = session?.user?.email ?? undefined;
+  const sessionEmail = session?.user?.email;
+  if (!sessionEmail) {
+    return { ok: false, error: "E-mail da conta não encontrado." };
+  }
+
+  if (org.asaasSubscriptionId) {
+    try {
+      await cancelAsaasSubscription(org.asaasSubscriptionId);
+    } catch (e) {
+      console.warn("[Asaas] could not cancel previous subscription:", e);
+    }
+  }
 
   try {
-    const response = await fetch("https://api.mercadopago.com/checkout/preferences", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        items: [
-          {
-            id: plan.id,
-            title: `GestorPro — Plano ${plan.name}`,
-            quantity: 1,
-            unit_price: plan.priceMonthly,
-            currency_id: "BRL",
-          },
-        ],
-        ...(payerEmail ? { payer: { email: payerEmail } } : {}),
-        external_reference: `${ctx.orgId}:${plan.id}`,
-        back_urls: {
-          success: backUrl,
-          failure: backUrl,
-          pending: backUrl,
-        },
-        auto_return: "approved",
-        notification_url: `${appUrl}/api/billing/webhook`,
-        metadata: { orgId: ctx.orgId, planId: plan.id },
-      }),
+    const checkout = await createAsaasCheckout({
+      orgId: ctx.orgId,
+      customerId: org.asaasCustomerId,
+      customerName: org.name,
+      customerEmail: sessionEmail,
+      cpfCnpj: digits,
+      planId: plan.id,
+      planName: plan.name,
+      value: plan.priceMonthly,
+      appUrl,
     });
 
-    if (!response.ok) {
-      const detail = await response.text();
-      console.error("[Mercado Pago] checkout error:", response.status, detail);
-      return { ok: false, error: "Não foi possível iniciar o pagamento. Tente novamente." };
-    }
+    await prisma.organization.update({
+      where: { id: ctx.orgId },
+      data: {
+        plan: plan.id,
+        asaasCustomerId: checkout.customerId,
+        asaasSubscriptionId: checkout.subscriptionId,
+        subscriptionStatus: "PAST_DUE",
+      },
+    });
 
-    const data = (await response.json()) as { init_point?: string; sandbox_init_point?: string };
-    const initPoint = data.init_point ?? data.sandbox_init_point;
-    if (!initPoint) {
-      return { ok: false, error: "Resposta inválida do Mercado Pago." };
-    }
+    revalidatePath("/assinatura");
+    revalidatePath("/dashboard");
 
-    return { ok: true, mode: "mercadopago", initPoint };
+    return { ok: true, mode: "asaas", paymentUrl: checkout.paymentUrl };
   } catch (e) {
-    console.error("[Mercado Pago] checkout exception:", e);
-    return { ok: false, error: "Erro ao conectar com o Mercado Pago." };
+    if (e instanceof AsaasApiError) {
+      console.error("[Asaas] checkout error:", e.status, e.body);
+    } else {
+      console.error("[Asaas] checkout exception:", e);
+    }
+    return { ok: false, error: "Não foi possível iniciar o pagamento. Tente novamente." };
   }
 }
 
-/** Ação do formulário de assinatura: checkout MP ou fallback simulado. */
-export async function subscribePlan(planId: string): Promise<void> {
-  const result = await createCheckoutSession(planId);
+/** Ação do formulário de assinatura: checkout Asaas ou fallback simulado. */
+export async function subscribePlan(formData: FormData): Promise<void> {
+  const planId = String(formData.get("planId") ?? "");
+  let cpfCnpj = String(formData.get("cpfCnpj") ?? "");
+  if (!cpfCnpj.trim()) {
+    const ctx = await getAuthContext();
+    const config = ctx.organization.config as { billingCpfCnpj?: string } | null;
+    cpfCnpj = config?.billingCpfCnpj ?? "";
+  }
+  const result = await createCheckoutSession(planId, cpfCnpj);
   if (!result.ok) throw new Error(result.error);
-  if (result.mode === "mercadopago") {
-    redirect(result.initPoint);
+  if (result.mode === "asaas") {
+    redirect(result.paymentUrl);
   }
 }
 
 /**
  * Assinatura SIMULADA. Marca a organização como ATIVA no plano escolhido.
- * Usado quando MERCADOPAGO_ACCESS_TOKEN não está configurado.
+ * Usado quando ASAAS_API_KEY não está configurado.
  */
 export async function subscribeFake(planId: string): Promise<void> {
   const ctx = await getAuthContext();
@@ -122,14 +140,29 @@ export async function subscribeFake(planId: string): Promise<void> {
   revalidatePath("/dashboard");
 }
 
-export async function cancelFake(): Promise<void> {
+export async function cancelSubscription(): Promise<void> {
   const ctx = await getAuthContext();
   requireRole(ctx, ["OWNER", "ADMIN"]);
 
+  const org = ctx.organization;
+
+  if (org.asaasSubscriptionId && isAsaasConfigured()) {
+    try {
+      await cancelAsaasSubscription(org.asaasSubscriptionId);
+    } catch (e) {
+      console.error("[Asaas] cancel error:", e);
+      throw new Error("Não foi possível cancelar a assinatura no Asaas. Tente novamente.");
+    }
+  }
+
   await prisma.organization.update({
     where: { id: ctx.orgId },
-    data: { subscriptionStatus: "CANCELED" },
+    data: {
+      subscriptionStatus: "CANCELED",
+      asaasSubscriptionId: null,
+    },
   });
 
   revalidatePath("/assinatura");
+  revalidatePath("/dashboard");
 }

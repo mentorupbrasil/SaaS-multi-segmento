@@ -2,69 +2,83 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { checkApiRateLimit, apiRateLimitResponse } from "@/lib/api-rate-limit";
 import {
-  fetchMercadoPagoPayment,
-  parseExternalReference,
-  subscriptionStatusFromPayment,
-} from "@/lib/billing-mp";
+  parseBillingExternalReference,
+  subscriptionStatusFromAsaasEvent,
+  verifyAsaasWebhookToken,
+  type AsaasWebhookBody,
+} from "@/lib/billing-asaas";
 
-type MpWebhookBody = {
-  type?: string;
-  action?: string;
-  data?: { id?: string };
-};
+async function resolveOrgUpdate(body: AsaasWebhookBody): Promise<{
+  orgId: string;
+  planId?: string;
+  status: NonNullable<ReturnType<typeof subscriptionStatusFromAsaasEvent>>;
+} | null> {
+  const status = subscriptionStatusFromAsaasEvent(body.event, body.payment?.status);
+  if (!status) return null;
 
-function verifyWebhookSignature(req: NextRequest): boolean {
-  const secret = process.env.MERCADOPAGO_WEBHOOK_SECRET;
-  if (!secret) return true;
-  const urlSecret = req.nextUrl.searchParams.get("secret");
-  return urlSecret === secret;
+  const externalRef =
+    body.payment?.externalReference ??
+    body.subscription?.externalReference ??
+    null;
+
+  const parsed = parseBillingExternalReference(externalRef);
+  if (parsed) {
+    return { orgId: parsed.orgId, planId: parsed.planId, status };
+  }
+
+  const subscriptionId = body.payment?.subscription ?? body.subscription?.id;
+  if (subscriptionId) {
+    const org = await prisma.organization.findFirst({
+      where: { asaasSubscriptionId: subscriptionId },
+      select: { id: true, plan: true },
+    });
+    if (org) {
+      return { orgId: org.id, planId: org.plan, status };
+    }
+  }
+
+  const customerId = body.payment?.customer ?? body.subscription?.customer;
+  if (customerId) {
+    const org = await prisma.organization.findFirst({
+      where: { asaasCustomerId: customerId },
+      select: { id: true, plan: true },
+    });
+    if (org) {
+      return { orgId: org.id, planId: org.plan, status };
+    }
+  }
+
+  return null;
 }
 
 export async function POST(req: NextRequest) {
   const rl = checkApiRateLimit("billing-webhook", 120, 60_000);
   if (!rl.ok) return apiRateLimitResponse(rl.retryAfterMs);
 
-  if (!verifyWebhookSignature(req)) {
-    return NextResponse.json({ error: "Assinatura inválida" }, { status: 401 });
+  if (!verifyAsaasWebhookToken(req.headers.get("asaas-access-token"))) {
+    return NextResponse.json({ error: "Token inválido" }, { status: 401 });
   }
 
   const raw = await req.text();
-  let body: MpWebhookBody;
+  let body: AsaasWebhookBody;
   try {
-    body = JSON.parse(raw) as MpWebhookBody;
+    body = JSON.parse(raw) as AsaasWebhookBody;
   } catch {
     return NextResponse.json({ error: "JSON inválido" }, { status: 400 });
   }
 
-  const eventType = body.type ?? body.action ?? "unknown";
-  const paymentId = body.data?.id;
-  console.info("[billing/webhook] evento:", eventType, paymentId);
+  const eventType = body.event ?? "unknown";
+  console.info("[billing/webhook] Asaas evento:", eventType, body.payment?.id ?? body.subscription?.id);
 
-  let externalRef = req.nextUrl.searchParams.get("external_reference") ?? undefined;
-  let mpStatus: string | undefined;
-
-  if ((eventType === "payment" || eventType.includes("payment")) && paymentId) {
-    const payment = await fetchMercadoPagoPayment(String(paymentId));
-    if (payment) {
-      externalRef = externalRef ?? payment.external_reference;
-      mpStatus = payment.status;
-    }
-  }
-
-  const parsed = parseExternalReference(externalRef);
-  if (parsed) {
-    const status =
-      subscriptionStatusFromPayment(mpStatus) ??
-      (eventType.includes("authorized") ? "ACTIVE" : null) ??
-      (eventType.includes("cancel") || eventType.includes("rejected") ? "CANCELED" : null) ??
-      (eventType.includes("past_due") || eventType.includes("pending") ? "PAST_DUE" : null);
-
-    if (status) {
-      await prisma.organization.update({
-        where: { id: parsed.orgId },
-        data: { plan: parsed.planId, subscriptionStatus: status },
-      });
-    }
+  const update = await resolveOrgUpdate(body);
+  if (update) {
+    await prisma.organization.update({
+      where: { id: update.orgId },
+      data: {
+        ...(update.planId ? { plan: update.planId } : {}),
+        subscriptionStatus: update.status,
+      },
+    });
   }
 
   return NextResponse.json({ received: true });

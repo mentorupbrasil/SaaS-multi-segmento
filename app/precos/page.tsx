@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 };
 
 function buildPricingFaq() {
-  const mpConfigured = Boolean(process.env.MERCADOPAGO_ACCESS_TOKEN?.trim());
+  const billingConfigured = Boolean(process.env.ASAAS_API_KEY?.trim());
   return [
     {
       q: "Posso trocar de plano depois?",
@@ -26,9 +26,9 @@ function buildPricingFaq() {
     },
     {
       q: "Quais formas de pagamento?",
-      a: mpConfigured
-        ? "Aceitamos PIX e cartão via Mercado Pago. A confirmação do pagamento é automática após a aprovação."
-        : "Em breve teremos PIX e cartão via Mercado Pago. Nesta fase a assinatura é simulada para você testar o produto.",
+      a: billingConfigured
+        ? "Aceitamos PIX, boleto e cartão via Asaas. A confirmação do pagamento é automática após a aprovação."
+        : "PIX, boleto e cartão via Asaas. Configure a integração em produção para cobrança automática.",
     },
   ];
 }

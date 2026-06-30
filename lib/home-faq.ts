@@ -21,7 +21,7 @@ export function getHomeFaqGroups(): FaqGroup[] {
         },
         {
           q: "Quanto tempo leva para a conta ficar pronta?",
-          a: "A conta é ativada na hora após o cadastro. Você já entra no painel com a estrutura do segmento escolhido. Cadastrar serviços, equipe e os primeiros clientes costuma levar poucos minutos — não há instalação, servidor ou técnico para contratar.",
+          a: "Após o cadastro, você conclui o pagamento via Asaas. O acesso ao painel é liberado assim que o pagamento for confirmado (geralmente em instantes com PIX ou cartão).",
         },
         {
           q: "Funciona no celular?",
@@ -43,7 +43,7 @@ export function getHomeFaqGroups(): FaqGroup[] {
         },
         {
           q: "Como pago a assinatura?",
-          a: "A cobrança é feita via Mercado Pago (PIX ou cartão) no momento da assinatura. Você escolhe o plano, conclui o cadastro e o acesso é liberado assim que o pagamento for confirmado.",
+          a: "A cobrança recorrente mensal é feita via Asaas (PIX, boleto ou cartão). Você escolhe o plano, conclui o cadastro e o acesso é liberado assim que o pagamento for confirmado.",
         },
       ],
     },

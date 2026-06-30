@@ -1,6 +1,6 @@
 // Planos de assinatura (marketing e UI).
 // Limites efetivos (usuários, filiais, módulos extras) são aplicados em lib/plan-limits.ts.
-// O billing real (Mercado Pago) usa MERCADOPAGO_ACCESS_TOKEN; sem token, a assinatura é simulada.
+// O billing real (Asaas) usa ASAAS_API_KEY; sem chave, a assinatura é simulada.
 
 export interface Plan {
   id: string;

@@ -89,7 +89,7 @@ export default async function AdminBillingPage() {
       </div>
 
       <p className="mt-4 text-sm text-slate-500">
-        Cobrança automática via gateway (Stripe/Asaas) será integrada em breve. Hoje o status é gerenciado manualmente
+        Cobrança recorrente via Asaas (webhook em /api/billing/webhook). Status também pode ser ajustado manualmente
         no cadastro da organização.
       </p>
     </div>

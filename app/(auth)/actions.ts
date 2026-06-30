@@ -27,6 +27,13 @@ const signupSchema = z.object({
   businessName: z.string().min(2, "Informe o nome do negócio"),
   segmentId: z.string().min(1, "Escolha um segmento"),
   planId: z.string().min(1, "Escolha um plano"),
+  cpfCnpj: z
+    .string()
+    .min(1, "Informe CPF ou CNPJ")
+    .refine((v) => {
+      const digits = v.replace(/\D/g, "");
+      return digits.length === 11 || digits.length === 14;
+    }, "CPF ou CNPJ inválido"),
 });
 
 async function uniqueSlug(base: string): Promise<string> {
@@ -51,13 +58,14 @@ export async function signupAction(
     businessName: formData.get("businessName"),
     segmentId: formData.get("segmentId"),
     planId: formData.get("planId"),
+    cpfCnpj: formData.get("cpfCnpj"),
   });
 
   if (!parsed.success) {
     return { error: parsed.error.issues[0]?.message ?? "Dados inválidos" };
   }
 
-  const { name, email, password, businessName, segmentId, planId } = parsed.data;
+  const { name, email, password, businessName, segmentId, planId, cpfCnpj } = parsed.data;
 
   const signupLimit = checkSignupRateLimit(email);
   if (!signupLimit.ok) {
@@ -79,8 +87,7 @@ export async function signupAction(
 
   let organizationId: string;
 
-  // Criacao transacional: User + Organization + Membership (+ servicos padrao).
-  // Sem periodo de teste: a conta ja nasce assinante do plano escolhido.
+  // Conta criada aguardando pagamento — acesso liberado após confirmação via Asaas.
   await prisma.$transaction(async (tx) => {
     const user = await tx.user.create({
       data: { name, email: email.toLowerCase(), passwordHash },
@@ -92,8 +99,9 @@ export async function signupAction(
         slug,
         segmentId,
         plan: plan.id,
-        subscriptionStatus: "ACTIVE",
+        subscriptionStatus: "PAST_DUE",
         trialEndsAt: null,
+        config: { billingCpfCnpj: cpfCnpj.replace(/\D/g, "") },
         memberships: {
           create: { userId: user.id, role: "OWNER", title: segment.terms.professional },
         },
@@ -121,7 +129,7 @@ export async function signupAction(
     await signIn("credentials", {
       email: email.toLowerCase(),
       password,
-      redirectTo: "/onboarding",
+      redirectTo: "/assinatura?welcome=1",
     });
   } catch (error) {
     if (error instanceof AuthError) {

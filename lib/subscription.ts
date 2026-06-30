@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import type { Organization } from "@prisma/client";
 import type { AuthContext } from "@/lib/auth-context";
 
-const SUBSCRIPTION_EXEMPT_PREFIXES = ["/assinatura", "/configuracoes", "/onboarding"];
+const SUBSCRIPTION_EXEMPT_PREFIXES = ["/assinatura", "/configuracoes"];
 
 type OrgSubscription = Pick<Organization, "subscriptionStatus" | "trialEndsAt">;
 

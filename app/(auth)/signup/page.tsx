@@ -45,7 +45,7 @@ export default function SignupPage() {
         <div className="border-b border-slate-100 bg-slate-50/60 px-8 py-6">
           <h1 className="text-2xl font-bold text-slate-900">Crie a conta do seu negócio</h1>
           <p className="mt-1 text-sm text-slate-500">
-            Escolha o seu segmento e o plano. Sua conta já fica ativa e pronta para usar.
+            Escolha o seu segmento e o plano. Após o cadastro, você conclui o pagamento para liberar o acesso.
           </p>
         </div>
 
@@ -184,6 +184,19 @@ export default function SignupPage() {
                 </label>
                 <input id="password" name="password" type="password" className="input" placeholder="Mínimo 6 caracteres" required />
               </div>
+              <div className="sm:col-span-2">
+                <label className="label" htmlFor="cpfCnpj">
+                  CPF ou CNPJ
+                </label>
+                <input
+                  id="cpfCnpj"
+                  name="cpfCnpj"
+                  className="input"
+                  placeholder="000.000.000-00 ou 00.000.000/0000-00"
+                  inputMode="numeric"
+                  required
+                />
+              </div>
             </div>
           </div>
 
@@ -192,7 +205,7 @@ export default function SignupPage() {
           )}
 
           <SubmitButton className="w-full py-3 text-base" pendingText="Criando conta...">
-            Criar conta e começar
+            Criar conta e ir para pagamento
           </SubmitButton>
 
           <p className="text-center text-sm text-slate-500">
