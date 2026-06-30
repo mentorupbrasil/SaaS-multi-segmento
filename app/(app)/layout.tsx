@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { getOptionalAuthContext, listOrganizationsForSwitcher } from "@/lib/auth-context";
 import { getSegment } from "@/segments";
 import { buildNavForUser } from "@/lib/nav";
-import { requireActiveSubscription } from "@/lib/subscription";
+import { requireActiveSubscription, isSubscriptionActive } from "@/lib/subscription";
 import { Sidebar } from "@/components/sidebar";
 import { auth } from "@/auth";
 import { isPlatformAdminEmail } from "@/lib/platform-admin";
@@ -37,6 +37,7 @@ export default async function AppLayout({
 
   if (
     !isPlatformAdmin &&
+    isSubscriptionActive(ctx.organization) &&
     !isOnboardingCompleted(ctx.organization.config) &&
     pathname !== "/onboarding"
   ) {
