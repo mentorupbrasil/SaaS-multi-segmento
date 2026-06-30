@@ -23,7 +23,7 @@ export function PageHero({
   secondaryCta,
 }: {
   eyebrow: string;
-  title: string;
+  title: string | ReactNode;
   description?: string;
   primaryCta?: { href: string; label: string };
   secondaryCta?: { href: string; label: string };

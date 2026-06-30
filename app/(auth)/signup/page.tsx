@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useMemo, useState } from "react";
+import { useActionState, useMemo, useState, useEffect } from "react";
 import Link from "next/link";
 import { Check } from "lucide-react";
 import { getSegmentGroups } from "@/segments";
@@ -24,6 +24,12 @@ export default function SignupPage() {
   const [segmentId, setSegmentId] = useState<string>("");
   const [planId, setPlanId] = useState<string>("pro");
   const [query, setQuery] = useState<string>("");
+  useEffect(() => {
+    const fromUrl = new URLSearchParams(window.location.search).get("plan");
+    if (fromUrl && PAYABLE_PLANS.some((p) => p.id === fromUrl)) {
+      setPlanId(fromUrl);
+    }
+  }, []);
 
   const groups = useMemo(() => {
     const q = normalize(query.trim());

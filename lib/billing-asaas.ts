@@ -46,12 +46,43 @@ export function isAsaasConfigured(): boolean {
   return Boolean(process.env.ASAAS_API_KEY?.trim());
 }
 
-export function getAsaasBaseUrl(): string {
+/** Chave $aact_prod_... = produção. Sandbox usa $aact_YLT... ou ambiente explícito. */
+export function isAsaasProduction(): boolean {
   const env = process.env.ASAAS_ENV?.trim().toLowerCase();
-  if (env === "production" || env === "prod") {
+  if (env === "production" || env === "prod") return true;
+  if (env === "sandbox") return false;
+  const key = process.env.ASAAS_API_KEY?.trim() ?? "";
+  return key.includes("_prod_");
+}
+
+/** Simulação só em dev local sem ASAAS_API_KEY. Produção exige Asaas real. */
+export function isBillingSimulationAllowed(): boolean {
+  if (process.env.NODE_ENV === "production") return false;
+  return !isAsaasConfigured();
+}
+
+export function getAsaasBaseUrl(): string {
+  if (isAsaasProduction()) {
     return "https://api.asaas.com/api/v3";
   }
   return "https://sandbox.asaas.com/api/v3";
+}
+
+export function getPublicAppUrl(): string | null {
+  const url = process.env.NEXT_PUBLIC_APP_URL?.trim();
+  if (!url) return null;
+  if (url.includes("localhost") || url.includes("127.0.0.1")) return null;
+  return url.replace(/\/$/, "");
+}
+
+export function requirePublicAppUrlForBilling(): string {
+  const url = getPublicAppUrl();
+  if (!url) {
+    throw new Error(
+      "NEXT_PUBLIC_APP_URL deve ser a URL pública do site (ex.: https://www.gestorpro.sbs).",
+    );
+  }
+  return url;
 }
 
 export function normalizeCpfCnpj(value: string): string {

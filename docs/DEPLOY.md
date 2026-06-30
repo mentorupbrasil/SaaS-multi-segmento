@@ -46,9 +46,11 @@ Configure em **Project → Settings → Environment Variables**:
 | `AUTH_SECRET` | Sim | `npx auth secret` |
 | `AUTH_TRUST_HOST` | Sim | `true` na Vercel |
 | `PLATFORM_ADMIN_EMAILS` | Sim | Ex.: `admin@gestorpro.com` |
-| `NEXT_PUBLIC_APP_URL` | Recomendado | URL pública, ex. `https://app.gestorpro.com` |
-| `SMTP_*` | Opcional | E-mail transacional (convites, reset) |
-| `MERCADOPAGO_*` | Opcional | Billing real |
+| `NEXT_PUBLIC_APP_URL` | Sim (vendas) | URL pública, ex. `https://www.gestorpro.sbs` |
+| `ASAAS_API_KEY` | Sim (vendas) | Chave API Asaas (`$aact_prod_...` em produção) |
+| `ASAAS_ENV` | Opcional | `production` — detectado automaticamente se a chave contém `_prod_` |
+| `ASAAS_WEBHOOK_TOKEN` | Recomendado | Token do header `asaas-access-token` no webhook |
+| `SMTP_*` / `RESEND_API_KEY` | Recomendado | E-mail transacional (convites, reset) |
 | `GOOGLE_CLIENT_ID` | Opcional | Login Google (habilita OAuth) |
 | `GOOGLE_CLIENT_SECRET` | Opcional | Login Google |
 | `SENTRY_DSN` | Opcional | Observabilidade |
@@ -71,7 +73,35 @@ DATABASE_URL="..." npm run db:seed
 
 4. Valide: login demo, dashboard, `/admin`, build CI verde no GitHub Actions.
 
-## 4. CI (GitHub Actions)
+## 4. Asaas — receber pagamentos (produção)
+
+1. Conta em [asaas.com](https://www.asaas.com) → **Integrações → Chave de API** (produção, `$aact_prod_...`).
+2. **Não marque** permissão de saque na chave — só cobrança.
+3. Na **Vercel**, configure:
+
+```
+ASAAS_API_KEY=sua_chave_prod
+ASAAS_ENV=production
+NEXT_PUBLIC_APP_URL=https://www.gestorpro.sbs
+ASAAS_WEBHOOK_TOKEN=token_longo_que_voce_inventa
+```
+
+4. **Integrações → Webhooks** no Asaas:
+   - URL: `https://www.gestorpro.sbs/api/billing/webhook`
+   - Token de autenticação: mesmo valor de `ASAAS_WEBHOOK_TOKEN`
+   - Eventos: `PAYMENT_CONFIRMED`, `PAYMENT_RECEIVED`, `PAYMENT_OVERDUE`, `PAYMENT_DELETED`, `SUBSCRIPTION_DELETED`
+
+5. Rode a migration Asaas no banco de produção:
+
+```bash
+npx prisma migrate deploy
+```
+
+6. Teste: cadastro em `/signup` → `/assinatura` → pagamento → webhook libera acesso.
+
+> Se a chave API foi exposta, **revogue e gere outra** no painel Asaas.
+
+## 5. CI (GitHub Actions)
 
 O workflow `.github/workflows/ci.yml` roda em push/PR:
 
@@ -83,7 +113,7 @@ O workflow `.github/workflows/ci.yml` roda em push/PR:
 
 Mantenha o branch principal protegido exigindo CI verde.
 
-## 5. OneDrive / Windows local
+## 6. OneDrive / Windows local
 
 Se `prisma generate` falhar com **EPERM** (pasta no OneDrive):
 
@@ -91,19 +121,19 @@ Se `prisma generate` falhar com **EPERM** (pasta no OneDrive):
 - Alternativa: clone o repo fora do OneDrive ou use WSL.
 - Manual: `npm run db:generate`
 
-## 6. Segurança — rotacionar credenciais
+## 7. Segurança — rotacionar credenciais
 
 > **Importante:** se a `DATABASE_URL` ou senhas SMTP/já foram expostas em chat, issue ou commit, **rotacione imediatamente**:
 
 1. Neon → **Reset password** ou crie um novo role/database.
 2. Atualize `DATABASE_URL` e `DIRECT_URL` na Vercel (Production + Preview).
 3. Gere novo `AUTH_SECRET` (`npx auth secret`) e atualize na Vercel.
-4. Revogue tokens Mercado Pago / Google OAuth se aplicável.
+4. Revogue tokens Asaas / Google OAuth se aplicável.
 5. Redeploy para aplicar as novas variáveis.
 
 Nunca commite `.env` com segredos reais.
 
-## 7. RLS opcional (PostgreSQL)
+## 8. RLS opcional (PostgreSQL)
 
 Template em `prisma/rls.sql`. Aplique manualmente se quiser defesa em profundidade além do `organizationId` na aplicação:
 
@@ -113,7 +143,7 @@ psql "$DIRECT_URL" -f prisma/rls.sql
 
 Use role separada para migrations (`BYPASSRLS`) vs. aplicação.
 
-## 8. Sentry (opcional)
+## 9. Sentry (opcional)
 
 1. Instale: `npm i @sentry/nextjs`
 2. Configure `SENTRY_DSN` na Vercel.
@@ -121,7 +151,9 @@ Use role separada para migrations (`BYPASSRLS`) vs. aplicação.
 
 ## Checklist pós-deploy
 
-- [ ] Migrations aplicadas (`migrate deploy`)
+- [ ] `ASAAS_API_KEY` + `NEXT_PUBLIC_APP_URL` na Vercel
+- [ ] Webhook Asaas apontando para `/api/billing/webhook`
+- [ ] Migration Asaas aplicada (`migrate deploy`)
 - [ ] Seed executado (orgs demo)
 - [ ] Login admin e tenant demo OK
 - [ ] CI verde no GitHub

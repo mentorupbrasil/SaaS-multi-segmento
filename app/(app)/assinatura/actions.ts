@@ -10,9 +10,12 @@ import {
   AsaasApiError,
   cancelAsaasSubscription,
   createAsaasCheckout,
+  getPublicAppUrl,
   isAsaasConfigured,
+  isBillingSimulationAllowed,
   isValidCpfCnpj,
   normalizeCpfCnpj,
+  requirePublicAppUrlForBilling,
 } from "@/lib/billing-asaas";
 
 export type CheckoutResult =
@@ -39,6 +42,12 @@ export async function createCheckoutSession(
   }
 
   if (!isAsaasConfigured()) {
+    if (!isBillingSimulationAllowed()) {
+      return {
+        ok: false,
+        error: "Pagamentos não configurados. Defina ASAAS_API_KEY nas variáveis de ambiente.",
+      };
+    }
     await subscribeFake(planId);
     return { ok: true, mode: "fake" };
   }
@@ -48,7 +57,18 @@ export async function createCheckoutSession(
     return { ok: false, error: "Informe um CPF ou CNPJ válido para emitir a cobrança." };
   }
 
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
+  let appUrl: string;
+  try {
+    appUrl =
+      process.env.NODE_ENV === "production"
+        ? requirePublicAppUrlForBilling()
+        : (getPublicAppUrl() ?? "http://localhost:3000");
+  } catch {
+    return {
+      ok: false,
+      error: "Configure NEXT_PUBLIC_APP_URL com a URL pública do site (ex.: https://www.gestorpro.sbs).",
+    };
+  }
   const org = ctx.organization;
   const session = await auth();
   const sessionEmail = session?.user?.email;

@@ -1,5 +1,5 @@
 import { getAuthContext } from "@/lib/auth-context";
-import { isAsaasConfigured } from "@/lib/billing-asaas";
+import { isAsaasConfigured, isAsaasProduction, isBillingSimulationAllowed } from "@/lib/billing-asaas";
 import { PLANS, getPlan } from "@/lib/plans";
 import { PageHeader } from "@/components/page-header";
 import { Icon } from "@/components/icon";
@@ -64,8 +64,10 @@ export default async function AssinaturaPage({ searchParams }: Props) {
 
       <div className="rounded-lg border border-blue-200 bg-blue-50 px-4 py-3 text-sm text-blue-800">
         {billingConfigured
-          ? "Cobrança recorrente mensal via Asaas (PIX, boleto ou cartão). O acesso é liberado após confirmação do pagamento."
-          : "Modo simulado: configure ASAAS_API_KEY para cobrança real. Sem a chave, a assinatura é ativada localmente para testes."}
+          ? `Cobrança recorrente mensal via Asaas (${isAsaasProduction() ? "produção" : "sandbox"}) — PIX, boleto ou cartão. O acesso é liberado após confirmação do pagamento.`
+          : isBillingSimulationAllowed()
+            ? "Modo simulado (dev local): configure ASAAS_API_KEY para cobrança real."
+            : "Pagamentos indisponíveis: configure ASAAS_API_KEY e NEXT_PUBLIC_APP_URL na Vercel."}
       </div>
 
       <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
