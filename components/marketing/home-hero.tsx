@@ -5,19 +5,19 @@ import { Icon } from "@/components/icon";
 import { HeroSection } from "@/components/marketing/hero-section";
 import { getSegmentTotal } from "@/lib/segment-vitrine";
 
-/** Imagens em alta resolução (800px+) — nichos do GestorPro */
+/** Imagens em alta resolução (800px) — nichos do GestorPro */
 const HERO_IMAGES = [
   {
-    src: "https://images.unsplash.com/photo-1621605815971-fbc98d665033?auto=format&fit=crop&crop=faces,center&q=90&w=800&h=800",
-    alt: "Barbearia — profissional atendendo cliente",
+    src: "https://images.unsplash.com/photo-1621605815971-fbc98d665033?auto=format&fit=crop&q=90&w=800&h=800",
+    alt: "Barbearia — ferramentas e ambiente profissional",
   },
   {
-    src: "https://images.unsplash.com/photo-1579684385127-1ef15f5a9529?auto=format&fit=crop&crop=entropy&cs=tinysrgb&q=90&w=800&h=800",
-    alt: "Clínica — médica em consultório",
+    src: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&q=90&w=800&h=800",
+    alt: "Clínica — profissional de saúde em consultório",
   },
   {
-    src: "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?auto=format&fit=crop&crop=entropy&cs=tinysrgb&q=90&w=800&h=800",
-    alt: "Equipe de negócio em reunião de gestão",
+    src: "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?auto=format&fit=crop&q=90&w=800&h=800",
+    alt: "Equipe de negócio celebrando resultado",
   },
 ];
 

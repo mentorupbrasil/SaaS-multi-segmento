@@ -122,9 +122,9 @@ export function HeroSection({
             className="mt-8 flex flex-wrap justify-center gap-4 lg:justify-start"
             variants={reduceMotion ? undefined : itemVariants}
           >
-            {actions.map((action) => (
+            {actions.map((action, index) => (
               <Button
-                key={action.href + action.text}
+                key={`${action.href}-${index}`}
                 asChild
                 variant={action.variant ?? "default"}
                 size="lg"
@@ -137,17 +137,17 @@ export function HeroSection({
 
           {/* Stats — linha única no desktop, como no 21st */}
           <motion.div
-            className="mt-12 flex w-full max-w-lg flex-col items-stretch gap-4 sm:max-w-none sm:flex-row sm:flex-wrap sm:items-center sm:justify-center sm:gap-x-8 sm:gap-y-4 lg:justify-start"
+            className="mt-12 flex flex-wrap justify-center gap-x-8 gap-y-4 lg:justify-start"
             variants={reduceMotion ? undefined : itemVariants}
           >
             {stats.map((stat) => (
-              <div key={stat.label} className="flex shrink-0 items-center gap-3 sm:min-w-[140px]">
+              <div key={stat.label} className="flex items-center gap-3">
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary ring-1 ring-primary/20">
                   {stat.icon}
                 </div>
-                <div className="min-w-0 text-left">
+                <div className="text-left">
                   <p className="text-xl font-bold tabular-nums leading-none text-foreground">{stat.value}</p>
-                  <p className="mt-1 whitespace-nowrap text-sm text-muted-foreground">{stat.label}</p>
+                  <p className="mt-1 text-sm text-muted-foreground">{stat.label}</p>
                 </div>
               </div>
             ))}
@@ -156,7 +156,7 @@ export function HeroSection({
 
         {/* Coluna direita — collage (posições do código 21st) */}
         <motion.div
-          className="relative mx-auto h-[400px] w-full max-w-md sm:h-[500px] lg:mx-0 lg:max-w-none"
+          className="relative h-[400px] w-full sm:h-[500px]"
           variants={reduceMotion ? undefined : containerVariants}
           initial={reduceMotion ? false : "hidden"}
           animate={reduceMotion ? false : "visible"}
@@ -182,31 +182,29 @@ export function HeroSection({
           )}
 
           {images[0] && (
-            <div className="absolute left-1/2 top-0 z-20 -translate-x-1/2">
-              <motion.div
-                className="h-48 w-48 rounded-2xl border border-border/60 bg-card p-2 shadow-2xl shadow-black/10 sm:h-64 sm:w-64 dark:shadow-black/30"
-                style={{ transformOrigin: "bottom center" }}
-                variants={reduceMotion ? undefined : imageVariants(0.2)}
-                whileHover={reduceMotion ? undefined : { y: -6, scale: 1.02 }}
-                transition={{ type: "spring", stiffness: 300, damping: 20 }}
-              >
-                <Image
-                  src={images[0].src}
-                  alt={images[0].alt}
-                  width={512}
-                  height={512}
-                  quality={90}
-                  priority
-                  sizes="(max-width: 640px) 192px, 256px"
-                  className="h-full w-full rounded-xl object-cover"
-                />
-              </motion.div>
-            </div>
+            <motion.div
+              className="absolute left-1/2 top-0 z-20 h-48 w-48 rounded-2xl bg-muted p-2 shadow-lg sm:h-64 sm:w-64"
+              style={{ x: "-50%", transformOrigin: "bottom center" }}
+              variants={reduceMotion ? undefined : imageVariants(0.2)}
+              whileHover={reduceMotion ? undefined : { y: -6, scale: 1.02 }}
+              transition={{ type: "spring", stiffness: 300, damping: 20 }}
+            >
+              <Image
+                src={images[0].src}
+                alt={images[0].alt}
+                width={512}
+                height={512}
+                quality={90}
+                priority
+                sizes="(max-width: 640px) 192px, 256px"
+                className="h-full w-full rounded-xl object-cover"
+              />
+            </motion.div>
           )}
 
           {images[1] && (
             <motion.div
-              className="absolute right-0 top-1/3 z-30 h-40 w-40 rounded-2xl border border-border/60 bg-card p-2 shadow-2xl shadow-black/10 sm:h-56 sm:w-56 dark:shadow-black/30"
+              className="absolute right-0 top-1/3 z-30 h-40 w-40 rounded-2xl bg-muted p-2 shadow-lg sm:h-56 sm:w-56"
               style={{ transformOrigin: "left center" }}
               variants={reduceMotion ? undefined : imageVariants(0.35)}
               whileHover={reduceMotion ? undefined : { y: -6, scale: 1.02 }}
@@ -226,7 +224,7 @@ export function HeroSection({
 
           {images[2] && (
             <motion.div
-              className="absolute bottom-0 left-0 z-10 h-32 w-32 rounded-2xl border border-border/60 bg-card p-2 shadow-2xl shadow-black/10 sm:h-48 sm:w-48 dark:shadow-black/30"
+              className="absolute bottom-0 left-0 z-10 h-32 w-32 rounded-2xl bg-muted p-2 shadow-lg sm:h-48 sm:w-48"
               style={{ transformOrigin: "top right" }}
               variants={reduceMotion ? undefined : imageVariants(0.5)}
               whileHover={reduceMotion ? undefined : { y: -6, scale: 1.02 }}
