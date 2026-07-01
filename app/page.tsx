@@ -49,8 +49,9 @@ export default function HomePage() {
             </h1>
             <p className="mt-5 max-w-xl text-lg leading-relaxed text-slate-600">
               Escolha o seu segmento e tenha agenda, clientes, serviços e financeiro com a linguagem
-              do seu nicho. Conta ativa na hora
-              {starterPrice != null ? `, a partir de R$ ${starterPrice.toFixed(2).replace(".", ",")}/mês` : ""}.
+              do seu nicho. Cadastro em minutos
+              {starterPrice != null ? `, a partir de R$ ${starterPrice.toFixed(2).replace(".", ",")}/mês` : ""}
+              {" "}— acesso após confirmação do pagamento.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link href="/signup" className="btn-primary px-6 py-3 text-base">

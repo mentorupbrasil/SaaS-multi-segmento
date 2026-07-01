@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { Icon } from "@/components/icon";
 import { Testimonials } from "@/components/marketing/testimonials";
 import { MarketingShell, PageHero } from "@/components/marketing/marketing-shell";
+import { getSegmentTotal } from "@/lib/segment-vitrine";
 
 export const metadata: Metadata = {
   title: "Clientes e casos",
@@ -10,20 +11,37 @@ export const metadata: Metadata = {
     "Negócios de diversos segmentos usam o GestorPro para organizar a agenda, os clientes e o financeiro. Veja histórias e resultados.",
 };
 
-const STATS = [
-  { n: "+18", l: "Segmentos atendidos" },
-  { n: "100%", l: "Online e na nuvem" },
-  { n: "R$ 39,90", l: "A partir de, por mês" },
-  { n: "Sem", l: "Fidelidade ou multa" },
-];
-
 const CASES = [
-  { icon: "Scissors", segment: "Barbearia", title: "Agenda cheia e menos faltas", text: "Com lembretes e agenda online, a barbearia reduziu horários vazios e organizou as comissões." },
-  { icon: "Stethoscope", segment: "Clínica", title: "Prontuário sempre à mão", text: "O histórico de cada paciente em um só lugar agilizou o atendimento e a rotina da recepção." },
-  { icon: "Car", segment: "Oficina", title: "Ordens de serviço sob controle", text: "Saíram do caderno: cada serviço com itens, status e valor, sem perder orçamento." },
+  {
+    icon: "Scissors",
+    segment: "Barbearia",
+    title: "Agenda cheia e menos faltas",
+    text: "Com lembretes (plano Profissional+) e agenda online, a barbearia reduziu horários vazios e organizou o caixa do dia.",
+  },
+  {
+    icon: "Stethoscope",
+    segment: "Clínica",
+    title: "Prontuário sempre à mão",
+    text: "O histórico de cada paciente em um só lugar agilizou o atendimento e a rotina da recepção.",
+  },
+  {
+    icon: "Car",
+    segment: "Oficina",
+    title: "Ordens de serviço sob controle",
+    text: "Saíram do caderno: cada serviço com itens, status e valor no plano Premium — sem perder orçamento.",
+  },
 ];
 
 export default function CasosPage() {
+  const total = getSegmentTotal();
+
+  const stats = [
+    { n: `${total}+`, l: "Segmentos atendidos" },
+    { n: "100%", l: "Online e na nuvem" },
+    { n: "R$ 39,90", l: "A partir de, por mês" },
+    { n: "Sem", l: "Fidelidade ou multa" },
+  ];
+
   return (
     <MarketingShell>
       <PageHero
@@ -34,7 +52,7 @@ export default function CasosPage() {
 
       <section className="section py-12">
         <div className="grid grid-cols-2 gap-6 rounded-2xl border border-slate-200 bg-white p-8 text-center sm:grid-cols-4">
-          {STATS.map((s) => (
+          {stats.map((s) => (
             <div key={s.l}>
               <p className="text-2xl font-bold text-slate-900">{s.n}</p>
               <p className="mt-1 text-sm text-slate-500">{s.l}</p>

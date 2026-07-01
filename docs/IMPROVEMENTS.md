@@ -53,8 +53,8 @@ Atualizado após implementação das melhorias de engenharia, infra e backlog mu
 |---|----------|--------|
 | 21 | `lib/features.ts` desatualizado | 🔶 Revisado parcialmente |
 | 22 | README roadmap obsoleto | 🔶 |
-| 23 | Landings oversell capabilities | 🔶 |
-| 24 | Planos prometem WhatsApp/link público | 🔶 Booking público scaffold; WhatsApp não |
+| 23 | Landings oversell capabilities | ✅ Aviso de plano + FAQ por segmento |
+| 24 | Planos prometem WhatsApp/link público | ✅ Enforcement + `FEATURE_WHATSAPP` / booking |
 | 25 | Homepage IA mock | 🔶 Gated por `FEATURE_IA` |
 | 26 | `/funcionalidades` mistura available/soon | 🔶 |
 
@@ -75,8 +75,8 @@ Atualizado após implementação das melhorias de engenharia, infra e backlog mu
 | 35 | Agenda: recorrência, lista de espera | ❌ |
 | 36 | `UseSessionButton` com `router.refresh()` | ✅ |
 | 37 | FinancialEntry com relações Prisma | ✅ Schema + migration |
-| 38 | Assinatura inativa bloqueia | 🔶 Banner; bloqueio parcial |
-| 39 | Planos com enforcement | 🔶 `canAddUser`, limites parciais |
+| 38 | Assinatura inativa bloqueia | ✅ `requireActiveSubscription` + middleware |
+| 39 | Planos com enforcement | ✅ Menu, rotas, export, usuários, filiais |
 | 40 | Multi-unidade/filiais | 🔶 Model `Branch`; UI parcial |
 | 41 | Comissões automáticas | ❌ |
 | 42 | Pacotes/combos/assinaturas recorrentes | 🔶 Pacotes de sessão |

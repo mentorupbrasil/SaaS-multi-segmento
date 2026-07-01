@@ -3,6 +3,7 @@ import { Logo } from "./logo";
 import { Icon } from "@/components/icon";
 import { CATEGORY_ORDER, CATEGORY_META } from "@/segments/types";
 import { getSegmentGroupsForVitrine, getFeaturedSegments, getSegmentTotal } from "@/lib/segment-vitrine";
+import { PLATFORM_EMAIL, PLATFORM_MAILTO } from "@/lib/platform-contact";
 
 const PRODUTO = [
   { href: "/funcionalidades", label: "Funcionalidades" },
@@ -72,7 +73,7 @@ export function SiteFooter() {
           <div>
             <p className="text-xl font-bold text-white">Assine e comece hoje</p>
             <p className="mt-1 text-sm text-slate-400">
-              Conta ativa na hora · A partir de R$ 39,90/mês · Sem fidelidade
+              A partir de R$ 39,90/mês · Sem fidelidade · Acesso após confirmação do pagamento
             </p>
           </div>
           <div className="flex flex-wrap gap-3">
@@ -107,6 +108,12 @@ export function SiteFooter() {
             >
               Já tenho conta →
             </Link>
+            <a
+              href={PLATFORM_MAILTO}
+              className="mt-3 block text-sm text-slate-400 transition-colors hover:text-white"
+            >
+              {PLATFORM_EMAIL}
+            </a>
           </div>
 
           <div className="lg:col-span-2">

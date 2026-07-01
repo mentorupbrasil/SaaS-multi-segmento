@@ -3,7 +3,7 @@ import { getSegmentTotal } from "@/lib/segment-vitrine";
 
 const STATS = [
   { icon: "Layers", label: "segmentos prontos", key: "segments" as const },
-  { icon: "Zap", label: "conta ativa na hora", key: "instant" as const },
+  { icon: "Zap", label: "cadastro em minutos", key: "instant" as const },
   { icon: "CreditCard", label: "sem fidelidade", key: "no-lock" as const },
   { icon: "Headphones", label: "suporte em português", key: "support" as const },
 ];
@@ -22,7 +22,7 @@ export function StatsBar() {
               </span>
               <div>
                 <p className="text-lg font-bold tabular-nums text-slate-900">
-                  {stat.key === "segments" ? total : stat.key === "instant" ? "1 min" : stat.key === "no-lock" ? "0" : "100%"}
+                  {stat.key === "segments" ? total : stat.key === "instant" ? "2 min" : stat.key === "no-lock" ? "0" : "100%"}
                 </p>
                 <p className="text-xs text-slate-500">{stat.label}</p>
               </div>

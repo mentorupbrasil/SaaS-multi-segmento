@@ -17,7 +17,8 @@ export const INTEGRATIONS: Integration[] = [
     name: "WhatsApp",
     icon: "MessageCircle",
     category: "Comunicação",
-    description: "Envie lembretes, confirmações e mensagens automáticas para os seus clientes.",
+    description:
+      "Lembretes e confirmações automáticas para clientes. Plano Profissional ou superior; configure a API em Conexões no painel.",
     status: "available",
     planGated: true,
   },
@@ -25,7 +26,8 @@ export const INTEGRATIONS: Integration[] = [
     name: "PIX",
     icon: "Wallet",
     category: "Pagamentos",
-    description: "Receba por PIX e concilie os pagamentos direto no financeiro.",
+    description:
+      "Receba PIX dos seus clientes e concilie no financeiro. Plano Profissional+; ative em Conexões com sua chave ou provedor.",
     status: "available",
     planGated: true,
   },

@@ -8,6 +8,7 @@ import { cancelSubscription } from "./actions";
 import { SubscribePlanForm } from "./subscribe-plan-form";
 import { AsaasDiagnosePanel } from "./asaas-diagnose";
 import { PlanCurrentLimits } from "@/components/plan-current-limits";
+import { PLATFORM_MAILTO } from "@/lib/platform-contact";
 
 const STATUS_LABELS: Record<string, string> = {
   TRIALING: "Em teste",
@@ -128,7 +129,7 @@ export default async function AssinaturaPage({ searchParams }: Props) {
                 ))}
               </ul>
               {isEnterprise ? (
-                <a href="mailto:vendas@gestorpro.com.br" className="btn-secondary mt-6 w-full">
+                <a href={PLATFORM_MAILTO} className="btn-secondary mt-6 w-full">
                   Falar com vendas
                 </a>
               ) : (

@@ -12,6 +12,7 @@ import { SiteFooter } from "@/components/marketing/site-footer";
 import { Pricing } from "@/components/marketing/pricing";
 import { Faq } from "@/components/marketing/faq";
 import { getSegmentLandingFaq } from "@/lib/platform-faq";
+import { PlanModulesNotice } from "@/components/marketing/plan-modules-notice";
 
 export const dynamicParams = false;
 
@@ -117,10 +118,13 @@ export default async function SegmentLandingPage({
             </div>
             <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-slate-500">
               <span className="inline-flex items-center gap-1.5">
-                <Icon name="Check" className="h-4 w-4 text-green-600" /> Conta ativa na hora
+                <Icon name="Check" className="h-4 w-4 text-green-600" /> Cadastro em minutos
               </span>
               <span className="inline-flex items-center gap-1.5">
                 <Icon name="Check" className="h-4 w-4 text-green-600" /> Sem fidelidade
+              </span>
+              <span className="inline-flex items-center gap-1.5">
+                <Icon name="Check" className="h-4 w-4 text-green-600" /> Pagamento seguro via Asaas
               </span>
             </div>
           </div>
@@ -146,6 +150,7 @@ export default async function SegmentLandingPage({
                   </li>
                 ))}
               </ul>
+              <PlanModulesNotice className="mt-5" />
             </div>
           </div>
         </div>
@@ -156,12 +161,13 @@ export default async function SegmentLandingPage({
         <div className="text-center">
           <span className="eyebrow">O que está incluso</span>
           <h2 className="mt-4 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
-            {seg.label}: tudo o que você precisa
+            {seg.label}: módulos do seu nicho
           </h2>
           <p className="mx-auto mt-3 max-w-2xl text-slate-600">
-            Módulos prontos e já com os nomes do seu segmento.
+            Módulos prontos com os nomes do seu segmento — a liberação depende do plano contratado.
           </p>
         </div>
+        <PlanModulesNotice className="mx-auto mt-8 max-w-3xl" />
         <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {seg.modules.map((id) => {
             const mod = MODULES[id];
@@ -406,7 +412,8 @@ export default async function SegmentLandingPage({
               Integrações
             </h2>
             <p className="mt-2 text-slate-600">
-              Conecte o sistema com as ferramentas que você já usa no dia a dia.
+              Conecte o sistema com as ferramentas que você já usa. WhatsApp e PIX exigem plano
+              Profissional+ e configuração em Conexões.
             </p>
             <ul className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3">
               {extras.integrations.map((i) => (

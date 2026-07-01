@@ -67,7 +67,7 @@ export function CtaBand({
               )}
               <li className="inline-flex items-center gap-1.5">
                 <Icon name="Check" className="h-4 w-4 text-brand-600" />
-                Conta ativa na hora
+                Acesso após pagamento confirmado
               </li>
               <li className="inline-flex items-center gap-1.5">
                 <Icon name="Check" className="h-4 w-4 text-brand-600" />

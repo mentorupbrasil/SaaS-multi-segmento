@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { LegalContent } from "@/components/marketing/legal-content";
+import { PLATFORM_EMAIL } from "@/lib/platform-contact";
 
 export const metadata: Metadata = {
   title: "Política de privacidade",
@@ -44,7 +45,7 @@ export default function PrivacidadePage() {
           heading: "Seus direitos",
           paragraphs: [
             "Você pode solicitar acesso, correção ou exclusão dos seus dados pessoais, bem como a portabilidade, conforme previsto na LGPD.",
-            "Para exercer esses direitos, entre em contato pelo nosso canal de suporte.",
+            "Para exercer esses direitos, entre em contato pelo e-mail " + PLATFORM_EMAIL + ".",
           ],
         },
         {

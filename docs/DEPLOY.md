@@ -21,13 +21,15 @@ npx prisma migrate deploy
 # ou, em ambiente novo: npm run db:push
 ```
 
-3. Popule dados demo (123 orgs + admin):
+3. Popule dados demo **apenas em ambiente de desenvolvimento/staging** (não rode seed em produção com clientes reais):
 
 ```bash
 npm run db:seed
 ```
 
-Contas após o seed:
+> **Produção:** evite `db:seed` — cria contas demo com senhas fracas. Use apenas migrations.
+
+Contas após o seed (dev/staging):
 
 | Conta | Senha | Uso |
 |-------|-------|-----|
@@ -50,7 +52,10 @@ Configure em **Project → Settings → Environment Variables**:
 | `ASAAS_API_KEY` | Sim (vendas) | Chave API Asaas (`$aact_prod_...` em produção) |
 | `ASAAS_ENV` | Opcional | `production` — detectado automaticamente se a chave contém `_prod_` |
 | `ASAAS_WEBHOOK_TOKEN` | Recomendado | Token do header `asaas-access-token` no webhook |
-| `SMTP_*` / `RESEND_API_KEY` | Recomendado | E-mail transacional (convites, reset) |
+| `SMTP_*` / `RESEND_API_KEY` | Recomendado | E-mail transacional; use `SMTP_FROM="GestorPro <noreply@gestorpro.sbs>"` |
+| `FEATURE_WHATSAPP` | Recomendado | `true` para lembretes WhatsApp (plano Pro+) |
+| `FEATURE_PUBLIC_BOOKING` | Recomendado | `true` para link público de agendamento |
+| `NEXT_PUBLIC_WHATSAPP_NUMBER` | Opcional | Dígitos com DDI (ex. `5511999999999`) para /suporte |
 | `GOOGLE_CLIENT_ID` | Opcional | Login Google (habilita OAuth) |
 | `GOOGLE_CLIENT_SECRET` | Opcional | Login Google |
 | `SENTRY_DSN` | Opcional | Observabilidade |
@@ -152,10 +157,13 @@ Use role separada para migrations (`BYPASSRLS`) vs. aplicação.
 ## Checklist pós-deploy
 
 - [ ] `ASAAS_API_KEY` + `NEXT_PUBLIC_APP_URL` na Vercel
-- [ ] Webhook Asaas apontando para `/api/billing/webhook`
+- [ ] `FEATURE_WHATSAPP=true` e `FEATURE_PUBLIC_BOOKING=true` (se vender Pro)
+- [ ] `RESEND_API_KEY` ou `SMTP_*` + `SMTP_FROM` para e-mails transacionais
+- [ ] Webhook Asaas apontando para `/api/billing/webhook` (fila ativa)
 - [ ] Migration Asaas aplicada (`migrate deploy`)
-- [ ] Seed executado (orgs demo)
-- [ ] Login admin e tenant demo OK
+- [ ] **Não** rodar `db:seed` em produção com clientes reais
+- [ ] Login e fluxo signup → pagamento → painel OK
+- [ ] Contato público: `contato@gestorpro.sbs` (e `NEXT_PUBLIC_WHATSAPP_NUMBER` se tiver WhatsApp)
 - [ ] CI verde no GitHub
 - [ ] Credenciais antigas rotacionadas (se expostas)
 - [ ] `NEXT_PUBLIC_APP_URL` apontando para domínio final

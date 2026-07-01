@@ -61,8 +61,8 @@ export function Testimonials() {
           </div>
           <div className="hidden h-8 w-px bg-slate-200 sm:block" />
           <div>
-            <p className="text-2xl font-bold text-slate-900">1 min</p>
-            <p className="text-xs text-slate-500">para ativar a conta</p>
+            <p className="text-2xl font-bold text-slate-900">2 min</p>
+            <p className="text-xs text-slate-500">para criar a conta</p>
           </div>
         </div>
 

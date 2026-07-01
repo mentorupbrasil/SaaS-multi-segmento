@@ -16,7 +16,7 @@ export default function IntegracoesPage() {
       <PageHero
         eyebrow="Integrações"
         title="Conecte com as ferramentas que você já usa"
-        description="WhatsApp e PIX já disponíveis no plano Profissional ou superior. Outras integrações chegam em breve."
+        description="WhatsApp e PIX no plano Profissional ou superior — configure em Conexões no painel. Outras integrações chegam em breve."
       />
 
       <section className="section py-16">
@@ -48,6 +48,11 @@ export default function IntegracoesPage() {
                 {i.category}
               </p>
               <p className="mt-1.5 text-sm leading-relaxed text-slate-600">{i.description}</p>
+              {i.status === "available" && i.planGated && (
+                <p className="mt-2 text-xs text-slate-500">
+                  Ative em Conexões após assinar o plano Profissional ou superior.
+                </p>
+              )}
               {i.status === "available" && i.planGated && (
                 <Link href="/signup" className="btn-primary mt-4 inline-flex w-full justify-center text-sm">
                   Assinar plano Profissional

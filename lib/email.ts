@@ -1,3 +1,5 @@
+import { PLATFORM_EMAIL_FROM } from "@/lib/platform-contact";
+
 export interface SendEmailOptions {
   to: string;
   subject: string;
@@ -18,7 +20,7 @@ async function sendViaResend(options: SendEmailOptions): Promise<SendEmailResult
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) return null;
 
-  const from = process.env.SMTP_FROM ?? "GestorPro <noreply@gestorpro.app>";
+  const from = process.env.SMTP_FROM ?? PLATFORM_EMAIL_FROM;
   const response = await fetch("https://api.resend.com/emails", {
     method: "POST",
     headers: {
@@ -50,7 +52,7 @@ export async function sendEmail(options: SendEmailOptions): Promise<SendEmailRes
   }
 
   const payload = {
-    from: process.env.SMTP_FROM ?? "noreply@gestorpro.local",
+    from: process.env.SMTP_FROM ?? PLATFORM_EMAIL_FROM,
     ...options,
   };
 

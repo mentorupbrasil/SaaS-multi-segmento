@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { LegalContent } from "@/components/marketing/legal-content";
+import { PLATFORM_EMAIL } from "@/lib/platform-contact";
 
 export const metadata: Metadata = {
   title: "Termos de uso",
@@ -51,6 +52,12 @@ export default function TermosPage() {
           heading: "Alterações nos termos",
           paragraphs: [
             "Estes termos podem ser atualizados periodicamente. Mudanças relevantes serão comunicadas, e o uso continuado da plataforma implica concordância com a versão vigente.",
+          ],
+        },
+        {
+          heading: "Contato",
+          paragraphs: [
+            `Dúvidas sobre estes termos: ${PLATFORM_EMAIL}`,
           ],
         },
       ]}

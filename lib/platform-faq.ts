@@ -1,4 +1,5 @@
 import type { FaqGroup, FaqItem } from "@/components/marketing/faq";
+import { PLATFORM_EMAIL } from "@/lib/platform-contact";
 import { filterModulesByPlan } from "@/lib/plan-enforcement";
 import { MODULES } from "@/modules";
 import { PLANS } from "@/lib/plans";
@@ -159,7 +160,7 @@ export function getHomeFaqGroups(): FaqGroup[] {
         },
         {
           q: "Como falo com o suporte?",
-          a: "Inicial: e-mail (suporte@gestorpro.com.br). Profissional e Premium: prioridade na fila. Enterprise: gerente dedicado. Canais em /suporte.",
+          a: `Inicial: e-mail (${PLATFORM_EMAIL}). Profissional e Premium: prioridade na fila. Enterprise: gerente dedicado. Canais em /suporte.`,
         },
       ],
     },
@@ -182,7 +183,7 @@ export function getAccountFaqGroup(): FaqGroup {
       },
       {
         q: "Esqueci a senha. E agora?",
-        a: "Na tela de login use “Esqueci minha senha”. Se não receber o e-mail, confira spam ou fale com suporte@gestorpro.com.br.",
+        a: `Na tela de login use “Esqueci minha senha”. Se não receber o e-mail, confira spam ou fale com ${PLATFORM_EMAIL}.`,
       },
       {
         q: "Como troco de plano?",
