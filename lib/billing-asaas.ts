@@ -148,11 +148,16 @@ export function parseAsaasErrorMessage(body: string): string {
   try {
     const parsed = JSON.parse(body) as {
       errors?: Array<{ description?: string; code?: string }>;
+      message?: string;
     };
-    const msg = parsed.errors?.[0]?.description;
-    if (msg) return msg;
+    const err = parsed.errors?.[0];
+    if (err?.description) {
+      return err.code ? `${err.description} (${err.code})` : err.description;
+    }
+    if (parsed.message) return parsed.message;
   } catch {
-    // ignore
+    const trimmed = body.trim();
+    if (trimmed && trimmed.length < 300) return trimmed;
   }
   return "Não foi possível iniciar o pagamento. Verifique os dados e tente novamente.";
 }
@@ -162,6 +167,7 @@ function authHeaders(): HeadersInit {
   if (!key) throw new Error("ASAAS_API_KEY não configurada");
   return {
     "Content-Type": "application/json",
+    "User-Agent": "GestorPro/1.0 (www.gestorpro.sbs; billing)",
     access_token: key,
   };
 }
@@ -176,7 +182,7 @@ async function asaasRequest<T>(path: string, init?: RequestInit): Promise<T> {
   return text ? (JSON.parse(text) as T) : ({} as T);
 }
 
-function formatDueDate(daysFromNow = 0): string {
+function formatDueDate(daysFromNow = 1): string {
   const d = new Date();
   d.setDate(d.getDate() + daysFromNow);
   return d.toISOString().slice(0, 10);
@@ -225,6 +231,13 @@ export async function createAsaasSubscription(input: {
   });
 }
 
+export async function findAsaasCustomerByOrgId(orgId: string): Promise<AsaasCustomer | null> {
+  const list = await asaasRequest<AsaasList<AsaasCustomer>>(
+    `/customers?externalReference=${encodeURIComponent(orgId)}&limit=1`,
+  );
+  return list.data?.[0] ?? null;
+}
+
 export async function findAsaasCustomerByCpfCnpj(cpfCnpj: string): Promise<AsaasCustomer | null> {
   const digits = normalizeCpfCnpj(cpfCnpj);
   const list = await asaasRequest<AsaasList<AsaasCustomer>>(
@@ -271,6 +284,11 @@ export async function createAsaasCheckout(input: {
   appUrl: string;
 }): Promise<{ customerId: string; subscriptionId: string; paymentUrl: string }> {
   let customerId = input.customerId ?? null;
+
+  if (!customerId) {
+    const byOrg = await findAsaasCustomerByOrgId(input.orgId);
+    if (byOrg) customerId = byOrg.id;
+  }
 
   if (!customerId) {
     const existing = await findAsaasCustomerByCpfCnpj(input.cpfCnpj);
