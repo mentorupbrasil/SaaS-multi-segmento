@@ -37,7 +37,7 @@ export default async function ServicoDetailPage({
       <PageHeader title={service.name} description={serviceLabel} />
 
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-        <Link href="/servicos" className="text-sm text-brand-600 hover:underline">
+        <Link href="/servicos" className="text-sm text-primary hover:underline">
           ← Voltar
         </Link>
         <div className="flex flex-wrap items-center gap-2">
@@ -56,31 +56,31 @@ export default async function ServicoDetailPage({
 
       <div className="mb-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <div className="card p-4">
-          <p className="text-xs text-slate-500">Preço</p>
+          <p className="text-xs text-muted-foreground">Preço</p>
           <p className="font-medium">{formatCurrency(service.price)}</p>
         </div>
         <div className="card p-4">
-          <p className="text-xs text-slate-500">Duração</p>
+          <p className="text-xs text-muted-foreground">Duração</p>
           <p className="font-medium">{service.durationMin} min</p>
         </div>
         <div className="card p-4">
-          <p className="text-xs text-slate-500">Status</p>
+          <p className="text-xs text-muted-foreground">Status</p>
           <p className="font-medium">{service.active ? "Ativo" : "Inativo"}</p>
         </div>
         <div className="card p-4">
-          <p className="text-xs text-slate-500">Agendamentos</p>
+          <p className="text-xs text-muted-foreground">Agendamentos</p>
           <p className="font-medium">{service._count.appointments}</p>
         </div>
       </div>
 
       {service.staffLinks.length > 0 && (
         <div className="card p-4">
-          <p className="mb-2 text-xs text-slate-500">{term(terms, "professional_plural")}</p>
+          <p className="mb-2 text-xs text-muted-foreground">{term(terms, "professional_plural")}</p>
           <ul className="flex flex-wrap gap-2">
             {service.staffLinks.map((link) => (
               <li
                 key={link.membershipId}
-                className="rounded-full bg-slate-100 px-3 py-1 text-sm text-slate-700"
+                className="rounded-full bg-muted px-3 py-1 text-sm text-foreground"
               >
                 {link.membership.user.name}
               </li>
@@ -89,7 +89,7 @@ export default async function ServicoDetailPage({
         </div>
       )}
 
-      <p className="mt-4 text-xs text-slate-400">Cadastrado em {formatDate(service.createdAt)}</p>
+      <p className="mt-4 text-xs text-muted-foreground">Cadastrado em {formatDate(service.createdAt)}</p>
     </div>
   );
 }

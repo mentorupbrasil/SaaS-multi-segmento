@@ -51,11 +51,11 @@ export default function CasosPage() {
       />
 
       <section className="section py-12">
-        <div className="grid grid-cols-2 gap-6 rounded-2xl border border-slate-200 bg-white p-8 text-center sm:grid-cols-4">
+        <div className="grid grid-cols-2 gap-6 rounded-2xl border border-border bg-card p-8 text-center sm:grid-cols-4">
           {stats.map((s) => (
             <div key={s.l}>
-              <p className="text-2xl font-bold text-slate-900">{s.n}</p>
-              <p className="mt-1 text-sm text-slate-500">{s.l}</p>
+              <p className="text-2xl font-bold text-foreground">{s.n}</p>
+              <p className="mt-1 text-sm text-muted-foreground">{s.l}</p>
             </div>
           ))}
         </div>
@@ -65,14 +65,14 @@ export default function CasosPage() {
         <div className="grid gap-6 md:grid-cols-3">
           {CASES.map((c) => (
             <div key={c.title} className="card p-6">
-              <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-brand-50 to-brand-100 text-brand-600 ring-1 ring-brand-100">
+              <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-primary/10 to-primary/5 text-primary ring-1 ring-primary/20">
                 <Icon name={c.icon} className="h-5 w-5" />
               </span>
-              <span className="mt-4 block text-xs font-semibold uppercase tracking-wide text-brand-600">
+              <span className="mt-4 block text-xs font-semibold uppercase tracking-wide text-primary">
                 {c.segment}
               </span>
-              <h3 className="mt-1 font-semibold text-slate-900">{c.title}</h3>
-              <p className="mt-1.5 text-sm leading-relaxed text-slate-600">{c.text}</p>
+              <h3 className="mt-1 font-semibold text-foreground">{c.title}</h3>
+              <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">{c.text}</p>
             </div>
           ))}
         </div>

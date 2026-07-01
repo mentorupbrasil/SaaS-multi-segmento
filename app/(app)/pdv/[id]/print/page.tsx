@@ -26,39 +26,39 @@ export default async function PdvPrintPage({
 
   return (
     <PrintLayout title="Cupom de venda">
-      <div className="mb-6 border-b border-slate-200 pb-4 text-center">
-        <h1 className="text-xl font-bold text-slate-900">{org.name}</h1>
-        <p className="text-sm text-slate-600">Cupom não fiscal</p>
-        <p className="text-xs text-slate-500">{formatDateTime(sale.createdAt)}</p>
+      <div className="mb-6 border-b border-border pb-4 text-center">
+        <h1 className="text-xl font-bold text-foreground">{org.name}</h1>
+        <p className="text-sm text-muted-foreground">Cupom não fiscal</p>
+        <p className="text-xs text-muted-foreground">{formatDateTime(sale.createdAt)}</p>
       </div>
 
       <div className="mb-4 text-sm">
         <p>
-          <span className="text-slate-500">Venda:</span>{" "}
+          <span className="text-muted-foreground">Venda:</span>{" "}
           {sale.tableLabel ?? `#${sale.id.slice(-6)}`}
         </p>
         {sale.customer && (
           <p>
-            <span className="text-slate-500">Cliente:</span> {sale.customer.name}
+            <span className="text-muted-foreground">Cliente:</span> {sale.customer.name}
           </p>
         )}
         {sale.paymentMethod && (
           <p>
-            <span className="text-slate-500">Pagamento:</span> {sale.paymentMethod}
+            <span className="text-muted-foreground">Pagamento:</span> {sale.paymentMethod}
           </p>
         )}
       </div>
 
       <table className="mb-6 w-full text-sm">
         <thead>
-          <tr className="border-b border-slate-200 text-left text-xs uppercase text-slate-500">
+          <tr className="border-b border-border text-left text-xs uppercase text-muted-foreground">
             <th className="py-2 pr-2">Item</th>
             <th className="py-2 pr-2 text-right">Qtd</th>
             <th className="py-2 pr-2 text-right">Unit.</th>
             <th className="py-2 text-right">Subtotal</th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-slate-100">
+        <tbody className="divide-y divide-border">
           {sale.items.map((item) => (
             <tr key={item.id}>
               <td className="py-2 pr-2">{item.description}</td>
@@ -78,10 +78,10 @@ export default async function PdvPrintPage({
         </tfoot>
       </table>
 
-      <p className="text-center text-xs text-slate-400">Obrigado pela preferência!</p>
+      <p className="text-center text-xs text-muted-foreground">Obrigado pela preferência!</p>
 
-      <p className="mt-6 text-center text-xs text-slate-400 print:hidden">
-        <Link href="/pdv/vendas" className="text-brand-600 hover:underline">
+      <p className="mt-6 text-center text-xs text-muted-foreground print:hidden">
+        <Link href="/pdv/vendas" className="text-primary hover:underline">
           ← Voltar ao histórico
         </Link>
       </p>

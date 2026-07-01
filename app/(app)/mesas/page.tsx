@@ -28,7 +28,7 @@ export default async function MesasPage() {
       <div className="space-y-8">
         {zones.map((zone) => (
           <section key={zone}>
-            <h2 className="mb-3 text-lg font-semibold text-slate-900">{zone}</h2>
+            <h2 className="mb-3 text-lg font-semibold text-foreground">{zone}</h2>
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
               {tables
                 .filter((t) => (t.zone ?? "Salão") === zone)
@@ -37,11 +37,11 @@ export default async function MesasPage() {
                     key={table.id}
                     className={`card border-2 p-4 ${STATUS_STYLES[table.status]}`}
                   >
-                    <p className="font-semibold text-slate-900">{table.label}</p>
-                    <p className="text-xs text-slate-500">{table.seats} lugares</p>
+                    <p className="font-semibold text-foreground">{table.label}</p>
+                    <p className="text-xs text-muted-foreground">{table.seats} lugares</p>
                     <Link
                       href={`/pdv?table=${encodeURIComponent(table.label)}`}
-                      className="mt-2 inline-block text-xs font-medium text-brand-600 hover:underline"
+                      className="mt-2 inline-block text-xs font-medium text-primary hover:underline"
                     >
                       Abrir no PDV
                     </Link>

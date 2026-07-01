@@ -34,7 +34,7 @@ const STATUS_STYLES: Record<string, string> = {
   CONFIRMED: "bg-indigo-100 text-indigo-700",
   COMPLETED: "bg-green-100 text-green-700",
   CANCELED: "bg-red-100 text-red-700",
-  NO_SHOW: "bg-slate-100 text-slate-500",
+  NO_SHOW: "bg-muted text-muted-foreground",
 };
 
 export default async function AgendaPage({
@@ -172,7 +172,7 @@ export default async function AgendaPage({
         <>
           <div className="card mb-8 overflow-hidden">
             <table className="w-full text-sm">
-              <thead className="bg-slate-50 text-left text-xs uppercase tracking-wider text-slate-500">
+              <thead className="bg-muted text-left text-xs uppercase tracking-wider text-muted-foreground">
                 <tr>
                   <th className="px-4 py-3">Data/Hora</th>
                   <th className="px-4 py-3">{term(terms, "customer")}</th>
@@ -182,13 +182,13 @@ export default async function AgendaPage({
                   <th className="px-4 py-3">Ações</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-border">
                 {appointments.map((a) => (
-                  <tr key={a.id} className="hover:bg-slate-50">
-                    <td className="px-4 py-3 text-slate-600">{formatDateTime(a.startAt)}</td>
-                    <td className="px-4 py-3 font-medium text-slate-900">{a.customer.name}</td>
-                    <td className="px-4 py-3 text-slate-600">{a.service?.name ?? "-"}</td>
-                    <td className="px-4 py-3 text-slate-600">{a.staff?.user.name ?? "-"}</td>
+                  <tr key={a.id} className="hover:bg-muted">
+                    <td className="px-4 py-3 text-muted-foreground">{formatDateTime(a.startAt)}</td>
+                    <td className="px-4 py-3 font-medium text-foreground">{a.customer.name}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{a.service?.name ?? "-"}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{a.staff?.user.name ?? "-"}</td>
                     <td className="px-4 py-3">
                       <span
                         className={`rounded-full px-2 py-0.5 text-xs font-medium ${STATUS_STYLES[a.status]}`}
@@ -224,11 +224,11 @@ export default async function AgendaPage({
       <section className="mt-8">
         <h2 className="mb-3 text-lg font-semibold">Horários bloqueados</h2>
         {blockedSlots.length === 0 ? (
-          <div className="card p-6 text-center text-sm text-slate-500">Nenhum bloqueio cadastrado.</div>
+          <div className="card p-6 text-center text-sm text-muted-foreground">Nenhum bloqueio cadastrado.</div>
         ) : (
           <div className="card overflow-hidden">
             <table className="w-full text-sm">
-              <thead className="bg-slate-50 text-left text-xs uppercase tracking-wider text-slate-500">
+              <thead className="bg-muted text-left text-xs uppercase tracking-wider text-muted-foreground">
                 <tr>
                   <th className="px-4 py-3">Início</th>
                   <th className="px-4 py-3">Fim</th>
@@ -237,13 +237,13 @@ export default async function AgendaPage({
                   <th className="px-4 py-3">Ações</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-border">
                 {blockedSlots.map((b) => (
-                  <tr key={b.id} className="hover:bg-slate-50">
-                    <td className="px-4 py-3 text-slate-600">{formatDateTime(b.startAt)}</td>
-                    <td className="px-4 py-3 text-slate-600">{formatDateTime(b.endAt)}</td>
-                    <td className="px-4 py-3 text-slate-600">{b.staff?.user.name ?? "Todos"}</td>
-                    <td className="px-4 py-3 text-slate-600">{b.reason ?? "—"}</td>
+                  <tr key={b.id} className="hover:bg-muted">
+                    <td className="px-4 py-3 text-muted-foreground">{formatDateTime(b.startAt)}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{formatDateTime(b.endAt)}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{b.staff?.user.name ?? "Todos"}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{b.reason ?? "—"}</td>
                     <td className="px-4 py-3">
                       <DeleteBlockButton id={b.id} />
                     </td>

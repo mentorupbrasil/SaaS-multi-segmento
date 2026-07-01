@@ -59,26 +59,26 @@ export default async function EquipeDetailPage({
       <PageHeader title={member.user.name} description={member.title ?? "Membro da equipe"} />
 
       <div className="mb-4">
-        <Link href="/equipe" className="text-sm text-brand-600 hover:underline">
+        <Link href="/equipe" className="text-sm text-primary hover:underline">
           ← Voltar
         </Link>
       </div>
 
       <div className="mb-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <div className="card p-4">
-          <p className="text-xs text-slate-500">E-mail</p>
+          <p className="text-xs text-muted-foreground">E-mail</p>
           <p className="font-medium">{member.user.email}</p>
         </div>
         <div className="card p-4">
-          <p className="text-xs text-slate-500">Permissão</p>
+          <p className="text-xs text-muted-foreground">Permissão</p>
           <p className="font-medium">{ROLE_LABELS[member.role] ?? member.role}</p>
         </div>
         <div className="card p-4">
-          <p className="text-xs text-slate-500">Comissões pendentes</p>
+          <p className="text-xs text-muted-foreground">Comissões pendentes</p>
           <p className="text-xl font-bold text-amber-600">{formatCurrency(pendingCommissions)}</p>
         </div>
         <div className="card p-4">
-          <p className="text-xs text-slate-500">Serviços vinculados</p>
+          <p className="text-xs text-muted-foreground">Serviços vinculados</p>
           <p className="font-medium">{services.length}</p>
         </div>
       </div>
@@ -91,7 +91,7 @@ export default async function EquipeDetailPage({
               <Link
                 key={s.service.id}
                 href={`/servicos/${s.service.id}`}
-                className="rounded-full bg-brand-50 px-3 py-1 text-sm text-brand-700 hover:bg-brand-100"
+                className="rounded-full bg-brand-50 px-3 py-1 text-sm text-primary hover:bg-primary/15"
               >
                 {s.service.name}
               </Link>
@@ -104,16 +104,16 @@ export default async function EquipeDetailPage({
         <section>
           <h2 className="mb-3 font-semibold">Agendamentos recentes</h2>
           {appointments.length === 0 ? (
-            <p className="text-sm text-slate-500">Nenhum agendamento.</p>
+            <p className="text-sm text-muted-foreground">Nenhum agendamento.</p>
           ) : (
-            <div className="card divide-y divide-slate-100 text-sm">
+            <div className="card divide-y divide-border text-sm">
               {appointments.map((a) => (
                 <div key={a.id} className="flex justify-between px-4 py-3">
                   <div>
                     <p className="font-medium">{a.customer.name}</p>
-                    <p className="text-slate-500">{a.service?.name ?? "—"}</p>
+                    <p className="text-muted-foreground">{a.service?.name ?? "—"}</p>
                   </div>
-                  <span className="text-slate-600">{formatDate(a.startAt)}</span>
+                  <span className="text-muted-foreground">{formatDate(a.startAt)}</span>
                 </div>
               ))}
             </div>
@@ -123,20 +123,20 @@ export default async function EquipeDetailPage({
         <section>
           <h2 className="mb-3 font-semibold">Ordens de serviço recentes</h2>
           {workOrders.length === 0 ? (
-            <p className="text-sm text-slate-500">Nenhuma OS.</p>
+            <p className="text-sm text-muted-foreground">Nenhuma OS.</p>
           ) : (
-            <div className="card divide-y divide-slate-100 text-sm">
+            <div className="card divide-y divide-border text-sm">
               {workOrders.map((o) => (
                 <Link
                   key={o.id}
                   href={`/ordens-de-servico/${o.id}`}
-                  className="flex justify-between px-4 py-3 hover:bg-slate-50"
+                  className="flex justify-between px-4 py-3 hover:bg-muted"
                 >
                   <div>
                     <p className="font-medium">{o.title ?? o.customer?.name ?? "OS"}</p>
-                    <p className="text-slate-500">{o.customer?.name ?? "—"}</p>
+                    <p className="text-muted-foreground">{o.customer?.name ?? "—"}</p>
                   </div>
-                  <span className="text-slate-600">{formatDate(o.createdAt)}</span>
+                  <span className="text-muted-foreground">{formatDate(o.createdAt)}</span>
                 </Link>
               ))}
             </div>
@@ -147,12 +147,12 @@ export default async function EquipeDetailPage({
       {commissions.length > 0 && (
         <section className="mt-8">
           <h2 className="mb-3 font-semibold">Comissões recentes</h2>
-          <div className="card divide-y divide-slate-100 text-sm">
+          <div className="card divide-y divide-border text-sm">
             {commissions.map((c) => (
               <Link
                 key={c.id}
                 href={`/comissoes/${c.id}`}
-                className="flex justify-between px-4 py-3 hover:bg-slate-50"
+                className="flex justify-between px-4 py-3 hover:bg-muted"
               >
                 <span>{c.description.replace(/ \[apt:[^\]]+\]/, "")}</span>
                 <span className={c.paidAt ? "text-green-600" : "text-amber-600"}>

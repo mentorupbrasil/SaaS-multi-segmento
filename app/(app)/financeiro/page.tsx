@@ -63,7 +63,7 @@ export default async function FinanceiroPage({
   const cards = [
     { label: "Receitas (pagas)", value: formatCurrency(income), tone: "text-green-600" },
     { label: "Despesas (pagas)", value: formatCurrency(expense), tone: "text-red-600" },
-    { label: "Saldo", value: formatCurrency(income - expense), tone: "text-slate-900" },
+    { label: "Saldo", value: formatCurrency(income - expense), tone: "text-foreground" },
     { label: "Em aberto", value: formatCurrency(pending), tone: "text-amber-600" },
   ];
 
@@ -81,8 +81,8 @@ export default async function FinanceiroPage({
         action={<EntryForm />}
       />
 
-      <p className="mb-4 text-sm text-slate-500">
-        <Link href="/caixa" className="text-brand-600 hover:underline">
+      <p className="mb-4 text-sm text-muted-foreground">
+        <Link href="/caixa" className="text-primary hover:underline">
           Ir para o caixa →
         </Link>
         {overdueCount > 0 && (
@@ -93,7 +93,7 @@ export default async function FinanceiroPage({
       <div className="mb-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {cards.map((c) => (
           <div key={c.label} className="card p-5">
-            <p className="text-sm text-slate-500">{c.label}</p>
+            <p className="text-sm text-muted-foreground">{c.label}</p>
             <p className={`mt-1 text-xl font-bold ${c.tone}`}>{c.value}</p>
           </div>
         ))}
@@ -141,7 +141,7 @@ export default async function FinanceiroPage({
         <>
           <div className="card overflow-hidden">
             <table className="w-full text-sm">
-              <thead className="bg-slate-50 text-left text-xs uppercase tracking-wider text-slate-500">
+              <thead className="bg-muted text-left text-xs uppercase tracking-wider text-muted-foreground">
                 <tr>
                   <th className="px-4 py-3">Descrição</th>
                   <th className="px-4 py-3">Tipo</th>
@@ -150,11 +150,11 @@ export default async function FinanceiroPage({
                   <th className="px-4 py-3">Status</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-border">
                 {entries.map((e) => (
-                  <tr key={e.id} className="hover:bg-slate-50">
-                    <td className="px-4 py-3 font-medium text-slate-900">
-                      <Link href={`/financeiro/${e.id}`} className="hover:text-brand-600">
+                  <tr key={e.id} className="hover:bg-muted">
+                    <td className="px-4 py-3 font-medium text-foreground">
+                      <Link href={`/financeiro/${e.id}`} className="hover:text-primary">
                         {e.description}
                       </Link>
                     </td>
@@ -163,8 +163,8 @@ export default async function FinanceiroPage({
                         {e.type === "INCOME" ? "Receita" : "Despesa"}
                       </span>
                     </td>
-                    <td className="px-4 py-3 text-slate-600">{formatCurrency(e.amount)}</td>
-                    <td className="px-4 py-3 text-slate-600">{e.dueDate ? formatDate(e.dueDate) : "-"}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{formatCurrency(e.amount)}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{e.dueDate ? formatDate(e.dueDate) : "-"}</td>
                     <td className="px-4 py-3">
                       {e.status === "PAID" ? (
                         <span className="rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-700">

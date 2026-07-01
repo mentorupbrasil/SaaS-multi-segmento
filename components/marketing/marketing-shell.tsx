@@ -6,7 +6,7 @@ import { Icon } from "@/components/icon";
 
 export function MarketingShell({ children }: { children: ReactNode }) {
   return (
-    <div className="bg-white">
+    <div className="min-h-screen bg-background text-foreground">
       <SiteHeader />
       <main>{children}</main>
       <SiteFooter />
@@ -29,15 +29,15 @@ export function PageHero({
   secondaryCta?: { href: string; label: string };
 }) {
   return (
-    <section className="relative overflow-hidden border-b border-slate-100">
+    <section className="relative overflow-hidden border-b border-border bg-background">
       <div className="absolute inset-0 bg-grid [mask-image:radial-gradient(ellipse_at_top,black,transparent_70%)]" />
       <div className="section relative py-14 text-center sm:py-16">
         <span className="eyebrow">{eyebrow}</span>
-        <h1 className="mx-auto mt-4 max-w-3xl text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl">
+        <h1 className="mx-auto mt-4 max-w-3xl text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
           {title}
         </h1>
         {description && (
-          <p className="mx-auto mt-4 max-w-2xl text-lg text-slate-600">{description}</p>
+          <p className="mx-auto mt-4 max-w-2xl text-lg text-muted-foreground">{description}</p>
         )}
         {(primaryCta || secondaryCta) && (
           <div className="mt-8 flex flex-wrap justify-center gap-3">

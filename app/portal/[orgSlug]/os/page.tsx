@@ -84,7 +84,7 @@ export default async function PortalOsLookupPage({
         <p className="rounded-xl bg-amber-50 px-4 py-3 text-sm text-amber-800">
           Nenhum cadastro encontrado com este e-mail.
         </p>
-        <Link href={`/portal/${org.slug}/os`} className="mt-4 inline-block text-sm text-brand-600 hover:underline">
+        <Link href={`/portal/${org.slug}/os`} className="mt-4 inline-block text-sm text-primary hover:underline">
           Tentar outro e-mail
         </Link>
       </PortalShell>
@@ -99,9 +99,9 @@ export default async function PortalOsLookupPage({
   return (
     <PortalShell orgName={org.name} orgSlug={org.slug} title={`Olá, ${customer.name}`}>
       <section className="mb-8">
-        <h2 className="mb-3 font-semibold text-slate-900">Ordens de serviço</h2>
+        <h2 className="mb-3 font-semibold text-foreground">Ordens de serviço</h2>
         {workOrders.length === 0 ? (
-          <p className="text-sm text-slate-500">Nenhuma OS encontrada.</p>
+          <p className="text-sm text-muted-foreground">Nenhuma OS encontrada.</p>
         ) : (
           <ul className="space-y-2">
             {workOrders.map((wo) => (
@@ -112,11 +112,11 @@ export default async function PortalOsLookupPage({
                 >
                   <div>
                     <p className="font-medium">{wo.title}</p>
-                    <p className="text-xs text-slate-500">{formatDate(wo.createdAt)}</p>
+                    <p className="text-xs text-muted-foreground">{formatDate(wo.createdAt)}</p>
                   </div>
                   <div className="text-right">
                     <p className="font-medium">{formatCurrency(wo.total)}</p>
-                    <p className="text-xs text-slate-500">{WO_STATUS[wo.status] ?? wo.status}</p>
+                    <p className="text-xs text-muted-foreground">{WO_STATUS[wo.status] ?? wo.status}</p>
                   </div>
                 </Link>
               </li>
@@ -126,9 +126,9 @@ export default async function PortalOsLookupPage({
       </section>
 
       <section>
-        <h2 className="mb-3 font-semibold text-slate-900">Orçamentos</h2>
+        <h2 className="mb-3 font-semibold text-foreground">Orçamentos</h2>
         {quotes.length === 0 ? (
-          <p className="text-sm text-slate-500">Nenhum orçamento encontrado.</p>
+          <p className="text-sm text-muted-foreground">Nenhum orçamento encontrado.</p>
         ) : (
           <ul className="space-y-2">
             {quotes.map((q) => (
@@ -139,11 +139,11 @@ export default async function PortalOsLookupPage({
                 >
                   <div>
                     <p className="font-medium">{q.title}</p>
-                    <p className="text-xs text-slate-500">{formatDate(q.createdAt)}</p>
+                    <p className="text-xs text-muted-foreground">{formatDate(q.createdAt)}</p>
                   </div>
                   <div className="text-right">
                     <p className="font-medium">{formatCurrency(q.total)}</p>
-                    <p className="text-xs text-slate-500">{QUOTE_STATUS[q.status] ?? q.status}</p>
+                    <p className="text-xs text-muted-foreground">{QUOTE_STATUS[q.status] ?? q.status}</p>
                   </div>
                 </Link>
               </li>
@@ -167,13 +167,13 @@ function PortalShell({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen bg-slate-50 px-4 py-10">
+    <div className="min-h-screen bg-muted px-4 py-10">
       <div className="mx-auto max-w-lg">
-        <Link href={`/portal/${orgSlug}`} className="mb-4 inline-flex items-center gap-1 text-sm text-brand-600 hover:underline">
+        <Link href={`/portal/${orgSlug}`} className="mb-4 inline-flex items-center gap-1 text-sm text-primary hover:underline">
           <Icon name="ArrowLeft" className="h-4 w-4" />
           {orgName}
         </Link>
-        <h1 className="mb-6 text-2xl font-bold text-slate-900">{title}</h1>
+        <h1 className="mb-6 text-2xl font-bold text-foreground">{title}</h1>
         {children}
       </div>
     </div>

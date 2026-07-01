@@ -25,20 +25,20 @@ export default async function PortalAgendaPage({
       : [];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-brand-50 via-white to-brand-100">
+    <div className="min-h-screen bg-gradient-to-br from-brand-50 via-background to-brand-100">
       <div className="mx-auto max-w-2xl px-6 py-12">
         <Link
           href={`/portal/${org.slug}`}
-          className="mb-6 inline-flex items-center gap-1 text-sm text-slate-500 hover:text-slate-800"
+          className="mb-6 inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
         >
           <Icon name="ArrowLeft" className="h-4 w-4" />
           Voltar ao portal
         </Link>
 
         <div className="card overflow-hidden">
-          <div className="border-b border-slate-100 bg-slate-50/60 px-8 py-6">
-            <h1 className="text-xl font-bold text-slate-900">Meus agendamentos</h1>
-            <p className="mt-1 text-sm text-slate-500">{org.name}</p>
+          <div className="border-b border-border bg-muted/40 px-8 py-6">
+            <h1 className="text-xl font-bold text-foreground">Meus agendamentos</h1>
+            <p className="mt-1 text-sm text-muted-foreground">{org.name}</p>
           </div>
 
           <div className="p-8">
@@ -63,23 +63,23 @@ export default async function PortalAgendaPage({
             </form>
 
             {email && appointments.length === 0 && (
-              <p className="rounded-xl bg-slate-50 px-4 py-6 text-center text-sm text-slate-500">
+              <p className="rounded-xl bg-muted px-4 py-6 text-center text-sm text-muted-foreground">
                 Nenhum agendamento futuro encontrado para este e-mail.
               </p>
             )}
 
             {appointments.length > 0 && (
-              <ul className="divide-y divide-slate-100 rounded-xl border border-slate-100">
+              <ul className="divide-y divide-border rounded-xl border border-border">
                 {appointments.map((appt) => (
                   <li key={appt.id} className="flex items-start gap-3 px-4 py-4">
-                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand-50 text-brand-600">
+                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand-50 text-primary">
                       <Icon name="Calendar" className="h-5 w-5" />
                     </span>
                     <div>
-                      <p className="font-medium text-slate-900">
+                      <p className="font-medium text-foreground">
                         {appt.service?.name ?? "Atendimento"}
                       </p>
-                      <p className="text-sm text-slate-600">{formatDateTime(appt.startAt)}</p>
+                      <p className="text-sm text-muted-foreground">{formatDateTime(appt.startAt)}</p>
                       <span className="mt-1 inline-block rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-700">
                         {appt.status === "CONFIRMED" ? "Confirmado" : "Agendado"}
                       </span>

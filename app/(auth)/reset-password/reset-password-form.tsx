@@ -17,7 +17,7 @@ export default function ResetPasswordForm() {
     return (
       <div className="card w-full max-w-md p-8 text-center text-sm text-red-700">
         Link inválido.{" "}
-        <Link href="/forgot-password" className="font-semibold text-brand-700 hover:underline">
+        <Link href="/forgot-password" className="font-semibold text-primary hover:underline">
           Solicitar novo link
         </Link>
       </div>
@@ -27,9 +27,9 @@ export default function ResetPasswordForm() {
   return (
     <div className="w-full max-w-md">
       <div className="card overflow-hidden">
-        <div className="border-b border-slate-100 bg-slate-50/60 px-8 py-6">
-          <h1 className="text-2xl font-bold text-slate-900">Nova senha</h1>
-          <p className="mt-1 text-sm text-slate-500">Escolha uma senha segura para sua conta.</p>
+        <div className="border-b border-border bg-muted/40 px-8 py-6">
+          <h1 className="text-2xl font-bold text-foreground">Nova senha</h1>
+          <p className="mt-1 text-sm text-muted-foreground">Escolha uma senha segura para sua conta.</p>
         </div>
 
         {state.ok ? (

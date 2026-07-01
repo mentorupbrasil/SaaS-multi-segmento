@@ -91,11 +91,11 @@ export default async function SegmentLandingPage({
   const faqItems = getSegmentLandingFaq(seg);
 
   return (
-    <div className="bg-white">
+    <div className="bg-card">
       <SiteHeader />
 
       {/* Hero */}
-      <section className="relative overflow-hidden border-b border-slate-100">
+      <section className="relative overflow-hidden border-b border-border">
         <div className="absolute inset-0 bg-grid [mask-image:radial-gradient(ellipse_at_top,black,transparent_70%)]" />
         <div className="section relative grid items-center gap-12 py-16 lg:grid-cols-2">
           <div>
@@ -103,10 +103,10 @@ export default async function SegmentLandingPage({
               <Icon name={seg.icon} className="h-3.5 w-3.5" />
               {CATEGORY_LABELS[seg.category]}
             </span>
-            <h1 className="mt-5 text-4xl font-bold leading-tight tracking-tight text-slate-900 sm:text-5xl">
+            <h1 className="mt-5 text-4xl font-bold leading-tight tracking-tight text-foreground sm:text-5xl">
               {seg.seo.headline}
             </h1>
-            <p className="mt-5 max-w-xl text-lg text-slate-600">{seg.seo.subheadline}</p>
+            <p className="mt-5 max-w-xl text-lg text-muted-foreground">{seg.seo.subheadline}</p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link href="/signup" className="btn-primary px-6 py-3 text-base">
                 Assinar agora
@@ -116,7 +116,7 @@ export default async function SegmentLandingPage({
                 Ver planos
               </Link>
             </div>
-            <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-slate-500">
+            <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-muted-foreground">
               <span className="inline-flex items-center gap-1.5">
                 <Icon name="Check" className="h-4 w-4 text-green-600" /> Cadastro em minutos
               </span>
@@ -132,20 +132,20 @@ export default async function SegmentLandingPage({
           {/* Card de benefícios */}
           <div className="relative mx-auto w-full max-w-md">
             <div className="absolute -inset-4 rounded-3xl bg-gradient-to-br from-brand-200/40 via-brand-200/40 to-brand-300/40 blur-2xl" />
-            <div className="relative rounded-2xl border border-slate-200 bg-white p-7 shadow-2xl shadow-slate-300/40">
+            <div className="relative rounded-2xl border border-border bg-card p-7 shadow-2xl shadow-black/10/40">
               <div className="flex items-center gap-3">
                 <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-brand-600 to-brand-700 text-white">
                   <Icon name={seg.icon} className="h-6 w-6" />
                 </span>
                 <div>
-                  <p className="font-semibold text-slate-900">{seg.label}</p>
-                  <p className="text-sm text-slate-500">{seg.tagline}</p>
+                  <p className="font-semibold text-foreground">{seg.label}</p>
+                  <p className="text-sm text-muted-foreground">{seg.tagline}</p>
                 </div>
               </div>
               <ul className="mt-6 space-y-3">
                 {seg.benefits.map((b) => (
-                  <li key={b} className="flex items-start gap-3 text-sm text-slate-700">
-                    <Icon name="BadgeCheck" className="mt-0.5 h-5 w-5 shrink-0 text-brand-600" />
+                  <li key={b} className="flex items-start gap-3 text-sm text-foreground">
+                    <Icon name="BadgeCheck" className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
                     {b}
                   </li>
                 ))}
@@ -160,10 +160,10 @@ export default async function SegmentLandingPage({
       <section className="section py-16">
         <div className="text-center">
           <span className="eyebrow">O que está incluso</span>
-          <h2 className="mt-4 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+          <h2 className="mt-4 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
             {seg.label}: módulos do seu nicho
           </h2>
-          <p className="mx-auto mt-3 max-w-2xl text-slate-600">
+          <p className="mx-auto mt-3 max-w-2xl text-muted-foreground">
             Módulos prontos com os nomes do seu segmento — a liberação depende do plano contratado.
           </p>
         </div>
@@ -174,10 +174,10 @@ export default async function SegmentLandingPage({
             if (!mod) return null;
             return (
               <div key={id} className="card p-6 transition-shadow hover:shadow-md">
-                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-brand-50 to-brand-100 text-brand-600 ring-1 ring-brand-100">
+                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-primary/10 to-primary/5 text-primary ring-1 ring-primary/20">
                   <Icon name={mod.nav[0]?.icon ?? "Tag"} className="h-5 w-5" />
                 </div>
-                <h3 className="mt-4 flex items-center gap-2 font-semibold text-slate-900">
+                <h3 className="mt-4 flex items-center gap-2 font-semibold text-foreground">
                   {moduleLabel[id] ?? mod.name}
                   {mod.comingSoon && (
                     <span className="rounded bg-amber-100 px-1.5 py-0.5 text-[10px] font-semibold text-amber-700">
@@ -185,7 +185,7 @@ export default async function SegmentLandingPage({
                     </span>
                   )}
                 </h3>
-                <p className="mt-1.5 text-sm leading-relaxed text-slate-600">
+                <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
                   {moduleDescription[id] ?? mod.description}
                 </p>
               </div>
@@ -195,28 +195,28 @@ export default async function SegmentLandingPage({
       </section>
 
       {/* Funcionalidades essenciais (catálogo da categoria) */}
-      <section className="border-t border-slate-100 bg-slate-50/60">
+      <section className="border-t border-border bg-muted/40">
         <div className="section py-16">
           <div className="text-center">
             <span className="eyebrow">Funcionalidades</span>
-            <h2 className="mt-4 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+            <h2 className="mt-4 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
               Um sistema completo para {CATEGORY_LABELS[seg.category].toLowerCase()}
             </h2>
-            <p className="mx-auto mt-3 max-w-2xl text-slate-600">{extras.intro}</p>
-            <div className="mt-4 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs text-slate-500">
+            <p className="mx-auto mt-3 max-w-2xl text-muted-foreground">{extras.intro}</p>
+            <div className="mt-4 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs text-muted-foreground">
               <span className="inline-flex items-center gap-1.5">
-                <Icon name="Check" className="h-4 w-4 text-brand-600" /> Disponível
+                <Icon name="Check" className="h-4 w-4 text-primary" /> Disponível
               </span>
               <span className="inline-flex items-center gap-1.5">
-                <Icon name="Clock" className="h-4 w-4 text-slate-300" /> No roadmap
+                <Icon name="Clock" className="h-4 w-4 text-muted-foreground/80" /> No roadmap
               </span>
             </div>
           </div>
           <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {extras.groups.map((group) => (
               <div key={group.id} className="card p-6">
-                <h3 className="flex items-center gap-2 font-semibold text-slate-900">
-                  <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-brand-50 to-brand-100 text-brand-600 ring-1 ring-brand-100">
+                <h3 className="flex items-center gap-2 font-semibold text-foreground">
+                  <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-primary/10 to-primary/5 text-primary ring-1 ring-primary/20">
                     <Icon name={group.icon} className="h-5 w-5" />
                   </span>
                   {group.title}
@@ -228,10 +228,10 @@ export default async function SegmentLandingPage({
                         name={it.status === "available" ? "Check" : "Clock"}
                         className={cn(
                           "mt-0.5 h-4 w-4 shrink-0",
-                          it.status === "available" ? "text-brand-600" : "text-slate-300",
+                          it.status === "available" ? "text-primary" : "text-muted-foreground/80",
                         )}
                       />
-                      <span className={it.status === "available" ? "text-slate-700" : "text-slate-400"}>
+                      <span className={it.status === "available" ? "text-foreground" : "text-muted-foreground"}>
                         {it.label}
                       </span>
                     </li>
@@ -244,14 +244,14 @@ export default async function SegmentLandingPage({
       </section>
 
       {/* Personalizado para o segmento */}
-      <section className="border-y border-slate-100 bg-white">
+      <section className="border-y border-border bg-card">
         <div className="section py-16">
           <div className="text-center">
             <span className="eyebrow">Já vem pronto</span>
-            <h2 className="mt-4 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+            <h2 className="mt-4 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
               Configurado para {seg.label.toLowerCase()}
             </h2>
-            <p className="mx-auto mt-3 max-w-2xl text-slate-600">
+            <p className="mx-auto mt-3 max-w-2xl text-muted-foreground">
               Ao escolher o seu segmento, a plataforma se adapta automaticamente — sem configuração técnica.
             </p>
           </div>
@@ -259,19 +259,19 @@ export default async function SegmentLandingPage({
           <div className="mt-12 grid gap-6 lg:grid-cols-3">
             {/* Nomenclatura */}
             <div className="card p-6">
-              <h3 className="flex items-center gap-2 font-semibold text-slate-900">
-                <Icon name="Languages" className="h-5 w-5 text-brand-600" />
+              <h3 className="flex items-center gap-2 font-semibold text-foreground">
+                <Icon name="Languages" className="h-5 w-5 text-primary" />
                 A linguagem do seu negócio
               </h3>
-              <p className="mt-1.5 text-sm text-slate-500">
+              <p className="mt-1.5 text-sm text-muted-foreground">
                 Os menus e telas usam os termos que você já fala no dia a dia.
               </p>
               <ul className="mt-4 space-y-2.5">
                 {nomenclature.map((n) => (
                   <li key={n.base} className="flex items-center gap-2 text-sm">
-                    <span className="text-slate-400">{n.base}</span>
-                    <Icon name="ArrowRight" className="h-3.5 w-3.5 text-slate-300" />
-                    <span className="font-semibold text-slate-900">{n.value}</span>
+                    <span className="text-muted-foreground">{n.base}</span>
+                    <Icon name="ArrowRight" className="h-3.5 w-3.5 text-muted-foreground/80" />
+                    <span className="font-semibold text-foreground">{n.value}</span>
                   </li>
                 ))}
               </ul>
@@ -279,21 +279,21 @@ export default async function SegmentLandingPage({
 
             {/* Serviços padrão */}
             <div className="card p-6">
-              <h3 className="flex items-center gap-2 font-semibold text-slate-900">
-                <Icon name="Tag" className="h-5 w-5 text-brand-600" />
+              <h3 className="flex items-center gap-2 font-semibold text-foreground">
+                <Icon name="Tag" className="h-5 w-5 text-primary" />
                 {terms.service_plural} já cadastrados
               </h3>
-              <p className="mt-1.5 text-sm text-slate-500">
+              <p className="mt-1.5 text-sm text-muted-foreground">
                 Você começa com exemplos prontos e ajusta como quiser.
               </p>
               <ul className="mt-4 space-y-2.5">
                 {(seg.defaultServices ?? []).map((s) => (
                   <li key={s.name} className="flex items-center justify-between gap-2 text-sm">
-                    <span className="text-slate-700">{s.name}</span>
-                    <span className="font-medium text-slate-900">
+                    <span className="text-foreground">{s.name}</span>
+                    <span className="font-medium text-foreground">
                       {s.price > 0 ? formatCurrency(s.price) : "—"}
                       {s.durationMin > 0 && (
-                        <span className="ml-1 text-xs text-slate-400">· {s.durationMin}min</span>
+                        <span className="ml-1 text-xs text-muted-foreground">· {s.durationMin}min</span>
                       )}
                     </span>
                   </li>
@@ -303,21 +303,21 @@ export default async function SegmentLandingPage({
 
             {/* Ficha de cadastro */}
             <div className="card p-6">
-              <h3 className="flex items-center gap-2 font-semibold text-slate-900">
-                <Icon name="ClipboardList" className="h-5 w-5 text-brand-600" />
+              <h3 className="flex items-center gap-2 font-semibold text-foreground">
+                <Icon name="ClipboardList" className="h-5 w-5 text-primary" />
                 Ficha de {terms.customer.toLowerCase()}
               </h3>
-              <p className="mt-1.5 text-sm text-slate-500">
+              <p className="mt-1.5 text-sm text-muted-foreground">
                 Além de nome, telefone e e-mail, o cadastro inclui campos do seu segmento.
               </p>
               <ul className="mt-4 flex flex-wrap gap-2">
-                <li className="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-600">Nome</li>
-                <li className="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-600">Telefone</li>
-                <li className="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-600">E-mail</li>
+                <li className="rounded-full bg-muted px-3 py-1 text-xs font-medium text-muted-foreground">Nome</li>
+                <li className="rounded-full bg-muted px-3 py-1 text-xs font-medium text-muted-foreground">Telefone</li>
+                <li className="rounded-full bg-muted px-3 py-1 text-xs font-medium text-muted-foreground">E-mail</li>
                 {(seg.customerFields ?? []).map((f) => (
                   <li
                     key={f.key}
-                    className="rounded-full bg-brand-50 px-3 py-1 text-xs font-medium text-brand-700 ring-1 ring-brand-100"
+                    className="rounded-full bg-brand-50 px-3 py-1 text-xs font-medium text-primary ring-1 ring-primary/20"
                   >
                     {f.label}
                   </li>
@@ -333,28 +333,28 @@ export default async function SegmentLandingPage({
         <div className="absolute inset-0 bg-grid opacity-10" />
         <div className="section relative py-16">
           <div className="text-center">
-            <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-brand-200">
+            <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-card/10 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-brand-200">
               <Icon name="Sparkles" className="h-3.5 w-3.5" /> Recursos premium
             </span>
             <h2 className="mt-4 text-3xl font-bold tracking-tight sm:text-4xl">
               O que torna o sistema referência
             </h2>
-            <p className="mx-auto mt-3 max-w-2xl text-slate-300">
+            <p className="mx-auto mt-3 max-w-2xl text-muted-foreground/80">
               Recursos avançados, em evolução contínua, para levar o seu negócio a outro nível.
             </p>
           </div>
           <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {extras.premium.map((group) => (
-              <div key={group.id} className="rounded-2xl border border-white/10 bg-white/5 p-6">
+              <div key={group.id} className="rounded-2xl border border-white/10 bg-card/5 p-6">
                 <h3 className="flex items-center gap-2 font-semibold">
-                  <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-white/10 text-brand-200">
+                  <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-card/10 text-brand-200">
                     <Icon name={group.icon} className="h-5 w-5" />
                   </span>
                   {group.title}
                 </h3>
                 <ul className="mt-4 space-y-2">
                   {group.items.map((it) => (
-                    <li key={it.label} className="flex items-start gap-2 text-sm text-slate-300">
+                    <li key={it.label} className="flex items-start gap-2 text-sm text-muted-foreground/80">
                       <Icon name="Sparkles" className="mt-0.5 h-4 w-4 shrink-0 text-brand-300" />
                       {it.label}
                     </li>
@@ -370,36 +370,36 @@ export default async function SegmentLandingPage({
       <section className="section py-16">
         <div className="text-center">
           <span className="eyebrow">Diferenciais</span>
-          <h2 className="mt-4 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+          <h2 className="mt-4 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
             Pensado para ser o melhor do setor
           </h2>
         </div>
         <div className="mx-auto mt-10 grid max-w-4xl gap-3 sm:grid-cols-2">
           {extras.differentials.map((d) => (
-            <div key={d} className="flex items-start gap-3 rounded-xl border border-slate-200 bg-white p-4">
-              <Icon name="BadgeCheck" className="mt-0.5 h-5 w-5 shrink-0 text-brand-600" />
-              <span className="text-sm font-medium text-slate-700">{d}</span>
+            <div key={d} className="flex items-start gap-3 rounded-xl border border-border bg-card p-4">
+              <Icon name="BadgeCheck" className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
+              <span className="text-sm font-medium text-foreground">{d}</span>
             </div>
           ))}
         </div>
       </section>
 
       {/* Dashboards e integrações */}
-      <section className="border-y border-slate-100 bg-slate-50/60">
+      <section className="border-y border-border bg-muted/40">
         <div className="section grid gap-10 py-16 lg:grid-cols-2">
           <div>
-            <h2 className="flex items-center gap-2 text-2xl font-bold tracking-tight text-slate-900">
-              <Icon name="BarChart3" className="h-6 w-6 text-brand-600" />
+            <h2 className="flex items-center gap-2 text-2xl font-bold tracking-tight text-foreground">
+              <Icon name="BarChart3" className="h-6 w-6 text-primary" />
               Dashboards e indicadores
             </h2>
-            <p className="mt-2 text-slate-600">
+            <p className="mt-2 text-muted-foreground">
               Acompanhe os números que importam para decidir com segurança.
             </p>
             <ul className="mt-6 flex flex-wrap gap-2">
               {extras.dashboards.map((d) => (
                 <li
                   key={d}
-                  className="rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-600"
+                  className="rounded-full border border-border bg-card px-3 py-1.5 text-xs font-medium text-muted-foreground"
                 >
                   {d}
                 </li>
@@ -407,21 +407,21 @@ export default async function SegmentLandingPage({
             </ul>
           </div>
           <div>
-            <h2 className="flex items-center gap-2 text-2xl font-bold tracking-tight text-slate-900">
-              <Icon name="Plug" className="h-6 w-6 text-brand-600" />
+            <h2 className="flex items-center gap-2 text-2xl font-bold tracking-tight text-foreground">
+              <Icon name="Plug" className="h-6 w-6 text-primary" />
               Integrações
             </h2>
-            <p className="mt-2 text-slate-600">
+            <p className="mt-2 text-muted-foreground">
               Conecte o sistema com as ferramentas que você já usa. WhatsApp e PIX exigem plano
               Profissional+ e configuração em Conexões.
             </p>
             <ul className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3">
               {extras.integrations.map((i) => (
-                <li key={i.label} className="flex items-center gap-2 rounded-xl border border-slate-200 bg-white p-3">
-                  <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 text-slate-600">
+                <li key={i.label} className="flex items-center gap-2 rounded-xl border border-border bg-card p-3">
+                  <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-muted text-muted-foreground">
                     <Icon name={i.icon} className="h-4 w-4" />
                   </span>
-                  <span className="text-xs font-medium text-slate-700">{i.label}</span>
+                  <span className="text-xs font-medium text-foreground">{i.label}</span>
                 </li>
               ))}
             </ul>
@@ -433,7 +433,7 @@ export default async function SegmentLandingPage({
       <section className="section py-16">
         <div className="text-center">
           <span className="eyebrow">Simples assim</span>
-          <h2 className="mt-4 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+          <h2 className="mt-4 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
             Comece em 3 passos
           </h2>
         </div>
@@ -444,20 +444,20 @@ export default async function SegmentLandingPage({
             { icon: "TrendingUp", t: "Gerencie e cresça", d: "Agenda, clientes e caixa em um lugar só." },
           ].map((s, i) => (
             <div key={s.t} className="text-center">
-              <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-white text-brand-600 shadow-sm ring-1 ring-slate-200">
+              <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-card text-primary shadow-sm ring-1 ring-border">
                 <Icon name={s.icon} className="h-6 w-6" />
               </div>
-              <span className="mt-4 inline-block text-xs font-bold uppercase tracking-wider text-brand-600">
+              <span className="mt-4 inline-block text-xs font-bold uppercase tracking-wider text-primary">
                 Passo {i + 1}
               </span>
-              <h3 className="mt-1 text-lg font-semibold text-slate-900">{s.t}</h3>
-              <p className="mx-auto mt-1.5 max-w-xs text-sm text-slate-600">{s.d}</p>
+              <h3 className="mt-1 text-lg font-semibold text-foreground">{s.t}</h3>
+              <p className="mx-auto mt-1.5 max-w-xs text-sm text-muted-foreground">{s.d}</p>
             </div>
           ))}
         </div>
       </section>
 
-      <div className="border-t border-slate-100 bg-slate-50/60">
+      <div className="border-t border-border bg-muted/40">
         <Pricing />
       </div>
 
@@ -470,7 +470,7 @@ export default async function SegmentLandingPage({
       {/* Segmentos relacionados */}
       {related.length > 0 && (
         <section className="section pb-8">
-          <h2 className="text-center text-sm font-bold uppercase tracking-wider text-slate-500">
+          <h2 className="text-center text-sm font-bold uppercase tracking-wider text-muted-foreground">
             Também em {CATEGORY_LABELS[seg.category]}
           </h2>
           <div className="mx-auto mt-6 flex max-w-3xl flex-wrap justify-center gap-3">
@@ -478,9 +478,9 @@ export default async function SegmentLandingPage({
               <Link
                 key={r.id}
                 href={`/${r.slug}`}
-                className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition-colors hover:border-brand-300 hover:text-brand-700"
+                className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-sm font-medium text-foreground transition-colors hover:border-brand-300 hover:text-primary"
               >
-                <Icon name={r.icon} className="h-4 w-4 text-brand-600" />
+                <Icon name={r.icon} className="h-4 w-4 text-primary" />
                 {r.label}
               </Link>
             ))}

@@ -31,7 +31,7 @@ export default async function VacinaDetailPage({
       <PageHeader title={vaccination.vaccine} description="Registro de vacinação" />
 
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-        <Link href="/vacinas" className="text-sm text-brand-600 hover:underline">
+        <Link href="/vacinas" className="text-sm text-primary hover:underline">
           ← Voltar
         </Link>
         <DeleteButton
@@ -42,26 +42,26 @@ export default async function VacinaDetailPage({
 
       <div className="mb-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <div className="card p-4">
-          <p className="text-xs text-slate-500">Pet</p>
-          <Link href={`/pets/${vaccination.pet.id}`} className="font-medium hover:text-brand-600">
+          <p className="text-xs text-muted-foreground">Pet</p>
+          <Link href={`/pets/${vaccination.pet.id}`} className="font-medium hover:text-primary">
             {vaccination.pet.name}
           </Link>
         </div>
         <div className="card p-4">
-          <p className="text-xs text-slate-500">Tutor</p>
+          <p className="text-xs text-muted-foreground">Tutor</p>
           <Link
             href={`/clientes/${vaccination.pet.customer.id}`}
-            className="font-medium hover:text-brand-600"
+            className="font-medium hover:text-primary"
           >
             {vaccination.pet.customer.name}
           </Link>
         </div>
         <div className="card p-4">
-          <p className="text-xs text-slate-500">Aplicada em</p>
+          <p className="text-xs text-muted-foreground">Aplicada em</p>
           <p className="font-medium">{formatDate(vaccination.appliedAt)}</p>
         </div>
         <div className="card p-4">
-          <p className="text-xs text-slate-500">Próxima dose</p>
+          <p className="text-xs text-muted-foreground">Próxima dose</p>
           <p className={`font-medium ${overdue ? "text-red-600" : ""}`}>
             {vaccination.nextDueAt ? formatDate(vaccination.nextDueAt) : "—"}
           </p>
@@ -76,12 +76,12 @@ export default async function VacinaDetailPage({
 
       {vaccination.notes && (
         <div className="card mb-6 p-4">
-          <p className="text-xs text-slate-500">Observações</p>
+          <p className="text-xs text-muted-foreground">Observações</p>
           <p className="text-sm">{vaccination.notes}</p>
         </div>
       )}
 
-      <p className="text-xs text-slate-400">Registrado em {formatDate(vaccination.createdAt)}</p>
+      <p className="text-xs text-muted-foreground">Registrado em {formatDate(vaccination.createdAt)}</p>
     </div>
   );
 }

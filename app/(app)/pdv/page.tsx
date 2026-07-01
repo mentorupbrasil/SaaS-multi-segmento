@@ -94,15 +94,15 @@ export default async function PdvPage({
             <div key={sale.id} className="card p-6">
               <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
                 <div>
-                  <p className="font-semibold text-slate-900">
+                  <p className="font-semibold text-foreground">
                     {sale.tableLabel ?? `Venda #${sale.id.slice(-6)}`}
                   </p>
-                  <p className="text-sm text-slate-500">
+                  <p className="text-sm text-muted-foreground">
                     {sale.customer?.name ?? "Sem cliente"} · {formatDate(sale.createdAt)}
                   </p>
                 </div>
                 <div className="text-right">
-                  <p className="text-2xl font-bold text-slate-900">{formatCurrency(sale.total)}</p>
+                  <p className="text-2xl font-bold text-foreground">{formatCurrency(sale.total)}</p>
                   <FinalizeSaleButton saleId={sale.id} paymentMethods={paymentMethods} />
                   <CancelSaleButton saleId={sale.id} />
                   <DeleteButton action={deleteSale.bind(null, sale.id)} />
@@ -111,7 +111,7 @@ export default async function PdvPage({
 
               {sale.items.length > 0 && (
                 <table className="mb-2 w-full text-sm">
-                  <thead className="text-left text-xs uppercase text-slate-500">
+                  <thead className="text-left text-xs uppercase text-muted-foreground">
                     <tr>
                       <th className="py-2">Item</th>
                       <th className="py-2">Qtd</th>
@@ -119,7 +119,7 @@ export default async function PdvPage({
                       <th className="py-2">Subtotal</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-100">
+                  <tbody className="divide-y divide-border">
                     {sale.items.map((item) => (
                       <tr key={item.id}>
                         <td className="py-2">{item.description}</td>

@@ -39,8 +39,8 @@ const PRIORITY_LABEL: Record<string, string> = {
 };
 
 const PRIORITY_STYLES: Record<string, string> = {
-  LOW: "bg-slate-100 text-slate-600",
-  NORMAL: "bg-slate-100 text-slate-700",
+  LOW: "bg-muted text-muted-foreground",
+  NORMAL: "bg-muted text-foreground",
   HIGH: "bg-amber-100 text-amber-700",
   URGENT: "bg-red-100 text-red-700",
 };
@@ -88,7 +88,7 @@ export default async function GovernancaPage() {
       ) : (
         <div className="space-y-6">
           <section>
-            <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-slate-500">
+            <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-muted-foreground">
               Mapa de quartos
             </h2>
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6">
@@ -97,7 +97,7 @@ export default async function GovernancaPage() {
                 return (
                   <div
                     key={room.id}
-                    className={`card border p-4 ${ROOM_STATUS_STYLES[room.status] ?? "border-slate-200"}`}
+                    className={`card border p-4 ${ROOM_STATUS_STYLES[room.status] ?? "border-border"}`}
                   >
                     <p className="text-lg font-bold">{room.number}</p>
                     <p className="text-xs opacity-80">{room.type ?? "—"}</p>
@@ -118,17 +118,17 @@ export default async function GovernancaPage() {
           </section>
 
           <section>
-            <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-slate-500">
+            <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-muted-foreground">
               Tarefas pendentes
             </h2>
             {activeTasks.length === 0 ? (
-              <div className="card p-8 text-center text-slate-500">
+              <div className="card p-8 text-center text-muted-foreground">
                 Nenhuma tarefa pendente. Crie uma nova tarefa para a equipe de governança.
               </div>
             ) : (
               <div className="card overflow-hidden">
                 <table className="w-full text-sm">
-                  <thead className="bg-slate-50 text-left text-xs uppercase tracking-wider text-slate-500">
+                  <thead className="bg-muted text-left text-xs uppercase tracking-wider text-muted-foreground">
                     <tr>
                       <th className="px-4 py-3">Quarto</th>
                       <th className="px-4 py-3">Tipo</th>
@@ -139,14 +139,14 @@ export default async function GovernancaPage() {
                       <th className="px-4 py-3">Ações</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-100">
+                  <tbody className="divide-y divide-border">
                     {activeTasks.map((task) => (
-                      <tr key={task.id} className="hover:bg-slate-50">
-                        <td className="px-4 py-3 font-medium text-slate-900">
+                      <tr key={task.id} className="hover:bg-muted">
+                        <td className="px-4 py-3 font-medium text-foreground">
                           {task.room.number}
                           {task.room.type ? ` (${task.room.type})` : ""}
                         </td>
-                        <td className="px-4 py-3 text-slate-600">
+                        <td className="px-4 py-3 text-muted-foreground">
                           {TASK_TYPE_LABEL[task.taskType] ?? task.taskType}
                         </td>
                         <td className="px-4 py-3">
@@ -156,7 +156,7 @@ export default async function GovernancaPage() {
                             {PRIORITY_LABEL[task.priority] ?? task.priority}
                           </span>
                         </td>
-                        <td className="px-4 py-3 text-slate-600">
+                        <td className="px-4 py-3 text-muted-foreground">
                           {task.assignedStaff?.user.name ?? "—"}
                         </td>
                         <td className="px-4 py-3">
@@ -164,7 +164,7 @@ export default async function GovernancaPage() {
                             {task.status === "IN_PROGRESS" ? "Em andamento" : "Pendente"}
                           </span>
                         </td>
-                        <td className="px-4 py-3 text-slate-600">{formatDate(task.createdAt)}</td>
+                        <td className="px-4 py-3 text-muted-foreground">{formatDate(task.createdAt)}</td>
                         <td className="px-4 py-3">
                           <HousekeepingTaskStatusButtons id={task.id} status={task.status} />
                         </td>

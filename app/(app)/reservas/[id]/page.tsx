@@ -47,7 +47,7 @@ export default async function ReservationDetailPage({
       />
 
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-        <Link href="/reservas" className="text-sm text-brand-600 hover:underline">
+        <Link href="/reservas" className="text-sm text-primary hover:underline">
           ← Voltar
         </Link>
         <DeleteButton action={deleteReservation.bind(null, reservation.id)} redirectTo="/reservas" />
@@ -55,42 +55,42 @@ export default async function ReservationDetailPage({
 
       <div className="mb-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <div className="card p-4">
-          <p className="text-xs text-slate-500">{term(terms, "customer")}</p>
+          <p className="text-xs text-muted-foreground">{term(terms, "customer")}</p>
           <p className="font-medium">
-            <Link href={`/clientes/${reservation.customer.id}`} className="hover:text-brand-600">
+            <Link href={`/clientes/${reservation.customer.id}`} className="hover:text-primary">
               {reservation.customer.name}
             </Link>
           </p>
         </div>
         <div className="card p-4">
-          <p className="text-xs text-slate-500">Quarto</p>
+          <p className="text-xs text-muted-foreground">Quarto</p>
           <p className="font-medium">
             {reservation.room.number}
             {reservation.room.type ? ` · ${reservation.room.type}` : ""}
           </p>
         </div>
         <div className="card p-4">
-          <p className="text-xs text-slate-500">Check-in / Check-out</p>
+          <p className="text-xs text-muted-foreground">Check-in / Check-out</p>
           <p className="font-medium">
             {formatDate(reservation.checkIn)} — {formatDate(reservation.checkOut)}
           </p>
         </div>
         <div className="card p-4">
-          <p className="text-xs text-slate-500">Total</p>
-          <p className="text-xl font-bold text-slate-900">{formatCurrency(reservation.total)}</p>
+          <p className="text-xs text-muted-foreground">Total</p>
+          <p className="text-xl font-bold text-foreground">{formatCurrency(reservation.total)}</p>
         </div>
       </div>
 
       {reservation.notes && (
         <div className="card mb-6 p-4">
-          <p className="text-xs text-slate-500">Observações</p>
+          <p className="text-xs text-muted-foreground">Observações</p>
           <p className="text-sm">{reservation.notes}</p>
         </div>
       )}
 
       <ReservationStatusButtons id={reservation.id} status={reservation.status} />
 
-      <p className="mt-4 text-xs text-slate-400">Criada em {formatDate(reservation.createdAt)}</p>
+      <p className="mt-4 text-xs text-muted-foreground">Criada em {formatDate(reservation.createdAt)}</p>
     </div>
   );
 }

@@ -83,7 +83,7 @@ export default async function VacinasPage({
         <>
           <div className="card overflow-hidden">
             <table className="w-full text-sm">
-              <thead className="bg-slate-50 text-left text-xs uppercase tracking-wider text-slate-500">
+              <thead className="bg-muted text-left text-xs uppercase tracking-wider text-muted-foreground">
                 <tr>
                   <th className="px-4 py-3">{term(terms, "pet")}</th>
                   <th className="px-4 py-3">Tutor</th>
@@ -93,18 +93,18 @@ export default async function VacinasPage({
                   <th className="px-4 py-3">Ações</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-border">
                 {vaccinations.map((v) => (
-                  <tr key={v.id} className="hover:bg-slate-50">
-                    <td className="px-4 py-3 font-medium text-slate-900">
-                      <Link href={`/vacinas/${v.id}`} className="hover:text-brand-600">
+                  <tr key={v.id} className="hover:bg-muted">
+                    <td className="px-4 py-3 font-medium text-foreground">
+                      <Link href={`/vacinas/${v.id}`} className="hover:text-primary">
                         {v.pet.name}
                       </Link>
                     </td>
-                    <td className="px-4 py-3 text-slate-600">{v.pet.customer.name}</td>
-                    <td className="px-4 py-3 text-slate-600">{v.vaccine}</td>
-                    <td className="px-4 py-3 text-slate-600">{formatDate(v.appliedAt)}</td>
-                    <td className="px-4 py-3 text-slate-600">{v.nextDueAt ? formatDate(v.nextDueAt) : "—"}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{v.pet.customer.name}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{v.vaccine}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{formatDate(v.appliedAt)}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{v.nextDueAt ? formatDate(v.nextDueAt) : "—"}</td>
                     <td className="px-4 py-3">
                       <DeleteButton action={deleteVaccination.bind(null, v.id)} />
                     </td>

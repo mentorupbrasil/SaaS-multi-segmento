@@ -44,7 +44,7 @@ export default async function FinanceiroDetailPage({
       <PageHeader title={entry.description} description="Lançamento financeiro" />
 
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-        <Link href="/financeiro" className="text-sm text-brand-600 hover:underline">
+        <Link href="/financeiro" className="text-sm text-primary hover:underline">
           ← Voltar
         </Link>
         <div className="flex flex-wrap items-center gap-2">
@@ -58,7 +58,7 @@ export default async function FinanceiroDetailPage({
 
       <div className="mb-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <div className="card p-4">
-          <p className="text-xs text-slate-500">Valor</p>
+          <p className="text-xs text-muted-foreground">Valor</p>
           <p
             className={`text-2xl font-bold ${entry.type === "INCOME" ? "text-green-600" : "text-red-600"}`}
           >
@@ -66,15 +66,15 @@ export default async function FinanceiroDetailPage({
           </p>
         </div>
         <div className="card p-4">
-          <p className="text-xs text-slate-500">Tipo</p>
+          <p className="text-xs text-muted-foreground">Tipo</p>
           <p className="font-medium">{TYPE_LABEL[entry.type] ?? entry.type}</p>
         </div>
         <div className="card p-4">
-          <p className="text-xs text-slate-500">Status</p>
+          <p className="text-xs text-muted-foreground">Status</p>
           <p className="font-medium">{STATUS_LABEL[entry.status] ?? entry.status}</p>
         </div>
         <div className="card p-4">
-          <p className="text-xs text-slate-500">Vencimento</p>
+          <p className="text-xs text-muted-foreground">Vencimento</p>
           <p className="font-medium">{entry.dueDate ? formatDate(entry.dueDate) : "—"}</p>
         </div>
       </div>
@@ -82,18 +82,18 @@ export default async function FinanceiroDetailPage({
       <div className="mb-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {entry.customer && (
           <div className="card p-4">
-            <p className="text-xs text-slate-500">Cliente</p>
-            <Link href={`/clientes/${entry.customer.id}`} className="font-medium hover:text-brand-600">
+            <p className="text-xs text-muted-foreground">Cliente</p>
+            <Link href={`/clientes/${entry.customer.id}`} className="font-medium hover:text-primary">
               {entry.customer.name}
             </Link>
           </div>
         )}
         {entry.workOrder && (
           <div className="card p-4">
-            <p className="text-xs text-slate-500">Ordem de serviço</p>
+            <p className="text-xs text-muted-foreground">Ordem de serviço</p>
             <Link
               href={`/ordens-de-servico/${entry.workOrder.id}`}
-              className="font-medium hover:text-brand-600"
+              className="font-medium hover:text-primary"
             >
               {entry.workOrder.title ?? "Ver OS"}
             </Link>
@@ -101,23 +101,23 @@ export default async function FinanceiroDetailPage({
         )}
         {entry.quote && (
           <div className="card p-4">
-            <p className="text-xs text-slate-500">Orçamento</p>
-            <Link href={`/orcamentos/${entry.quote.id}`} className="font-medium hover:text-brand-600">
+            <p className="text-xs text-muted-foreground">Orçamento</p>
+            <Link href={`/orcamentos/${entry.quote.id}`} className="font-medium hover:text-primary">
               {entry.quote.title ?? "Ver orçamento"}
             </Link>
           </div>
         )}
         {entry.sale && (
           <div className="card p-4">
-            <p className="text-xs text-slate-500">Venda PDV</p>
-            <Link href={`/pdv/vendas`} className="font-medium hover:text-brand-600">
+            <p className="text-xs text-muted-foreground">Venda PDV</p>
+            <Link href={`/pdv/vendas`} className="font-medium hover:text-primary">
               {formatCurrency(entry.sale.total)}
             </Link>
           </div>
         )}
       </div>
 
-      <p className="text-xs text-slate-400">
+      <p className="text-xs text-muted-foreground">
         Criado em {formatDate(entry.createdAt)}
         {entry.paidAt ? ` · Pago em ${formatDate(entry.paidAt)}` : ""}
       </p>

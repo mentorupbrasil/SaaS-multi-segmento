@@ -44,8 +44,8 @@ export function OnboardingWizard({ orgName, segmentLabel }: OnboardingWizardProp
               s === step
                 ? "bg-brand-600 text-white"
                 : s < step
-                  ? "bg-brand-100 text-brand-700"
-                  : "bg-slate-100 text-slate-400"
+                  ? "bg-primary/15 text-primary"
+                  : "bg-muted text-muted-foreground"
             }`}
           >
             {s}
@@ -55,9 +55,9 @@ export function OnboardingWizard({ orgName, segmentLabel }: OnboardingWizardProp
 
       {step === 1 && (
         <div className="card p-8 text-center">
-          <Icon name="Sparkles" className="mx-auto mb-4 h-12 w-12 text-brand-600" />
+          <Icon name="Sparkles" className="mx-auto mb-4 h-12 w-12 text-primary" />
           <h2 className="mb-2 text-xl font-semibold">Bem-vindo ao GestorPro!</h2>
-          <p className="mb-6 text-sm text-slate-600">
+          <p className="mb-6 text-sm text-muted-foreground">
             Sua conta <strong>{orgName}</strong> está pronta no segmento{" "}
             <strong>{segmentLabel}</strong>. Vamos configurar o essencial em 3 passos.
           </p>
@@ -70,7 +70,7 @@ export function OnboardingWizard({ orgName, segmentLabel }: OnboardingWizardProp
       {step === 2 && (
         <div className="card p-6">
           <h2 className="mb-2 text-lg font-semibold">Passo 2: Primeiro serviço</h2>
-          <p className="mb-4 text-sm text-slate-500">
+          <p className="mb-4 text-sm text-muted-foreground">
             Cadastre um serviço ou pule para configurar depois.
           </p>
           <form action={serviceAction} className="grid gap-4">
@@ -104,7 +104,7 @@ export function OnboardingWizard({ orgName, segmentLabel }: OnboardingWizardProp
       {step === 3 && (
         <div className="card p-6">
           <h2 className="mb-2 text-lg font-semibold">Passo 3: Agendamento online</h2>
-          <p className="mb-4 text-sm text-slate-500">
+          <p className="mb-4 text-sm text-muted-foreground">
             Permita que clientes agendem pelo link público.
           </p>
           <form action={bookingAction} className="grid gap-4">
@@ -114,7 +114,7 @@ export function OnboardingWizard({ orgName, segmentLabel }: OnboardingWizardProp
                 name="publicBookingEnabled"
                 value="true"
                 defaultChecked
-                className="rounded border-slate-300"
+                className="rounded border-border"
               />
               Habilitar agendamento online agora
             </label>

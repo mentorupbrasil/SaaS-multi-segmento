@@ -170,7 +170,7 @@ export function HeroSection({
               className="text-balance text-4xl font-bold tracking-tighter text-foreground sm:text-5xl md:text-6xl md:leading-[1.08]"
               variants={reduceMotion ? undefined : itemVariants}
             >
-              <span className="bg-gradient-to-b from-foreground to-foreground/75 bg-clip-text text-transparent dark:from-white dark:to-white/70">
+              <span className="bg-gradient-to-b from-foreground to-foreground/75 bg-clip-text text-transparent dark:from-white dark:to-background/70">
                 {headline.regular}
               </span>{" "}
               <span className="gradient-text">{headline.gradient}</span>

@@ -35,7 +35,7 @@ export default async function PortalResponsavelPage({
     return (
       <Shell orgSlug={org.slug} orgName={org.name}>
         <h1 className="mb-2 text-2xl font-bold">Área do responsável</h1>
-        <p className="mb-6 text-sm text-slate-600">
+        <p className="mb-6 text-sm text-muted-foreground">
           Informe o e-mail cadastrado na escola para ver turmas, frequência e mensalidades.
         </p>
         <form method="get" className="card space-y-4 p-6">
@@ -60,7 +60,7 @@ export default async function PortalResponsavelPage({
         <p className="rounded-xl bg-amber-50 px-4 py-3 text-sm text-amber-800">
           E-mail não encontrado. Verifique com a secretaria.
         </p>
-        <Link href={`/portal/${org.slug}/responsavel`} className="mt-4 inline-block text-sm text-brand-600 hover:underline">
+        <Link href={`/portal/${org.slug}/responsavel`} className="mt-4 inline-block text-sm text-primary hover:underline">
           Tentar novamente
         </Link>
       </Shell>
@@ -72,25 +72,25 @@ export default async function PortalResponsavelPage({
   return (
     <Shell orgSlug={org.slug} orgName={org.name}>
       <h1 className="mb-1 text-2xl font-bold">{customer.name}</h1>
-      <p className="mb-6 text-sm text-slate-600">Portal do responsável · {org.name}</p>
+      <p className="mb-6 text-sm text-muted-foreground">Portal do responsável · {org.name}</p>
 
       {data.frequencyRate != null && (
         <div className="card mb-6 p-4">
-          <p className="text-xs text-slate-500">Frequência recente</p>
-          <p className="text-2xl font-bold text-brand-600">{data.frequencyRate}%</p>
+          <p className="text-xs text-muted-foreground">Frequência recente</p>
+          <p className="text-2xl font-bold text-primary">{data.frequencyRate}%</p>
         </div>
       )}
 
       <section className="mb-8">
         <h2 className="mb-3 font-semibold">Turmas matriculadas</h2>
         {data.enrollments.length === 0 ? (
-          <p className="text-sm text-slate-500">Nenhuma matrícula ativa.</p>
+          <p className="text-sm text-muted-foreground">Nenhuma matrícula ativa.</p>
         ) : (
           <ul className="space-y-2">
             {data.enrollments.map((e) => (
               <li key={e.id} className="card p-4">
                 <p className="font-medium">{e.class.name}</p>
-                <p className="text-xs text-slate-500">
+                <p className="text-xs text-muted-foreground">
                   {[e.class.grade, e.class.shift].filter(Boolean).join(" · ") || "Turma ativa"}
                 </p>
               </li>
@@ -121,9 +121,9 @@ export default async function PortalResponsavelPage({
       <section>
         <h2 className="mb-3 font-semibold">Últimas presenças</h2>
         {data.attendance.length === 0 ? (
-          <p className="text-sm text-slate-500">Sem registros de frequência.</p>
+          <p className="text-sm text-muted-foreground">Sem registros de frequência.</p>
         ) : (
-          <ul className="card divide-y divide-slate-100 text-sm">
+          <ul className="card divide-y divide-border text-sm">
             {data.attendance.slice(0, 10).map((a) => (
               <li key={a.id} className="flex justify-between px-4 py-3">
                 <span>
@@ -151,9 +151,9 @@ function Shell({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen bg-slate-50 px-4 py-10">
+    <div className="min-h-screen bg-muted px-4 py-10">
       <div className="mx-auto max-w-lg">
-        <Link href={`/portal/${orgSlug}`} className="mb-4 inline-flex items-center gap-1 text-sm text-brand-600 hover:underline">
+        <Link href={`/portal/${orgSlug}`} className="mb-4 inline-flex items-center gap-1 text-sm text-primary hover:underline">
           <Icon name="ArrowLeft" className="h-4 w-4" />
           {orgName}
         </Link>

@@ -34,7 +34,7 @@ export default async function ComissaoDetailPage({
       <PageHeader title={description} description="Detalhe da comissão" />
 
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-        <Link href="/comissoes" className="text-sm text-brand-600 hover:underline">
+        <Link href="/comissoes" className="text-sm text-primary hover:underline">
           ← Voltar
         </Link>
         <div className="flex flex-wrap items-center gap-2">
@@ -48,21 +48,21 @@ export default async function ComissaoDetailPage({
 
       <div className="mb-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <div className="card p-4">
-          <p className="text-xs text-slate-500">Valor</p>
-          <p className="text-2xl font-bold text-brand-600">{formatCurrency(commission.amount)}</p>
+          <p className="text-xs text-muted-foreground">Valor</p>
+          <p className="text-2xl font-bold text-primary">{formatCurrency(commission.amount)}</p>
         </div>
         <div className="card p-4">
-          <p className="text-xs text-slate-500">Profissional</p>
-          <Link href={`/equipe/${commission.staff.id}`} className="font-medium hover:text-brand-600">
+          <p className="text-xs text-muted-foreground">Profissional</p>
+          <Link href={`/equipe/${commission.staff.id}`} className="font-medium hover:text-primary">
             {commission.staff.user.name}
           </Link>
         </div>
         <div className="card p-4">
-          <p className="text-xs text-slate-500">Status</p>
+          <p className="text-xs text-muted-foreground">Status</p>
           <p className="font-medium">{commission.paidAt ? "Pago" : "Pendente"}</p>
         </div>
         <div className="card p-4">
-          <p className="text-xs text-slate-500">Data</p>
+          <p className="text-xs text-muted-foreground">Data</p>
           <p className="font-medium">{formatDate(commission.createdAt)}</p>
         </div>
       </div>
@@ -70,10 +70,10 @@ export default async function ComissaoDetailPage({
       <div className="mb-6 grid gap-4 sm:grid-cols-2">
         {commission.customer && (
           <div className="card p-4">
-            <p className="text-xs text-slate-500">Cliente</p>
+            <p className="text-xs text-muted-foreground">Cliente</p>
             <Link
               href={`/clientes/${commission.customer.id}`}
-              className="font-medium hover:text-brand-600"
+              className="font-medium hover:text-primary"
             >
               {commission.customer.name}
             </Link>
@@ -81,10 +81,10 @@ export default async function ComissaoDetailPage({
         )}
         {commission.workOrder && (
           <div className="card p-4">
-            <p className="text-xs text-slate-500">Ordem de serviço</p>
+            <p className="text-xs text-muted-foreground">Ordem de serviço</p>
             <Link
               href={`/ordens-de-servico/${commission.workOrder.id}`}
-              className="font-medium hover:text-brand-600"
+              className="font-medium hover:text-primary"
             >
               {commission.workOrder.title ?? "Ver OS"}
             </Link>
@@ -92,7 +92,7 @@ export default async function ComissaoDetailPage({
         )}
       </div>
 
-      <p className="text-xs text-slate-400">
+      <p className="text-xs text-muted-foreground">
         Registrado em {formatDate(commission.createdAt)}
         {commission.paidAt ? ` · Pago em ${formatDate(commission.paidAt)}` : ""}
       </p>

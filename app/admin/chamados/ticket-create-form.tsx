@@ -23,7 +23,7 @@ export function TicketCreateForm({
       </summary>
       <form
         action={formAction}
-        className="absolute right-0 z-10 mt-2 w-80 rounded-xl border border-slate-200 bg-white p-4 shadow-lg"
+        className="absolute right-0 z-10 mt-2 w-80 rounded-xl border border-border bg-card p-4 shadow-lg"
       >
         <div className="space-y-3">
           <div>

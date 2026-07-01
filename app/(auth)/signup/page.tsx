@@ -48,9 +48,9 @@ export default function SignupPage() {
   return (
     <div className="w-full max-w-4xl">
       <div className="card overflow-hidden">
-        <div className="border-b border-slate-100 bg-slate-50/60 px-8 py-6">
-          <h1 className="text-2xl font-bold text-slate-900">Crie a conta do seu negócio</h1>
-          <p className="mt-1 text-sm text-slate-500">
+        <div className="border-b border-border bg-muted/40 px-8 py-6">
+          <h1 className="text-2xl font-bold text-foreground">Crie a conta do seu negócio</h1>
+          <p className="mt-1 text-sm text-muted-foreground">
             Escolha o seu segmento e o plano. Após o cadastro, você conclui o pagamento para liberar o acesso.
           </p>
         </div>
@@ -69,15 +69,15 @@ export default function SignupPage() {
               />
             </div>
 
-            <div className="max-h-72 space-y-5 overflow-y-auto rounded-xl border border-slate-200 bg-slate-50/50 p-4">
+            <div className="max-h-72 space-y-5 overflow-y-auto rounded-xl border border-border bg-muted/30 p-4">
               {groups.length === 0 && (
-                <p className="py-6 text-center text-sm text-slate-500">
+                <p className="py-6 text-center text-sm text-muted-foreground">
                   Nenhum segmento encontrado. Você ainda pode criar a conta e personalizar depois.
                 </p>
               )}
               {groups.map((group) => (
                 <div key={group.category}>
-                  <p className="mb-2 text-xs font-bold uppercase tracking-wider text-slate-400">
+                  <p className="mb-2 text-xs font-bold uppercase tracking-wider text-muted-foreground">
                     {group.label}
                   </p>
                   <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
@@ -87,14 +87,14 @@ export default function SignupPage() {
                         key={seg.id}
                         onClick={() => setSegmentId(seg.id)}
                         className={cn(
-                          "flex items-center gap-2 rounded-xl border bg-white p-3 text-left transition-all",
+                          "flex items-center gap-2 rounded-xl border bg-card p-3 text-left transition-all",
                           segmentId === seg.id
                             ? "border-brand-600 ring-1 ring-brand-600"
-                            : "border-slate-200 hover:border-brand-300",
+                            : "border-border hover:border-brand-300",
                         )}
                       >
-                        <Icon name={seg.icon} className="h-5 w-5 shrink-0 text-brand-600" />
-                        <span className="truncate text-sm font-medium text-slate-700">
+                        <Icon name={seg.icon} className="h-5 w-5 shrink-0 text-primary" />
+                        <span className="truncate text-sm font-medium text-foreground">
                           {seg.label}
                         </span>
                       </button>
@@ -118,10 +118,10 @@ export default function SignupPage() {
                     key={plan.id}
                     onClick={() => setPlanId(plan.id)}
                     className={cn(
-                      "relative rounded-xl border bg-white p-4 text-left transition-all",
+                      "relative rounded-xl border bg-card p-4 text-left transition-all",
                       selected
                         ? "border-brand-600 ring-1 ring-brand-600"
-                        : "border-slate-200 hover:border-brand-300",
+                        : "border-border hover:border-brand-300",
                     )}
                   >
                     {plan.badge && (
@@ -135,26 +135,26 @@ export default function SignupPage() {
                       </span>
                     )}
                     <span className="flex items-center justify-between">
-                      <span className="text-sm font-semibold text-slate-900">{plan.name}</span>
-                      {selected && <Check className="h-4 w-4 text-brand-600" />}
+                      <span className="text-sm font-semibold text-foreground">{plan.name}</span>
+                      {selected && <Check className="h-4 w-4 text-primary" />}
                     </span>
                     <span className="mt-1 block">
-                      <span className="text-xl font-bold text-slate-900">
+                      <span className="text-xl font-bold text-foreground">
                         {formatCurrency(plan.priceMonthly as number)}
                       </span>
-                      <span className="text-xs text-slate-500">/mês</span>
+                      <span className="text-xs text-muted-foreground">/mês</span>
                     </span>
-                    <span className="mt-1 block text-xs leading-snug text-slate-500">
+                    <span className="mt-1 block text-xs leading-snug text-muted-foreground">
                       {plan.description}
                     </span>
                   </button>
                 );
               })}
             </div>
-            <p className="mt-2 text-xs text-slate-500">
+            <p className="mt-2 text-xs text-muted-foreground">
               Sem fidelidade. Você pode trocar de plano ou cancelar quando quiser nas configurações.
               Rede ou franquia?{" "}
-              <Link href="/suporte" className="font-semibold text-brand-700 hover:text-brand-800">
+              <Link href="/suporte" className="font-semibold text-primary hover:text-primary/80">
                 Fale com o time sobre o Enterprise
               </Link>
               .
@@ -214,9 +214,9 @@ export default function SignupPage() {
             Criar conta e ir para pagamento
           </SubmitButton>
 
-          <p className="text-center text-sm text-slate-500">
+          <p className="text-center text-sm text-muted-foreground">
             Já tem conta?{" "}
-            <Link href="/login" className="font-semibold text-brand-700 hover:text-brand-800">
+            <Link href="/login" className="font-semibold text-primary hover:text-primary/80">
               Entrar
             </Link>
           </p>

@@ -48,7 +48,7 @@ export default async function EstoqueDetailPage({
       <PageHeader title={item.name} description="Detalhe do item de estoque" />
 
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-        <Link href="/estoque" className="text-sm text-brand-600 hover:underline">
+        <Link href="/estoque" className="text-sm text-primary hover:underline">
           ← Voltar
         </Link>
         <DeleteButton action={deleteInventoryItem.bind(null, item.id)} redirectTo="/estoque" />
@@ -56,21 +56,21 @@ export default async function EstoqueDetailPage({
 
       <div className="mb-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <div className="card p-4">
-          <p className="text-xs text-slate-500">Quantidade</p>
-          <p className={`text-2xl font-bold ${lowStock ? "text-amber-600" : "text-slate-900"}`}>
+          <p className="text-xs text-muted-foreground">Quantidade</p>
+          <p className={`text-2xl font-bold ${lowStock ? "text-amber-600" : "text-foreground"}`}>
             {item.quantity} {item.unit}
           </p>
         </div>
         <div className="card p-4">
-          <p className="text-xs text-slate-500">Mínimo</p>
+          <p className="text-xs text-muted-foreground">Mínimo</p>
           <p className="font-medium">{item.minQuantity}</p>
         </div>
         <div className="card p-4">
-          <p className="text-xs text-slate-500">Preço</p>
+          <p className="text-xs text-muted-foreground">Preço</p>
           <p className="font-medium">{formatCurrency(item.price)}</p>
         </div>
         <div className="card p-4">
-          <p className="text-xs text-slate-500">SKU / Marca</p>
+          <p className="text-xs text-muted-foreground">SKU / Marca</p>
           <p className="font-medium">{item.sku ?? "—"} · {item.brand ?? "—"}</p>
         </div>
       </div>
@@ -91,11 +91,11 @@ export default async function EstoqueDetailPage({
 
       <h2 className="mb-3 mt-8 text-lg font-semibold">Histórico</h2>
       {movements.length === 0 ? (
-        <p className="text-sm text-slate-500">Nenhuma movimentação ainda.</p>
+        <p className="text-sm text-muted-foreground">Nenhuma movimentação ainda.</p>
       ) : (
         <div className="card overflow-hidden">
           <table className="w-full text-sm">
-            <thead className="bg-slate-50 text-left text-xs uppercase text-slate-500">
+            <thead className="bg-muted text-left text-xs uppercase text-muted-foreground">
               <tr>
                 <th className="px-4 py-3">Data</th>
                 <th className="px-4 py-3">Tipo</th>
@@ -104,7 +104,7 @@ export default async function EstoqueDetailPage({
                 <th className="px-4 py-3">Fornecedor</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-border">
               {movements.map((m) => (
                 <tr key={m.id}>
                   <td className="px-4 py-3">{formatDate(m.createdAt)}</td>

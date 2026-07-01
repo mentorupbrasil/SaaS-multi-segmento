@@ -36,11 +36,11 @@ export default function SuportePage() {
         <div className="grid gap-6 md:grid-cols-3">
           {channels.map((c) => (
             <div key={c.title} className="card flex flex-col p-6 transition-shadow hover:shadow-md">
-              <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-brand-50 to-brand-100 text-brand-600 ring-1 ring-brand-100">
+              <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-primary/10 to-primary/5 text-primary ring-1 ring-primary/20">
                 <Icon name={c.icon} className="h-5 w-5" />
               </span>
-              <h3 className="mt-4 font-semibold text-slate-900">{c.title}</h3>
-              <p className="mt-1 flex-1 text-sm text-slate-600">{c.text}</p>
+              <h3 className="mt-4 font-semibold text-foreground">{c.title}</h3>
+              <p className="mt-1 flex-1 text-sm text-muted-foreground">{c.text}</p>
               <Link
                 href={c.href}
                 className="btn-secondary mt-4"
@@ -53,7 +53,7 @@ export default function SuportePage() {
         </div>
       </section>
 
-      <div className="border-t border-slate-100 bg-slate-50/40">
+      <div className="border-t border-border bg-muted/30">
         <Faq
           groups={getSupportFaqGroups()}
           title="Perguntas frequentes"

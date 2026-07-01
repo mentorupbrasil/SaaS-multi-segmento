@@ -78,7 +78,7 @@ export function FeaturesShowcase() {
           }
           description="Pare de juntar caderno, planilha e WhatsApp. Centralize a operação do seu negócio."
         />
-        <p className="mx-auto mt-3 max-w-xl text-center text-sm font-medium text-slate-500">
+        <p className="mx-auto mt-3 max-w-xl text-center text-sm font-medium text-muted-foreground">
           {total} recursos · {groups.length} categorias · Adaptados ao seu segmento
         </p>
 
@@ -93,14 +93,14 @@ export function FeaturesShowcase() {
         <div className="mt-12">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
             <div>
-              <p className="text-sm font-semibold text-slate-900">Explore por categoria</p>
-              <p className="mt-0.5 text-xs text-slate-500">
+              <p className="text-sm font-semibold text-foreground">Explore por categoria</p>
+              <p className="mt-0.5 text-xs text-muted-foreground">
                 Veja o que mais o GestorPro oferece além do essencial
               </p>
             </div>
             <Link
               href="/funcionalidades"
-              className="inline-flex items-center gap-1 text-sm font-semibold text-brand-700 hover:text-brand-800"
+              className="inline-flex items-center gap-1 text-sm font-semibold text-primary hover:text-primary/80"
             >
               Ver catálogo completo
               <ArrowRight className="h-4 w-4" />
@@ -116,8 +116,8 @@ export function FeaturesShowcase() {
                 className={cn(
                   "flex shrink-0 items-center gap-1.5 rounded-full px-4 py-2 text-xs font-semibold transition-colors",
                   activeGroup === group.id
-                    ? "bg-brand-600 text-white shadow-sm"
-                    : "bg-white text-slate-600 ring-1 ring-slate-200 hover:bg-slate-50",
+                    ? "bg-primary text-primary-foreground shadow-sm"
+                    : "bg-card text-muted-foreground ring-1 ring-border hover:bg-muted",
                 )}
               >
                 <Icon name={FEATURE_GROUP_ICONS[group.id] ?? "Layers"} className="h-3.5 w-3.5" />
@@ -129,12 +129,12 @@ export function FeaturesShowcase() {
           {active && (
             <div className="card-elevated mt-5 p-5 sm:p-6">
               <div className="mb-4 flex items-start gap-3">
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-brand-50 to-brand-100 text-brand-600 ring-1 ring-brand-100">
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-primary/10 to-primary/5 text-primary ring-1 ring-primary/20">
                   <Icon name={FEATURE_GROUP_ICONS[active.id] ?? "Layers"} className="h-5 w-5" />
                 </span>
                 <div>
-                  <h3 className="font-semibold text-slate-900">{active.label}</h3>
-                  <p className="mt-0.5 text-sm text-slate-500">{active.description}</p>
+                  <h3 className="font-semibold text-foreground">{active.label}</h3>
+                  <p className="mt-0.5 text-sm text-muted-foreground">{active.description}</p>
                 </div>
               </div>
 
@@ -143,20 +143,20 @@ export function FeaturesShowcase() {
                   <Link
                     key={item.id}
                     href={`/funcionalidades#${item.id}`}
-                    className="group flex items-start gap-3 rounded-xl border border-slate-100 bg-slate-50/50 p-3 transition-all hover:border-brand-200 hover:bg-white hover:shadow-sm"
+                    className="group flex items-start gap-3 rounded-xl border border-border bg-muted/30 p-3 transition-all hover:border-primary/30 hover:bg-card hover:shadow-sm"
                   >
                     <Icon
                       name={item.icon}
-                      className="mt-0.5 h-4 w-4 shrink-0 text-slate-400 group-hover:text-brand-600"
+                      className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground group-hover:text-primary"
                     />
                     <span className="min-w-0">
                       <span className="flex flex-wrap items-center gap-2">
-                        <span className="text-sm font-medium text-slate-800 group-hover:text-brand-700">
+                        <span className="text-sm font-medium text-foreground group-hover:text-primary">
                           {item.name}
                         </span>
                         <FeatureBadge item={item} />
                       </span>
-                      <span className="mt-0.5 block text-xs text-slate-500">{item.short}</span>
+                      <span className="mt-0.5 block text-xs text-muted-foreground">{item.short}</span>
                     </span>
                   </Link>
                 ))}

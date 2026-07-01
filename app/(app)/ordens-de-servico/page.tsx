@@ -112,7 +112,7 @@ export default async function OrdensDeServicoPage({
         <>
           <div className="card overflow-hidden">
             <table className="w-full text-sm">
-              <thead className="bg-slate-50 text-left text-xs uppercase tracking-wider text-slate-500">
+              <thead className="bg-muted text-left text-xs uppercase tracking-wider text-muted-foreground">
                 <tr>
                   <th className="px-4 py-3">Título</th>
                   <th className="px-4 py-3">Cliente</th>
@@ -122,22 +122,22 @@ export default async function OrdensDeServicoPage({
                   <th className="px-4 py-3">Ações</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-border">
                 {orders.map((o) => (
-                  <tr key={o.id} className="hover:bg-slate-50">
-                    <td className="px-4 py-3 font-medium text-slate-900">
-                      <Link href={`/ordens-de-servico/${o.id}`} className="hover:text-brand-600">
+                  <tr key={o.id} className="hover:bg-muted">
+                    <td className="px-4 py-3 font-medium text-foreground">
+                      <Link href={`/ordens-de-servico/${o.id}`} className="hover:text-primary">
                         {o.title}
                       </Link>
                     </td>
-                    <td className="px-4 py-3 text-slate-600">{o.customer?.name ?? "—"}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{o.customer?.name ?? "—"}</td>
                     <td className="px-4 py-3">
-                      <span className="rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-700">
+                      <span className="rounded-full bg-muted px-2 py-0.5 text-xs font-medium text-foreground">
                         {STATUS_LABEL[o.status] ?? o.status}
                       </span>
                     </td>
-                    <td className="px-4 py-3 text-slate-600">{formatCurrency(o.total)}</td>
-                    <td className="px-4 py-3 text-slate-600">{formatDate(o.createdAt)}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{formatCurrency(o.total)}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{formatDate(o.createdAt)}</td>
                     <td className="px-4 py-3">
                       <DeleteButton action={deleteWorkOrder.bind(null, o.id)} />
                     </td>

@@ -29,12 +29,12 @@ export default async function FiliaisPage() {
         action={!atLimit ? <BranchForm /> : undefined}
       />
 
-      <Link href="/configuracoes" className="mb-4 inline-block text-sm text-brand-600 hover:underline">
+      <Link href="/configuracoes" className="mb-4 inline-block text-sm text-primary hover:underline">
         ← Voltar às configurações
       </Link>
 
       {limits.maxBranches !== null && (
-        <p className="mb-4 text-sm text-slate-600">
+        <p className="mb-4 text-sm text-muted-foreground">
           Plano atual: até {limits.maxBranches} filial(is). Em uso: {branches.length}.
         </p>
       )}
@@ -57,7 +57,7 @@ export default async function FiliaisPage() {
       ) : (
         <div className="card overflow-hidden">
           <table className="w-full text-sm">
-            <thead className="bg-slate-50 text-left text-xs uppercase text-slate-500">
+            <thead className="bg-muted text-left text-xs uppercase text-muted-foreground">
               <tr>
                 <th className="px-4 py-3">Nome</th>
                 <th className="px-4 py-3">Endereço</th>
@@ -65,19 +65,19 @@ export default async function FiliaisPage() {
                 <th className="px-4 py-3">Ações</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-border">
               {branches.map((b) => (
-                <tr key={b.id} className="hover:bg-slate-50">
-                  <td className="px-4 py-3 font-medium text-slate-900">
+                <tr key={b.id} className="hover:bg-muted">
+                  <td className="px-4 py-3 font-medium text-foreground">
                     {b.name}
                     {b.isDefault && (
-                      <span className="ml-2 rounded-full bg-brand-100 px-2 py-0.5 text-xs text-brand-700">
+                      <span className="ml-2 rounded-full bg-primary/15 px-2 py-0.5 text-xs text-primary">
                         Padrão
                       </span>
                     )}
                   </td>
-                  <td className="px-4 py-3 text-slate-600">{b.address ?? "—"}</td>
-                  <td className="px-4 py-3 text-slate-600">{formatDate(b.createdAt)}</td>
+                  <td className="px-4 py-3 text-muted-foreground">{b.address ?? "—"}</td>
+                  <td className="px-4 py-3 text-muted-foreground">{formatDate(b.createdAt)}</td>
                   <td className="px-4 py-3">
                     {!b.isDefault && (
                       <DeleteButton

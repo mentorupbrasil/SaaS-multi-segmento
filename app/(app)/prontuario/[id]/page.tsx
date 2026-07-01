@@ -36,7 +36,7 @@ export default async function ProntuarioDetailPage({
       <PageHeader title={record.title} description={term(terms, "records")} />
 
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-        <Link href="/prontuario" className="text-sm text-brand-600 hover:underline">
+        <Link href="/prontuario" className="text-sm text-primary hover:underline">
           ← Voltar
         </Link>
         <DeleteButton action={deleteCustomerRecord.bind(null, record.id)} redirectTo="/prontuario" />
@@ -44,33 +44,33 @@ export default async function ProntuarioDetailPage({
 
       <div className="mb-6 grid gap-4 sm:grid-cols-2">
         <div className="card p-4">
-          <p className="text-xs text-slate-500">{customerLabel}</p>
+          <p className="text-xs text-muted-foreground">{customerLabel}</p>
           <p className="font-medium">
-            <Link href={`/clientes/${record.customer.id}`} className="hover:text-brand-600">
+            <Link href={`/clientes/${record.customer.id}`} className="hover:text-primary">
               {record.customer.name}
             </Link>
           </p>
         </div>
         <div className="card p-4">
-          <p className="text-xs text-slate-500">Registrado em</p>
+          <p className="text-xs text-muted-foreground">Registrado em</p>
           <p className="font-medium">{formatDate(record.createdAt)}</p>
         </div>
       </div>
 
       {record.content && (
         <div className="card mb-4 p-5">
-          <p className="mb-2 text-xs font-semibold uppercase text-slate-500">Conteúdo</p>
-          <p className="whitespace-pre-wrap text-sm text-slate-700">{record.content}</p>
+          <p className="mb-2 text-xs font-semibold uppercase text-muted-foreground">Conteúdo</p>
+          <p className="whitespace-pre-wrap text-sm text-foreground">{record.content}</p>
         </div>
       )}
 
       {record.attachments.length > 0 && (
         <div className="card p-5">
-          <p className="mb-3 text-xs font-semibold uppercase text-slate-500">Anexos</p>
+          <p className="mb-3 text-xs font-semibold uppercase text-muted-foreground">Anexos</p>
           <ul className="space-y-2">
             {record.attachments.map((a) => (
               <li key={a.id}>
-                <a href={a.fileUrl} target="_blank" rel="noopener noreferrer" className="text-sm text-brand-600 hover:underline">
+                <a href={a.fileUrl} target="_blank" rel="noopener noreferrer" className="text-sm text-primary hover:underline">
                   {a.fileName}
                 </a>
               </li>

@@ -11,13 +11,13 @@ export function ComingSoon({
 }) {
   return (
     <div>
-      <h1 className="text-2xl font-bold text-slate-900">{title}</h1>
+      <h1 className="text-2xl font-bold text-foreground">{title}</h1>
       <div className="card mt-6 flex flex-col items-center gap-3 p-12 text-center">
-        <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-50 to-brand-100 text-brand-600 ring-1 ring-brand-100">
+        <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-primary/10 to-primary/5 text-primary ring-1 ring-primary/20">
           <Icon name={icon} className="h-7 w-7" />
         </div>
-        <h2 className="text-lg font-semibold text-slate-900">Módulo em breve</h2>
-        <p className="max-w-md text-sm text-slate-500">{description}</p>
+        <h2 className="text-lg font-semibold text-foreground">Módulo em breve</h2>
+        <p className="max-w-md text-sm text-muted-foreground">{description}</p>
         <span className="mt-2 rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-700">
           Disponível nas próximas fases
         </span>

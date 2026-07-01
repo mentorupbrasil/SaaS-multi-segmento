@@ -25,7 +25,7 @@ export default function SobrePage() {
       />
 
       <section className="section py-16">
-        <div className="mx-auto max-w-3xl space-y-5 text-slate-700">
+        <div className="mx-auto max-w-3xl space-y-5 text-foreground">
           <p className="leading-relaxed">
             A maioria dos sistemas de gestão tenta servir a todos da mesma forma: menus genéricos,
             termos que não fazem sentido para o seu dia a dia e funcionalidades que você nunca vai
@@ -33,7 +33,7 @@ export default function SobrePage() {
             caderno e na planilha.
           </p>
           <p className="leading-relaxed">
-            O <strong className="text-slate-900">GestorPro</strong> nasceu para resolver isso. Uma
+            O <strong className="text-foreground">GestorPro</strong> nasceu para resolver isso. Uma
             única plataforma que se transforma conforme o seu segmento — barbearia, salão, clínica,
             oficina, petshop, academia e muito mais — com a nomenclatura, os serviços e os campos
             certos para cada negócio.
@@ -46,11 +46,11 @@ export default function SobrePage() {
         <div className="mt-14 grid gap-6 md:grid-cols-3">
           {VALUES.map((v) => (
             <div key={v.title} className="card p-6">
-              <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-brand-50 to-brand-100 text-brand-600 ring-1 ring-brand-100">
+              <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-primary/10 to-primary/5 text-primary ring-1 ring-primary/20">
                 <Icon name={v.icon} className="h-5 w-5" />
               </span>
-              <h3 className="mt-4 font-semibold text-slate-900">{v.title}</h3>
-              <p className="mt-1.5 text-sm leading-relaxed text-slate-600">{v.text}</p>
+              <h3 className="mt-4 font-semibold text-foreground">{v.title}</h3>
+              <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">{v.text}</p>
             </div>
           ))}
         </div>

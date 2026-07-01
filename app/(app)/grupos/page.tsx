@@ -59,7 +59,7 @@ export default async function GruposPage({
         <>
           <div className="card overflow-hidden">
             <table className="w-full text-sm">
-              <thead className="bg-slate-50 text-left text-xs uppercase tracking-wider text-slate-500">
+              <thead className="bg-muted text-left text-xs uppercase tracking-wider text-muted-foreground">
                 <tr>
                   <th className="px-4 py-3">Nome</th>
                   <th className="px-4 py-3">Tipo</th>
@@ -68,17 +68,17 @@ export default async function GruposPage({
                   <th className="px-4 py-3">Ações</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-border">
                 {groups.map((g) => (
-                  <tr key={g.id} className="hover:bg-slate-50">
-                    <td className="px-4 py-3 font-medium text-slate-900">
-                      <Link href={`/grupos/${g.id}`} className="hover:text-brand-600">
+                  <tr key={g.id} className="hover:bg-muted">
+                    <td className="px-4 py-3 font-medium text-foreground">
+                      <Link href={`/grupos/${g.id}`} className="hover:text-primary">
                         {g.name}
                       </Link>
                     </td>
-                    <td className="px-4 py-3 text-slate-600">{g.groupType ?? "—"}</td>
-                    <td className="px-4 py-3 text-slate-600">{g._count.members}</td>
-                    <td className="px-4 py-3 text-slate-600">{formatDate(g.createdAt)}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{g.groupType ?? "—"}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{g._count.members}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{formatDate(g.createdAt)}</td>
                     <td className="px-4 py-3">
                       <DeleteButton action={deleteGroup.bind(null, g.id)} />
                     </td>

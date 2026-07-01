@@ -36,7 +36,7 @@ export default async function RelatoriosPage({
           description="Indicadores avançados do desempenho do negócio."
         />
         <div className="card p-10 text-center">
-          <p className="text-slate-600">
+          <p className="text-muted-foreground">
             Relatórios avançados estão disponíveis a partir do plano Profissional.
           </p>
           <Link href="/assinatura" className="btn-primary mt-4 inline-flex">
@@ -198,50 +198,50 @@ export default async function RelatoriosPage({
 
       <div className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
         <div className="card p-4">
-          <p className="text-xs text-slate-500">Agendamentos (período)</p>
-          <p className="text-2xl font-bold text-slate-900">{appointmentTotal}</p>
+          <p className="text-xs text-muted-foreground">Agendamentos (período)</p>
+          <p className="text-2xl font-bold text-foreground">{appointmentTotal}</p>
         </div>
         <div className="card p-4">
-          <p className="text-xs text-slate-500">Receita (período)</p>
+          <p className="text-xs text-muted-foreground">Receita (período)</p>
           <p className="text-2xl font-bold text-green-600">
             {formatCurrency(revenueRows.reduce((s, r) => s + r.total, 0))}
           </p>
         </div>
         <div className="card p-4">
-          <p className="text-xs text-slate-500">Vendas PDV (período)</p>
-          <p className="text-2xl font-bold text-slate-900">
+          <p className="text-xs text-muted-foreground">Vendas PDV (período)</p>
+          <p className="text-2xl font-bold text-foreground">
             {formatCurrency(pdvSales._sum.total ?? 0)}
           </p>
-          <p className="text-xs text-slate-500">{pdvSales._count} venda(s)</p>
+          <p className="text-xs text-muted-foreground">{pdvSales._count} venda(s)</p>
         </div>
         <div className="card p-4">
-          <p className="text-xs text-slate-500">Caixa</p>
-          <p className={`text-2xl font-bold ${openCashShift ? "text-green-600" : "text-slate-500"}`}>
+          <p className="text-xs text-muted-foreground">Caixa</p>
+          <p className={`text-2xl font-bold ${openCashShift ? "text-green-600" : "text-muted-foreground"}`}>
             {openCashShift ? "Aberto" : "Fechado"}
           </p>
         </div>
         <div className="card p-4">
-          <p className="text-xs text-slate-500">Itens em estoque baixo</p>
+          <p className="text-xs text-muted-foreground">Itens em estoque baixo</p>
           <p className="text-2xl font-bold text-amber-600">{lowStockItems.length}</p>
         </div>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
         <section className="card overflow-hidden">
-          <h2 className="border-b border-slate-100 px-4 py-3 text-lg font-semibold">
+          <h2 className="border-b border-border px-4 py-3 text-lg font-semibold">
             Receita por mês
           </h2>
           <table className="w-full text-sm">
-            <thead className="bg-slate-50 text-left text-xs uppercase tracking-wider text-slate-500">
+            <thead className="bg-muted text-left text-xs uppercase tracking-wider text-muted-foreground">
               <tr>
                 <th className="px-4 py-3">Mês</th>
                 <th className="px-4 py-3 text-right">Receita</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-border">
               {revenueRows.map((row) => (
                 <tr key={row.month}>
-                  <td className="px-4 py-3 font-medium capitalize text-slate-900">{row.month}</td>
+                  <td className="px-4 py-3 font-medium capitalize text-foreground">{row.month}</td>
                   <td className="px-4 py-3 text-right text-green-600">{formatCurrency(row.total)}</td>
                 </tr>
               ))}
@@ -250,27 +250,27 @@ export default async function RelatoriosPage({
         </section>
 
         <section className="card overflow-hidden">
-          <h2 className="border-b border-slate-100 px-4 py-3 text-lg font-semibold">
+          <h2 className="border-b border-border px-4 py-3 text-lg font-semibold">
             Agendamentos por status
           </h2>
           <table className="w-full text-sm">
-            <thead className="bg-slate-50 text-left text-xs uppercase tracking-wider text-slate-500">
+            <thead className="bg-muted text-left text-xs uppercase tracking-wider text-muted-foreground">
               <tr>
                 <th className="px-4 py-3">Status</th>
                 <th className="px-4 py-3 text-right">Quantidade</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-border">
               {appointments.length === 0 ? (
                 <tr>
-                  <td colSpan={2} className="px-4 py-6 text-center text-slate-500">
+                  <td colSpan={2} className="px-4 py-6 text-center text-muted-foreground">
                     Nenhum agendamento no período.
                   </td>
                 </tr>
               ) : (
                 appointments.map((a) => (
                   <tr key={a.status}>
-                    <td className="px-4 py-3 font-medium text-slate-900">{a.status}</td>
+                    <td className="px-4 py-3 font-medium text-foreground">{a.status}</td>
                     <td className="px-4 py-3 text-right">{a._count.id}</td>
                   </tr>
                 ))
@@ -280,27 +280,27 @@ export default async function RelatoriosPage({
         </section>
 
         <section className="card overflow-hidden">
-          <h2 className="border-b border-slate-100 px-4 py-3 text-lg font-semibold">
+          <h2 className="border-b border-border px-4 py-3 text-lg font-semibold">
             Top serviços (agendamentos)
           </h2>
           <table className="w-full text-sm">
-            <thead className="bg-slate-50 text-left text-xs uppercase tracking-wider text-slate-500">
+            <thead className="bg-muted text-left text-xs uppercase tracking-wider text-muted-foreground">
               <tr>
                 <th className="px-4 py-3">Serviço</th>
                 <th className="px-4 py-3 text-right">Agendamentos</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-border">
               {topServicesRaw.length === 0 ? (
                 <tr>
-                  <td colSpan={2} className="px-4 py-6 text-center text-slate-500">
+                  <td colSpan={2} className="px-4 py-6 text-center text-muted-foreground">
                     Sem dados no período.
                   </td>
                 </tr>
               ) : (
                 topServicesRaw.map((s) => (
                   <tr key={s.serviceId ?? "unknown"}>
-                    <td className="px-4 py-3 font-medium text-slate-900">
+                    <td className="px-4 py-3 font-medium text-foreground">
                       {s.serviceId ? (serviceNameMap.get(s.serviceId) ?? "—") : "—"}
                     </td>
                     <td className="px-4 py-3 text-right">{s._count.id}</td>
@@ -312,30 +312,30 @@ export default async function RelatoriosPage({
         </section>
 
         <section className="card overflow-hidden">
-          <h2 className="border-b border-slate-100 px-4 py-3 text-lg font-semibold">
+          <h2 className="border-b border-border px-4 py-3 text-lg font-semibold">
             Estoque baixo
           </h2>
           <table className="w-full text-sm">
-            <thead className="bg-slate-50 text-left text-xs uppercase tracking-wider text-slate-500">
+            <thead className="bg-muted text-left text-xs uppercase tracking-wider text-muted-foreground">
               <tr>
                 <th className="px-4 py-3">Item</th>
                 <th className="px-4 py-3 text-right">Qtd</th>
                 <th className="px-4 py-3 text-right">Mín.</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-border">
               {lowStockItems.length === 0 ? (
                 <tr>
-                  <td colSpan={3} className="px-4 py-6 text-center text-slate-500">
+                  <td colSpan={3} className="px-4 py-6 text-center text-muted-foreground">
                     Nenhum item abaixo do mínimo.
                   </td>
                 </tr>
               ) : (
                 lowStockItems.map((item) => (
                   <tr key={item.id}>
-                    <td className="px-4 py-3 font-medium text-slate-900">{item.name}</td>
+                    <td className="px-4 py-3 font-medium text-foreground">{item.name}</td>
                     <td className="px-4 py-3 text-right text-amber-600">{item.quantity}</td>
-                    <td className="px-4 py-3 text-right text-slate-600">{item.minQuantity}</td>
+                    <td className="px-4 py-3 text-right text-muted-foreground">{item.minQuantity}</td>
                   </tr>
                 ))
               )}
@@ -346,25 +346,25 @@ export default async function RelatoriosPage({
 
       {hasConsolidated && (
         <section className="card mt-8 overflow-hidden">
-          <h2 className="border-b border-slate-100 px-4 py-3 text-lg font-semibold">
+          <h2 className="border-b border-border px-4 py-3 text-lg font-semibold">
             Visão consolidada (Premium)
           </h2>
           <div className="grid gap-4 p-4 sm:grid-cols-3">
-            <div className="rounded-xl bg-slate-50 p-4">
-              <p className="text-xs text-slate-500">Receita financeira</p>
+            <div className="rounded-xl bg-muted p-4">
+              <p className="text-xs text-muted-foreground">Receita financeira</p>
               <p className="text-xl font-bold text-green-600">
                 {formatCurrency(revenueRows.reduce((s, r) => s + r.total, 0))}
               </p>
             </div>
-            <div className="rounded-xl bg-slate-50 p-4">
-              <p className="text-xs text-slate-500">PDV no período</p>
-              <p className="text-xl font-bold text-slate-900">
+            <div className="rounded-xl bg-muted p-4">
+              <p className="text-xs text-muted-foreground">PDV no período</p>
+              <p className="text-xl font-bold text-foreground">
                 {formatCurrency(pdvSales._sum.total ?? 0)}
               </p>
             </div>
-            <div className="rounded-xl bg-slate-50 p-4">
-              <p className="text-xs text-slate-500">Ticket médio PDV</p>
-              <p className="text-xl font-bold text-slate-900">
+            <div className="rounded-xl bg-muted p-4">
+              <p className="text-xs text-muted-foreground">Ticket médio PDV</p>
+              <p className="text-xl font-bold text-foreground">
                 {pdvSales._count > 0
                   ? formatCurrency((pdvSales._sum.total ?? 0) / pdvSales._count)
                   : formatCurrency(0)}

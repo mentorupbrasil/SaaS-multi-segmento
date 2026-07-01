@@ -81,7 +81,7 @@ export default async function EventosPage({
         <>
           <div className="card overflow-hidden">
             <table className="w-full text-sm">
-              <thead className="bg-slate-50 text-left text-xs uppercase tracking-wider text-slate-500">
+              <thead className="bg-muted text-left text-xs uppercase tracking-wider text-muted-foreground">
                 <tr>
                   <th className="px-4 py-3">Nome</th>
                   <th className="px-4 py-3">{term(terms, "customer")}</th>
@@ -92,25 +92,25 @@ export default async function EventosPage({
                   <th className="px-4 py-3">Ações</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-border">
                 {events.map((e) => (
-                  <tr key={e.id} className="hover:bg-slate-50">
-                    <td className="px-4 py-3 font-medium text-slate-900">
-                      <Link href={`/eventos/${e.id}`} className="hover:text-brand-600">
+                  <tr key={e.id} className="hover:bg-muted">
+                    <td className="px-4 py-3 font-medium text-foreground">
+                      <Link href={`/eventos/${e.id}`} className="hover:text-primary">
                         {e.name}
                       </Link>
                     </td>
-                    <td className="px-4 py-3 text-slate-600">{e.customer?.name ?? "—"}</td>
-                    <td className="px-4 py-3 text-slate-600">{e.eventType ?? "—"}</td>
-                    <td className="px-4 py-3 text-slate-600">
+                    <td className="px-4 py-3 text-muted-foreground">{e.customer?.name ?? "—"}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{e.eventType ?? "—"}</td>
+                    <td className="px-4 py-3 text-muted-foreground">
                       {e.eventDate ? formatDate(e.eventDate) : "—"}
                     </td>
                     <td className="px-4 py-3">
-                      <span className="rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-700">
+                      <span className="rounded-full bg-muted px-2 py-0.5 text-xs font-medium text-foreground">
                         {STATUS_LABEL[e.status] ?? e.status}
                       </span>
                     </td>
-                    <td className="px-4 py-3 text-slate-600">{formatCurrency(e.total)}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{formatCurrency(e.total)}</td>
                     <td className="px-4 py-3">
                       <div className="flex flex-wrap items-center gap-2">
                         <EventStatusButtons id={e.id} status={e.status} />

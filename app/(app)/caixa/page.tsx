@@ -50,17 +50,17 @@ export default async function CaixaPage() {
 
       <div className="mb-6 grid gap-4 sm:grid-cols-3">
         <div className="card p-5">
-          <p className="text-sm text-slate-500">Receitas pagas hoje</p>
+          <p className="text-sm text-muted-foreground">Receitas pagas hoje</p>
           <p className="mt-1 text-xl font-bold text-green-600">{formatCurrency(todayTotal)}</p>
         </div>
         <div className="card p-5">
-          <p className="text-sm text-slate-500">Vendas PDV hoje</p>
-          <p className="mt-1 text-xl font-bold text-slate-900">{formatCurrency(todaySales._sum.total ?? 0)}</p>
-          <p className="text-xs text-slate-500">{todaySales._count} venda(s)</p>
+          <p className="text-sm text-muted-foreground">Vendas PDV hoje</p>
+          <p className="mt-1 text-xl font-bold text-foreground">{formatCurrency(todaySales._sum.total ?? 0)}</p>
+          <p className="text-xs text-muted-foreground">{todaySales._count} venda(s)</p>
         </div>
         <div className="card p-5">
-          <p className="text-sm text-slate-500">Status do caixa</p>
-          <p className={`mt-1 text-xl font-bold ${openShift ? "text-green-600" : "text-slate-500"}`}>
+          <p className="text-sm text-muted-foreground">Status do caixa</p>
+          <p className={`mt-1 text-xl font-bold ${openShift ? "text-green-600" : "text-muted-foreground"}`}>
             {openShift ? "Aberto" : "Fechado"}
           </p>
         </div>
@@ -69,10 +69,10 @@ export default async function CaixaPage() {
       {openShift ? (
         <div className="card p-6">
           <h2 className="mb-2 text-lg font-semibold">Turno aberto</h2>
-          <p className="text-sm text-slate-600">
+          <p className="text-sm text-muted-foreground">
             Operador: {openShift.operator.user.name} · Aberto em {formatDateTime(openShift.openedAt)}
           </p>
-          <p className="text-sm text-slate-600">
+          <p className="text-sm text-muted-foreground">
             Fundo de caixa: {formatCurrency(openShift.openingFloat)}
           </p>
           <CloseShiftForm shiftId={openShift.id} />

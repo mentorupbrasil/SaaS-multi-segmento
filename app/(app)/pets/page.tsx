@@ -71,7 +71,7 @@ export default async function PetsPage({
         <>
           <div className="card overflow-hidden">
             <table className="w-full text-sm">
-              <thead className="bg-slate-50 text-left text-xs uppercase tracking-wider text-slate-500">
+              <thead className="bg-muted text-left text-xs uppercase tracking-wider text-muted-foreground">
                 <tr>
                   <th className="px-4 py-3">Nome</th>
                   <th className="px-4 py-3">Espécie</th>
@@ -81,22 +81,22 @@ export default async function PetsPage({
                   <th className="px-4 py-3">Ações</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-border">
                 {pets.map((p) => (
-                  <tr key={p.id} className="hover:bg-slate-50">
-                    <td className="px-4 py-3 font-medium text-slate-900">
-                      <Link href={`/pets/${p.id}`} className="hover:text-brand-600">
+                  <tr key={p.id} className="hover:bg-muted">
+                    <td className="px-4 py-3 font-medium text-foreground">
+                      <Link href={`/pets/${p.id}`} className="hover:text-primary">
                         {p.name}
                       </Link>
                     </td>
-                    <td className="px-4 py-3 text-slate-600">{p.species ?? "—"}</td>
-                    <td className="px-4 py-3 text-slate-600">{p.breed ?? "—"}</td>
-                    <td className="px-4 py-3 text-slate-600">
-                      <Link href={`/clientes/${p.customer.id}`} className="hover:text-brand-600">
+                    <td className="px-4 py-3 text-muted-foreground">{p.species ?? "—"}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{p.breed ?? "—"}</td>
+                    <td className="px-4 py-3 text-muted-foreground">
+                      <Link href={`/clientes/${p.customer.id}`} className="hover:text-primary">
                         {p.customer.name}
                       </Link>
                     </td>
-                    <td className="px-4 py-3 text-slate-600">{formatDate(p.createdAt)}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{formatDate(p.createdAt)}</td>
                     <td className="px-4 py-3">
                       <DeleteButton action={deletePet.bind(null, p.id)} />
                     </td>

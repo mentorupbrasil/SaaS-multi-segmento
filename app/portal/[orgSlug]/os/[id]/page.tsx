@@ -29,37 +29,37 @@ export default async function PortalWorkOrderPage({
   if (!order) notFound();
 
   return (
-    <div className="min-h-screen bg-slate-50 px-4 py-10">
+    <div className="min-h-screen bg-muted px-4 py-10">
       <div className="mx-auto max-w-lg">
         <Link
           href={`/portal/${org.slug}/os`}
-          className="mb-4 inline-flex items-center gap-1 text-sm text-brand-600 hover:underline"
+          className="mb-4 inline-flex items-center gap-1 text-sm text-primary hover:underline"
         >
           <Icon name="ArrowLeft" className="h-4 w-4" />
           Voltar
         </Link>
 
         <div className="card p-6">
-          <p className="text-sm text-slate-500">{org.name}</p>
-          <h1 className="mt-1 text-2xl font-bold text-slate-900">{order.title}</h1>
+          <p className="text-sm text-muted-foreground">{org.name}</p>
+          <h1 className="mt-1 text-2xl font-bold text-foreground">{order.title}</h1>
           <p className="mt-2 text-sm">
             Status:{" "}
             <span className="font-medium">{STATUS_LABEL[order.status] ?? order.status}</span>
           </p>
 
           {order.customer && (
-            <p className="mt-1 text-sm text-slate-600">Cliente: {order.customer.name}</p>
+            <p className="mt-1 text-sm text-muted-foreground">Cliente: {order.customer.name}</p>
           )}
           {order.vehicle && (
-            <p className="text-sm text-slate-600">
+            <p className="text-sm text-muted-foreground">
               Veículo: {order.vehicle.plate} — {order.vehicle.model}
             </p>
           )}
 
-          <div className="mt-6 border-t border-slate-100 pt-4">
+          <div className="mt-6 border-t border-border pt-4">
             <h2 className="mb-2 font-semibold">Itens</h2>
             {order.items.length === 0 ? (
-              <p className="text-sm text-slate-500">Sem itens lançados ainda.</p>
+              <p className="text-sm text-muted-foreground">Sem itens lançados ainda.</p>
             ) : (
               <ul className="space-y-2 text-sm">
                 {order.items.map((item) => (
@@ -74,7 +74,7 @@ export default async function PortalWorkOrderPage({
           </div>
 
           {order.dueDate && (
-            <p className="mt-4 text-xs text-slate-500">Previsão: {formatDate(order.dueDate)}</p>
+            <p className="mt-4 text-xs text-muted-foreground">Previsão: {formatDate(order.dueDate)}</p>
           )}
         </div>
       </div>

@@ -26,7 +26,7 @@ export default function HomePage() {
   const featureIaEnabled = process.env.FEATURE_IA === "true";
 
   return (
-    <div className="bg-background">
+    <div className="min-h-screen bg-background text-foreground">
       <SiteHeader />
       <HomeHero starterPrice={starterPrice ?? undefined} />
       <LogosStrip />

@@ -43,7 +43,7 @@ export default async function QuartoDetailPage({
       <PageHeader title={`Quarto ${room.number}`} description="Detalhes da acomodação" />
 
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-        <Link href="/quartos" className="text-sm text-brand-600 hover:underline">
+        <Link href="/quartos" className="text-sm text-primary hover:underline">
           ← Voltar
         </Link>
         <div className="flex flex-wrap items-center gap-2">
@@ -64,26 +64,26 @@ export default async function QuartoDetailPage({
 
       <div className="mb-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <div className="card p-4">
-          <p className="text-xs text-slate-500">Tipo</p>
+          <p className="text-xs text-muted-foreground">Tipo</p>
           <p className="font-medium">{room.type ?? "—"}</p>
         </div>
         <div className="card p-4">
-          <p className="text-xs text-slate-500">Status</p>
+          <p className="text-xs text-muted-foreground">Status</p>
           <p className="font-medium">{STATUS_LABEL[room.status] ?? room.status}</p>
         </div>
         <div className="card p-4">
-          <p className="text-xs text-slate-500">Diária</p>
+          <p className="text-xs text-muted-foreground">Diária</p>
           <p className="font-medium">{formatCurrency(room.dailyRate)}</p>
         </div>
         <div className="card p-4">
-          <p className="text-xs text-slate-500">Cadastro</p>
+          <p className="text-xs text-muted-foreground">Cadastro</p>
           <p className="font-medium">{formatDate(room.createdAt)}</p>
         </div>
       </div>
 
       {room.notes && (
         <div className="card mb-6 p-4">
-          <p className="text-xs text-slate-500">Observações</p>
+          <p className="text-xs text-muted-foreground">Observações</p>
           <p className="text-sm">{room.notes}</p>
         </div>
       )}
@@ -91,11 +91,11 @@ export default async function QuartoDetailPage({
       <section>
         <h2 className="mb-3 text-lg font-semibold">Reservas recentes</h2>
         {reservations.length === 0 ? (
-          <div className="card p-6 text-center text-sm text-slate-500">Nenhuma reserva.</div>
+          <div className="card p-6 text-center text-sm text-muted-foreground">Nenhuma reserva.</div>
         ) : (
           <div className="card overflow-hidden">
             <table className="w-full text-sm">
-              <thead className="bg-slate-50 text-left text-xs uppercase tracking-wider text-slate-500">
+              <thead className="bg-muted text-left text-xs uppercase tracking-wider text-muted-foreground">
                 <tr>
                   <th className="px-4 py-3">Hóspede</th>
                   <th className="px-4 py-3">Check-in</th>
@@ -103,17 +103,17 @@ export default async function QuartoDetailPage({
                   <th className="px-4 py-3">Status</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-border">
                 {reservations.map((r) => (
-                  <tr key={r.id} className="hover:bg-slate-50">
+                  <tr key={r.id} className="hover:bg-muted">
                     <td className="px-4 py-3">
-                      <Link href={`/reservas/${r.id}`} className="font-medium hover:text-brand-600">
+                      <Link href={`/reservas/${r.id}`} className="font-medium hover:text-primary">
                         {r.customer.name}
                       </Link>
                     </td>
-                    <td className="px-4 py-3 text-slate-600">{formatDate(r.checkIn)}</td>
-                    <td className="px-4 py-3 text-slate-600">{formatDate(r.checkOut)}</td>
-                    <td className="px-4 py-3 text-slate-600">{r.status}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{formatDate(r.checkIn)}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{formatDate(r.checkOut)}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{r.status}</td>
                   </tr>
                 ))}
               </tbody>

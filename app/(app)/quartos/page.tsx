@@ -74,7 +74,7 @@ export default async function QuartosPage({
         <>
           <div className="card overflow-hidden">
             <table className="w-full text-sm">
-              <thead className="bg-slate-50 text-left text-xs uppercase tracking-wider text-slate-500">
+              <thead className="bg-muted text-left text-xs uppercase tracking-wider text-muted-foreground">
                 <tr>
                   <th className="px-4 py-3">Número</th>
                   <th className="px-4 py-3">Tipo</th>
@@ -84,15 +84,15 @@ export default async function QuartosPage({
                   <th className="px-4 py-3">Ações</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-border">
                 {rooms.map((r) => (
-                  <tr key={r.id} className="hover:bg-slate-50">
-                    <td className="px-4 py-3 font-medium text-slate-900">
-                      <Link href={`/quartos/${r.id}`} className="hover:text-brand-600">
+                  <tr key={r.id} className="hover:bg-muted">
+                    <td className="px-4 py-3 font-medium text-foreground">
+                      <Link href={`/quartos/${r.id}`} className="hover:text-primary">
                         {r.number}
                       </Link>
                     </td>
-                    <td className="px-4 py-3 text-slate-600">{r.type ?? "—"}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{r.type ?? "—"}</td>
                     <td className="px-4 py-3">
                       <span
                         className={`rounded-full px-2 py-0.5 text-xs font-medium ${STATUS_STYLES[r.status]}`}
@@ -100,8 +100,8 @@ export default async function QuartosPage({
                         {STATUS_LABEL[r.status] ?? r.status}
                       </span>
                     </td>
-                    <td className="px-4 py-3 text-slate-600">{formatCurrency(r.dailyRate)}</td>
-                    <td className="px-4 py-3 text-slate-600">{formatDate(r.createdAt)}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{formatCurrency(r.dailyRate)}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{formatDate(r.createdAt)}</td>
                     <td className="px-4 py-3">
                       <div className="flex flex-wrap items-center gap-2">
                         <RoomEditForm

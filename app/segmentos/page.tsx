@@ -30,9 +30,9 @@ export default async function SegmentosPage({
       <SegmentsDirectory groups={groups} total={total} initialQuery={q?.trim() ?? ""} />
 
       <section className="section pb-16">
-        <div className="rounded-2xl border border-dashed border-slate-300 bg-white p-8 text-center">
-          <h3 className="text-lg font-semibold text-slate-900">Não encontrou o seu segmento?</h3>
-          <p className="mx-auto mt-2 max-w-xl text-sm text-slate-600">
+        <div className="rounded-2xl border border-dashed border-border bg-card p-8 text-center">
+          <h3 className="text-lg font-semibold text-foreground">Não encontrou o seu segmento?</h3>
+          <p className="mx-auto mt-2 max-w-xl text-sm text-muted-foreground">
             A plataforma é flexível e atende praticamente qualquer negócio com clientes, agenda,
             serviços e financeiro.
           </p>

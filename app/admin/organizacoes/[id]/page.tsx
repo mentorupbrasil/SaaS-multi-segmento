@@ -25,14 +25,14 @@ export default async function AdminOrganizationDetailPage({
 
   return (
     <div>
-      <Link href="/admin/organizacoes" className="text-sm font-medium text-brand-700 hover:underline">
+      <Link href="/admin/organizacoes" className="text-sm font-medium text-primary hover:underline">
         ← Organizações
       </Link>
 
       <div className="mt-4 mb-6 flex flex-wrap items-start justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">{org.name}</h1>
-          <p className="mt-1 text-sm text-slate-500">
+          <h1 className="text-2xl font-bold text-foreground">{org.name}</h1>
+          <p className="mt-1 text-sm text-muted-foreground">
             {segment?.label ?? org.segmentId} · Plano {org.plan} ·{" "}
             {STATUS_LABEL[org.subscriptionStatus] ?? org.subscriptionStatus}
           </p>
@@ -55,19 +55,19 @@ export default async function AdminOrganizationDetailPage({
           { label: "Agendamentos", value: org._count.appointments },
         ].map((s) => (
           <div key={s.label} className="card p-5">
-            <p className="text-sm text-slate-500">{s.label}</p>
-            <p className="mt-2 text-2xl font-bold text-slate-900">{s.value}</p>
+            <p className="text-sm text-muted-foreground">{s.label}</p>
+            <p className="mt-2 text-2xl font-bold text-foreground">{s.value}</p>
           </div>
         ))}
       </div>
 
       <div className="mt-8 card overflow-hidden">
-        <div className="border-b border-slate-100 px-5 py-4">
-          <h2 className="font-semibold text-slate-900">Usuários vinculados</h2>
+        <div className="border-b border-border px-5 py-4">
+          <h2 className="font-semibold text-foreground">Usuários vinculados</h2>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm">
-            <thead className="border-b border-slate-100 bg-slate-50/80 text-xs font-semibold uppercase tracking-wider text-slate-500">
+            <thead className="border-b border-border bg-muted/50 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
               <tr>
                 <th className="px-4 py-3">Nome</th>
                 <th className="px-4 py-3">E-mail</th>
@@ -75,13 +75,13 @@ export default async function AdminOrganizationDetailPage({
                 <th className="px-4 py-3">Desde</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-border">
               {org.memberships.map((m) => (
                 <tr key={m.id}>
-                  <td className="px-4 py-3 font-medium text-slate-900">{m.user.name}</td>
-                  <td className="px-4 py-3 text-slate-600">{m.user.email}</td>
-                  <td className="px-4 py-3 text-slate-600">{m.role}</td>
-                  <td className="px-4 py-3 text-slate-500">{formatDate(m.user.createdAt)}</td>
+                  <td className="px-4 py-3 font-medium text-foreground">{m.user.name}</td>
+                  <td className="px-4 py-3 text-muted-foreground">{m.user.email}</td>
+                  <td className="px-4 py-3 text-muted-foreground">{m.role}</td>
+                  <td className="px-4 py-3 text-muted-foreground">{formatDate(m.user.createdAt)}</td>
                 </tr>
               ))}
             </tbody>
@@ -89,7 +89,7 @@ export default async function AdminOrganizationDetailPage({
         </div>
       </div>
 
-      <div className="mt-6 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-600">
+      <div className="mt-6 rounded-xl border border-border bg-muted px-4 py-3 text-sm text-muted-foreground">
         Use <strong>Entrar nesta organização</strong> para operar clientes, agenda e financeiro desta conta com
         acesso total (super admin).
       </div>

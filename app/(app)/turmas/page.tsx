@@ -57,7 +57,7 @@ export default async function TurmasPage({
         <>
           <div className="card overflow-hidden">
             <table className="w-full text-sm">
-              <thead className="bg-slate-50 text-left text-xs uppercase tracking-wider text-slate-500">
+              <thead className="bg-muted text-left text-xs uppercase tracking-wider text-muted-foreground">
                 <tr>
                   <th className="px-4 py-3">Nome</th>
                   <th className="px-4 py-3">Série</th>
@@ -70,31 +70,31 @@ export default async function TurmasPage({
                   <th className="px-4 py-3">Ações</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-border">
                 {classes.map((c) => (
-                  <tr key={c.id} className="hover:bg-slate-50">
-                    <td className="px-4 py-3 font-medium text-slate-900">
-                      <Link href={`/turmas/${c.id}`} className="hover:text-brand-600">
+                  <tr key={c.id} className="hover:bg-muted">
+                    <td className="px-4 py-3 font-medium text-foreground">
+                      <Link href={`/turmas/${c.id}`} className="hover:text-primary">
                         {c.name}
                       </Link>
                     </td>
-                    <td className="px-4 py-3 text-slate-600">{c.grade ?? "—"}</td>
-                    <td className="px-4 py-3 text-slate-600">{c.shift ?? "—"}</td>
-                    <td className="px-4 py-3 text-slate-600">{c.room ?? "—"}</td>
-                    <td className="px-4 py-3 text-slate-600">{c.teacher?.user.name ?? "—"}</td>
-                    <td className="px-4 py-3 text-slate-600">
+                    <td className="px-4 py-3 text-muted-foreground">{c.grade ?? "—"}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{c.shift ?? "—"}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{c.room ?? "—"}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{c.teacher?.user.name ?? "—"}</td>
+                    <td className="px-4 py-3 text-muted-foreground">
                       {c._count.enrollments}/{c.capacity}
                     </td>
                     <td className="px-4 py-3">
                       <span
                         className={`rounded-full px-2 py-0.5 text-xs font-medium ${
-                          c.active ? "bg-green-100 text-green-800" : "bg-slate-100 text-slate-600"
+                          c.active ? "bg-green-100 text-green-800" : "bg-muted text-muted-foreground"
                         }`}
                       >
                         {c.active ? "Ativa" : "Inativa"}
                       </span>
                     </td>
-                    <td className="px-4 py-3 text-slate-600">{formatDate(c.createdAt)}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{formatDate(c.createdAt)}</td>
                     <td className="px-4 py-3">
                       <DeleteButton action={deleteSchoolClass.bind(null, c.id)} />
                     </td>

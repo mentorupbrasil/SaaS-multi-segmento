@@ -93,7 +93,7 @@ export default async function CalendarioPage({
       />
 
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-        <Link href="/agenda" className="text-sm text-brand-600 hover:underline">
+        <Link href="/agenda" className="text-sm text-primary hover:underline">
           ← Voltar à agenda
         </Link>
         <div className="flex gap-2">

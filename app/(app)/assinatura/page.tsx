@@ -56,10 +56,10 @@ export default async function AssinaturaPage({ searchParams }: Props) {
         </div>
       )}
 
-      <div className="mb-6 flex items-center justify-between rounded-xl border border-slate-200 bg-white px-5 py-4">
+      <div className="mb-6 flex items-center justify-between rounded-xl border border-border bg-card px-5 py-4">
         <div>
-          <p className="text-sm text-slate-500">Status atual</p>
-          <p className="text-lg font-semibold text-slate-900">
+          <p className="text-sm text-muted-foreground">Status atual</p>
+          <p className="text-lg font-semibold text-foreground">
             {STATUS_LABELS[org.subscriptionStatus]} · Plano {currentPlan?.name ?? org.plan}
           </p>
         </div>
@@ -106,23 +106,23 @@ export default async function AssinaturaPage({ searchParams }: Props) {
                   {plan.badge}
                 </span>
               )}
-              <h2 className="text-lg font-semibold text-slate-900">{plan.name}</h2>
-              <p className="mt-1 text-sm text-slate-500">{plan.description}</p>
+              <h2 className="text-lg font-semibold text-foreground">{plan.name}</h2>
+              <p className="mt-1 text-sm text-muted-foreground">{plan.description}</p>
               <p className="mt-3">
                 {isEnterprise ? (
-                  <span className="text-2xl font-bold text-slate-900">Sob consulta</span>
+                  <span className="text-2xl font-bold text-foreground">Sob consulta</span>
                 ) : (
                   <>
-                    <span className="text-3xl font-bold text-slate-900">
+                    <span className="text-3xl font-bold text-foreground">
                       {formatCurrency(plan.priceMonthly as number)}
                     </span>
-                    <span className="text-sm text-slate-500">/mês</span>
+                    <span className="text-sm text-muted-foreground">/mês</span>
                   </>
                 )}
               </p>
               <ul className="mt-4 flex-1 space-y-2">
                 {plan.features.map((f) => (
-                  <li key={f} className="flex items-center gap-2 text-sm text-slate-600">
+                  <li key={f} className="flex items-center gap-2 text-sm text-muted-foreground">
                     <Icon name="Check" className="h-4 w-4 text-green-600" />
                     {f}
                   </li>

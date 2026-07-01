@@ -51,10 +51,10 @@ export default async function BoletimPage() {
         <div className="space-y-6">
           {[...byClass.entries()].map(([className, students]) => (
             <section key={className}>
-              <h2 className="mb-3 text-lg font-semibold text-slate-900">{className}</h2>
+              <h2 className="mb-3 text-lg font-semibold text-foreground">{className}</h2>
               <div className="card overflow-hidden">
                 <table className="w-full text-sm">
-                  <thead className="bg-slate-50 text-left text-xs uppercase tracking-wider text-slate-500">
+                  <thead className="bg-muted text-left text-xs uppercase tracking-wider text-muted-foreground">
                     <tr>
                       <th className="px-4 py-3">Aluno</th>
                       <th className="px-4 py-3">Frequência</th>
@@ -62,13 +62,13 @@ export default async function BoletimPage() {
                       <th className="px-4 py-3">Matrícula</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-100">
+                  <tbody className="divide-y divide-border">
                     {students.map((e) => {
                       const s = stats.get(`${e.classId}:${e.customerId}`);
                       const rate = s && s.total > 0 ? Math.round((s.present / s.total) * 100) : null;
                       return (
-                        <tr key={e.id} className="hover:bg-slate-50">
-                          <td className="px-4 py-3 font-medium text-slate-900">{e.customer.name}</td>
+                        <tr key={e.id} className="hover:bg-muted">
+                          <td className="px-4 py-3 font-medium text-foreground">{e.customer.name}</td>
                           <td className="px-4 py-3">
                             {rate != null ? (
                               <span
@@ -82,10 +82,10 @@ export default async function BoletimPage() {
                               "—"
                             )}
                           </td>
-                          <td className="px-4 py-3 text-slate-600">
+                          <td className="px-4 py-3 text-muted-foreground">
                             {s ? `${s.present}/${s.total}` : "0/0"}
                           </td>
-                          <td className="px-4 py-3 text-slate-600">{formatDate(e.enrolledAt)}</td>
+                          <td className="px-4 py-3 text-muted-foreground">{formatDate(e.enrolledAt)}</td>
                         </tr>
                       );
                     })}

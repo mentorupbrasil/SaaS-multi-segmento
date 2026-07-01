@@ -81,12 +81,12 @@ export default async function FrequenciaPage({
 
       {classes.length === 0 ? (
         <EmptyState icon="CalendarCheck" description="Cadastre uma turma ativa para registrar frequência. 
-          <Link href=/turmas className=text-brand-600 hover:underline>
+          <Link href=/turmas className=text-primary hover:underline>
             Ir para turmas
           </Link>" />
       ) : selectedClassId && attendance.class ? (
         <>
-          <p className="mb-4 text-sm text-slate-600">
+          <p className="mb-4 text-sm text-muted-foreground">
             Turma: <span className="font-medium">{attendance.class.name}</span> —{" "}
             {new Intl.DateTimeFormat("pt-BR", {
               weekday: "long",

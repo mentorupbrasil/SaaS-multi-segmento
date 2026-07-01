@@ -78,7 +78,7 @@ export default async function ServicosPage({
         <>
           <div className="card overflow-hidden">
             <table className="w-full text-sm">
-              <thead className="bg-slate-50 text-left text-xs uppercase tracking-wider text-slate-500">
+              <thead className="bg-muted text-left text-xs uppercase tracking-wider text-muted-foreground">
                 <tr>
                   <th className="px-4 py-3">Nome</th>
                   <th className="px-4 py-3">Preço</th>
@@ -87,22 +87,22 @@ export default async function ServicosPage({
                   <th className="px-4 py-3">Ações</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-border">
                 {services.map((s) => (
-                  <tr key={s.id} className="hover:bg-slate-50">
-                    <td className="px-4 py-3 font-medium text-slate-900">
-                      <Link href={`/servicos/${s.id}`} className="hover:text-brand-600">
+                  <tr key={s.id} className="hover:bg-muted">
+                    <td className="px-4 py-3 font-medium text-foreground">
+                      <Link href={`/servicos/${s.id}`} className="hover:text-primary">
                         {s.name}
                       </Link>
                     </td>
-                    <td className="px-4 py-3 text-slate-600">{formatCurrency(s.price)}</td>
-                    <td className="px-4 py-3 text-slate-600">{s.durationMin} min</td>
+                    <td className="px-4 py-3 text-muted-foreground">{formatCurrency(s.price)}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{s.durationMin} min</td>
                     <td className="px-4 py-3">
                       <span
                         className={
                           s.active
                             ? "rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-700"
-                            : "rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-500"
+                            : "rounded-full bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground"
                         }
                       >
                         {s.active ? "Ativo" : "Inativo"}

@@ -54,22 +54,22 @@ export default async function GrupoDetailPage({
       />
 
       <div className="mb-4">
-        <Link href="/grupos" className="text-sm text-brand-600 hover:underline">
+        <Link href="/grupos" className="text-sm text-primary hover:underline">
           ← Voltar aos grupos
         </Link>
       </div>
 
       <div className="mb-6 grid gap-4 sm:grid-cols-3">
         <div className="card p-4">
-          <p className="text-xs text-slate-500">Tipo</p>
+          <p className="text-xs text-muted-foreground">Tipo</p>
           <p className="font-medium">{group.groupType ?? "—"}</p>
         </div>
         <div className="card p-4">
-          <p className="text-xs text-slate-500">Membros</p>
+          <p className="text-xs text-muted-foreground">Membros</p>
           <p className="font-medium">{group.members.length}</p>
         </div>
         <div className="card p-4">
-          <p className="text-xs text-slate-500">Cadastro</p>
+          <p className="text-xs text-muted-foreground">Cadastro</p>
           <p className="font-medium">{formatDate(group.createdAt)}</p>
         </div>
       </div>
@@ -82,7 +82,7 @@ export default async function GrupoDetailPage({
       ) : (
         <div className="card overflow-hidden">
           <table className="w-full text-sm">
-            <thead className="bg-slate-50 text-left text-xs uppercase tracking-wider text-slate-500">
+            <thead className="bg-muted text-left text-xs uppercase tracking-wider text-muted-foreground">
               <tr>
                 <th className="px-4 py-3">Nome</th>
                 <th className="px-4 py-3">Telefone</th>
@@ -90,16 +90,16 @@ export default async function GrupoDetailPage({
                 <th className="px-4 py-3">Ações</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-border">
               {group.members.map((m) => (
-                <tr key={m.id} className="hover:bg-slate-50">
-                  <td className="px-4 py-3 font-medium text-slate-900">
-                    <Link href={`/clientes/${m.customer.id}`} className="hover:text-brand-600">
+                <tr key={m.id} className="hover:bg-muted">
+                  <td className="px-4 py-3 font-medium text-foreground">
+                    <Link href={`/clientes/${m.customer.id}`} className="hover:text-primary">
                       {m.customer.name}
                     </Link>
                   </td>
-                  <td className="px-4 py-3 text-slate-600">{m.customer.phone ?? "—"}</td>
-                  <td className="px-4 py-3 text-slate-600">{m.customer.email ?? "—"}</td>
+                  <td className="px-4 py-3 text-muted-foreground">{m.customer.phone ?? "—"}</td>
+                  <td className="px-4 py-3 text-muted-foreground">{m.customer.email ?? "—"}</td>
                   <td className="px-4 py-3">
                     <DeleteButton
                       label="Remover"

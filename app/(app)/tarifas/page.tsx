@@ -40,8 +40,8 @@ export default async function TarifasPage() {
         description="Visão de diárias por tipo de quarto e channel manager (em breve)."
       />
 
-      <p className="mb-4 text-sm text-slate-500">
-        <Link href="/quartos" className="text-brand-600 hover:underline">
+      <p className="mb-4 text-sm text-muted-foreground">
+        <Link href="/quartos" className="text-primary hover:underline">
           Gerenciar quartos →
         </Link>
       </p>
@@ -51,16 +51,16 @@ export default async function TarifasPage() {
           const stats = ratesByType.get(t.label);
           return (
             <div key={t.value} className="card p-5">
-              <p className="text-sm font-semibold text-slate-900">{t.label}</p>
+              <p className="text-sm font-semibold text-foreground">{t.label}</p>
               {stats ? (
                 <>
-                  <p className="mt-2 text-2xl font-bold text-brand-600">{formatCurrency(stats.avg)}</p>
-                  <p className="text-xs text-slate-500">
+                  <p className="mt-2 text-2xl font-bold text-primary">{formatCurrency(stats.avg)}</p>
+                  <p className="text-xs text-muted-foreground">
                     {stats.count} quarto(s) · {formatCurrency(stats.min)} – {formatCurrency(stats.max)}
                   </p>
                 </>
               ) : (
-                <p className="mt-2 text-sm text-slate-500">Nenhum quarto deste tipo</p>
+                <p className="mt-2 text-sm text-muted-foreground">Nenhum quarto deste tipo</p>
               )}
             </div>
           );
@@ -68,10 +68,10 @@ export default async function TarifasPage() {
       </div>
 
       <div className="card p-5">
-        <h2 className="mb-2 font-semibold text-slate-900">Channel manager</h2>
-        <p className="text-sm text-slate-600">
+        <h2 className="mb-2 font-semibold text-foreground">Channel manager</h2>
+        <p className="text-sm text-muted-foreground">
           Integração com Booking.com, Airbnb e Expedia disponível em{" "}
-          <Link href="/conexoes" className="text-brand-600 hover:underline">
+          <Link href="/conexoes" className="text-primary hover:underline">
             Conexões
           </Link>
           . Configure credenciais e sincronize disponibilidade automaticamente.

@@ -28,7 +28,7 @@ function FeatureBadge({ item }: { item: FeatureItem }) {
   }
   if (item.planGated) {
     return (
-      <span className="rounded-full bg-brand-100 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-brand-700">
+      <span className="rounded-full bg-primary/15 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-primary">
         Pro+
       </span>
     );
@@ -90,24 +90,24 @@ export function FeaturesDirectory({ initialQuery = "" }: FeaturesDirectoryProps)
   return (
     <>
       {/* Barra sticky — busca + filtros */}
-      <div className="sticky top-16 z-40 border-b border-slate-200/80 bg-white/95 backdrop-blur">
+      <div className="sticky top-16 z-40 border-b border-border bg-background/95 backdrop-blur">
         <div className="section py-4">
           <label htmlFor="features-directory-search" className="sr-only">
             Buscar funcionalidade
           </label>
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
             <div className="relative min-w-0 flex-1">
-              <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+              <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <input
                 id="features-directory-search"
                 type="search"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder='Buscar agenda, financeiro, PDV, portal...'
-                className="w-full rounded-xl border border-slate-200 bg-slate-50 py-2.5 pl-10 pr-4 text-sm outline-none transition-colors focus:border-brand-300 focus:bg-white focus:ring-2 focus:ring-brand-100"
+                className="w-full rounded-xl border border-border bg-muted py-2.5 pl-10 pr-4 text-sm outline-none transition-colors focus:border-primary/50 focus:bg-background focus:ring-2 focus:ring-primary/20"
               />
             </div>
-            <p className="shrink-0 text-sm text-slate-500">
+            <p className="shrink-0 text-sm text-muted-foreground">
               {visibleCount} de {total} recursos
             </p>
           </div>
@@ -119,8 +119,8 @@ export function FeaturesDirectory({ initialQuery = "" }: FeaturesDirectoryProps)
               className={cn(
                 "shrink-0 rounded-full px-3 py-1.5 text-xs font-semibold transition-colors",
                 activeGroup === "all"
-                  ? "bg-brand-600 text-white"
-                  : "bg-slate-100 text-slate-600 hover:bg-slate-200",
+                  ? "bg-primary text-primary-foreground"
+                  : "bg-muted text-muted-foreground hover:bg-muted",
               )}
             >
               Todas
@@ -133,8 +133,8 @@ export function FeaturesDirectory({ initialQuery = "" }: FeaturesDirectoryProps)
                 className={cn(
                   "flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold transition-colors",
                   activeGroup === group.id
-                    ? "bg-brand-600 text-white"
-                    : "bg-slate-100 text-slate-600 hover:bg-slate-200",
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-muted text-muted-foreground hover:bg-muted",
                 )}
               >
                 <Icon name={FEATURE_GROUP_ICONS[group.id] ?? "Layers"} className="h-3.5 w-3.5" />
@@ -150,7 +150,7 @@ export function FeaturesDirectory({ initialQuery = "" }: FeaturesDirectoryProps)
           {/* Sidebar — sumário (desktop) */}
           <aside className="hidden lg:block">
             <nav className="sticky top-36 space-y-1">
-              <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-slate-400">
+              <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 Categorias
               </p>
               {FEATURE_GROUPS.map((group) => (
@@ -158,14 +158,14 @@ export function FeaturesDirectory({ initialQuery = "" }: FeaturesDirectoryProps)
                   key={group.id}
                   type="button"
                   onClick={() => scrollToGroup(group.id)}
-                  className="flex w-full items-center gap-2 rounded-lg px-2 py-2 text-left text-sm text-slate-600 transition-colors hover:bg-slate-50 hover:text-brand-700"
+                  className="flex w-full items-center gap-2 rounded-lg px-2 py-2 text-left text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-primary"
                 >
                   <Icon
                     name={FEATURE_GROUP_ICONS[group.id] ?? "Layers"}
-                    className="h-4 w-4 shrink-0 text-slate-400"
+                    className="h-4 w-4 shrink-0 text-muted-foreground"
                   />
                   <span className="min-w-0 truncate">{group.label}</span>
-                  <span className="ml-auto text-[10px] text-slate-400">{group.items.length}</span>
+                  <span className="ml-auto text-[10px] text-muted-foreground">{group.items.length}</span>
                 </button>
               ))}
             </nav>
@@ -176,10 +176,10 @@ export function FeaturesDirectory({ initialQuery = "" }: FeaturesDirectoryProps)
             {showFeatured && (
               <section>
                 <div className="mb-5">
-                  <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+                  <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                     Mais usados
                   </p>
-                  <h2 className="mt-1 text-lg font-bold text-slate-900">
+                  <h2 className="mt-1 text-lg font-bold text-foreground">
                     Recursos essenciais para começar
                   </h2>
                 </div>
@@ -192,17 +192,17 @@ export function FeaturesDirectory({ initialQuery = "" }: FeaturesDirectoryProps)
                         e.preventDefault();
                         document.getElementById(item.id)?.scrollIntoView({ behavior: "smooth" });
                       }}
-                      className="group flex items-start gap-3 rounded-2xl border border-slate-200 bg-white p-4 transition-all hover:-translate-y-0.5 hover:border-brand-200 hover:shadow-md"
+                      className="group flex items-start gap-3 rounded-2xl border border-border bg-card p-4 transition-all hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-md"
                     >
-                      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-brand-50 to-brand-100 text-brand-600 ring-1 ring-brand-100">
+                      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-primary/10 to-primary/5 text-primary ring-1 ring-primary/20">
                         <Icon name={item.icon} className="h-4 w-4" />
                       </span>
                       <span className="min-w-0">
-                        <span className="flex items-center gap-1 font-semibold text-slate-900 group-hover:text-brand-700">
+                        <span className="flex items-center gap-1 font-semibold text-foreground group-hover:text-primary">
                           {item.name}
                           <ArrowRight className="h-3.5 w-3.5 -translate-x-1 opacity-0 transition-all group-hover:translate-x-0 group-hover:opacity-100" />
                         </span>
-                        <span className="mt-0.5 block text-sm text-slate-500">{item.short}</span>
+                        <span className="mt-0.5 block text-sm text-muted-foreground">{item.short}</span>
                       </span>
                     </Link>
                   ))}
@@ -211,15 +211,15 @@ export function FeaturesDirectory({ initialQuery = "" }: FeaturesDirectoryProps)
             )}
 
             {filteredGroups.length === 0 ? (
-              <div className="rounded-2xl border border-dashed border-slate-300 bg-white py-16 text-center">
-                <p className="text-slate-600">Nenhuma funcionalidade encontrada para &ldquo;{query}&rdquo;.</p>
+              <div className="rounded-2xl border border-dashed border-border bg-card py-16 text-center">
+                <p className="text-muted-foreground">Nenhuma funcionalidade encontrada para &ldquo;{query}&rdquo;.</p>
                 <button
                   type="button"
                   onClick={() => {
                     setQuery("");
                     setActiveGroup("all");
                   }}
-                  className="mt-3 text-sm font-semibold text-brand-700 hover:text-brand-800"
+                  className="mt-3 text-sm font-semibold text-primary hover:text-primary/80"
                 >
                   Limpar filtros
                 </button>
@@ -228,12 +228,12 @@ export function FeaturesDirectory({ initialQuery = "" }: FeaturesDirectoryProps)
               filteredGroups.map((group) => (
                 <section key={group.id} id={group.id} className="scroll-mt-36">
                   <div className="mb-5 flex items-center gap-3">
-                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-brand-50 to-brand-100 text-brand-600 ring-1 ring-brand-100">
+                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-primary/10 to-primary/5 text-primary ring-1 ring-primary/20">
                       <Icon name={FEATURE_GROUP_ICONS[group.id] ?? "Layers"} className="h-5 w-5" />
                     </span>
                     <div>
-                      <h2 className="text-base font-bold text-slate-900">{group.label}</h2>
-                      <p className="text-sm text-slate-500">
+                      <h2 className="text-base font-bold text-foreground">{group.label}</h2>
+                      <p className="text-sm text-muted-foreground">
                         {group.description} · {group.items.length} recursos
                       </p>
                     </div>
@@ -244,17 +244,17 @@ export function FeaturesDirectory({ initialQuery = "" }: FeaturesDirectoryProps)
                       <article
                         key={item.id}
                         id={item.id}
-                        className="group scroll-mt-36 rounded-2xl border border-slate-200 bg-white p-5 transition-all hover:border-brand-200 hover:shadow-md"
+                        className="group scroll-mt-36 rounded-2xl border border-border bg-card p-5 transition-all hover:border-primary/30 hover:shadow-md"
                       >
                         <div className="flex items-start justify-between gap-2">
-                          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-brand-50 to-brand-100 text-brand-600 ring-1 ring-brand-100">
+                          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-primary/10 to-primary/5 text-primary ring-1 ring-primary/20">
                             <Icon name={item.icon} className="h-4 w-4" />
                           </span>
                           <FeatureBadge item={item} />
                         </div>
-                        <h3 className="mt-3 font-semibold text-slate-900">{item.name}</h3>
-                        <p className="mt-1 text-sm leading-relaxed text-slate-600">{item.description}</p>
-                        <p className="mt-2 text-xs text-slate-400">{item.short}</p>
+                        <h3 className="mt-3 font-semibold text-foreground">{item.name}</h3>
+                        <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{item.description}</p>
+                        <p className="mt-2 text-xs text-muted-foreground">{item.short}</p>
                       </article>
                     ))}
                   </div>

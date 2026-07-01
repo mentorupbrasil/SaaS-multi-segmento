@@ -117,7 +117,7 @@ export default async function MatriculasPage({
         <>
           <div className="card overflow-hidden">
             <table className="w-full text-sm">
-              <thead className="bg-slate-50 text-left text-xs uppercase tracking-wider text-slate-500">
+              <thead className="bg-muted text-left text-xs uppercase tracking-wider text-muted-foreground">
                 <tr>
                   <th className="px-4 py-3">Aluno</th>
                   <th className="px-4 py-3">Turma</th>
@@ -126,21 +126,21 @@ export default async function MatriculasPage({
                   <th className="px-4 py-3">Ações</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-border">
                 {enrollments.map((e) => (
-                  <tr key={e.id} className="hover:bg-slate-50">
-                    <td className="px-4 py-3 font-medium text-slate-900">
-                      <Link href={`/matriculas/${e.id}`} className="hover:text-brand-600">
+                  <tr key={e.id} className="hover:bg-muted">
+                    <td className="px-4 py-3 font-medium text-foreground">
+                      <Link href={`/matriculas/${e.id}`} className="hover:text-primary">
                         {e.customer.name}
                       </Link>
                     </td>
-                    <td className="px-4 py-3 text-slate-600">
-                      <Link href={`/turmas/${e.class.id}`} className="hover:text-brand-600">
+                    <td className="px-4 py-3 text-muted-foreground">
+                      <Link href={`/turmas/${e.class.id}`} className="hover:text-primary">
                         {e.class.name}
                       </Link>
                     </td>
-                    <td className="px-4 py-3 text-slate-600">{STATUS_LABEL[e.status] ?? e.status}</td>
-                    <td className="px-4 py-3 text-slate-600">{formatDate(e.enrolledAt)}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{STATUS_LABEL[e.status] ?? e.status}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{formatDate(e.enrolledAt)}</td>
                     <td className="px-4 py-3">
                       <DeleteButton
                         label="Remover"

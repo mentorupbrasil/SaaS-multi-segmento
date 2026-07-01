@@ -95,7 +95,7 @@ export default async function ComissoesPage({
       />
 
       <div className="mb-6 card p-5">
-        <p className="text-sm text-slate-500">Total pendente</p>
+        <p className="text-sm text-muted-foreground">Total pendente</p>
         <p className="mt-1 text-xl font-bold text-amber-600">
           {formatCurrency(pendingTotal._sum.amount ?? 0)}
         </p>
@@ -126,7 +126,7 @@ export default async function ComissoesPage({
         <>
           <div className="card overflow-hidden">
             <table className="w-full text-sm">
-              <thead className="bg-slate-50 text-left text-xs uppercase tracking-wider text-slate-500">
+              <thead className="bg-muted text-left text-xs uppercase tracking-wider text-muted-foreground">
                 <tr>
                   <th className="px-4 py-3">{term(terms, "professional")}</th>
                   <th className="px-4 py-3">Descrição</th>
@@ -136,18 +136,18 @@ export default async function ComissoesPage({
                   <th className="px-4 py-3">Status</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-border">
                 {commissions.map((c) => (
-                  <tr key={c.id} className="hover:bg-slate-50">
-                    <td className="px-4 py-3 font-medium text-slate-900">{c.staff.user.name}</td>
-                    <td className="px-4 py-3 text-slate-600">
-                      <Link href={`/comissoes/${c.id}`} className="hover:text-brand-600">
+                  <tr key={c.id} className="hover:bg-muted">
+                    <td className="px-4 py-3 font-medium text-foreground">{c.staff.user.name}</td>
+                    <td className="px-4 py-3 text-muted-foreground">
+                      <Link href={`/comissoes/${c.id}`} className="hover:text-primary">
                         {c.description.replace(/ \[apt:[^\]]+\]/, "")}
                       </Link>
                     </td>
-                    <td className="px-4 py-3 text-slate-600">{c.customer?.name ?? "—"}</td>
-                    <td className="px-4 py-3 text-slate-600">{formatCurrency(c.amount)}</td>
-                    <td className="px-4 py-3 text-slate-600">{formatDate(c.createdAt)}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{c.customer?.name ?? "—"}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{formatCurrency(c.amount)}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{formatDate(c.createdAt)}</td>
                     <td className="px-4 py-3">
                       {c.paidAt ? (
                         <div className="flex flex-wrap items-center gap-2">

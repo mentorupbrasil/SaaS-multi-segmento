@@ -22,17 +22,17 @@ export function LegalContent({
     <MarketingShell>
       <PageHero eyebrow={eyebrow} title={title} />
       <section className="section max-w-3xl py-16">
-        <p className="text-sm text-slate-400">Última atualização: {updatedAt}</p>
-        <p className="mt-4 leading-relaxed text-slate-700">{intro}</p>
+        <p className="text-sm text-muted-foreground">Última atualização: {updatedAt}</p>
+        <p className="mt-4 leading-relaxed text-foreground">{intro}</p>
         <div className="mt-8 space-y-8">
           {sections.map((s, i) => (
             <div key={s.heading}>
-              <h2 className="text-lg font-bold text-slate-900">
+              <h2 className="text-lg font-bold text-foreground">
                 {i + 1}. {s.heading}
               </h2>
               <div className="mt-2 space-y-3">
                 {s.paragraphs.map((p, j) => (
-                  <p key={j} className="leading-relaxed text-slate-700">
+                  <p key={j} className="leading-relaxed text-foreground">
                     {p}
                   </p>
                 ))}

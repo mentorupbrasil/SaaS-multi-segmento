@@ -65,23 +65,23 @@ export default async function ConexoesPage() {
 
           return (
             <div key={item.provider} className="card flex items-start gap-4 p-6">
-              <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-brand-50 text-brand-600">
+              <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-brand-50 text-primary">
                 <Icon name={item.icon} className="h-6 w-6" />
               </span>
               <div className="min-w-0 flex-1">
                 <div className="flex items-start justify-between gap-3">
                   <div>
-                    <h2 className="font-semibold text-slate-900">{item.name}</h2>
-                    <p className="mt-1 text-sm text-slate-500">{item.description}</p>
+                    <h2 className="font-semibold text-foreground">{item.name}</h2>
+                    <p className="mt-1 text-sm text-muted-foreground">{item.description}</p>
                   </div>
                   <IntegrationToggle provider={item.provider} enabled={enabled} />
                 </div>
-                <p className="mt-3 text-xs text-slate-400">
+                <p className="mt-3 text-xs text-muted-foreground">
                   {item.provider === "nfe" && (
-                    <>Configure detalhes em <Link href="/fiscal" className="text-brand-600 hover:underline">Fiscal</Link> · </>
+                    <>Configure detalhes em <Link href="/fiscal" className="text-primary hover:underline">Fiscal</Link> · </>
                   )}
                   {item.provider === "channel_manager" && (
-                    <>Tarifas em <Link href="/tarifas" className="text-brand-600 hover:underline">Tarifas</Link> · </>
+                    <>Tarifas em <Link href="/tarifas" className="text-primary hover:underline">Tarifas</Link> · </>
                   )}
                   Webhook: /api/integrations/webhook/{item.provider === "pix" ? "mercadopago" : item.provider}
                 </p>

@@ -93,26 +93,26 @@ export default async function TurmaDetailPage({
       />
 
       <div className="mb-4">
-        <Link href="/turmas" className="text-sm text-brand-600 hover:underline">
+        <Link href="/turmas" className="text-sm text-primary hover:underline">
           ← Voltar às turmas
         </Link>
       </div>
 
       <div className="mb-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <div className="card p-4">
-          <p className="text-xs text-slate-500">Série / Nível</p>
+          <p className="text-xs text-muted-foreground">Série / Nível</p>
           <p className="font-medium">{schoolClass.grade ?? "—"}</p>
         </div>
         <div className="card p-4">
-          <p className="text-xs text-slate-500">Turno</p>
+          <p className="text-xs text-muted-foreground">Turno</p>
           <p className="font-medium">{schoolClass.shift ?? "—"}</p>
         </div>
         <div className="card p-4">
-          <p className="text-xs text-slate-500">Professor</p>
+          <p className="text-xs text-muted-foreground">Professor</p>
           <p className="font-medium">{schoolClass.teacher?.user.name ?? "—"}</p>
         </div>
         <div className="card p-4">
-          <p className="text-xs text-slate-500">Vagas</p>
+          <p className="text-xs text-muted-foreground">Vagas</p>
           <p className="font-medium">
             {schoolClass._count.enrollments}/{schoolClass.capacity}
           </p>
@@ -122,7 +122,7 @@ export default async function TurmaDetailPage({
       <div className="mb-4 flex flex-wrap gap-2">
         <Link
           href={`/frequencia?classId=${schoolClass.id}`}
-          className="text-sm text-brand-600 hover:underline"
+          className="text-sm text-primary hover:underline"
         >
           Registrar frequência desta turma
         </Link>
@@ -136,7 +136,7 @@ export default async function TurmaDetailPage({
       ) : (
         <div className="card overflow-hidden">
           <table className="w-full text-sm">
-            <thead className="bg-slate-50 text-left text-xs uppercase tracking-wider text-slate-500">
+            <thead className="bg-muted text-left text-xs uppercase tracking-wider text-muted-foreground">
               <tr>
                 <th className="px-4 py-3">Aluno</th>
                 <th className="px-4 py-3">Telefone</th>
@@ -146,20 +146,20 @@ export default async function TurmaDetailPage({
                 <th className="px-4 py-3">Ações</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-border">
               {schoolClass.enrollments.map((e) => (
-                <tr key={e.id} className="hover:bg-slate-50">
-                  <td className="px-4 py-3 font-medium text-slate-900">
-                    <Link href={`/matriculas/${e.id}`} className="hover:text-brand-600">
+                <tr key={e.id} className="hover:bg-muted">
+                  <td className="px-4 py-3 font-medium text-foreground">
+                    <Link href={`/matriculas/${e.id}`} className="hover:text-primary">
                       {e.customer.name}
                     </Link>
                   </td>
-                  <td className="px-4 py-3 text-slate-600">{e.customer.phone ?? "—"}</td>
-                  <td className="px-4 py-3 text-slate-600">{e.customer.email ?? "—"}</td>
-                  <td className="px-4 py-3 text-slate-600">
+                  <td className="px-4 py-3 text-muted-foreground">{e.customer.phone ?? "—"}</td>
+                  <td className="px-4 py-3 text-muted-foreground">{e.customer.email ?? "—"}</td>
+                  <td className="px-4 py-3 text-muted-foreground">
                     {STATUS_LABEL[e.status] ?? e.status}
                   </td>
-                  <td className="px-4 py-3 text-slate-600">{formatDate(e.enrolledAt)}</td>
+                  <td className="px-4 py-3 text-muted-foreground">{formatDate(e.enrolledAt)}</td>
                   <td className="px-4 py-3">
                     <DeleteButton
                       label="Remover"

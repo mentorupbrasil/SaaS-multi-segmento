@@ -72,7 +72,7 @@ export default async function PacotesPage({
         <>
           <div className="card overflow-hidden">
             <table className="w-full text-sm">
-              <thead className="bg-slate-50 text-left text-xs uppercase tracking-wider text-slate-500">
+              <thead className="bg-muted text-left text-xs uppercase tracking-wider text-muted-foreground">
                 <tr>
                   <th className="px-4 py-3">Pacote</th>
                   <th className="px-4 py-3">{term(terms, "customer")}</th>
@@ -82,16 +82,16 @@ export default async function PacotesPage({
                   <th className="px-4 py-3">Ações</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-border">
                 {packages.map((p) => (
-                  <tr key={p.id} className="hover:bg-slate-50">
-                    <td className="px-4 py-3 font-medium text-slate-900">{p.name}</td>
-                    <td className="px-4 py-3 text-slate-600">{p.customer.name}</td>
-                    <td className="px-4 py-3 text-slate-600">
+                  <tr key={p.id} className="hover:bg-muted">
+                    <td className="px-4 py-3 font-medium text-foreground">{p.name}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{p.customer.name}</td>
+                    <td className="px-4 py-3 text-muted-foreground">
                       {p.usedSessions}/{p.totalSessions}
                     </td>
-                    <td className="px-4 py-3 text-slate-600">{formatCurrency(p.price)}</td>
-                    <td className="px-4 py-3 text-slate-600">{p.expiresAt ? formatDate(p.expiresAt) : "—"}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{formatCurrency(p.price)}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{p.expiresAt ? formatDate(p.expiresAt) : "—"}</td>
                     <td className="px-4 py-3">
                       <div className="flex flex-wrap items-center gap-2">
                         <UseSessionButton id={p.id} disabled={p.usedSessions >= p.totalSessions} />

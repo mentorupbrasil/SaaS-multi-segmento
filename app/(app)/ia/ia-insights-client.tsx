@@ -68,18 +68,18 @@ export function IaInsightsClient() {
 
       {summary && (
         <div className="card p-6">
-          <div className="mb-4 flex items-center gap-2 text-sm text-slate-500">
-            <Icon name="Sparkles" className="h-4 w-4 text-brand-600" />
+          <div className="mb-4 flex items-center gap-2 text-sm text-muted-foreground">
+            <Icon name="Sparkles" className="h-4 w-4 text-primary" />
             Resumo {source === "openai" ? "via OpenAI" : "simulado (dev)"}
           </div>
-          <p className="whitespace-pre-wrap text-sm leading-relaxed text-slate-700">{summary}</p>
+          <p className="whitespace-pre-wrap text-sm leading-relaxed text-foreground">{summary}</p>
         </div>
       )}
 
       {!summary && !error && !loading && (
         <div className="card flex flex-col items-center px-8 py-12 text-center">
           <Icon name="Sparkles" className="h-10 w-10 text-brand-400" />
-          <p className="mt-4 text-sm text-slate-500">
+          <p className="mt-4 text-sm text-muted-foreground">
             Configure <code className="text-xs">FEATURE_IA=true</code> e opcionalmente{" "}
             <code className="text-xs">OPENAI_API_KEY</code> no ambiente.
           </p>

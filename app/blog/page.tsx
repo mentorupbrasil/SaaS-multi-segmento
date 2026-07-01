@@ -28,18 +28,18 @@ export default function BlogPage() {
               href={`/blog/${post.slug}`}
               className="card group flex flex-col overflow-hidden transition-shadow hover:shadow-md"
             >
-              <div className="flex h-40 items-center justify-center bg-gradient-to-br from-brand-50 to-brand-100">
+              <div className="flex h-40 items-center justify-center bg-gradient-to-br from-primary/10 to-primary/5">
                 <Icon name={post.cover} className="h-12 w-12 text-brand-500" />
               </div>
               <div className="flex flex-1 flex-col p-6">
-                <span className="text-xs font-semibold uppercase tracking-wide text-brand-600">
+                <span className="text-xs font-semibold uppercase tracking-wide text-primary">
                   {post.category}
                 </span>
-                <h2 className="mt-2 font-semibold leading-snug text-slate-900 group-hover:text-brand-700">
+                <h2 className="mt-2 font-semibold leading-snug text-foreground group-hover:text-primary">
                   {post.title}
                 </h2>
-                <p className="mt-2 flex-1 text-sm leading-relaxed text-slate-600">{post.excerpt}</p>
-                <div className="mt-4 flex items-center gap-3 text-xs text-slate-400">
+                <p className="mt-2 flex-1 text-sm leading-relaxed text-muted-foreground">{post.excerpt}</p>
+                <div className="mt-4 flex items-center gap-3 text-xs text-muted-foreground">
                   <span>{formatDate(post.date)}</span>
                   <span>·</span>
                   <span>{post.readMinutes} min de leitura</span>

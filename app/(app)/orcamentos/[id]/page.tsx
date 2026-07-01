@@ -66,7 +66,7 @@ export default async function QuoteDetailPage({
       />
 
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-        <Link href="/orcamentos" className="text-sm text-brand-600 hover:underline">
+        <Link href="/orcamentos" className="text-sm text-primary hover:underline">
           ← Voltar
         </Link>
         <div className="flex flex-wrap items-center gap-2">
@@ -91,26 +91,26 @@ export default async function QuoteDetailPage({
 
       <div className="mb-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <div className="card p-4">
-          <p className="text-xs text-slate-500">{term(terms, "customer")}</p>
+          <p className="text-xs text-muted-foreground">{term(terms, "customer")}</p>
           <p className="font-medium">{quote.customer?.name ?? "—"}</p>
         </div>
         <div className="card p-4">
-          <p className="text-xs text-slate-500">Veículo</p>
+          <p className="text-xs text-muted-foreground">Veículo</p>
           <p className="font-medium">
             {quote.vehicle ? `${quote.vehicle.plate} — ${quote.vehicle.model}` : "—"}
           </p>
         </div>
         <div className="card p-4">
-          <p className="text-xs text-slate-500">Válido até</p>
+          <p className="text-xs text-muted-foreground">Válido até</p>
           <p className="font-medium">{quote.validUntil ? formatDate(quote.validUntil) : "—"}</p>
         </div>
         <div className="card p-4">
-          <p className="text-xs text-slate-500">Total</p>
-          <p className="text-xl font-bold text-slate-900">{formatCurrency(quote.total)}</p>
+          <p className="text-xs text-muted-foreground">Total</p>
+          <p className="text-xl font-bold text-foreground">{formatCurrency(quote.total)}</p>
         </div>
       </div>
 
-      {quote.notes && <p className="mb-4 text-sm text-slate-600">{quote.notes}</p>}
+      {quote.notes && <p className="mb-4 text-sm text-muted-foreground">{quote.notes}</p>}
 
       {canEdit && (
         <div className="mb-6 flex flex-wrap items-center gap-3">
@@ -127,11 +127,11 @@ export default async function QuoteDetailPage({
 
       <h2 className="mb-2 mt-8 text-lg font-semibold">Itens</h2>
       {quote.items.length === 0 ? (
-        <p className="text-sm text-slate-500">Nenhum item ainda.</p>
+        <p className="text-sm text-muted-foreground">Nenhum item ainda.</p>
       ) : (
         <div className="card overflow-hidden">
           <table className="w-full text-sm">
-            <thead className="bg-slate-50 text-left text-xs uppercase text-slate-500">
+            <thead className="bg-muted text-left text-xs uppercase text-muted-foreground">
               <tr>
                 <th className="px-4 py-3">Tipo</th>
                 <th className="px-4 py-3">Descrição</th>
@@ -140,7 +140,7 @@ export default async function QuoteDetailPage({
                 <th className="px-4 py-3">Subtotal</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-border">
               {quote.items.map((item) => (
                 <tr key={item.id}>
                   <td className="px-4 py-3">{item.type}</td>
@@ -168,7 +168,7 @@ export default async function QuoteDetailPage({
         />
       )}
 
-      <p className="mt-4 text-xs text-slate-400">Criado em {formatDate(quote.createdAt)}</p>
+      <p className="mt-4 text-xs text-muted-foreground">Criado em {formatDate(quote.createdAt)}</p>
     </div>
   );
 }

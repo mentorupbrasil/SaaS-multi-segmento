@@ -54,7 +54,7 @@ export function SettingsForm({
                 defaultValue={defaultBookingSlug}
                 placeholder="minha-barbearia"
               />
-              <p className="mt-1 text-xs text-slate-500">URL: /agendar/seu-slug</p>
+              <p className="mt-1 text-xs text-muted-foreground">URL: /agendar/seu-slug</p>
             </div>
             <label className="flex items-center gap-2 text-sm">
               <input
@@ -62,7 +62,7 @@ export function SettingsForm({
                 name="publicBookingEnabled"
                 value="true"
                 defaultChecked={defaultBookingEnabled}
-                className="rounded border-slate-300"
+                className="rounded border-border"
               />
               Habilitar agendamento online
             </label>
@@ -71,11 +71,11 @@ export function SettingsForm({
       ) : (
         <div className="card p-6">
           <h2 className="mb-2 text-lg font-semibold">Agendamento público</h2>
-          <p className="text-sm text-slate-600">
+          <p className="text-sm text-muted-foreground">
             Link para clientes agendarem sozinhos está disponível a partir do plano{" "}
             <strong>Profissional</strong>.
           </p>
-          <Link href="/assinatura" className="mt-3 inline-block text-sm font-semibold text-brand-600 underline">
+          <Link href="/assinatura" className="mt-3 inline-block text-sm font-semibold text-primary underline">
             Fazer upgrade
           </Link>
         </div>
@@ -83,7 +83,7 @@ export function SettingsForm({
 
       <div className="card p-6">
         <h2 className="mb-4 text-lg font-semibold">Nomenclatura personalizada</h2>
-        <p className="mb-4 text-sm text-slate-500">
+        <p className="mb-4 text-sm text-muted-foreground">
           Sobrescreva termos do segmento. Deixe em branco para usar o padrão.
         </p>
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">

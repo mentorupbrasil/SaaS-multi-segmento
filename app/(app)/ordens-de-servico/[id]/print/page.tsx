@@ -38,42 +38,42 @@ export default async function WorkOrderPrintPage({
 
   return (
     <PrintLayout title={`Imprimir ${term(terms, "work_order")}`}>
-      <div className="mb-6 border-b border-slate-200 pb-4">
-        <h1 className="text-2xl font-bold text-slate-900">{org.name}</h1>
-        <p className="text-sm text-slate-600">{term(terms, "work_order")}</p>
+      <div className="mb-6 border-b border-border pb-4">
+        <h1 className="text-2xl font-bold text-foreground">{org.name}</h1>
+        <p className="text-sm text-muted-foreground">{term(terms, "work_order")}</p>
       </div>
 
       <div className="mb-6 flex flex-wrap justify-between gap-4 text-sm">
         <div>
-          <p className="font-semibold text-slate-900">{order.title}</p>
-          <p className="text-slate-600">Status: {STATUS_LABEL[order.status] ?? order.status}</p>
-          <p className="text-slate-600">Criada em {formatDate(order.createdAt)}</p>
+          <p className="font-semibold text-foreground">{order.title}</p>
+          <p className="text-muted-foreground">Status: {STATUS_LABEL[order.status] ?? order.status}</p>
+          <p className="text-muted-foreground">Criada em {formatDate(order.createdAt)}</p>
         </div>
         <div className="text-right">
-          <p className="text-slate-600">{term(terms, "customer")}: {order.customer?.name ?? "—"}</p>
+          <p className="text-muted-foreground">{term(terms, "customer")}: {order.customer?.name ?? "—"}</p>
           {order.vehicle && (
-            <p className="text-slate-600">
+            <p className="text-muted-foreground">
               Veículo: {order.vehicle.plate} — {order.vehicle.model}
             </p>
           )}
-          <p className="text-slate-600">Responsável: {order.staff?.user.name ?? "—"}</p>
+          <p className="text-muted-foreground">Responsável: {order.staff?.user.name ?? "—"}</p>
         </div>
       </div>
 
       {order.description && (
-        <p className="mb-6 text-sm text-slate-700">{order.description}</p>
+        <p className="mb-6 text-sm text-foreground">{order.description}</p>
       )}
 
       <table className="mb-6 w-full text-sm">
         <thead>
-          <tr className="border-b border-slate-200 text-left text-xs uppercase text-slate-500">
+          <tr className="border-b border-border text-left text-xs uppercase text-muted-foreground">
             <th className="py-2 pr-4">Descrição</th>
             <th className="py-2 pr-4 text-right">Qtd</th>
             <th className="py-2 pr-4 text-right">Unit.</th>
             <th className="py-2 text-right">Subtotal</th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-slate-100">
+        <tbody className="divide-y divide-border">
           {order.items.map((item) => (
             <tr key={item.id}>
               <td className="py-2 pr-4">{item.description}</td>
@@ -93,8 +93,8 @@ export default async function WorkOrderPrintPage({
         </tfoot>
       </table>
 
-      <p className="text-center text-xs text-slate-400 print:hidden">
-        <Link href={`/ordens-de-servico/${order.id}`} className="text-brand-600 hover:underline">
+      <p className="text-center text-xs text-muted-foreground print:hidden">
+        <Link href={`/ordens-de-servico/${order.id}`} className="text-primary hover:underline">
           ← Voltar ao detalhe
         </Link>
       </p>

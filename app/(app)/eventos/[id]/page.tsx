@@ -49,7 +49,7 @@ export default async function EventDetailPage({
       />
 
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-        <Link href="/eventos" className="text-sm text-brand-600 hover:underline">
+        <Link href="/eventos" className="text-sm text-primary hover:underline">
           ← Voltar
         </Link>
         <DeleteButton action={deleteBusinessEvent.bind(null, event.id)} redirectTo="/eventos" />
@@ -57,10 +57,10 @@ export default async function EventDetailPage({
 
       <div className="mb-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <div className="card p-4">
-          <p className="text-xs text-slate-500">{term(terms, "customer")}</p>
+          <p className="text-xs text-muted-foreground">{term(terms, "customer")}</p>
           <p className="font-medium">
             {event.customer ? (
-              <Link href={`/clientes/${event.customer.id}`} className="hover:text-brand-600">
+              <Link href={`/clientes/${event.customer.id}`} className="hover:text-primary">
                 {event.customer.name}
               </Link>
             ) : (
@@ -69,11 +69,11 @@ export default async function EventDetailPage({
           </p>
         </div>
         <div className="card p-4">
-          <p className="text-xs text-slate-500">Tipo</p>
+          <p className="text-xs text-muted-foreground">Tipo</p>
           <p className="font-medium">{event.eventType ?? "—"}</p>
         </div>
         <div className="card p-4">
-          <p className="text-xs text-slate-500">Data / Local</p>
+          <p className="text-xs text-muted-foreground">Data / Local</p>
           <p className="font-medium">
             {[event.eventDate ? formatDate(event.eventDate) : null, event.location]
               .filter(Boolean)
@@ -81,12 +81,12 @@ export default async function EventDetailPage({
           </p>
         </div>
         <div className="card p-4">
-          <p className="text-xs text-slate-500">Total</p>
-          <p className="text-xl font-bold text-slate-900">{formatCurrency(event.total)}</p>
+          <p className="text-xs text-muted-foreground">Total</p>
+          <p className="text-xl font-bold text-foreground">{formatCurrency(event.total)}</p>
         </div>
       </div>
 
-      {event.notes && <p className="mb-4 text-sm text-slate-600">{event.notes}</p>}
+      {event.notes && <p className="mb-4 text-sm text-muted-foreground">{event.notes}</p>}
 
       <EventStatusButtons id={event.id} status={event.status} />
 

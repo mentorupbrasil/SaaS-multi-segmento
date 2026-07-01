@@ -48,10 +48,10 @@ function IaDashboardPanel() {
             <span className="h-2 w-2 rounded-full bg-amber-400/80" />
             <span className="h-2 w-2 rounded-full bg-emerald-400/80" />
           </div>
-          <span className="text-[10px] font-medium text-slate-400">GestorPro · IA</span>
+          <span className="text-[10px] font-medium text-muted-foreground">GestorPro · IA</span>
         </div>
 
-        <div className="rounded-xl border border-white/10 bg-white/5 p-4 backdrop-blur-sm">
+        <div className="rounded-xl border border-white/10 bg-card/5 p-4 backdrop-blur-sm">
           <div className="flex items-center gap-2 text-brand-300">
             <Icon name="Sparkles" className="h-3.5 w-3.5" />
             <span className="text-[10px] font-semibold uppercase tracking-wider">Resumo do dia</span>

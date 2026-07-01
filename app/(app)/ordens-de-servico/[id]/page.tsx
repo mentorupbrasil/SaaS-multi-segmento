@@ -63,7 +63,7 @@ export default async function WorkOrderDetailPage({
       />
 
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-        <Link href="/ordens-de-servico" className="text-sm text-brand-600 hover:underline">
+        <Link href="/ordens-de-servico" className="text-sm text-primary hover:underline">
           ← Voltar
         </Link>
         <div className="flex flex-wrap items-center gap-2">
@@ -86,38 +86,38 @@ export default async function WorkOrderDetailPage({
 
       <div className="mb-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <div className="card p-4">
-          <p className="text-xs text-slate-500">{term(terms, "customer")}</p>
+          <p className="text-xs text-muted-foreground">{term(terms, "customer")}</p>
           <p className="font-medium">{order.customer?.name ?? "—"}</p>
         </div>
         <div className="card p-4">
-          <p className="text-xs text-slate-500">Veículo</p>
+          <p className="text-xs text-muted-foreground">Veículo</p>
           <p className="font-medium">
             {order.vehicle ? `${order.vehicle.plate} — ${order.vehicle.model}` : "—"}
           </p>
         </div>
         <div className="card p-4">
-          <p className="text-xs text-slate-500">Responsável</p>
+          <p className="text-xs text-muted-foreground">Responsável</p>
           <p className="font-medium">{order.staff?.user.name ?? "—"}</p>
         </div>
         <div className="card p-4">
-          <p className="text-xs text-slate-500">Total</p>
-          <p className="text-xl font-bold text-slate-900">{formatCurrency(order.total)}</p>
+          <p className="text-xs text-muted-foreground">Total</p>
+          <p className="text-xl font-bold text-foreground">{formatCurrency(order.total)}</p>
         </div>
       </div>
 
       {order.description && (
-        <p className="mb-4 text-sm text-slate-600">{order.description}</p>
+        <p className="mb-4 text-sm text-muted-foreground">{order.description}</p>
       )}
 
       <WorkOrderStatusButtons id={order.id} status={order.status} />
 
       <h2 className="mb-2 mt-8 text-lg font-semibold">Itens</h2>
       {order.items.length === 0 ? (
-        <p className="text-sm text-slate-500">Nenhum item ainda.</p>
+        <p className="text-sm text-muted-foreground">Nenhum item ainda.</p>
       ) : (
         <div className="card overflow-hidden">
           <table className="w-full text-sm">
-            <thead className="bg-slate-50 text-left text-xs uppercase text-slate-500">
+            <thead className="bg-muted text-left text-xs uppercase text-muted-foreground">
               <tr>
                 <th className="px-4 py-3">Tipo</th>
                 <th className="px-4 py-3">Descrição</th>
@@ -126,7 +126,7 @@ export default async function WorkOrderDetailPage({
                 <th className="px-4 py-3">Subtotal</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-border">
               {order.items.map((item) => (
                 <tr key={item.id}>
                   <td className="px-4 py-3">{item.type}</td>
@@ -154,7 +154,7 @@ export default async function WorkOrderDetailPage({
         />
       )}
 
-      <p className="mt-4 text-xs text-slate-400">Criada em {formatDate(order.createdAt)}</p>
+      <p className="mt-4 text-xs text-muted-foreground">Criada em {formatDate(order.createdAt)}</p>
     </div>
   );
 }

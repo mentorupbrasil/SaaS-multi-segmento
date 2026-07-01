@@ -13,9 +13,9 @@ export default function ForgotPasswordPage() {
   return (
     <div className="w-full max-w-md">
       <div className="card overflow-hidden">
-        <div className="border-b border-slate-100 bg-slate-50/60 px-8 py-6">
-          <h1 className="text-2xl font-bold text-slate-900">Esqueci minha senha</h1>
-          <p className="mt-1 text-sm text-slate-500">
+        <div className="border-b border-border bg-muted/40 px-8 py-6">
+          <h1 className="text-2xl font-bold text-foreground">Esqueci minha senha</h1>
+          <p className="mt-1 text-sm text-muted-foreground">
             Enviaremos um link para redefinir sua senha.
           </p>
         </div>
@@ -46,8 +46,8 @@ export default function ForgotPasswordPage() {
               Enviar link
             </SubmitButton>
 
-            <p className="text-center text-sm text-slate-500">
-              <Link href="/login" className="font-semibold text-brand-700 hover:text-brand-800">
+            <p className="text-center text-sm text-muted-foreground">
+              <Link href="/login" className="font-semibold text-primary hover:text-primary/80">
                 Voltar ao login
               </Link>
             </p>

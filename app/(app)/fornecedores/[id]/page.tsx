@@ -27,7 +27,7 @@ export default async function FornecedorDetailPage({
       <PageHeader title={supplier.name} description="Fornecedor" />
 
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-        <Link href="/fornecedores" className="text-sm text-brand-600 hover:underline">
+        <Link href="/fornecedores" className="text-sm text-primary hover:underline">
           ← Voltar
         </Link>
         <div className="flex flex-wrap items-center gap-2">
@@ -47,27 +47,27 @@ export default async function FornecedorDetailPage({
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         <div className="card p-4">
-          <p className="text-xs text-slate-500">Telefone</p>
+          <p className="text-xs text-muted-foreground">Telefone</p>
           <p className="font-medium">{supplier.phone ?? "—"}</p>
         </div>
         <div className="card p-4">
-          <p className="text-xs text-slate-500">E-mail</p>
+          <p className="text-xs text-muted-foreground">E-mail</p>
           <p className="font-medium">{supplier.email ?? "—"}</p>
         </div>
         <div className="card p-4">
-          <p className="text-xs text-slate-500">CNPJ / Documento</p>
+          <p className="text-xs text-muted-foreground">CNPJ / Documento</p>
           <p className="font-medium">{supplier.document ?? "—"}</p>
         </div>
       </div>
 
       {supplier.notes && (
         <div className="card mt-4 p-4">
-          <p className="text-xs text-slate-500">Observações</p>
+          <p className="text-xs text-muted-foreground">Observações</p>
           <p className="text-sm">{supplier.notes}</p>
         </div>
       )}
 
-      <p className="mt-4 text-xs text-slate-400">Cadastrado em {formatDate(supplier.createdAt)}</p>
+      <p className="mt-4 text-xs text-muted-foreground">Cadastrado em {formatDate(supplier.createdAt)}</p>
     </div>
   );
 }

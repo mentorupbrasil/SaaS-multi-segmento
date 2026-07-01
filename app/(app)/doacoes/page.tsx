@@ -82,7 +82,7 @@ export default async function DoacoesPage({
         <>
           <div className="card overflow-hidden">
             <table className="w-full text-sm">
-              <thead className="bg-slate-50 text-left text-xs uppercase tracking-wider text-slate-500">
+              <thead className="bg-muted text-left text-xs uppercase tracking-wider text-muted-foreground">
                 <tr>
                   <th className="px-4 py-3">Valor</th>
                   <th className="px-4 py-3">Tipo</th>
@@ -92,14 +92,14 @@ export default async function DoacoesPage({
                   <th className="px-4 py-3">Ações</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-border">
                 {donations.map((d) => (
-                  <tr key={d.id} className="hover:bg-slate-50">
+                  <tr key={d.id} className="hover:bg-muted">
                     <td className="px-4 py-3 font-medium text-green-600">{formatCurrency(d.amount)}</td>
-                    <td className="px-4 py-3 text-slate-600">{d.donationType ?? "—"}</td>
-                    <td className="px-4 py-3 text-slate-600">{d.customer?.name ?? "Anônimo"}</td>
-                    <td className="px-4 py-3 text-slate-600">{d.description ?? "—"}</td>
-                    <td className="px-4 py-3 text-slate-600">{formatDate(d.receivedAt)}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{d.donationType ?? "—"}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{d.customer?.name ?? "Anônimo"}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{d.description ?? "—"}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{formatDate(d.receivedAt)}</td>
                     <td className="px-4 py-3">
                       <DeleteButton action={deleteDonation.bind(null, d.id)} />
                     </td>

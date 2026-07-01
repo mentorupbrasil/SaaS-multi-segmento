@@ -81,7 +81,7 @@ export default async function ClientesPage({
         <>
           <div className="card overflow-hidden">
             <table className="w-full text-sm">
-              <thead className="bg-slate-50 text-left text-xs uppercase tracking-wider text-slate-500">
+              <thead className="bg-muted text-left text-xs uppercase tracking-wider text-muted-foreground">
                 <tr>
                   <th className="px-4 py-3">Nome</th>
                   <th className="px-4 py-3">Telefone</th>
@@ -90,17 +90,17 @@ export default async function ClientesPage({
                   <th className="px-4 py-3">Ações</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-border">
                 {customers.map((c) => (
-                  <tr key={c.id} className="hover:bg-slate-50">
-                    <td className="px-4 py-3 font-medium text-slate-900">
-                      <Link href={`/clientes/${c.id}`} className="hover:text-brand-600">
+                  <tr key={c.id} className="hover:bg-muted">
+                    <td className="px-4 py-3 font-medium text-foreground">
+                      <Link href={`/clientes/${c.id}`} className="hover:text-primary">
                         {c.name}
                       </Link>
                     </td>
-                    <td className="px-4 py-3 text-slate-600">{c.phone ?? "-"}</td>
-                    <td className="px-4 py-3 text-slate-600">{c.email ?? "-"}</td>
-                    <td className="px-4 py-3 text-slate-600">{formatDate(c.createdAt)}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{c.phone ?? "-"}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{c.email ?? "-"}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{formatDate(c.createdAt)}</td>
                     <td className="px-4 py-3">
                       <DeleteButton action={deleteCustomer.bind(null, c.id)} />
                     </td>

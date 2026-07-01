@@ -69,7 +69,7 @@ export default async function PdvVendasPage({
       ) : (
         <div className="card overflow-hidden">
           <table className="w-full text-sm">
-            <thead className="bg-slate-50 text-left text-xs uppercase text-slate-500">
+            <thead className="bg-muted text-left text-xs uppercase text-muted-foreground">
               <tr>
                 <th className="px-4 py-3">Data</th>
                 <th className="px-4 py-3">Identificador</th>
@@ -79,7 +79,7 @@ export default async function PdvVendasPage({
                 <th className="px-4 py-3" />
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-border">
               {sales.map((sale) => (
                 <tr key={sale.id}>
                   <td className="px-4 py-3">{formatDate(sale.createdAt)}</td>
@@ -92,7 +92,7 @@ export default async function PdvVendasPage({
                   <td className="px-4 py-3 text-right">
                     <Link
                       href={`/pdv/${sale.id}/print`}
-                      className="text-brand-600 hover:underline"
+                      className="text-primary hover:underline"
                     >
                       Cupom
                     </Link>

@@ -63,7 +63,7 @@ export default async function CadastrosPage({
       title="Cadastros auxiliares"
       description="Gerencie listas reutilizáveis em formulários e relatórios do sistema."
     >
-      <div className="mb-6 flex flex-wrap gap-2 border-b border-slate-200 pb-1">
+      <div className="mb-6 flex flex-wrap gap-2 border-b border-border pb-1">
         {MASTER_DATA_TYPES.map((type) => {
           const params = new URLSearchParams();
           params.set("type", type);
@@ -78,8 +78,8 @@ export default async function CadastrosPage({
               href={href}
               className={
                 active
-                  ? "rounded-t-lg border border-b-0 border-slate-200 bg-white px-3 py-2 text-sm font-medium text-brand-700"
-                  : "rounded-t-lg px-3 py-2 text-sm text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                  ? "rounded-t-lg border border-b-0 border-border bg-card px-3 py-2 text-sm font-medium text-primary"
+                  : "rounded-t-lg px-3 py-2 text-sm text-muted-foreground hover:bg-muted hover:text-foreground"
               }
             >
               {masterDataTypeLabel(type)}
@@ -113,7 +113,7 @@ export default async function CadastrosPage({
       ) : (
         <div className="card overflow-hidden">
           <table className="w-full text-sm">
-            <thead className="bg-slate-50 text-left text-xs uppercase tracking-wider text-slate-500">
+            <thead className="bg-muted text-left text-xs uppercase tracking-wider text-muted-foreground">
               <tr>
                 <th className="px-4 py-3">Nome</th>
                 <th className="px-4 py-3">Código</th>
@@ -121,12 +121,12 @@ export default async function CadastrosPage({
                 <th className="px-4 py-3">Ações</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-border">
               {items.map((item) => (
-                <tr key={item.id} className="hover:bg-slate-50">
-                  <td className="px-4 py-3 font-medium text-slate-900">{item.label}</td>
-                  <td className="px-4 py-3 text-slate-600">{item.value ?? "—"}</td>
-                  <td className="px-4 py-3 text-slate-600">{formatDate(item.createdAt)}</td>
+                <tr key={item.id} className="hover:bg-muted">
+                  <td className="px-4 py-3 font-medium text-foreground">{item.label}</td>
+                  <td className="px-4 py-3 text-muted-foreground">{item.value ?? "—"}</td>
+                  <td className="px-4 py-3 text-muted-foreground">{formatDate(item.createdAt)}</td>
                   <td className="px-4 py-3">
                     <DeleteButton
                       action={deleteMasterDataItem.bind(null, item.id)}

@@ -74,17 +74,17 @@ export default async function ProntuarioPage({
               <div key={r.id} className="card p-5">
                 <div className="flex flex-wrap items-start justify-between gap-2">
                   <div>
-                    <Link href={`/prontuario/${r.id}`} className="font-semibold text-slate-900 hover:text-brand-600">
+                    <Link href={`/prontuario/${r.id}`} className="font-semibold text-foreground hover:text-primary">
                       {r.title}
                     </Link>
-                    <p className="text-sm text-slate-500">
+                    <p className="text-sm text-muted-foreground">
                       {r.customer.name} · {formatDate(r.createdAt)}
                     </p>
                   </div>
                   <DeleteButton action={deleteCustomerRecord.bind(null, r.id)} />
                 </div>
                 {r.content && (
-                  <p className="mt-3 line-clamp-3 whitespace-pre-wrap text-sm text-slate-700">{r.content}</p>
+                  <p className="mt-3 line-clamp-3 whitespace-pre-wrap text-sm text-foreground">{r.content}</p>
                 )}
               </div>
             ))}

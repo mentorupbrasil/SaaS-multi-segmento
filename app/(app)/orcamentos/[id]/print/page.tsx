@@ -37,42 +37,42 @@ export default async function QuotePrintPage({
 
   return (
     <PrintLayout title={`Imprimir ${term(terms, "quote")}`}>
-      <div className="mb-6 border-b border-slate-200 pb-4">
-        <h1 className="text-2xl font-bold text-slate-900">{org.name}</h1>
-        <p className="text-sm text-slate-600">{term(terms, "quote")}</p>
+      <div className="mb-6 border-b border-border pb-4">
+        <h1 className="text-2xl font-bold text-foreground">{org.name}</h1>
+        <p className="text-sm text-muted-foreground">{term(terms, "quote")}</p>
       </div>
 
       <div className="mb-6 flex flex-wrap justify-between gap-4 text-sm">
         <div>
-          <p className="font-semibold text-slate-900">{quote.title}</p>
-          <p className="text-slate-600">Status: {STATUS_LABEL[quote.status] ?? quote.status}</p>
-          <p className="text-slate-600">Criado em {formatDate(quote.createdAt)}</p>
+          <p className="font-semibold text-foreground">{quote.title}</p>
+          <p className="text-muted-foreground">Status: {STATUS_LABEL[quote.status] ?? quote.status}</p>
+          <p className="text-muted-foreground">Criado em {formatDate(quote.createdAt)}</p>
           {quote.validUntil && (
-            <p className="text-slate-600">Válido até {formatDate(quote.validUntil)}</p>
+            <p className="text-muted-foreground">Válido até {formatDate(quote.validUntil)}</p>
           )}
         </div>
         <div className="text-right">
-          <p className="text-slate-600">{term(terms, "customer")}: {quote.customer?.name ?? "—"}</p>
+          <p className="text-muted-foreground">{term(terms, "customer")}: {quote.customer?.name ?? "—"}</p>
           {quote.vehicle && (
-            <p className="text-slate-600">
+            <p className="text-muted-foreground">
               Veículo: {quote.vehicle.plate} — {quote.vehicle.model}
             </p>
           )}
         </div>
       </div>
 
-      {quote.notes && <p className="mb-6 text-sm text-slate-700">{quote.notes}</p>}
+      {quote.notes && <p className="mb-6 text-sm text-foreground">{quote.notes}</p>}
 
       <table className="mb-6 w-full text-sm">
         <thead>
-          <tr className="border-b border-slate-200 text-left text-xs uppercase text-slate-500">
+          <tr className="border-b border-border text-left text-xs uppercase text-muted-foreground">
             <th className="py-2 pr-4">Descrição</th>
             <th className="py-2 pr-4 text-right">Qtd</th>
             <th className="py-2 pr-4 text-right">Unit.</th>
             <th className="py-2 text-right">Subtotal</th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-slate-100">
+        <tbody className="divide-y divide-border">
           {quote.items.map((item) => (
             <tr key={item.id}>
               <td className="py-2 pr-4">{item.description}</td>
@@ -92,8 +92,8 @@ export default async function QuotePrintPage({
         </tfoot>
       </table>
 
-      <p className="text-center text-xs text-slate-400 print:hidden">
-        <Link href={`/orcamentos/${quote.id}`} className="text-brand-600 hover:underline">
+      <p className="text-center text-xs text-muted-foreground print:hidden">
+        <Link href={`/orcamentos/${quote.id}`} className="text-primary hover:underline">
           ← Voltar ao detalhe
         </Link>
       </p>

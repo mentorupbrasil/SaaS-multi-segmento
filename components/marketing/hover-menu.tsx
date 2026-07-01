@@ -32,8 +32,8 @@ export function HoverMenu({
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
         className={cn(
-          "flex items-center gap-1 transition-colors hover:text-slate-900",
-          open && "text-slate-900",
+          "flex items-center gap-1 transition-colors hover:text-foreground",
+          open && "text-foreground",
         )}
       >
         {label}
@@ -47,7 +47,7 @@ export function HoverMenu({
           onMouseLeave={scheduleClose}
         >
           <div
-            className="rounded-2xl border border-slate-200 bg-white p-5 shadow-xl shadow-slate-300/40"
+            className="rounded-2xl border border-border bg-card p-5 shadow-xl shadow-black/10"
             onClick={() => setOpen(false)}
           >
             {children}

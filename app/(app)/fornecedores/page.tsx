@@ -59,7 +59,7 @@ export default async function FornecedoresPage({
         <>
           <div className="card overflow-hidden">
             <table className="w-full text-sm">
-              <thead className="bg-slate-50 text-left text-xs uppercase tracking-wider text-slate-500">
+              <thead className="bg-muted text-left text-xs uppercase tracking-wider text-muted-foreground">
                 <tr>
                   <th className="px-4 py-3">Nome</th>
                   <th className="px-4 py-3">Telefone</th>
@@ -69,18 +69,18 @@ export default async function FornecedoresPage({
                   <th className="px-4 py-3">Ações</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-border">
                 {suppliers.map((s) => (
-                  <tr key={s.id} className="hover:bg-slate-50">
-                    <td className="px-4 py-3 font-medium text-slate-900">
-                      <Link href={`/fornecedores/${s.id}`} className="hover:text-brand-600">
+                  <tr key={s.id} className="hover:bg-muted">
+                    <td className="px-4 py-3 font-medium text-foreground">
+                      <Link href={`/fornecedores/${s.id}`} className="hover:text-primary">
                         {s.name}
                       </Link>
                     </td>
-                    <td className="px-4 py-3 text-slate-600">{s.phone ?? "—"}</td>
-                    <td className="px-4 py-3 text-slate-600">{s.email ?? "—"}</td>
-                    <td className="px-4 py-3 text-slate-600">{s.document ?? "—"}</td>
-                    <td className="px-4 py-3 text-slate-600">{formatDate(s.createdAt)}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{s.phone ?? "—"}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{s.email ?? "—"}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{s.document ?? "—"}</td>
+                    <td className="px-4 py-3 text-muted-foreground">{formatDate(s.createdAt)}</td>
                     <td className="px-4 py-3">
                       <div className="flex flex-wrap items-center gap-2">
                         <SupplierEditForm
