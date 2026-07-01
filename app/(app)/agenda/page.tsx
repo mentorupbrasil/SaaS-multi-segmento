@@ -152,7 +152,7 @@ export default async function AgendaPage({
             },
           ]}
         />
-        <ExportCsvLink module="agenda" searchParams={paginationParams} />
+        <ExportCsvLink plan={org.plan} module="agenda" searchParams={paginationParams} />
       </div>
 
       <Suspense fallback={null}>

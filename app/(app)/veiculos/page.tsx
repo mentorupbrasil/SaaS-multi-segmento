@@ -71,7 +71,7 @@ export default async function VeiculosPage({
 
       <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
         <ListToolbar searchValue={params.q} searchPlaceholder="Buscar placa ou modelo..." />
-        <ExportCsvLink module="veiculos" searchParams={{ q: params.q || undefined }} />
+        <ExportCsvLink plan={ctx.organization.plan} module="veiculos" searchParams={{ q: params.q || undefined }} />
       </div>
 
       {vehicles.length === 0 ? (

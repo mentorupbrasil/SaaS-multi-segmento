@@ -101,7 +101,7 @@ export default async function MatriculasPage({
             },
           ]}
         />
-        <ExportButtons module="matriculas" searchParams={paginationParams} />
+        <ExportButtons plan={ctx.organization.plan} module="matriculas" searchParams={paginationParams} />
       </div>
 
       {enrollments.length === 0 ? (

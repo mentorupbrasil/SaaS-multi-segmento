@@ -67,7 +67,7 @@ export default async function ServicosPage({
           searchValue={params.q}
           searchPlaceholder={`Buscar ${serviceLabel.toLowerCase()} por nome...`}
         />
-        <ExportCsvLink module="servicos" searchParams={{ q: params.q || undefined }} />
+        <ExportCsvLink plan={org.plan} module="servicos" searchParams={{ q: params.q || undefined }} />
       </div>
 
       {services.length === 0 ? (

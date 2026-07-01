@@ -7,6 +7,7 @@ import { formatCurrency, cn } from "@/lib/utils";
 import { cancelSubscription } from "./actions";
 import { SubscribePlanForm } from "./subscribe-plan-form";
 import { AsaasDiagnosePanel } from "./asaas-diagnose";
+import { PlanCurrentLimits } from "@/components/plan-current-limits";
 
 const STATUS_LABELS: Record<string, string> = {
   TRIALING: "Em teste",
@@ -79,6 +80,8 @@ export default async function AssinaturaPage({ searchParams }: Props) {
       </div>
 
       {billingConfigured && <AsaasDiagnosePanel />}
+
+      <PlanCurrentLimits orgId={ctx.orgId} planId={org.plan} segmentId={org.segmentId} />
 
       <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {PLANS.map((plan) => {

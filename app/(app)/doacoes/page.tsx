@@ -73,7 +73,7 @@ export default async function DoacoesPage({
 
       <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
         <ListToolbar searchValue={params.q} searchPlaceholder="Buscar doação ou doador..." />
-        <ExportCsvLink module="doacoes" />
+        <ExportCsvLink plan={ctx.organization.plan} module="doacoes" />
       </div>
 
       {donations.length === 0 ? (

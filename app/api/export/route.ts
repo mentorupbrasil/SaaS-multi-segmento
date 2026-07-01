@@ -1,5 +1,6 @@
 import { auth } from "@/auth";
 import { prisma } from "@/lib/db";
+import { canExportData } from "@/lib/plan-enforcement";
 import { checkApiRateLimit, apiRateLimitResponse } from "@/lib/api-rate-limit";
 import { exportTableResponse, type ExportFormat } from "@/lib/export-excel";
 import { formatCurrency, formatDate, formatDateTime } from "@/lib/utils";
@@ -69,6 +70,15 @@ export async function GET(request: Request) {
   }
 
   const orgId = membership.organizationId;
+
+  const org = await prisma.organization.findUnique({
+    where: { id: orgId },
+    select: { plan: true },
+  });
+  if (!org || !canExportData(org.plan)) {
+    return new Response("Exportação disponível a partir do plano Profissional.", { status: 403 });
+  }
+
   const date = new Date().toISOString().slice(0, 10);
 
   switch (exportModule) {

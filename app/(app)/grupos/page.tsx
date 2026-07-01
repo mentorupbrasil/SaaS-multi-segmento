@@ -50,7 +50,7 @@ export default async function GruposPage({
 
       <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
         <ListToolbar searchValue={params.q} searchPlaceholder="Buscar grupo..." />
-        <ExportCsvLink module="grupos" searchParams={{ q: params.q || undefined }} />
+        <ExportCsvLink plan={ctx.organization.plan} module="grupos" searchParams={{ q: params.q || undefined }} />
       </div>
 
       {groups.length === 0 ? (

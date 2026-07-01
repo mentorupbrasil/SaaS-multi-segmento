@@ -63,7 +63,7 @@ export default async function PacotesPage({
 
       <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
         <ListToolbar searchValue={params.q} searchPlaceholder="Buscar pacote..." />
-        <ExportButtons module="pacotes" searchParams={{ q: params.q || undefined }} />
+        <ExportButtons plan={ctx.organization.plan} module="pacotes" searchParams={{ q: params.q || undefined }} />
       </div>
 
       {packages.length === 0 ? (

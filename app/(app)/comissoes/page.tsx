@@ -117,7 +117,7 @@ export default async function ComissoesPage({
             },
           ]}
         />
-        <ExportButtons module="comissoes" searchParams={paginationParams} />
+        <ExportButtons plan={ctx.organization.plan} module="comissoes" searchParams={paginationParams} />
       </div>
 
       {commissions.length === 0 ? (

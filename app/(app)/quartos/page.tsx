@@ -65,7 +65,7 @@ export default async function QuartosPage({
 
       <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
         <ListToolbar searchValue={params.q} searchPlaceholder="Buscar por número..." />
-        <ExportCsvLink module="quartos" searchParams={{ q: params.q || undefined }} />
+        <ExportCsvLink plan={ctx.organization.plan} module="quartos" searchParams={{ q: params.q || undefined }} />
       </div>
 
       {rooms.length === 0 ? (

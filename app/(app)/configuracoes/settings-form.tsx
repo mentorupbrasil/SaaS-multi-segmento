@@ -2,6 +2,7 @@
 
 import { useActionState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { updateOrganizationSettings, type FormResult } from "./actions";
 import { SubmitButton } from "@/components/submit-button";
 
@@ -11,6 +12,7 @@ interface SettingsFormProps {
   defaultName: string;
   defaultBookingSlug: string;
   defaultBookingEnabled: boolean;
+  canPublicBooking: boolean;
   termKeys: { key: string; label: string; value: string }[];
 }
 
@@ -18,6 +20,7 @@ export function SettingsForm({
   defaultName,
   defaultBookingSlug,
   defaultBookingEnabled,
+  canPublicBooking,
   termKeys,
 }: SettingsFormProps) {
   const [state, action] = useActionState(updateOrganizationSettings, initial);
@@ -39,33 +42,44 @@ export function SettingsForm({
         </div>
       </div>
 
-      <div className="card p-6">
-        <h2 className="mb-4 text-lg font-semibold">Agendamento público</h2>
-        <div className="grid gap-4">
-          <div>
-            <label className="label">Slug público</label>
-            <input
-              name="publicBookingSlug"
-              className="input"
-              defaultValue={defaultBookingSlug}
-              placeholder="minha-barbearia"
-            />
-            <p className="mt-1 text-xs text-slate-500">
-              URL: /agendar/seu-slug
-            </p>
+      {canPublicBooking ? (
+        <div className="card p-6">
+          <h2 className="mb-4 text-lg font-semibold">Agendamento público</h2>
+          <div className="grid gap-4">
+            <div>
+              <label className="label">Slug público</label>
+              <input
+                name="publicBookingSlug"
+                className="input"
+                defaultValue={defaultBookingSlug}
+                placeholder="minha-barbearia"
+              />
+              <p className="mt-1 text-xs text-slate-500">URL: /agendar/seu-slug</p>
+            </div>
+            <label className="flex items-center gap-2 text-sm">
+              <input
+                type="checkbox"
+                name="publicBookingEnabled"
+                value="true"
+                defaultChecked={defaultBookingEnabled}
+                className="rounded border-slate-300"
+              />
+              Habilitar agendamento online
+            </label>
           </div>
-          <label className="flex items-center gap-2 text-sm">
-            <input
-              type="checkbox"
-              name="publicBookingEnabled"
-              value="true"
-              defaultChecked={defaultBookingEnabled}
-              className="rounded border-slate-300"
-            />
-            Habilitar agendamento online
-          </label>
         </div>
-      </div>
+      ) : (
+        <div className="card p-6">
+          <h2 className="mb-2 text-lg font-semibold">Agendamento público</h2>
+          <p className="text-sm text-slate-600">
+            Link para clientes agendarem sozinhos está disponível a partir do plano{" "}
+            <strong>Profissional</strong>.
+          </p>
+          <Link href="/assinatura" className="mt-3 inline-block text-sm font-semibold text-brand-600 underline">
+            Fazer upgrade
+          </Link>
+        </div>
+      )}
 
       <div className="card p-6">
         <h2 className="mb-4 text-lg font-semibold">Nomenclatura personalizada</h2>

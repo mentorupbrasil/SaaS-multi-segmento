@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getAuthContext } from "@/lib/auth-context";
 import { prisma } from "@/lib/db";
+import { formatUserLimit, getOrgUsage } from "@/lib/plan-limits";
 import { parseListParams } from "@/lib/list-params";
 import { resolveTerms, term } from "@/lib/terms";
 import { PageHeader } from "@/components/page-header";
@@ -26,6 +27,9 @@ export default async function EquipePage({
   const params = parseListParams(await searchParams);
   const ctx = await getAuthContext();
   const org = ctx.organization;
+  const usage = await getOrgUsage(org.id);
+  const atUserLimit =
+    usage.limits.maxUsers !== null && usage.userCount >= usage.limits.maxUsers;
   const terms = resolveTerms(org.segmentId, (org.config as { terms?: Record<string, string> })?.terms);
   const professionalLabel = term(terms, "professional");
 
@@ -56,13 +60,23 @@ export default async function EquipePage({
     <div>
       <PageHeader
         title="Equipe"
-        description="Membros, papéis e permissões."
-        action={<MemberForm professionalLabel={professionalLabel} />}
+        description={`Membros, papéis e permissões · ${usage.userCount}/${formatUserLimit(org.plan)} usuários`}
+        action={!atUserLimit ? <MemberForm professionalLabel={professionalLabel} /> : undefined}
       />
+
+      {atUserLimit && (
+        <p className="mb-4 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+          Limite de usuários do plano atingido.{" "}
+          <Link href="/assinatura" className="font-semibold underline">
+            Faça upgrade
+          </Link>{" "}
+          para convidar mais membros.
+        </p>
+      )}
 
       <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
         <ListToolbar searchValue={params.q} searchPlaceholder="Buscar por nome ou e-mail..." />
-        <ExportCsvLink module="equipe" searchParams={{ q: params.q || undefined }} />
+        <ExportCsvLink plan={org.plan} module="equipe" searchParams={{ q: params.q || undefined }} />
       </div>
 
       {members.length === 0 ? (

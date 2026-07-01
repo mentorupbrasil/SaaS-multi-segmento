@@ -36,8 +36,8 @@ function buildPricingFaq() {
         : "PIX, boleto e cartão via Asaas. O pagamento é feito após o cadastro, na área de assinatura.",
     },
     {
-      q: "Preciso instalar algo?",
-      a: "Não. O GestorPro é 100% online. Funciona no navegador do celular, tablet ou computador — basta internet.",
+      q: "O plano Inicial inclui tudo do meu segmento?",
+      a: "O Inicial cobre o essencial: agenda, clientes, serviços, financeiro, caixa e equipe (até 2 usuários). Módulos avançados do segmento — como PDV, pets, turmas ou orçamentos — liberam no Profissional. Estoque e ordens de serviço ficam no Premium.",
     },
   ];
 }

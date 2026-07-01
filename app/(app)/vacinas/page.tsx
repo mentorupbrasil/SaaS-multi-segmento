@@ -74,7 +74,7 @@ export default async function VacinasPage({
 
       <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
         <ListToolbar searchValue={params.q} searchPlaceholder="Buscar pet ou vacina..." />
-        <ExportButtons module="vacinas" searchParams={{ q: params.q || undefined }} />
+        <ExportButtons plan={ctx.organization.plan} module="vacinas" searchParams={{ q: params.q || undefined }} />
       </div>
 
       {vaccinations.length === 0 ? (

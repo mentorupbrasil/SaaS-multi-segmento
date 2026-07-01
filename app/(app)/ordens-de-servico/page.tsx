@@ -103,7 +103,7 @@ export default async function OrdensDeServicoPage({
             },
           ]}
         />
-        <ExportCsvLink module="ordens-de-servico" searchParams={paginationParams} />
+        <ExportCsvLink plan={ctx.organization.plan} module="ordens-de-servico" searchParams={paginationParams} />
       </div>
 
       {orders.length === 0 ? (

@@ -92,7 +92,7 @@ export default async function ReservasPage({
 
       <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
         <ListToolbar searchValue={params.q} searchPlaceholder="Buscar hóspede ou quarto..." />
-        <ExportCsvLink module="reservas" />
+        <ExportCsvLink plan={ctx.organization.plan} module="reservas" />
       </div>
 
       {reservations.length === 0 ? (

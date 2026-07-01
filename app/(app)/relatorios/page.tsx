@@ -159,6 +159,7 @@ export default async function RelatoriosPage({
         description="Visão geral do desempenho do negócio."
         action={
           <ExportButtons
+            plan={plan}
             module="financial"
             searchParams={{ from: toInputDate(rangeStart), to: toInputDate(rangeEnd) }}
           />

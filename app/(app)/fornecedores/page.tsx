@@ -50,7 +50,7 @@ export default async function FornecedoresPage({
 
       <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
         <ListToolbar searchValue={params.q} searchPlaceholder="Buscar fornecedor por nome..." />
-        <ExportCsvLink module="fornecedores" searchParams={{ q: params.q || undefined }} />
+        <ExportCsvLink plan={ctx.organization.plan} module="fornecedores" searchParams={{ q: params.q || undefined }} />
       </div>
 
       {suppliers.length === 0 ? (

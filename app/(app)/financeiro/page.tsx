@@ -125,7 +125,7 @@ export default async function FinanceiroPage({
             },
           ]}
         />
-        <ExportCsvLink module="financeiro" searchParams={paginationParams} />
+        <ExportCsvLink plan={org.plan} module="financeiro" searchParams={paginationParams} />
       </div>
 
       {entries.length === 0 ? (

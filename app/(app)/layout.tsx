@@ -5,6 +5,7 @@ import { buildNavForUser } from "@/lib/nav";
 import { requireActiveSubscription, isSubscriptionActive } from "@/lib/subscription";
 import { getRequestPathname } from "@/lib/request-pathname";
 import { Sidebar } from "@/components/sidebar";
+import { PlanUsageBanner } from "@/components/plan-usage-banner";
 import { auth } from "@/auth";
 import { isPlatformAdminEmail } from "@/lib/platform-admin";
 import { listSegmentsForSwitcher } from "@/lib/segment-switcher-data";
@@ -83,7 +84,10 @@ export default async function AppLayout({
             Use o seletor <strong>Sistema / segmento</strong> no menu para trocar.
           </div>
         )}
-        <div className="mx-auto max-w-6xl px-6 py-8">{children}</div>
+        <div className="mx-auto max-w-6xl px-6 py-8">
+          {subscriptionActive && <PlanUsageBanner orgId={ctx.orgId} />}
+          {children}
+        </div>
       </main>
     </div>
   );

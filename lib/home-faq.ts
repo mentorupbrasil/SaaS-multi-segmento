@@ -35,7 +35,7 @@ export function getHomeFaqGroups(): FaqGroup[] {
       items: [
         {
           q: "Quanto custa e qual plano escolher?",
-          a: `O ${starter.name} sai por ${formatCurrency(starter.priceMonthly!)} por mês (até 2 usuários, 1 unidade). O ${pro.name}, indicado para quem quer WhatsApp e agendamento online, custa ${formatCurrency(pro.priceMonthly!)} por mês (até 8 usuários). O ${premium.name} (${formatCurrency(premium.priceMonthly!)} por mês) libera usuários ilimitados, filiais e módulos extras. Redes e franquias usam Enterprise sob consulta. Veja a comparação completa na página Preços.`,
+          a: `O ${starter.name} (${formatCurrency(starter.priceMonthly!)}/mês) inclui agenda, clientes, serviços, financeiro e caixa — até 2 usuários e 1 unidade. O ${pro.name} (${formatCurrency(pro.priceMonthly!)}/mês) libera todos os módulos do segmento, WhatsApp, agendamento online, relatórios e exportação — até 8 usuários. O ${premium.name} (${formatCurrency(premium.priceMonthly!)}/mês) adiciona estoque, ordens de serviço, filiais e usuários ilimitados. Enterprise é sob consulta para redes. Veja a comparação na página Preços.`,
         },
         {
           q: "Tem fidelidade ou multa para cancelar?",
@@ -53,7 +53,7 @@ export function getHomeFaqGroups(): FaqGroup[] {
       items: [
         {
           q: "WhatsApp e link de agendamento vêm em qual plano?",
-          a: "Lembretes por WhatsApp, link público para o cliente agendar sozinho, relatórios avançados e painel de Conexões fazem parte do plano Profissional ou superior. O plano Inicial já inclui agenda, clientes, financeiro, caixa e todos os módulos do seu segmento — ideal para começar enxuto.",
+          a: "Lembretes por WhatsApp, link público de agendamento, relatórios avançados, exportação CSV/Excel e painel de Conexões/IA fazem parte do plano Profissional ou superior. O Inicial foca no essencial: agenda, clientes, serviços, financeiro e caixa — ideal para começar enxuto.",
         },
         {
           q: "Posso ter mais de uma unidade ou filial?",
@@ -75,7 +75,7 @@ export function getHomeFaqGroups(): FaqGroup[] {
         },
         {
           q: "Consigo exportar meus dados?",
-          a: "Sim. Várias telas do sistema permitem exportar listas em CSV/Excel (clientes, financeiro, estoque, matrículas etc., conforme o módulo ativo no seu segmento). Seus dados continuam sob sua gestão.",
+          a: "Sim — a partir do plano Profissional. Várias telas permitem exportar listas em CSV/Excel (clientes, financeiro, agenda etc.). No plano Inicial o painel continua disponível, mas a exportação exige upgrade.",
         },
         {
           q: "Como falo com o suporte?",

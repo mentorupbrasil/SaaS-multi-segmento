@@ -61,7 +61,7 @@ export default async function ClientesPage({
           searchValue={params.q}
           searchPlaceholder={`Buscar ${customerLabel.toLowerCase()} por nome...`}
         />
-        <ExportCsvLink module="clientes" searchParams={{ q: params.q || undefined }} />
+        <ExportCsvLink plan={org.plan} module="clientes" searchParams={{ q: params.q || undefined }} />
       </div>
 
       {customers.length === 0 ? (

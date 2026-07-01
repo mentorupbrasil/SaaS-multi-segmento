@@ -95,7 +95,7 @@ export default async function OrcamentosPage({
             },
           ]}
         />
-        <ExportCsvLink module="orcamentos" searchParams={paginationParams} />
+        <ExportCsvLink plan={ctx.organization.plan} module="orcamentos" searchParams={paginationParams} />
       </div>
 
       {quotes.length === 0 ? (

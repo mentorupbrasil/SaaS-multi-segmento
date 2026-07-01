@@ -5,6 +5,10 @@ import { getSegment } from "@/segments";
 import { MODULES } from "@/modules";
 import { resolveTerms, DEFAULT_TERMS } from "@/lib/terms";
 import { resolveSegmentModules } from "@/lib/segment-modules";
+import { filterModulesByPlan } from "@/lib/plan-enforcement";
+import { canUsePublicBooking } from "@/lib/plan-enforcement";
+import { formatUserLimit, getOrgUsage } from "@/lib/plan-limits";
+import { getPlan } from "@/lib/plans";
 import type { ModuleId } from "@/modules/types";
 import { PageHeader } from "@/components/page-header";
 import { Icon } from "@/components/icon";
@@ -16,8 +20,11 @@ export default async function ConfiguracoesPage() {
   const segment = getSegment(org.segmentId);
   const terms = resolveTerms(org.segmentId, (org.config as { terms?: Record<string, string> })?.terms);
   const termOverrides = (org.config as { terms?: Record<string, string> })?.terms ?? {};
+  const plan = getPlan(org.plan);
+  const usage = await getOrgUsage(org.id);
 
-  const moduleIds = resolveSegmentModules(org.segmentId);
+  const segmentModuleIds = resolveSegmentModules(org.segmentId);
+  const activeModuleIds = filterModulesByPlan(segmentModuleIds, org.plan);
 
   const termKeys = Object.keys(DEFAULT_TERMS).map((key) => ({
     key,
@@ -29,10 +36,21 @@ export default async function ConfiguracoesPage() {
     <div>
       <PageHeader title="Configurações" description="Detalhes do seu negócio e segmento." />
 
+      <div className="mb-6 rounded-xl border border-slate-200 bg-slate-50 px-5 py-4 text-sm text-slate-700">
+        <p>
+          <strong>Plano {plan?.name ?? org.plan}</strong> · Usuários{" "}
+          {usage.userCount}/{formatUserLimit(org.plan)} · Filiais {usage.branchCount}
+        </p>
+        <Link href="/assinatura" className="mt-1 inline-block text-brand-600 underline">
+          Ver planos e fazer upgrade
+        </Link>
+      </div>
+
       <SettingsForm
         defaultName={org.name}
         defaultBookingSlug={org.publicBookingSlug ?? org.slug}
         defaultBookingEnabled={org.publicBookingEnabled}
+        canPublicBooking={canUsePublicBooking(org.plan)}
         termKeys={termKeys}
       />
 
@@ -79,15 +97,23 @@ export default async function ConfiguracoesPage() {
         </div>
 
         <div className="card p-6">
-          <h2 className="mb-4 text-lg font-semibold">Módulos ativos</h2>
+          <h2 className="mb-4 text-lg font-semibold">Módulos no seu plano</h2>
           <ul className="space-y-2">
-            {moduleIds.map((id: ModuleId) => (
+            {activeModuleIds.map((id: ModuleId) => (
               <li key={id} className="flex items-center gap-2 text-sm text-slate-700">
                 <Icon name="Check" className="h-4 w-4 text-green-600" />
                 {MODULES[id]?.name}
               </li>
             ))}
           </ul>
+          {activeModuleIds.length < segmentModuleIds.length && (
+            <p className="mt-3 text-xs text-amber-700">
+              Alguns módulos do segmento exigem plano Profissional ou Premium.{" "}
+              <Link href="/assinatura" className="underline">
+                Compare planos
+              </Link>
+            </p>
+          )}
         </div>
 
         <div className="card p-6 lg:col-span-2">

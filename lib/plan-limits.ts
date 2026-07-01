@@ -8,6 +8,7 @@ export type PlanFeature =
   | "public_booking"
   | "advanced_reports"
   | "consolidated_reports"
+  | "data_export"
   | "extra_modules"
   | "custom_integrations";
 
@@ -29,7 +30,7 @@ export const PLAN_LIMITS: Record<PlanId, PlanLimits> = {
     maxUsers: 8,
     maxBranches: 1,
     moduleExtras: [],
-    features: ["whatsapp_reminders", "public_booking", "advanced_reports"],
+    features: ["whatsapp_reminders", "public_booking", "advanced_reports", "data_export"],
   },
   premium: {
     maxUsers: null,
@@ -40,6 +41,7 @@ export const PLAN_LIMITS: Record<PlanId, PlanLimits> = {
       "public_booking",
       "advanced_reports",
       "consolidated_reports",
+      "data_export",
       "extra_modules",
     ],
   },
@@ -52,6 +54,7 @@ export const PLAN_LIMITS: Record<PlanId, PlanLimits> = {
       "public_booking",
       "advanced_reports",
       "consolidated_reports",
+      "data_export",
       "extra_modules",
       "custom_integrations",
     ],
@@ -60,22 +63,69 @@ export const PLAN_LIMITS: Record<PlanId, PlanLimits> = {
 
 const DEFAULT_LIMITS = PLAN_LIMITS.starter;
 
+export function normalizePlanId(plan: string): PlanId {
+  if (plan in PLAN_LIMITS) return plan as PlanId;
+  return "starter";
+}
+
 export function getPlanLimits(plan: string): PlanLimits {
-  return PLAN_LIMITS[plan as PlanId] ?? DEFAULT_LIMITS;
+  return PLAN_LIMITS[normalizePlanId(plan)];
 }
 
 export function canAccessFeature(plan: string, feature: PlanFeature): boolean {
   return getPlanLimits(plan).features.includes(feature);
 }
 
-export async function canAddUser(orgId: string): Promise<boolean> {
-  const org = await prisma.organization.findUnique({
-    where: { id: orgId },
-    select: { plan: true, _count: { select: { memberships: true } } },
-  });
-  if (!org) return false;
+export function formatUserLimit(plan: string): string {
+  const max = getPlanLimits(plan).maxUsers;
+  return max === null ? "Ilimitado" : String(max);
+}
+
+export function formatBranchLimit(plan: string): string {
+  const max = getPlanLimits(plan).maxBranches;
+  if (max === null) return "Ilimitado";
+  return max === 1 ? "1 unidade" : String(max);
+}
+
+export async function getOrgUsage(orgId: string) {
+  const [org, userCount, branchCount] = await Promise.all([
+    prisma.organization.findUnique({
+      where: { id: orgId },
+      select: { plan: true },
+    }),
+    prisma.membership.count({ where: { organizationId: orgId } }),
+    prisma.branch.count({ where: { organizationId: orgId } }),
+  ]);
+
+  if (!org) {
+    return {
+      plan: "starter" as PlanId,
+      userCount: 0,
+      branchCount: 0,
+      limits: PLAN_LIMITS.starter,
+      usersOverLimit: false,
+      branchesOverLimit: false,
+    };
+  }
 
   const limits = getPlanLimits(org.plan);
-  if (limits.maxUsers === null) return true;
-  return org._count.memberships < limits.maxUsers;
+  const usersOverLimit =
+    limits.maxUsers !== null && userCount > limits.maxUsers;
+  const branchesOverLimit =
+    limits.maxBranches !== null && branchCount > limits.maxBranches;
+
+  return {
+    plan: normalizePlanId(org.plan),
+    userCount,
+    branchCount,
+    limits,
+    usersOverLimit,
+    branchesOverLimit,
+  };
+}
+
+export async function canAddUser(orgId: string): Promise<boolean> {
+  const usage = await getOrgUsage(orgId);
+  if (usage.limits.maxUsers === null) return true;
+  return usage.userCount < usage.limits.maxUsers;
 }
