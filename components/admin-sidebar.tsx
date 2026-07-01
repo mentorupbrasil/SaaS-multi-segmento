@@ -20,6 +20,7 @@ const PLATFORM_NAV = [
   { href: "/admin/faturamento", label: "Faturamento", icon: "Wallet" },
   { href: "/admin/segmentos", label: "Segmentos", icon: "Layers" },
   { href: "/admin/chamados", label: "Chamados", icon: "LifeBuoy" },
+  { href: "/admin/audit", label: "Auditoria", icon: "ScrollText" },
 ];
 
 interface AdminSidebarProps {

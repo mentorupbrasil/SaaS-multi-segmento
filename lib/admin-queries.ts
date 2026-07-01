@@ -1,4 +1,20 @@
 import { prisma } from "@/lib/db";
+import { PLANS } from "@/lib/plans";
+
+function startOfMonth() {
+  const d = new Date();
+  d.setDate(1);
+  d.setHours(0, 0, 0, 0);
+  return d;
+}
+
+/** MRR estimado com base em assinaturas ACTIVE × preço do plano (não inclui receita operacional dos tenants). */
+function estimatePlatformMrr(activeByPlan: Record<string, number>): number {
+  return PLANS.reduce((sum, plan) => {
+    if (plan.priceMonthly == null) return sum;
+    return sum + (activeByPlan[plan.id] ?? 0) * plan.priceMonthly;
+  }, 0);
+}
 
 export async function getPlatformStats() {
   const [
@@ -7,7 +23,8 @@ export async function getPlatformStats() {
     customerCount,
     activeSubscriptions,
     pastDueSubscriptions,
-    monthIncome,
+    tenantOperationalIncome,
+    activeOrgsByPlan,
   ] = await Promise.all([
     prisma.organization.count(),
     prisma.user.count(),
@@ -22,7 +39,17 @@ export async function getPlatformStats() {
       },
       _sum: { amount: true },
     }),
+    prisma.organization.groupBy({
+      by: ["plan"],
+      where: { subscriptionStatus: "ACTIVE" },
+      _count: { _all: true },
+    }),
   ]);
+
+  const activeByPlan = activeOrgsByPlan.reduce<Record<string, number>>((acc, row) => {
+    acc[row.plan] = row._count._all;
+    return acc;
+  }, {});
 
   return {
     orgCount,
@@ -30,7 +57,11 @@ export async function getPlatformStats() {
     customerCount,
     activeSubscriptions,
     pastDueSubscriptions,
-    monthIncome: monthIncome._sum.amount ?? 0,
+    /** Receita operacional registrada pelos tenants (não é receita da plataforma). */
+    tenantOperationalIncome: tenantOperationalIncome._sum.amount ?? 0,
+    /** MRR estimado das assinaturas GestorPro. */
+    estimatedPlatformMrr: estimatePlatformMrr(activeByPlan),
+    activeByPlan,
   };
 }
 
@@ -100,9 +131,16 @@ export async function getBillingOverview() {
   return { orgs, byPlan, byStatus };
 }
 
-function startOfMonth() {
-  const d = new Date();
-  d.setDate(1);
-  d.setHours(0, 0, 0, 0);
-  return d;
+export async function listAuditLogs(limit = 100) {
+  return prisma.auditLog.findMany({
+    orderBy: { createdAt: "desc" },
+    take: limit,
+    include: {
+      user: { select: { id: true, name: true, email: true } },
+      organization: { select: { id: true, name: true } },
+    },
+  });
 }
+
+/** @deprecated Use tenantOperationalIncome — mantido para compatibilidade temporária. */
+export type PlatformStats = Awaited<ReturnType<typeof getPlatformStats>>;

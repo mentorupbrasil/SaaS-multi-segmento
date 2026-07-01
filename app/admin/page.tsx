@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { getAuthContext, listOrganizationsForSwitcher } from "@/lib/auth-context";
 import { getPlatformStats } from "@/lib/admin-queries";
-import { buildSuperAdminNav } from "@/lib/nav";
+import { buildAllModulesNav } from "@/lib/nav";
 import { getSegment, getSegmentGroups, ALL_SEGMENTS } from "@/segments";
 import { Icon } from "@/components/icon";
 import { formatCurrency } from "@/lib/utils";
@@ -14,7 +14,7 @@ export default async function AdminDashboardPage() {
   ]);
 
   const segment = getSegment(ctx.organization.segmentId);
-  const opsNav = buildSuperAdminNav();
+  const opsNav = buildAllModulesNav(ctx.organization.segmentId);
 
   const cards = [
     { label: "Organizações", value: stats.orgCount, icon: "Building2", href: "/admin/organizacoes" },
@@ -22,8 +22,14 @@ export default async function AdminDashboardPage() {
     { label: "Segmentos", value: ALL_SEGMENTS.length, icon: "Layers", href: "/admin/segmentos" },
     { label: "Assinaturas ativas", value: stats.activeSubscriptions, icon: "BadgeCheck", href: "/admin/faturamento" },
     {
-      label: "Receita (mês, todos tenants)",
-      value: formatCurrency(stats.monthIncome),
+      label: "MRR estimado (GestorPro)",
+      value: formatCurrency(stats.estimatedPlatformMrr),
+      icon: "TrendingUp",
+      href: "/admin/faturamento",
+    },
+    {
+      label: "Receita operacional tenants (mês)",
+      value: formatCurrency(stats.tenantOperationalIncome),
       icon: "Wallet",
       href: "/admin/faturamento",
     },

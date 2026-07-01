@@ -153,7 +153,7 @@ export function SidebarContent({
           {baseItems.map((item, i) => renderItem(item, i))}
           {navItems.length > 0 && (
             <p className="px-3 pb-1 pt-4 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-              {isPlatformAdmin ? "Todos os módulos" : "Módulos"}
+              {isPlatformAdmin ? "Módulos do segmento" : "Módulos"}
             </p>
           )}
           {navItems.map((item, i) => renderItem(item, i + baseItems.length))}
@@ -161,14 +161,6 @@ export function SidebarContent({
             Conta
           </p>
           {bottomItems.map((item, i) => renderItem(item, i + baseItems.length + navItems.length))}
-          {isPlatformAdmin && (
-            <>
-              <p className="px-3 pb-1 pt-4 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                Plataforma
-              </p>
-              {renderItem({ href: "/admin", label: "Admin da plataforma", icon: "Server" }, 999)}
-            </>
-          )}
         </nav>
       </ScrollArea>
 

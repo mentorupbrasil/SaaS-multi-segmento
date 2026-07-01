@@ -18,16 +18,11 @@ import { DeleteBlockButton } from "@/modules/scheduling/delete-block-button";
 import { DeleteButton } from "@/components/delete-button";
 import { deleteAppointment } from "@/modules/scheduling/actions";
 import { formatDateTime } from "@/lib/utils";
+import { APPOINTMENT_STATUS_LABELS, labelFor } from "@/lib/status-labels";
 
 const PAGE_SIZE = 20;
 
-const STATUS_LABELS: Record<string, string> = {
-  SCHEDULED: "Agendado",
-  CONFIRMED: "Confirmado",
-  COMPLETED: "Concluído",
-  CANCELED: "Cancelado",
-  NO_SHOW: "Faltou",
-};
+const STATUS_LABELS = APPOINTMENT_STATUS_LABELS;
 
 const STATUS_STYLES: Record<string, string> = {
   SCHEDULED: "bg-blue-100 text-blue-700",
@@ -193,7 +188,7 @@ export default async function AgendaPage({
                       <span
                         className={`rounded-full px-2 py-0.5 text-xs font-medium ${STATUS_STYLES[a.status]}`}
                       >
-                        {STATUS_LABELS[a.status]}
+                        {labelFor(STATUS_LABELS, a.status)}
                       </span>
                     </td>
                     <td className="px-4 py-3">

@@ -3,13 +3,7 @@ import { getBillingOverview } from "@/lib/admin-queries";
 import { getSegment } from "@/segments";
 import { formatDate } from "@/lib/utils";
 import { getPlan } from "@/lib/plans";
-
-const STATUS_LABEL: Record<string, string> = {
-  ACTIVE: "Ativa",
-  TRIALING: "Trial",
-  PAST_DUE: "Inadimplente",
-  CANCELED: "Cancelada",
-};
+import { SUBSCRIPTION_STATUS_LABELS, labelFor } from "@/lib/status-labels";
 
 export default async function AdminBillingPage() {
   const { orgs, byPlan, byStatus } = await getBillingOverview();
@@ -38,7 +32,7 @@ export default async function AdminBillingPage() {
           <ul className="mt-3 space-y-2">
             {Object.entries(byStatus).map(([status, count]) => (
               <li key={status} className="flex justify-between text-sm">
-                <span className="text-foreground">{STATUS_LABEL[status] ?? status}</span>
+                <span className="text-foreground">{labelFor(SUBSCRIPTION_STATUS_LABELS, status)}</span>
                 <span className="font-semibold text-foreground">{count}</span>
               </li>
             ))}
@@ -76,7 +70,7 @@ export default async function AdminBillingPage() {
                     <td className="px-4 py-3 text-foreground">{plan?.name ?? org.plan}</td>
                     <td className="px-4 py-3">
                       <span className="rounded-full bg-muted px-2 py-0.5 text-xs font-medium text-foreground">
-                        {STATUS_LABEL[org.subscriptionStatus] ?? org.subscriptionStatus}
+                        {labelFor(SUBSCRIPTION_STATUS_LABELS, org.subscriptionStatus)}
                       </span>
                     </td>
                     <td className="px-4 py-3 text-muted-foreground">{formatDate(org.createdAt)}</td>

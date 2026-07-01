@@ -36,14 +36,20 @@ export function buildNav(org: OrgLike): NavItem[] {
   );
 
   const items: NavItem[] = [];
+  const seenHrefs = new Set<string>();
+
   for (const moduleId of moduleIds) {
     const mod = MODULES[moduleId];
     if (!mod) continue;
     for (const navItem of mod.nav) {
+      if (seenHrefs.has(navItem.href)) continue;
+      if (navItem.href === "/comissoes" && segment.category === "alimentacao") continue;
+      seenHrefs.add(navItem.href);
       items.push({
         href: navItem.href,
         label: terms[navItem.labelKey] ?? navItem.fallback,
         icon: navItem.icon,
+        comingSoon: mod.comingSoon,
       });
     }
   }
@@ -63,9 +69,12 @@ export function buildNav(org: OrgLike): NavItem[] {
 export function buildAllModulesNav(segmentId = "barbearia"): NavItem[] {
   const terms: Terms = resolveTerms(segmentId, {});
   const items: NavItem[] = [];
+  const seenHrefs = new Set<string>();
 
   for (const mod of ALL_MODULES) {
     for (const navItem of mod.nav) {
+      if (seenHrefs.has(navItem.href)) continue;
+      seenHrefs.add(navItem.href);
       items.push({
         href: navItem.href,
         label: terms[navItem.labelKey] ?? navItem.fallback,

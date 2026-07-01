@@ -153,8 +153,3 @@ export function LogosStrip({
     </section>
   );
 }
-
-/** @deprecated Use LogosStrip */
-export function SocialProofStrip() {
-  return <LogosStrip />;
-}

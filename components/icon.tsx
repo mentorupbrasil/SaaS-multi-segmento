@@ -157,6 +157,7 @@ import {
   Music,
   Mic2,
   Church,
+  ScrollText,
   type LucideIcon,
 } from "lucide-react";
 
@@ -319,6 +320,7 @@ const ICONS: Record<string, LucideIcon> = {
   Music,
   Mic2,
   Church,
+  ScrollText,
 };
 
 export function Icon({

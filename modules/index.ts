@@ -156,10 +156,7 @@ export const MODULES: Record<ModuleId, ModuleDef> = {
     id: "kitchen",
     name: "Cozinha",
     description: "Painel de produção e pedidos da cozinha (KDS).",
-    nav: [
-      { href: "/cozinha", labelKey: "kitchen", fallback: "Cozinha", icon: "ChefHat" },
-      { href: "/mesas", labelKey: "tables", fallback: "Mesas", icon: "LayoutGrid" },
-    ],
+    nav: [{ href: "/cozinha", labelKey: "kitchen", fallback: "Cozinha", icon: "ChefHat" }],
   },
 };
 

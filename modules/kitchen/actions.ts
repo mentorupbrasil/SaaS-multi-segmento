@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/db";
 import { getAuthContext } from "@/lib/auth-context";
+import { requireCreateRole } from "@/lib/action-auth";
 
 export interface FormResult {
   error?: string;
@@ -18,6 +19,8 @@ type KitchenItem = {
 
 export async function createKitchenOrder(workOrderId: string): Promise<FormResult> {
   const ctx = await getAuthContext();
+
+  requireCreateRole(ctx);
 
   const wo = await prisma.workOrder.findFirst({
     where: { id: workOrderId, organizationId: ctx.orgId },

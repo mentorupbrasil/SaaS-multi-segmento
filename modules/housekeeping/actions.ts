@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { prisma } from "@/lib/db";
 import { getAuthContext } from "@/lib/auth-context";
+import { requireCreateRole } from "@/lib/action-auth";
 
 export interface FormResult {
   error?: string;
@@ -24,6 +25,7 @@ export async function createHousekeepingTask(
   formData: FormData,
 ): Promise<FormResult> {
   const ctx = await getAuthContext();
+  requireCreateRole(ctx);
   const parsed = createSchema.safeParse({
     roomId: formData.get("roomId"),
     taskType: formData.get("taskType"),

@@ -4,13 +4,8 @@ import { getOrganizationAdminDetail } from "@/lib/admin-queries";
 import { getSegment } from "@/segments";
 import { formatDate } from "@/lib/utils";
 import { EnterOrganizationButton } from "@/components/enter-organization-button";
-
-const STATUS_LABEL: Record<string, string> = {
-  ACTIVE: "Ativa",
-  TRIALING: "Trial",
-  PAST_DUE: "Inadimplente",
-  CANCELED: "Cancelada",
-};
+import { OrganizationAdminForm } from "@/components/organization-admin-form";
+import { SUBSCRIPTION_STATUS_LABELS, labelFor } from "@/lib/status-labels";
 
 export default async function AdminOrganizationDetailPage({
   params,
@@ -34,7 +29,7 @@ export default async function AdminOrganizationDetailPage({
           <h1 className="text-2xl font-bold text-foreground">{org.name}</h1>
           <p className="mt-1 text-sm text-muted-foreground">
             {segment?.label ?? org.segmentId} · Plano {org.plan} ·{" "}
-            {STATUS_LABEL[org.subscriptionStatus] ?? org.subscriptionStatus}
+            {labelFor(SUBSCRIPTION_STATUS_LABELS, org.subscriptionStatus)}
           </p>
         </div>
         {segment && (
@@ -45,6 +40,14 @@ export default async function AdminOrganizationDetailPage({
             </Link>
           </div>
         )}
+      </div>
+
+      <div className="mb-8">
+        <OrganizationAdminForm
+          orgId={org.id}
+          plan={org.plan}
+          subscriptionStatus={org.subscriptionStatus}
+        />
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -87,11 +90,6 @@ export default async function AdminOrganizationDetailPage({
             </tbody>
           </table>
         </div>
-      </div>
-
-      <div className="mt-6 rounded-xl border border-border bg-muted px-4 py-3 text-sm text-muted-foreground">
-        Use <strong>Entrar nesta organização</strong> para operar clientes, agenda e financeiro desta conta com
-        acesso total (super admin).
       </div>
     </div>
   );

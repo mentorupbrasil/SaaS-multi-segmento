@@ -8,3 +8,13 @@ export function requireMutationRole(ctx: AuthContext, roles: Role[]): void {
     throw new Error("Permissão insuficiente para esta ação");
   }
 }
+
+/** Criação operacional — OWNER, ADMIN e STAFF. */
+export function requireCreateRole(ctx: AuthContext): void {
+  requireMutationRole(ctx, ["OWNER", "ADMIN", "STAFF"]);
+}
+
+/** Configurações sensíveis — apenas OWNER e ADMIN. */
+export function requireAdminRole(ctx: AuthContext): void {
+  requireMutationRole(ctx, ["OWNER", "ADMIN"]);
+}

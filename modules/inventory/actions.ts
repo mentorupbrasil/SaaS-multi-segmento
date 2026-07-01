@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { prisma } from "@/lib/db";
 import { getAuthContext } from "@/lib/auth-context";
-import { requireMutationRole } from "@/lib/action-auth";
+import { requireMutationRole, requireCreateRole } from "@/lib/action-auth";
 import { logAudit } from "@/lib/audit-log";
 
 import { addInventoryMovement } from "@/lib/inventory-utils";
@@ -31,6 +31,7 @@ export async function createInventoryItem(
   formData: FormData,
 ): Promise<FormResult> {
   const ctx = await getAuthContext();
+  requireCreateRole(ctx);
   const parsed = schema.safeParse({
     name: formData.get("name"),
     sku: formData.get("sku") ?? undefined,

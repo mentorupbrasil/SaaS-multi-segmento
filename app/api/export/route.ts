@@ -4,6 +4,7 @@ import { canExportData } from "@/lib/plan-enforcement";
 import { checkApiRateLimit, apiRateLimitResponse } from "@/lib/api-rate-limit";
 import { exportTableResponse, type ExportFormat } from "@/lib/export-excel";
 import { formatCurrency, formatDate, formatDateTime } from "@/lib/utils";
+import { isPlatformAdminEmail } from "@/lib/platform-admin";
 
 const ALLOWED = new Set([
   "clientes",
@@ -61,15 +62,27 @@ export async function GET(request: Request) {
   const rl = checkApiRateLimit(`export:${session.user.id}`);
   if (!rl.ok) return apiRateLimitResponse(rl.retryAfterMs);
 
-  const membership = await prisma.membership.findFirst({
-    where: { userId: session.user.id },
-    orderBy: { id: "asc" },
-  });
-  if (!membership) {
-    return new Response("Forbidden", { status: 403 });
+  const isPlatformAdmin =
+    session.user.isPlatformAdmin ?? isPlatformAdminEmail(session.user.email);
+  const sessionOrgId = session.user.activeOrgId || session.user.orgId;
+
+  let orgId: string | undefined;
+  if (isPlatformAdmin && sessionOrgId) {
+    orgId = sessionOrgId;
+  } else {
+    const membership = await prisma.membership.findFirst({
+      where: { userId: session.user.id, ...(sessionOrgId ? { organizationId: sessionOrgId } : {}) },
+      orderBy: { id: "asc" },
+    });
+    if (!membership) {
+      return new Response("Forbidden", { status: 403 });
+    }
+    orgId = membership.organizationId;
   }
 
-  const orgId = membership.organizationId;
+  if (!orgId) {
+    return new Response("Forbidden", { status: 403 });
+  }
 
   const org = await prisma.organization.findUnique({
     where: { id: orgId },

@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { prisma } from "@/lib/db";
 import { getAuthContext } from "@/lib/auth-context";
-import { requireMutationRole } from "@/lib/action-auth";
+import { requireMutationRole, requireCreateRole } from "@/lib/action-auth";
 import { logAudit } from "@/lib/audit-log";
 import { maybeCreateAppointmentCommission } from "@/lib/commission-auto";
 
@@ -26,6 +26,7 @@ export async function createAppointment(
   formData: FormData,
 ): Promise<FormResult> {
   const ctx = await getAuthContext();
+  requireCreateRole(ctx);
   const parsed = schema.safeParse({
     customerId: formData.get("customerId"),
     serviceId: formData.get("serviceId") ?? undefined,
@@ -178,6 +179,7 @@ export async function createBlockedSlot(
   formData: FormData,
 ): Promise<FormResult> {
   const ctx = await getAuthContext();
+  requireCreateRole(ctx);
   const parsed = blockSchema.safeParse({
     staffId: formData.get("staffId") || undefined,
     startAt: formData.get("startAt"),

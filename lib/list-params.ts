@@ -34,3 +34,11 @@ export function paginate<T>(items: T[], page: number, pageSize: number) {
     totalPages,
   };
 }
+
+export function listSkip({ page, pageSize }: ListParams): number {
+  return (page - 1) * pageSize;
+}
+
+export function totalPages(total: number, pageSize: number): number {
+  return Math.max(1, Math.ceil(total / pageSize));
+}

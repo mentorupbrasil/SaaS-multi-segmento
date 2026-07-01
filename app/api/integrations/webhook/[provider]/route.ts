@@ -3,10 +3,26 @@ import { prisma } from "@/lib/db";
 
 const SUPPORTED_PROVIDERS = ["mercadopago", "whatsapp"] as const;
 
+function verifyWebhookAuth(request: Request): boolean {
+  const secret = process.env.INTEGRATION_WEBHOOK_SECRET?.trim();
+  if (!secret) {
+    return process.env.NODE_ENV !== "production";
+  }
+  const header = request.headers.get("x-webhook-secret")?.trim();
+  const authHeader = request.headers.get("authorization")?.trim();
+  if (header === secret) return true;
+  if (authHeader === `Bearer ${secret}`) return true;
+  return false;
+}
+
 export async function POST(
   request: Request,
   { params }: { params: Promise<{ provider: string }> },
 ) {
+  if (!verifyWebhookAuth(request)) {
+    return NextResponse.json({ error: "Não autorizado." }, { status: 401 });
+  }
+
   const { provider } = await params;
   const normalized = provider.toLowerCase();
 
@@ -21,15 +37,15 @@ export async function POST(
     payload = null;
   }
 
-  console.log(`[webhook:${normalized}]`, payload);
+  if (process.env.NODE_ENV !== "production") {
+    console.log(`[webhook:${normalized}]`, payload);
+  }
 
   if (normalized === "mercadopago") {
-    // Stub: reconciliar pagamento PIX/cartão com FinancialEntry nas próximas fases.
     return NextResponse.json({ received: true, provider: normalized, action: "logged" });
   }
 
   if (normalized === "whatsapp") {
-    // Stub: processar mensagens inbound / status de entrega.
     const data = payload as { organizationId?: string } | null;
     if (data?.organizationId) {
       const integration = await prisma.integrationConfig.findUnique({
@@ -59,5 +75,6 @@ export async function GET(
     provider,
     status: "webhook_stub",
     methods: ["POST"],
+    auth: "x-webhook-secret or Authorization: Bearer INTEGRATION_WEBHOOK_SECRET",
   });
 }

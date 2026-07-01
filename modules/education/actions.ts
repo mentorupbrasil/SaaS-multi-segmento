@@ -5,7 +5,7 @@ import { z } from "zod";
 import type { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/db";
 import { getAuthContext } from "@/lib/auth-context";
-import { requireMutationRole } from "@/lib/action-auth";
+import { requireMutationRole, requireCreateRole } from "@/lib/action-auth";
 import { logAudit } from "@/lib/audit-log";
 
 export interface FormResult {
@@ -111,6 +111,7 @@ export async function createSchoolClass(
   formData: FormData,
 ): Promise<FormResult> {
   const ctx = await getAuthContext();
+  requireCreateRole(ctx);
   const parsed = classSchema.safeParse({
     name: formData.get("name"),
     grade: formData.get("grade") ?? undefined,
@@ -225,6 +226,7 @@ export async function createEnrollment(
   formData: FormData,
 ): Promise<FormResult> {
   const ctx = await getAuthContext();
+  requireCreateRole(ctx);
   const parsed = enrollmentSchema.safeParse({
     classId: formData.get("classId"),
     customerId: formData.get("customerId"),

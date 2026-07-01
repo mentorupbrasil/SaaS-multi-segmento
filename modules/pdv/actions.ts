@@ -9,7 +9,7 @@ import { z } from "zod";
 import { prisma } from "@/lib/db";
 
 import { getAuthContext } from "@/lib/auth-context";
-import { requireMutationRole } from "@/lib/action-auth";
+import { requireMutationRole, requireCreateRole } from "@/lib/action-auth";
 import { logAudit } from "@/lib/audit-log";
 
 import { addInventoryMovement, recalcSaleTotal } from "@/lib/inventory-utils";
@@ -38,6 +38,8 @@ export async function createSale(
 ): Promise<FormResult> {
 
   const ctx = await getAuthContext();
+
+  requireCreateRole(ctx);
 
   const customerId = (formData.get("customerId") as string) || undefined;
 

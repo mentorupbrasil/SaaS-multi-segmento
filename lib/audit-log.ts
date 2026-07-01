@@ -1,40 +1,46 @@
 import { prisma } from "@/lib/db";
 import type { AuthContext } from "@/lib/auth-context";
+import type { Prisma } from "@prisma/client";
 
-type AuditLogDelegate = {
-  create: (args: {
-    data: {
-      organizationId: string;
-      userId: string;
-      action: string;
-      metadata?: unknown;
-    };
-  }) => Promise<unknown>;
-};
-
-function getAuditLogClient(): AuditLogDelegate | undefined {
-  return (prisma as unknown as { auditLog?: AuditLogDelegate }).auditLog;
+function toJson(metadata?: Record<string, unknown>): Prisma.InputJsonValue {
+  return (metadata ?? {}) as Prisma.InputJsonValue;
 }
 
-/** Registra ação de auditoria quando o model AuditLog existir no schema. */
+/** Registra ação de auditoria na organização ativa. */
 export async function logAudit(
   ctx: AuthContext,
   action: string,
   metadata?: Record<string, unknown>,
 ): Promise<void> {
-  const auditLog = getAuditLogClient();
-  if (!auditLog) return;
-
   try {
-    await auditLog.create({
+    await prisma.auditLog.create({
       data: {
         organizationId: ctx.orgId,
         userId: ctx.userId,
         action,
-        metadata: metadata ?? {},
+        metadata: toJson(metadata),
       },
     });
   } catch {
-    // Model pode não estar migrado ainda — não interrompe o fluxo principal.
+    // Não interrompe o fluxo principal.
+  }
+}
+
+/** Registra ação de plataforma (super admin) sem org obrigatória. */
+export async function logPlatformAudit(
+  userId: string,
+  action: string,
+  metadata?: Record<string, unknown>,
+): Promise<void> {
+  try {
+    await prisma.auditLog.create({
+      data: {
+        userId,
+        action,
+        metadata: toJson(metadata),
+      },
+    });
+  } catch {
+    // Não interrompe o fluxo principal.
   }
 }

@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { getAuthContext, requireRole } from "@/lib/auth-context";
 import { setIntegration } from "@/lib/integrations-service";
+import { TOGGLEABLE_INTEGRATION_PROVIDERS } from "@/lib/integration-definitions";
 
 export interface IntegrationActionState {
   error?: string;
@@ -11,7 +12,7 @@ export interface IntegrationActionState {
 }
 
 const toggleSchema = z.object({
-  provider: z.enum(["whatsapp", "pix", "google_calendar"]),
+  provider: z.enum(TOGGLEABLE_INTEGRATION_PROVIDERS),
   enabled: z.enum(["true", "false"]),
 });
 

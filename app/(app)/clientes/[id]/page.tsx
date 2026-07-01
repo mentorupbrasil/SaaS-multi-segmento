@@ -11,47 +11,14 @@ import { CustomerEditForm } from "@/modules/clients/customer-edit-form";
 import { DeleteButton } from "@/components/delete-button";
 import { deleteCustomer } from "@/modules/clients/actions";
 import { formatCurrency, formatDate, formatDateTime } from "@/lib/utils";
-
-const WO_STATUS: Record<string, string> = {
-  DRAFT: "Rascunho",
-  OPEN: "Aberta",
-  IN_PROGRESS: "Em andamento",
-  DONE: "Concluída",
-  CANCELED: "Cancelada",
-};
-
-const APPT_STATUS: Record<string, string> = {
-  SCHEDULED: "Agendado",
-  CONFIRMED: "Confirmado",
-  COMPLETED: "Concluído",
-  CANCELED: "Cancelado",
-  NO_SHOW: "Faltou",
-};
-
-const RES_STATUS: Record<string, string> = {
-  PENDING: "Pendente",
-  CONFIRMED: "Confirmada",
-  CHECKED_IN: "Check-in",
-  CHECKED_OUT: "Check-out",
-  CANCELED: "Cancelada",
-};
-
-const EVENT_STATUS: Record<string, string> = {
-  PLANNING: "Planejamento",
-  CONFIRMED: "Confirmado",
-  IN_PROGRESS: "Em andamento",
-  DONE: "Concluído",
-  CANCELED: "Cancelado",
-};
-
-const QUOTE_STATUS: Record<string, string> = {
-  DRAFT: "Rascunho",
-  SENT: "Enviado",
-  APPROVED: "Aprovado",
-  REJECTED: "Rejeitado",
-  CONVERTED: "Convertido",
-  EXPIRED: "Expirado",
-};
+import {
+  APPOINTMENT_STATUS_LABELS,
+  WORK_ORDER_STATUS_LABELS,
+  RESERVATION_STATUS_LABELS,
+  EVENT_STATUS_LABELS,
+  QUOTE_STATUS_LABELS,
+  labelFor,
+} from "@/lib/status-labels";
 
 export default async function CustomerDetailPage({
   params,
@@ -311,7 +278,7 @@ export default async function CustomerDetailPage({
                     </p>
                   </div>
                   <span className="rounded-full bg-muted px-2 py-0.5 text-xs">
-                    {APPT_STATUS[a.status] ?? a.status}
+                    {labelFor(APPOINTMENT_STATUS_LABELS, a.status)}
                   </span>
                 </div>
               ))}
@@ -344,7 +311,7 @@ export default async function CustomerDetailPage({
                   </div>
                   <div className="text-right">
                     <p className="font-medium">{formatCurrency(wo.total)}</p>
-                    <span className="text-xs text-muted-foreground">{WO_STATUS[wo.status] ?? wo.status}</span>
+                    <span className="text-xs text-muted-foreground">{labelFor(WORK_ORDER_STATUS_LABELS, wo.status)}</span>
                   </div>
                 </Link>
               ))}
@@ -403,7 +370,7 @@ export default async function CustomerDetailPage({
                   </div>
                   <div className="text-right">
                     <p className="font-medium">{formatCurrency(q.total)}</p>
-                    <span className="text-xs text-muted-foreground">{QUOTE_STATUS[q.status] ?? q.status}</span>
+                    <span className="text-xs text-muted-foreground">{labelFor(QUOTE_STATUS_LABELS, q.status)}</span>
                   </div>
                 </Link>
               ))}
@@ -464,7 +431,7 @@ export default async function CustomerDetailPage({
                       {formatDate(r.checkIn)} — {formatDate(r.checkOut)}
                     </p>
                   </div>
-                  <span className="text-xs text-muted-foreground">{RES_STATUS[r.status] ?? r.status}</span>
+                  <span className="text-xs text-muted-foreground">{labelFor(RESERVATION_STATUS_LABELS, r.status)}</span>
                 </div>
               ))}
             </div>
@@ -519,7 +486,7 @@ export default async function CustomerDetailPage({
                     <p className="font-medium">{e.name}</p>
                     <p className="text-muted-foreground">{e.eventDate ? formatDate(e.eventDate) : formatDate(e.createdAt)}</p>
                   </div>
-                  <span className="text-xs text-muted-foreground">{EVENT_STATUS[e.status] ?? e.status}</span>
+                  <span className="text-xs text-muted-foreground">{labelFor(EVENT_STATUS_LABELS, e.status)}</span>
                 </div>
               ))}
             </div>

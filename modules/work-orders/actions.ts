@@ -9,7 +9,7 @@ import { z } from "zod";
 import { prisma } from "@/lib/db";
 
 import { getAuthContext } from "@/lib/auth-context";
-import { requireMutationRole } from "@/lib/action-auth";
+import { requireMutationRole, requireCreateRole } from "@/lib/action-auth";
 import { logAudit } from "@/lib/audit-log";
 
 import {
@@ -65,6 +65,8 @@ export async function createWorkOrder(
 ): Promise<FormResult> {
 
   const ctx = await getAuthContext();
+
+  requireCreateRole(ctx);
 
   const parsed = schema.safeParse({
 
