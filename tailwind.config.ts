@@ -75,10 +75,15 @@ const config: Config = {
         shimmer: {
           "100%": { transform: "translateX(100%)" },
         },
+        grid: {
+          "0%": { transform: "translateY(0)" },
+          "100%": { transform: "translateY(var(--cell-size))" },
+        },
       },
       animation: {
         "fade-in": "fade-in 0.5s ease-out forwards",
         shimmer: "shimmer 2s infinite",
+        grid: "grid 20s linear infinite",
       },
     },
   },
