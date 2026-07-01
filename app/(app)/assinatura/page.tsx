@@ -6,6 +6,7 @@ import { Icon } from "@/components/icon";
 import { formatCurrency, cn } from "@/lib/utils";
 import { cancelSubscription } from "./actions";
 import { SubscribePlanForm } from "./subscribe-plan-form";
+import { AsaasDiagnosePanel } from "./asaas-diagnose";
 
 const STATUS_LABELS: Record<string, string> = {
   TRIALING: "Em teste",
@@ -76,6 +77,8 @@ export default async function AssinaturaPage({ searchParams }: Props) {
             ? "Modo simulado (dev local): configure ASAAS_API_KEY para cobrança real."
             : "Pagamentos indisponíveis: configure ASAAS_API_KEY e NEXT_PUBLIC_APP_URL na Vercel."}
       </div>
+
+      {billingConfigured && <AsaasDiagnosePanel />}
 
       <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {PLANS.map((plan) => {

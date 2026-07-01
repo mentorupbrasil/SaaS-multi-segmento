@@ -14,8 +14,9 @@ import {
   isBillingSimulationAllowed,
   isValidCpfCnpj,
   normalizeCpfCnpj,
-  parseAsaasErrorMessage,
   requirePublicAppUrlForBilling,
+  diagnoseAsaasConnection,
+  formatAsaasHttpError,
 } from "@/lib/billing-asaas";
 
 export type SubscribePlanState = {
@@ -119,7 +120,7 @@ export async function createCheckoutSession(
   } catch (e) {
     if (e instanceof AsaasApiError) {
       console.error("[Asaas] checkout error:", e.status, e.body);
-      return { ok: false, error: parseAsaasErrorMessage(e.body) };
+      return { ok: false, error: formatAsaasHttpError(e.status, e.body) };
     }
     if (e instanceof Error) {
       console.error("[Asaas] checkout exception:", e.message);
@@ -148,6 +149,13 @@ export async function subscribePlanAction(
   revalidatePath("/assinatura");
   revalidatePath("/dashboard");
   return {};
+}
+
+/** Diagnóstico Asaas — só owner/admin, para ver erro real da API. */
+export async function runAsaasDiagnosis() {
+  const ctx = await getAuthContext();
+  requireRole(ctx, ["OWNER", "ADMIN"]);
+  return diagnoseAsaasConnection();
 }
 
 /**

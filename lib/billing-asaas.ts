@@ -42,8 +42,13 @@ type AsaasWebhookBody = {
   subscription?: AsaasSubscription;
 };
 
+function getAsaasApiKey(): string {
+  const raw = process.env.ASAAS_API_KEY?.trim() ?? "";
+  return raw.replace(/^["']+|["']+$/g, "");
+}
+
 export function isAsaasConfigured(): boolean {
-  return Boolean(process.env.ASAAS_API_KEY?.trim());
+  return getAsaasApiKey().length > 20;
 }
 
 /** Chave $aact_prod_... = produção. Sandbox usa $aact_YLT... ou ambiente explícito. */
@@ -51,7 +56,7 @@ export function isAsaasProduction(): boolean {
   const env = process.env.ASAAS_ENV?.trim().toLowerCase();
   if (env === "production" || env === "prod") return true;
   if (env === "sandbox") return false;
-  const key = process.env.ASAAS_API_KEY?.trim() ?? "";
+  const key = getAsaasApiKey();
   return key.includes("_prod_");
 }
 
@@ -145,8 +150,11 @@ function sleep(ms: number): Promise<void> {
 }
 
 export function parseAsaasErrorMessage(body: string): string {
+  const trimmed = body.trim();
+  if (!trimmed) return "Resposta vazia do Asaas (sem detalhes).";
+
   try {
-    const parsed = JSON.parse(body) as {
+    const parsed = JSON.parse(trimmed) as {
       errors?: Array<{ description?: string; code?: string }>;
       message?: string;
     };
@@ -156,14 +164,165 @@ export function parseAsaasErrorMessage(body: string): string {
     }
     if (parsed.message) return parsed.message;
   } catch {
-    const trimmed = body.trim();
-    if (trimmed && trimmed.length < 300) return trimmed;
+    // not JSON
   }
-  return "Não foi possível iniciar o pagamento. Verifique os dados e tente novamente.";
+
+  if (trimmed.length <= 400) return trimmed;
+  return `${trimmed.slice(0, 400)}…`;
+}
+
+export function formatAsaasHttpError(status: number, body: string): string {
+  const detail = parseAsaasErrorMessage(body);
+  return `Asaas respondeu HTTP ${status}: ${detail}`;
+}
+
+export type AsaasDiagnosticCheck = {
+  name: string;
+  ok: boolean;
+  detail: string;
+};
+
+/** Testa conexão com o Asaas e retorna cada etapa (para debug em produção). */
+export async function diagnoseAsaasConnection(): Promise<{
+  ok: boolean;
+  checks: AsaasDiagnosticCheck[];
+}> {
+  const checks: AsaasDiagnosticCheck[] = [];
+  const key = getAsaasApiKey();
+
+  checks.push({
+    name: "ASAAS_API_KEY",
+    ok: key.length > 20,
+    detail: key ? `Configurada (${key.slice(0, 8)}…${key.slice(-4)})` : "Não definida na Vercel",
+  });
+
+  checks.push({
+    name: "Ambiente",
+    ok: true,
+    detail: `${isAsaasProduction() ? "produção" : "sandbox"} → ${getAsaasBaseUrl()}`,
+  });
+
+  const appUrl = getPublicAppUrl();
+  checks.push({
+    name: "NEXT_PUBLIC_APP_URL",
+    ok: Boolean(appUrl),
+    detail: appUrl ?? "Não definida ou localhost",
+  });
+
+  if (!key) {
+    return { ok: false, checks };
+  }
+
+  try {
+    const res = await fetch(`${getAsaasBaseUrl()}/customers?limit=1`, {
+      headers: {
+        "Content-Type": "application/json",
+        "User-Agent": "GestorPro/1.0 (www.gestorpro.sbs; diagnose)",
+        access_token: key,
+      },
+    });
+    const body = await res.text();
+    checks.push({
+      name: "API GET /customers",
+      ok: res.ok,
+      detail: res.ok ? "Conexão OK" : formatAsaasHttpError(res.status, body),
+    });
+    if (!res.ok) return { ok: false, checks };
+
+    // Simula checkout: cliente + assinatura R$5 (mesmo fluxo do botão Pagar)
+    const testCpf = "52998224725";
+    let customerId: string | null = null;
+    const byCpf = await fetch(
+      `${getAsaasBaseUrl()}/customers?cpfCnpj=${testCpf}&limit=1`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "User-Agent": "GestorPro/1.0 (diagnose)",
+          access_token: key,
+        },
+      },
+    );
+    const byCpfBody = await byCpf.text();
+    if (byCpf.ok) {
+      try {
+        customerId = (JSON.parse(byCpfBody) as AsaasList<AsaasCustomer>).data?.[0]?.id ?? null;
+      } catch {
+        /* ignore */
+      }
+    }
+
+    if (!customerId) {
+      const createRes = await fetch(`${getAsaasBaseUrl()}/customers`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "User-Agent": "GestorPro/1.0 (diagnose)",
+          access_token: key,
+        },
+        body: JSON.stringify({
+          name: "GestorPro Diagnóstico",
+          email: `diag-${Date.now()}@gestorpro.sbs`,
+          cpfCnpj: testCpf,
+          externalReference: `diag-${Date.now()}`,
+        }),
+      });
+      const createBody = await createRes.text();
+      checks.push({
+        name: "API POST /customers (teste)",
+        ok: createRes.ok,
+        detail: createRes.ok
+          ? "Cliente de teste criado"
+          : formatAsaasHttpError(createRes.status, createBody),
+      });
+      if (!createRes.ok) return { ok: false, checks };
+      customerId = (JSON.parse(createBody) as AsaasCustomer).id;
+    } else {
+      checks.push({
+        name: "API POST /customers (teste)",
+        ok: true,
+        detail: "Cliente de teste já existia",
+      });
+    }
+
+    const subRes = await fetch(`${getAsaasBaseUrl()}/subscriptions`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "User-Agent": "GestorPro/1.0 (diagnose)",
+        access_token: key,
+      },
+      body: JSON.stringify({
+        customer: customerId,
+        billingType: "UNDEFINED",
+        value: 5,
+        nextDueDate: formatDueDate(1),
+        cycle: "MONTHLY",
+        description: "GestorPro — diagnóstico",
+        externalReference: `diag:${Date.now()}`,
+      }),
+    });
+    const subBody = await subRes.text();
+    checks.push({
+      name: "API POST /subscriptions (teste R$5)",
+      ok: subRes.ok,
+      detail: subRes.ok
+        ? "Assinatura de teste criada"
+        : formatAsaasHttpError(subRes.status, subBody),
+    });
+
+    return { ok: subRes.ok, checks };
+  } catch (e) {
+    checks.push({
+      name: "API GET /customers",
+      ok: false,
+      detail: e instanceof Error ? e.message : "Falha de rede ao chamar Asaas",
+    });
+    return { ok: false, checks };
+  }
 }
 
 function authHeaders(): HeadersInit {
-  const key = process.env.ASAAS_API_KEY?.trim();
+  const key = getAsaasApiKey();
   if (!key) throw new Error("ASAAS_API_KEY não configurada");
   return {
     "Content-Type": "application/json",
@@ -211,7 +370,6 @@ export async function createAsaasSubscription(input: {
   planId: string;
   planName: string;
   value: number;
-  successUrl: string;
 }): Promise<AsaasSubscription> {
   return asaasRequest<AsaasSubscription>("/subscriptions", {
     method: "POST",
@@ -219,14 +377,10 @@ export async function createAsaasSubscription(input: {
       customer: input.customerId,
       billingType: "UNDEFINED",
       value: input.value,
-      nextDueDate: formatDueDate(0),
+      nextDueDate: formatDueDate(1),
       cycle: "MONTHLY",
       description: `GestorPro — Plano ${input.planName}`,
       externalReference: `${input.orgId}:${input.planId}`,
-      callback: {
-        successUrl: input.successUrl,
-        autoRedirect: true,
-      },
     }),
   });
 }
@@ -321,7 +475,6 @@ export async function createAsaasCheckout(input: {
     planId: input.planId,
     planName: input.planName,
     value: input.value,
-    successUrl: `${input.appUrl}/assinatura?payment=success`,
   });
 
   const paymentUrl = await getSubscriptionPaymentUrl(subscription.id);
