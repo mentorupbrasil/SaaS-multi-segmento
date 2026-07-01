@@ -12,7 +12,8 @@ import { getAuthContext } from "@/lib/auth-context";
 import { requireMutationRole, requireCreateRole } from "@/lib/action-auth";
 import { logAudit } from "@/lib/audit-log";
 
-import { addInventoryMovement, recalcSaleTotal } from "@/lib/inventory-utils";
+import { addInventoryMovement } from "@/lib/inventory-utils";
+import { recalcSaleTotal, lineItemFieldsSchema, buildSaleItemData } from "@/lib/line-items";
 import { requireOpenCashShift } from "@/lib/cash-shift-utils";
 
 
@@ -73,20 +74,8 @@ export async function createSale(
 
 
 
-const itemSchema = z.object({
-
+const itemSchema = lineItemFieldsSchema.extend({
   saleId: z.string().min(1),
-
-  description: z.string().min(1),
-
-  quantity: z.coerce.number().min(0.01),
-
-  unitPrice: z.coerce.number().min(0),
-
-  serviceId: z.string().optional(),
-
-  inventoryItemId: z.string().optional(),
-
 });
 
 
@@ -102,19 +91,13 @@ export async function addSaleItem(
   const ctx = await getAuthContext();
 
   const parsed = itemSchema.safeParse({
-
     saleId: formData.get("saleId"),
-
+    type: formData.get("type") || undefined,
     description: formData.get("description"),
-
     quantity: formData.get("quantity"),
-
     unitPrice: formData.get("unitPrice"),
-
     serviceId: formData.get("serviceId") || undefined,
-
     inventoryItemId: formData.get("inventoryItemId") || undefined,
-
   });
 
   if (!parsed.success) {
@@ -136,23 +119,10 @@ export async function addSaleItem(
 
 
   await prisma.saleItem.create({
-
     data: {
-
       saleId: sale.id,
-
-      description: parsed.data.description,
-
-      quantity: parsed.data.quantity,
-
-      unitPrice: parsed.data.unitPrice,
-
-      serviceId: parsed.data.serviceId || null,
-
-      inventoryItemId: parsed.data.inventoryItemId || null,
-
+      ...buildSaleItemData(parsed.data),
     },
-
   });
 
 

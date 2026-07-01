@@ -5,7 +5,7 @@ import bcrypt from "bcryptjs";
 import { AuthError } from "next-auth";
 import { prisma } from "@/lib/db";
 import { signIn } from "@/auth";
-import { getSegment } from "@/segments";
+import { getSegment, ALL_SEGMENTS } from "@/segments";
 import { getPlan, PLANS } from "@/lib/plans";
 import { isSubscriptionActive } from "@/lib/subscription";
 import { seedDefaultMasterData } from "@/lib/master-data";
@@ -26,7 +26,10 @@ const signupSchema = z.object({
   email: z.string().email("E-mail inválido"),
   password: z.string().min(6, "A senha deve ter ao menos 6 caracteres"),
   businessName: z.string().min(2, "Informe o nome do negócio"),
-  segmentId: z.string().min(1, "Escolha um segmento"),
+  segmentId: z
+    .string()
+    .min(1, "Escolha um segmento")
+    .refine((id) => ALL_SEGMENTS.some((s) => s.id === id), "Segmento inválido"),
   planId: z.string().min(1, "Escolha um plano"),
   cpfCnpj: z
     .string()

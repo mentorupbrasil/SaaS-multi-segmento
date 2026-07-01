@@ -56,6 +56,13 @@ export const MEMBERSHIP_ROLE_LABELS: Record<string, string> = {
   STAFF: "Equipe",
 };
 
+export const SUPPORT_TICKET_STATUS_LABELS: Record<string, string> = {
+  OPEN: "Aberto",
+  IN_PROGRESS: "Em andamento",
+  RESOLVED: "Resolvido",
+  CLOSED: "Fechado",
+};
+
 export function labelFor(map: Record<string, string>, key: string, fallback?: string): string {
   return map[key] ?? fallback ?? key;
 }

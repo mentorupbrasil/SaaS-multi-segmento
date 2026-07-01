@@ -6,7 +6,7 @@ import { prisma } from "@/lib/db";
 import { getAuthContext } from "@/lib/auth-context";
 import { requireMutationRole, requireCreateRole } from "@/lib/action-auth";
 import { logAudit } from "@/lib/audit-log";
-import { recalcQuoteTotal } from "@/lib/inventory-utils";
+import { recalcQuoteTotal, lineItemFieldsSchema, buildLineItemData } from "@/lib/line-items";
 import { convertQuoteToWorkOrder } from "@/modules/work-orders/actions";
 
 export interface FormResult {
@@ -56,14 +56,8 @@ export async function createQuote(
   return { ok: true, id: quote.id };
 }
 
-const itemSchema = z.object({
+const itemSchema = lineItemFieldsSchema.extend({
   quoteId: z.string().min(1),
-  type: z.enum(["SERVICE", "PART", "LABOR"]),
-  description: z.string().min(1),
-  quantity: z.coerce.number().min(0.01),
-  unitPrice: z.coerce.number().min(0),
-  serviceId: z.string().optional(),
-  inventoryItemId: z.string().optional(),
 });
 
 export async function addQuoteItem(
@@ -92,12 +86,7 @@ export async function addQuoteItem(
   await prisma.quoteItem.create({
     data: {
       quoteId: quote.id,
-      type: parsed.data.type,
-      description: parsed.data.description,
-      quantity: parsed.data.quantity,
-      unitPrice: parsed.data.unitPrice,
-      serviceId: parsed.data.serviceId || null,
-      inventoryItemId: parsed.data.inventoryItemId || null,
+      ...buildLineItemData(parsed.data),
     },
   });
 

@@ -1,5 +1,6 @@
 import { PageHeader } from "@/components/page-header";
 import { formatDate } from "@/lib/utils";
+import { SUPPORT_TICKET_STATUS_LABELS, labelFor } from "@/lib/status-labels";
 import {
   createSupportTicketAction,
   listOrganizationsForTickets,
@@ -8,13 +9,6 @@ import {
 } from "./actions";
 import { TicketCreateForm } from "./ticket-create-form";
 import { TicketStatusSelect } from "./ticket-status-select";
-
-const STATUS_LABEL: Record<string, string> = {
-  OPEN: "Aberto",
-  IN_PROGRESS: "Em andamento",
-  RESOLVED: "Resolvido",
-  CLOSED: "Fechado",
-};
 
 export default async function AdminTicketsPage() {
   const [tickets, organizations] = await Promise.all([
@@ -37,6 +31,7 @@ export default async function AdminTicketsPage() {
               <tr>
                 <th className="px-4 py-3">Assunto</th>
                 <th className="px-4 py-3">Organização</th>
+                <th className="px-4 py-3">Solicitante</th>
                 <th className="px-4 py-3">Status</th>
                 <th className="px-4 py-3">Criado em</th>
                 <th className="px-4 py-3">Ações</th>
@@ -52,9 +47,15 @@ export default async function AdminTicketsPage() {
                   <td className="px-4 py-3 text-foreground">
                     {ticket.organization?.name ?? "—"}
                   </td>
+                  <td className="px-4 py-3 text-muted-foreground">
+                    {ticket.user?.name ?? "—"}
+                    {ticket.user?.email && (
+                      <span className="block text-xs">{ticket.user.email}</span>
+                    )}
+                  </td>
                   <td className="px-4 py-3">
                     <span className="rounded-full bg-muted px-2 py-0.5 text-xs font-medium text-foreground">
-                      {STATUS_LABEL[ticket.status] ?? ticket.status}
+                      {labelFor(SUPPORT_TICKET_STATUS_LABELS, ticket.status)}
                     </span>
                   </td>
                   <td className="px-4 py-3 text-muted-foreground">{formatDate(ticket.createdAt)}</td>
@@ -69,7 +70,7 @@ export default async function AdminTicketsPage() {
               ))}
               {tickets.length === 0 && (
                 <tr>
-                  <td colSpan={5} className="px-4 py-10 text-center text-muted-foreground">
+                  <td colSpan={6} className="px-4 py-10 text-center text-muted-foreground">
                     Nenhum chamado registrado.
                   </td>
                 </tr>

@@ -38,6 +38,7 @@ export const ALL_APP_ROUTE_PREFIXES = [
   "/tarifas",
   "/mesas",
   "/fiscal",
+  "/chamados",
 ] as const;
 
 /** Prefixos que exigem sessão autenticada (app + admin). */

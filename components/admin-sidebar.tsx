@@ -10,7 +10,7 @@ import { SegmentSwitcher, type SegmentOption } from "@/components/segment-switch
 import { ThemeToggle } from "@/components/theme-toggle";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { buildAllModulesNav } from "@/lib/nav";
+import { buildAllModulesNav, resolveActiveNavHref } from "@/lib/nav";
 import { cn } from "@/lib/utils";
 
 const PLATFORM_NAV = [
@@ -42,16 +42,19 @@ export function AdminSidebar({
   const operationalNav = buildAllModulesNav(activeSegmentId);
   const initials = userName.slice(0, 2).toUpperCase();
 
+  const platformHrefs = PLATFORM_NAV.map((item) => item.href);
+  const activePlatformHref = resolveActiveNavHref(pathname, platformHrefs);
+  const operationalHrefs = operationalNav.map((item) => item.href);
+  const activeOperationalHref = resolveActiveNavHref(pathname, operationalHrefs);
+
   const renderItem = (item: {
     href: string;
     label: string;
     icon: string;
     exact?: boolean;
     comingSoon?: boolean;
-  }) => {
-    const active = item.exact
-      ? pathname === item.href
-      : pathname === item.href || pathname.startsWith(item.href + "/");
+  }, activeHref: string | null) => {
+    const active = activeHref === item.href;
     return (
       <Link
         key={item.href}
@@ -99,11 +102,11 @@ export function AdminSidebar({
           <p className="px-3 pb-1 pt-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
             Plataforma
           </p>
-          {PLATFORM_NAV.map((item) => renderItem(item))}
+          {PLATFORM_NAV.map((item) => renderItem(item, activePlatformHref))}
           <p className="px-3 pb-1 pt-4 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
             Operação (todos os módulos)
           </p>
-          {operationalNav.map((item) => renderItem(item))}
+          {operationalNav.map((item) => renderItem(item, activeOperationalHref))}
         </nav>
       </ScrollArea>
 

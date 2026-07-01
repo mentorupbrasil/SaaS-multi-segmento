@@ -13,12 +13,13 @@ import { requireMutationRole, requireCreateRole } from "@/lib/action-auth";
 import { logAudit } from "@/lib/audit-log";
 
 import {
-
   deductInventoryForWorkOrder,
-
-  recalcWorkOrderTotal,
-
 } from "@/lib/inventory-utils";
+import {
+  recalcWorkOrderTotal,
+  lineItemFieldsSchema,
+  buildLineItemData,
+} from "@/lib/line-items";
 
 
 
@@ -132,22 +133,8 @@ export async function createWorkOrder(
 
 
 
-const itemSchema = z.object({
-
+const itemSchema = lineItemFieldsSchema.extend({
   workOrderId: z.string().min(1),
-
-  type: z.enum(["SERVICE", "PART", "LABOR"]),
-
-  description: z.string().min(1),
-
-  quantity: z.coerce.number().min(0.01),
-
-  unitPrice: z.coerce.number().min(0),
-
-  serviceId: z.string().optional(),
-
-  inventoryItemId: z.string().optional(),
-
 });
 
 
@@ -199,25 +186,10 @@ export async function addWorkOrderItem(
 
 
   await prisma.workOrderItem.create({
-
     data: {
-
       workOrderId: wo.id,
-
-      type: parsed.data.type,
-
-      description: parsed.data.description,
-
-      quantity: parsed.data.quantity,
-
-      unitPrice: parsed.data.unitPrice,
-
-      serviceId: parsed.data.serviceId || null,
-
-      inventoryItemId: parsed.data.inventoryItemId || null,
-
+      ...buildLineItemData(parsed.data),
     },
-
   });
 
 

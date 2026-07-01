@@ -62,6 +62,8 @@ export function buildNav(org: OrgLike): NavItem[] {
     items.push({ href: "/conexoes", label: "Integrações", icon: "Plug" });
   }
 
+  items.push({ href: "/chamados", label: "Suporte", icon: "LifeBuoy" });
+
   return items;
 }
 
@@ -97,4 +99,13 @@ export function buildNavForUser(org: OrgLike, _isPlatformAdmin?: boolean): NavIt
 
 export function isModuleEnabled(segmentId: string, moduleId: string): boolean {
   return resolveSegmentModules(segmentId).includes(moduleId as never);
+}
+
+/** Retorna o href do menu mais específico que corresponde à rota atual. */
+export function resolveActiveNavHref(pathname: string, hrefs: string[]): string | null {
+  const matching = hrefs.filter(
+    (href) => pathname === href || pathname.startsWith(`${href}/`),
+  );
+  if (matching.length === 0) return null;
+  return matching.reduce((best, href) => (href.length > best.length ? href : best));
 }

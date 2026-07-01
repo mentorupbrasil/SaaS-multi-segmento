@@ -29,8 +29,8 @@ export const APP_INTEGRATIONS: AppIntegrationDefinition[] = [
     name: "PIX",
     icon: "Wallet",
     description: "Receba pagamentos via PIX com conciliação no financeiro.",
-    webhookPath: "mercadopago",
     toggleable: true,
+    status: "preview",
   },
   {
     provider: "google_calendar",

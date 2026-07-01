@@ -69,13 +69,14 @@ export default async function TarifasPage() {
 
       <div className="card p-5">
         <h2 className="mb-2 font-semibold text-foreground">Channel manager</h2>
-        <p className="text-sm text-muted-foreground">
-          Integração com Booking.com, Airbnb e Expedia disponível em{" "}
-          <Link href="/conexoes" className="text-primary hover:underline">
-            Conexões
-          </Link>
-          . Configure credenciais e sincronize disponibilidade automaticamente.
+        <p className="mb-2 text-sm text-muted-foreground">
+          Sincronização com Booking.com, Airbnb e Expedia está <strong>em desenvolvimento</strong>. Por enquanto,
+          gerencie tarifas em <Link href="/quartos" className="text-primary hover:underline">Quartos</Link> e
+          disponibilidade em <Link href="/reservas" className="text-primary hover:underline">Reservas</Link>.
         </p>
+        <span className="inline-block rounded-full bg-amber-500/15 px-2 py-0.5 text-xs font-semibold text-amber-700 dark:text-amber-400">
+          Em breve
+        </span>
       </div>
     </div>
   );

@@ -14,6 +14,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { ThemeToggle } from "@/components/theme-toggle";
 import type { NavItem } from "@/lib/nav";
+import { resolveActiveNavHref } from "@/lib/nav";
 
 export interface SidebarProps {
   orgName: string;
@@ -59,8 +60,11 @@ export function SidebarContent({
     { href: "/configuracoes", label: "Configurações", icon: "Settings" },
   ];
 
+  const allNavHrefs = [...baseItems, ...navItems, ...bottomItems].map((item) => item.href);
+  const activeHref = resolveActiveNavHref(pathname, allNavHrefs);
+
   const renderItem = (item: NavItem, index: number) => {
-    const active = pathname === item.href || pathname.startsWith(item.href + "/");
+    const active = activeHref === item.href;
     const content = (
       <>
         <Icon

@@ -84,33 +84,18 @@ export async function addInventoryMovement(params: {
 }
 
 export async function recalcWorkOrderTotal(workOrderId: string, organizationId: string) {
-  const items = await prisma.workOrderItem.findMany({ where: { workOrderId } });
-  const total = sumLineItems(items);
-  await prisma.workOrder.updateMany({
-    where: { id: workOrderId, organizationId },
-    data: { total },
-  });
-  return total;
+  const { recalcWorkOrderTotal: recalc } = await import("@/lib/line-items");
+  return recalc(workOrderId, organizationId);
 }
 
 export async function recalcQuoteTotal(quoteId: string, organizationId: string) {
-  const items = await prisma.quoteItem.findMany({ where: { quoteId } });
-  const total = sumLineItems(items);
-  await prisma.quote.updateMany({
-    where: { id: quoteId, organizationId },
-    data: { total },
-  });
-  return total;
+  const { recalcQuoteTotal: recalc } = await import("@/lib/line-items");
+  return recalc(quoteId, organizationId);
 }
 
 export async function recalcSaleTotal(saleId: string, organizationId: string) {
-  const items = await prisma.saleItem.findMany({ where: { saleId } });
-  const total = sumLineItems(items);
-  await prisma.sale.updateMany({
-    where: { id: saleId, organizationId },
-    data: { total },
-  });
-  return total;
+  const { recalcSaleTotal: recalc } = await import("@/lib/line-items");
+  return recalc(saleId, organizationId);
 }
 
 export type LineItemInput = {
