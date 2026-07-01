@@ -15,7 +15,7 @@ const STATUS_LABELS: Record<string, string> = {
 };
 
 type Props = {
-  searchParams: Promise<{ payment?: string; welcome?: string }>;
+  searchParams: Promise<{ payment?: string; welcome?: string; error?: string }>;
 };
 
 export default async function AssinaturaPage({ searchParams }: Props) {
@@ -26,6 +26,7 @@ export default async function AssinaturaPage({ searchParams }: Props) {
   const billingConfigured = isAsaasConfigured();
   const paymentSuccess = params.payment === "success";
   const justSignedUp = params.welcome === "1";
+  const checkoutError = params.error ? decodeURIComponent(params.error) : null;
   const config = org.config as { billingCpfCnpj?: string } | null;
   const defaultCpfCnpj = config?.billingCpfCnpj ?? "";
 
@@ -36,6 +37,12 @@ export default async function AssinaturaPage({ searchParams }: Props) {
       {justSignedUp && org.subscriptionStatus === "PAST_DUE" && (
         <div className="mb-6 rounded-xl border border-amber-200 bg-amber-50 px-5 py-4 text-sm text-amber-900">
           Conta criada. Conclua o pagamento abaixo para liberar o acesso ao sistema.
+        </div>
+      )}
+
+      {checkoutError && (
+        <div className="mb-6 rounded-xl border border-red-200 bg-red-50 px-5 py-4 text-sm text-red-800">
+          {checkoutError}
         </div>
       )}
 

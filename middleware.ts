@@ -5,12 +5,15 @@ import { authConfig } from "./auth.config";
 const { auth } = NextAuth(authConfig);
 
 export default auth((req) => {
+  const pathname = req.nextUrl.pathname;
   const requestHeaders = new Headers(req.headers);
-  requestHeaders.set("x-pathname", req.nextUrl.pathname);
+  requestHeaders.set("x-pathname", pathname);
 
-  return NextResponse.next({
+  const response = NextResponse.next({
     request: { headers: requestHeaders },
   });
+  response.cookies.set("gp-path", pathname, { httpOnly: true, path: "/", sameSite: "lax" });
+  return response;
 });
 
 export const config = {

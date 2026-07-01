@@ -1,7 +1,6 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 import { getAuthContext, requireRole } from "@/lib/auth-context";
 import { prisma } from "@/lib/db";
@@ -15,8 +14,14 @@ import {
   isBillingSimulationAllowed,
   isValidCpfCnpj,
   normalizeCpfCnpj,
+  parseAsaasErrorMessage,
   requirePublicAppUrlForBilling,
 } from "@/lib/billing-asaas";
+
+export type SubscribePlanState = {
+  error?: string;
+  paymentUrl?: string;
+};
 
 export type CheckoutResult =
   | { ok: true; mode: "fake" }
@@ -114,15 +119,22 @@ export async function createCheckoutSession(
   } catch (e) {
     if (e instanceof AsaasApiError) {
       console.error("[Asaas] checkout error:", e.status, e.body);
-    } else {
-      console.error("[Asaas] checkout exception:", e);
+      return { ok: false, error: parseAsaasErrorMessage(e.body) };
     }
+    if (e instanceof Error) {
+      console.error("[Asaas] checkout exception:", e.message);
+      return { ok: false, error: e.message };
+    }
+    console.error("[Asaas] checkout exception:", e);
     return { ok: false, error: "Não foi possível iniciar o pagamento. Tente novamente." };
   }
 }
 
-/** Ação do formulário de assinatura: checkout Asaas ou fallback simulado. */
-export async function subscribePlan(formData: FormData): Promise<void> {
+/** Formulário de assinatura — retorna URL de pagamento ou erro (sem throw). */
+export async function subscribePlanAction(
+  _prev: SubscribePlanState,
+  formData: FormData,
+): Promise<SubscribePlanState> {
   const planId = String(formData.get("planId") ?? "");
   let cpfCnpj = String(formData.get("cpfCnpj") ?? "");
   if (!cpfCnpj.trim()) {
@@ -131,10 +143,11 @@ export async function subscribePlan(formData: FormData): Promise<void> {
     cpfCnpj = config?.billingCpfCnpj ?? "";
   }
   const result = await createCheckoutSession(planId, cpfCnpj);
-  if (!result.ok) throw new Error(result.error);
-  if (result.mode === "asaas") {
-    redirect(result.paymentUrl);
-  }
+  if (!result.ok) return { error: result.error };
+  if (result.mode === "asaas") return { paymentUrl: result.paymentUrl };
+  revalidatePath("/assinatura");
+  revalidatePath("/dashboard");
+  return {};
 }
 
 /**

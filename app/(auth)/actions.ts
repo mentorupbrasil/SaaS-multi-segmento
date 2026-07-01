@@ -7,6 +7,7 @@ import { prisma } from "@/lib/db";
 import { signIn } from "@/auth";
 import { getSegment } from "@/segments";
 import { getPlan, PLANS } from "@/lib/plans";
+import { isSubscriptionActive } from "@/lib/subscription";
 import { seedDefaultMasterData } from "@/lib/master-data";
 import { slugify } from "@/lib/utils";
 import { isPlatformAdminEmail } from "@/lib/platform-admin";
@@ -170,11 +171,28 @@ export async function loginAction(
     return { error: rateLimitErrorMessage(loginLimit.retryAfterMs) };
   }
 
+  let redirectTo = isPlatformAdminEmail(email) ? "/admin" : "/dashboard";
+  if (!isPlatformAdminEmail(email)) {
+    const user = await prisma.user.findUnique({
+      where: { email },
+      include: {
+        memberships: {
+          take: 1,
+          include: { organization: true },
+        },
+      },
+    });
+    const org = user?.memberships[0]?.organization;
+    if (org && !isSubscriptionActive(org)) {
+      redirectTo = "/assinatura";
+    }
+  }
+
   try {
     await signIn("credentials", {
       email,
       password: parsed.data.password,
-      redirectTo: isPlatformAdminEmail(email) ? "/admin" : "/dashboard",
+      redirectTo,
     });
   } catch (error) {
     if (error instanceof AuthError) {

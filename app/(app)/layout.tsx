@@ -1,9 +1,8 @@
-import { headers } from "next/headers";
-import { redirect } from "next/navigation";
-import { getOptionalAuthContext, listOrganizationsForSwitcher } from "@/lib/auth-context";
+import { redirect } from "next/navigation";import { getOptionalAuthContext, listOrganizationsForSwitcher } from "@/lib/auth-context";
 import { getSegment } from "@/segments";
 import { buildNavForUser } from "@/lib/nav";
 import { requireActiveSubscription, isSubscriptionActive } from "@/lib/subscription";
+import { getRequestPathname } from "@/lib/request-pathname";
 import { Sidebar } from "@/components/sidebar";
 import { auth } from "@/auth";
 import { isPlatformAdminEmail } from "@/lib/platform-admin";
@@ -27,8 +26,7 @@ export default async function AppLayout({
   const ctx = await getOptionalAuthContext();
   if (!ctx) redirect("/login");
 
-  const headersList = await headers();
-  const pathname = headersList.get("x-pathname") ?? "";
+  const pathname = await getRequestPathname();
   requireActiveSubscription(ctx, pathname);
 
   const session = await auth();
@@ -45,10 +43,16 @@ export default async function AppLayout({
   }
 
   const segment = getSegment(ctx.effectiveSegmentId);
-  const navItems = buildNavForUser(
+  const subscriptionActive = isSubscriptionActive(ctx.organization);
+  const allNavItems = buildNavForUser(
     { ...ctx.organization, segmentId: ctx.effectiveSegmentId, plan: ctx.organization.plan },
     isPlatformAdmin,
   );
+  const navItems = subscriptionActive
+    ? allNavItems
+    : allNavItems.filter(
+        (item) => item.href === "/assinatura" || item.href.startsWith("/configuracoes"),
+      );
   const organizations = isPlatformAdmin ? await listOrganizationsForSwitcher() : [];
   const segments = isPlatformAdmin ? listSegmentsForSwitcher() : [];
 

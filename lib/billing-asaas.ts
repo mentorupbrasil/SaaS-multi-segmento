@@ -140,6 +140,23 @@ export function subscriptionStatusFromAsaasEvent(
   return null;
 }
 
+function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+export function parseAsaasErrorMessage(body: string): string {
+  try {
+    const parsed = JSON.parse(body) as {
+      errors?: Array<{ description?: string; code?: string }>;
+    };
+    const msg = parsed.errors?.[0]?.description;
+    if (msg) return msg;
+  } catch {
+    // ignore
+  }
+  return "Não foi possível iniciar o pagamento. Verifique os dados e tente novamente.";
+}
+
 function authHeaders(): HeadersInit {
   const key = process.env.ASAAS_API_KEY?.trim();
   if (!key) throw new Error("ASAAS_API_KEY não configurada");
@@ -208,16 +225,32 @@ export async function createAsaasSubscription(input: {
   });
 }
 
-export async function getSubscriptionPaymentUrl(subscriptionId: string): Promise<string | null> {
-  const list = await asaasRequest<AsaasList<AsaasPayment>>(
-    `/payments?subscription=${encodeURIComponent(subscriptionId)}&limit=5&order=asc`,
+export async function findAsaasCustomerByCpfCnpj(cpfCnpj: string): Promise<AsaasCustomer | null> {
+  const digits = normalizeCpfCnpj(cpfCnpj);
+  const list = await asaasRequest<AsaasList<AsaasCustomer>>(
+    `/customers?cpfCnpj=${encodeURIComponent(digits)}&limit=1`,
   );
-  const payments = list.data ?? [];
-  const pending = payments.find((p) =>
-    ["PENDING", "OVERDUE", "AWAITING_RISK_ANALYSIS"].includes((p.status ?? "").toUpperCase()),
-  );
-  const payment = pending ?? payments[0];
-  return payment?.invoiceUrl ?? payment?.bankSlipUrl ?? null;
+  return list.data?.[0] ?? null;
+}
+
+export async function getSubscriptionPaymentUrl(
+  subscriptionId: string,
+  retries = 4,
+): Promise<string | null> {
+  for (let i = 0; i < retries; i += 1) {
+    const list = await asaasRequest<AsaasList<AsaasPayment>>(
+      `/payments?subscription=${encodeURIComponent(subscriptionId)}&limit=10&order=asc`,
+    );
+    const payments = list.data ?? [];
+    const pending = payments.find((p) =>
+      ["PENDING", "OVERDUE", "AWAITING_RISK_ANALYSIS"].includes((p.status ?? "").toUpperCase()),
+    );
+    const payment = pending ?? payments[0];
+    const url = payment?.invoiceUrl ?? payment?.bankSlipUrl ?? null;
+    if (url) return url;
+    if (i < retries - 1) await sleep(800);
+  }
+  return null;
 }
 
 export async function cancelAsaasSubscription(subscriptionId: string): Promise<void> {
@@ -237,18 +270,35 @@ export async function createAsaasCheckout(input: {
   value: number;
   appUrl: string;
 }): Promise<{ customerId: string; subscriptionId: string; paymentUrl: string }> {
-  const customer =
-    input.customerId != null
-      ? { id: input.customerId }
-      : await createAsaasCustomer({
+  let customerId = input.customerId ?? null;
+
+  if (!customerId) {
+    const existing = await findAsaasCustomerByCpfCnpj(input.cpfCnpj);
+    if (existing) {
+      customerId = existing.id;
+    } else {
+      try {
+        const created = await createAsaasCustomer({
           name: input.customerName,
           email: input.customerEmail,
           cpfCnpj: input.cpfCnpj,
           orgId: input.orgId,
         });
+        customerId = created.id;
+      } catch (e) {
+        if (e instanceof AsaasApiError) {
+          const retry = await findAsaasCustomerByCpfCnpj(input.cpfCnpj);
+          if (retry) customerId = retry.id;
+          else throw e;
+        } else {
+          throw e;
+        }
+      }
+    }
+  }
 
   const subscription = await createAsaasSubscription({
-    customerId: customer.id,
+    customerId,
     orgId: input.orgId,
     planId: input.planId,
     planName: input.planName,
@@ -258,11 +308,13 @@ export async function createAsaasCheckout(input: {
 
   const paymentUrl = await getSubscriptionPaymentUrl(subscription.id);
   if (!paymentUrl) {
-    throw new Error("Assinatura criada, mas não foi possível obter o link de pagamento.");
+    throw new Error(
+      "Cobrança criada no Asaas, mas o link de pagamento ainda não ficou pronto. Aguarde 1 minuto e clique em Pagar novamente.",
+    );
   }
 
   return {
-    customerId: customer.id,
+    customerId,
     subscriptionId: subscription.id,
     paymentUrl,
   };
