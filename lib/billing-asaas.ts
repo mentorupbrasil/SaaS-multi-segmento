@@ -51,12 +51,13 @@ export function isAsaasConfigured(): boolean {
   return getAsaasApiKey().length > 20;
 }
 
-/** Chave $aact_prod_... = produção. Sandbox usa $aact_YLT... ou ambiente explícito. */
+/** Chave $aact_prod_... = produção; $aact_hmlg_... = sandbox. */
 export function isAsaasProduction(): boolean {
   const env = process.env.ASAAS_ENV?.trim().toLowerCase();
   if (env === "production" || env === "prod") return true;
-  if (env === "sandbox") return false;
+  if (env === "sandbox" || env === "homolog" || env === "hmlg") return false;
   const key = getAsaasApiKey();
+  if (key.includes("_hmlg_")) return false;
   return key.includes("_prod_");
 }
 
@@ -68,9 +69,9 @@ export function isBillingSimulationAllowed(): boolean {
 
 export function getAsaasBaseUrl(): string {
   if (isAsaasProduction()) {
-    return "https://api.asaas.com/api/v3";
+    return "https://api.asaas.com/v3";
   }
-  return "https://sandbox.asaas.com/api/v3";
+  return "https://api-sandbox.asaas.com/v3";
 }
 
 export function getPublicAppUrl(): string | null {

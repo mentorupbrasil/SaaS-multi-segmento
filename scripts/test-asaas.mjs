@@ -12,7 +12,7 @@ const key = (process.env.ASAAS_API_KEY ?? "").trim().replace(/^["']+|["']+$/g, "
 const env = (process.env.ASAAS_ENV ?? "").trim().toLowerCase();
 const isProd =
   env === "production" || env === "prod" || (key.includes("_prod_") && env !== "sandbox");
-const base = isProd ? "https://api.asaas.com/api/v3" : "https://sandbox.asaas.com/api/v3";
+const base = isProd ? "https://api.asaas.com/v3" : "https://api-sandbox.asaas.com/v3";
 
 const headers = {
   "Content-Type": "application/json",
