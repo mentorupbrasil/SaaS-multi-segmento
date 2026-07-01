@@ -13,7 +13,7 @@ interface StatProps {
 }
 
 interface ActionProps {
-  text: string;
+  text: React.ReactNode;
   href: string;
   variant?: ButtonProps["variant"];
   className?: string;
@@ -33,7 +33,7 @@ const containerVariants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
-    transition: { staggerChildren: 0.15 },
+    transition: { staggerChildren: 0.2 },
   },
 };
 
@@ -46,21 +46,33 @@ const itemVariants = {
   },
 };
 
-const imageVariants = {
-  hidden: { opacity: 0, scale: 0.92 },
-  visible: {
-    opacity: 1,
-    scale: 1,
-    transition: { duration: 0.55, ease: [0.21, 0.47, 0.32, 0.98] as const },
-  },
-};
+function imageVariants(delay = 0) {
+  return {
+    hidden: { opacity: 0, scale: 0.8, y: 24 },
+    visible: {
+      opacity: 1,
+      scale: 1,
+      y: 0,
+      transition: {
+        duration: 0.6,
+        delay,
+        ease: [0.21, 0.47, 0.32, 0.98] as const,
+      },
+    },
+  };
+}
 
-const floatingVariants = {
-  animate: {
-    y: [0, -8, 0],
-    transition: { duration: 3, repeat: Infinity, ease: "easeInOut" as const },
-  },
-};
+function floatingAnimation(delay = 0) {
+  return {
+    y: [0, -10, 0],
+    transition: {
+      duration: 3.2,
+      repeat: Infinity,
+      ease: "easeInOut" as const,
+      delay,
+    },
+  };
+}
 
 export function HeroSection({
   title,
@@ -74,11 +86,12 @@ export function HeroSection({
   const reduceMotion = useReducedMotion();
 
   return (
-    <section className={cn("relative w-full overflow-hidden border-b border-border bg-background", className)}>
-      <div className="absolute inset-0 bg-grid [mask-image:radial-gradient(ellipse_at_top,black,transparent_70%)]" />
+    <section className={cn("relative w-full overflow-hidden bg-background py-12 sm:py-24", className)}>
+      <div className="absolute inset-0 bg-grid [mask-image:radial-gradient(ellipse_at_top,black,transparent_72%)]" />
       <div className="section-glow pointer-events-none absolute inset-0" />
 
-      <div className="section relative grid grid-cols-1 items-center gap-12 py-16 sm:py-20 lg:grid-cols-2 lg:gap-10 lg:py-24">
+      <div className="section relative grid grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-8">
+        {/* Coluna esquerda — texto */}
         <motion.div
           className="flex flex-col items-center text-center lg:items-start lg:text-left"
           variants={reduceMotion ? undefined : containerVariants}
@@ -86,7 +99,7 @@ export function HeroSection({
           animate={reduceMotion ? false : "visible"}
         >
           {eyebrow && (
-            <motion.div variants={reduceMotion ? undefined : itemVariants} className="mb-5">
+            <motion.div variants={reduceMotion ? undefined : itemVariants} className="mb-4">
               {eyebrow}
             </motion.div>
           )}
@@ -99,43 +112,51 @@ export function HeroSection({
           </motion.h1>
 
           <motion.p
-            className="mt-6 max-w-xl text-lg leading-relaxed text-muted-foreground"
+            className="mt-6 max-w-md text-lg leading-relaxed text-muted-foreground lg:max-w-xl"
             variants={reduceMotion ? undefined : itemVariants}
           >
             {subtitle}
           </motion.p>
 
           <motion.div
-            className="mt-8 flex flex-wrap justify-center gap-3 lg:justify-start"
+            className="mt-8 flex flex-wrap justify-center gap-4 lg:justify-start"
             variants={reduceMotion ? undefined : itemVariants}
           >
             {actions.map((action) => (
-              <Button key={action.href + action.text} asChild variant={action.variant ?? "default"} size="lg" className={action.className}>
+              <Button
+                key={action.href + action.text}
+                asChild
+                variant={action.variant ?? "default"}
+                size="lg"
+                className={action.className}
+              >
                 <Link href={action.href}>{action.text}</Link>
               </Button>
             ))}
           </motion.div>
 
+          {/* Stats — linha única no desktop, como no 21st */}
           <motion.div
-            className="mt-10 flex flex-wrap justify-center gap-6 sm:gap-8 lg:justify-start"
+            className="mt-12 flex w-full max-w-lg flex-col items-stretch gap-4 sm:max-w-none sm:flex-row sm:flex-wrap sm:items-center sm:justify-center sm:gap-x-8 sm:gap-y-4 lg:justify-start"
             variants={reduceMotion ? undefined : itemVariants}
           >
             {stats.map((stat) => (
-              <div key={stat.label} className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary ring-1 ring-primary/20">
+              <div key={stat.label} className="flex shrink-0 items-center gap-3 sm:min-w-[140px]">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary ring-1 ring-primary/20">
                   {stat.icon}
                 </div>
-                <div className="text-left">
-                  <p className="text-xl font-bold tabular-nums text-foreground">{stat.value}</p>
-                  <p className="text-sm text-muted-foreground">{stat.label}</p>
+                <div className="min-w-0 text-left">
+                  <p className="text-xl font-bold tabular-nums leading-none text-foreground">{stat.value}</p>
+                  <p className="mt-1 whitespace-nowrap text-sm text-muted-foreground">{stat.label}</p>
                 </div>
               </div>
             ))}
           </motion.div>
         </motion.div>
 
+        {/* Coluna direita — collage (posições do código 21st) */}
         <motion.div
-          className="relative mx-auto h-[380px] w-full max-w-lg sm:h-[480px] lg:max-w-none"
+          className="relative mx-auto h-[400px] w-full max-w-md sm:h-[500px] lg:mx-0 lg:max-w-none"
           variants={reduceMotion ? undefined : containerVariants}
           initial={reduceMotion ? false : "hidden"}
           animate={reduceMotion ? false : "visible"}
@@ -143,52 +164,83 @@ export function HeroSection({
           {!reduceMotion && (
             <>
               <motion.div
-                className="absolute -top-2 left-1/4 h-14 w-14 rounded-full bg-brand-400/20 dark:bg-brand-600/20"
-                variants={floatingVariants}
-                animate="animate"
+                className="absolute -top-4 left-1/4 h-16 w-16 rounded-full bg-blue-200/50 dark:bg-blue-800/30"
+                animate={floatingAnimation(0)}
                 aria-hidden
               />
               <motion.div
-                className="absolute bottom-4 right-1/4 h-10 w-10 rounded-lg bg-violet-400/20 dark:bg-violet-600/20"
-                variants={floatingVariants}
-                animate="animate"
-                style={{ animationDelay: "0.5s" }}
+                className="absolute bottom-0 right-1/4 h-12 w-12 rounded-lg bg-purple-200/50 dark:bg-purple-800/30"
+                animate={floatingAnimation(0.5)}
                 aria-hidden
               />
               <motion.div
-                className="absolute bottom-1/3 left-2 h-5 w-5 rounded-full bg-emerald-400/25 dark:bg-emerald-600/20"
-                variants={floatingVariants}
-                animate="animate"
-                style={{ animationDelay: "1s" }}
+                className="absolute bottom-1/4 left-4 h-6 w-6 rounded-full bg-green-200/50 dark:bg-green-800/30"
+                animate={floatingAnimation(1)}
                 aria-hidden
               />
             </>
           )}
 
           {images[0] && (
-            <motion.div
-              className="absolute left-1/2 top-0 h-44 w-44 -translate-x-1/2 rounded-2xl border border-border bg-card p-2 shadow-xl shadow-black/10 sm:h-60 sm:w-60"
-              variants={reduceMotion ? undefined : imageVariants}
-            >
-              <Image src={images[0].src} alt={images[0].alt} width={240} height={240} className="h-full w-full rounded-xl object-cover" priority />
-            </motion.div>
+            <div className="absolute left-1/2 top-0 z-20 -translate-x-1/2">
+              <motion.div
+                className="h-48 w-48 rounded-2xl border border-border/60 bg-card p-2 shadow-2xl shadow-black/10 sm:h-64 sm:w-64 dark:shadow-black/30"
+                style={{ transformOrigin: "bottom center" }}
+                variants={reduceMotion ? undefined : imageVariants(0.2)}
+                whileHover={reduceMotion ? undefined : { y: -6, scale: 1.02 }}
+                transition={{ type: "spring", stiffness: 300, damping: 20 }}
+              >
+                <Image
+                  src={images[0].src}
+                  alt={images[0].alt}
+                  width={512}
+                  height={512}
+                  quality={90}
+                  priority
+                  sizes="(max-width: 640px) 192px, 256px"
+                  className="h-full w-full rounded-xl object-cover"
+                />
+              </motion.div>
+            </div>
           )}
 
           {images[1] && (
             <motion.div
-              className="absolute right-0 top-[28%] h-36 w-36 rounded-2xl border border-border bg-card p-2 shadow-xl shadow-black/10 sm:h-52 sm:w-52"
-              variants={reduceMotion ? undefined : imageVariants}
+              className="absolute right-0 top-1/3 z-30 h-40 w-40 rounded-2xl border border-border/60 bg-card p-2 shadow-2xl shadow-black/10 sm:h-56 sm:w-56 dark:shadow-black/30"
+              style={{ transformOrigin: "left center" }}
+              variants={reduceMotion ? undefined : imageVariants(0.35)}
+              whileHover={reduceMotion ? undefined : { y: -6, scale: 1.02 }}
+              transition={{ type: "spring", stiffness: 300, damping: 20 }}
             >
-              <Image src={images[1].src} alt={images[1].alt} width={208} height={208} className="h-full w-full rounded-xl object-cover" />
+              <Image
+                src={images[1].src}
+                alt={images[1].alt}
+                width={448}
+                height={448}
+                quality={90}
+                sizes="(max-width: 640px) 160px, 224px"
+                className="h-full w-full rounded-xl object-cover"
+              />
             </motion.div>
           )}
 
           {images[2] && (
             <motion.div
-              className="absolute bottom-0 left-0 h-28 w-28 rounded-2xl border border-border bg-card p-2 shadow-xl shadow-black/10 sm:h-44 sm:w-44"
-              variants={reduceMotion ? undefined : imageVariants}
+              className="absolute bottom-0 left-0 z-10 h-32 w-32 rounded-2xl border border-border/60 bg-card p-2 shadow-2xl shadow-black/10 sm:h-48 sm:w-48 dark:shadow-black/30"
+              style={{ transformOrigin: "top right" }}
+              variants={reduceMotion ? undefined : imageVariants(0.5)}
+              whileHover={reduceMotion ? undefined : { y: -6, scale: 1.02 }}
+              transition={{ type: "spring", stiffness: 300, damping: 20 }}
             >
-              <Image src={images[2].src} alt={images[2].alt} width={176} height={176} className="h-full w-full rounded-xl object-cover" />
+              <Image
+                src={images[2].src}
+                alt={images[2].alt}
+                width={384}
+                height={384}
+                quality={90}
+                sizes="(max-width: 640px) 128px, 192px"
+                className="h-full w-full rounded-xl object-cover"
+              />
             </motion.div>
           )}
         </motion.div>

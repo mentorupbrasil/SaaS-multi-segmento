@@ -1,21 +1,23 @@
 "use client";
 
+import Link from "next/link";
 import { Icon } from "@/components/icon";
 import { HeroSection } from "@/components/marketing/hero-section";
 import { getSegmentTotal } from "@/lib/segment-vitrine";
 
+/** Imagens em alta resolução (800px+) — nichos do GestorPro */
 const HERO_IMAGES = [
   {
-    src: "https://images.unsplash.com/photo-1621605815971-fbc98d665033?auto=format&fit=crop&q=80&w=480&h=480",
-    alt: "Profissional atendendo cliente em barbearia",
+    src: "https://images.unsplash.com/photo-1621605815971-fbc98d665033?auto=format&fit=crop&crop=faces,center&q=90&w=800&h=800",
+    alt: "Barbearia — profissional atendendo cliente",
   },
   {
-    src: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&q=80&w=480&h=480",
-    alt: "Equipe de clínica utilizando sistema de gestão",
+    src: "https://images.unsplash.com/photo-1579684385127-1ef15f5a9529?auto=format&fit=crop&crop=entropy&cs=tinysrgb&q=90&w=800&h=800",
+    alt: "Clínica — médica em consultório",
   },
   {
-    src: "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&q=80&w=480&h=480",
-    alt: "Empreendedor gerenciando negócio no notebook",
+    src: "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?auto=format&fit=crop&crop=entropy&cs=tinysrgb&q=90&w=800&h=800",
+    alt: "Equipe de negócio em reunião de gestão",
   },
 ];
 
@@ -41,12 +43,22 @@ export function HomeHero({ starterPrice }: { starterPrice?: number }) {
       subtitle={`Escolha o seu segmento e tenha agenda, clientes, serviços e financeiro com a linguagem do seu nicho. Cadastro em minutos, a partir de ${priceLabel}/mês — acesso após confirmação do pagamento.`}
       actions={[
         {
-          text: "Assinar agora",
+          text: (
+            <>
+              Assinar agora
+              <Icon name="ArrowRight" className="h-4 w-4" />
+            </>
+          ),
           href: "/signup",
-          className: "gap-2",
+          className: "gap-2 shadow-md shadow-primary/20",
         },
         {
-          text: "Ver planos",
+          text: (
+            <>
+              Ver planos
+              <Icon name="ArrowRight" className="h-4 w-4" />
+            </>
+          ),
           href: "/precos",
           variant: "outline",
           className: "gap-2",
