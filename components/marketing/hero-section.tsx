@@ -62,6 +62,74 @@ function imageVariants(delay = 0) {
   };
 }
 
+function statItemVariants() {
+  return {
+    hidden: { opacity: 0, y: 12 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.45,
+        ease: [0.21, 0.47, 0.32, 0.98] as const,
+      },
+    },
+  };
+}
+
+const statsContainerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.08, delayChildren: 0.15 },
+  },
+};
+
+function HeroStats({
+  stats,
+  reduceMotion,
+}: {
+  stats: StatProps[];
+  reduceMotion: boolean | null;
+}) {
+  return (
+    <motion.div
+      className="mt-10 w-full max-w-xl lg:max-w-none"
+      variants={reduceMotion ? undefined : itemVariants}
+    >
+      <div className="overflow-hidden rounded-2xl border border-border/70 bg-gradient-to-br from-card/90 via-card/70 to-muted/30 shadow-sm ring-1 ring-black/[0.03] backdrop-blur-sm dark:from-card/80 dark:via-card/60 dark:to-muted/20 dark:ring-white/[0.04]">
+        <motion.div
+          className="grid grid-cols-3 divide-x divide-border/60"
+          variants={reduceMotion ? undefined : statsContainerVariants}
+          initial={reduceMotion ? false : "hidden"}
+          animate={reduceMotion ? false : "visible"}
+        >
+          {stats.map((stat) => (
+            <motion.div
+              key={stat.label}
+              className="group relative flex flex-col items-center gap-2 px-2 py-4 transition-colors hover:bg-primary/[0.04] sm:px-4 sm:py-5 lg:items-start lg:px-5"
+              variants={reduceMotion ? undefined : statItemVariants()}
+              whileHover={reduceMotion ? undefined : { y: -2 }}
+              transition={{ type: "spring", stiffness: 400, damping: 28 }}
+            >
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-primary/15 to-primary/5 text-primary shadow-inner ring-1 ring-primary/15 transition-transform group-hover:scale-105 sm:h-10 sm:w-10">
+                {stat.icon}
+              </div>
+              <div className="min-w-0 text-center lg:text-left">
+                <p className="text-base font-bold tabular-nums tracking-tight text-foreground sm:text-xl">
+                  {stat.value}
+                </p>
+                <p className="mt-0.5 text-[10px] leading-snug text-muted-foreground sm:text-xs">
+                  {stat.label}
+                </p>
+              </div>
+            </motion.div>
+          ))}
+        </motion.div>
+      </div>
+    </motion.div>
+  );
+}
+
 function floatingAnimation(delay = 0) {
   return {
     y: [0, -10, 0],
@@ -135,23 +203,7 @@ export function HeroSection({
             ))}
           </motion.div>
 
-          {/* Stats — linha única no desktop, como no 21st */}
-          <motion.div
-            className="mt-12 flex flex-wrap justify-center gap-x-8 gap-y-4 lg:justify-start"
-            variants={reduceMotion ? undefined : itemVariants}
-          >
-            {stats.map((stat) => (
-              <div key={stat.label} className="flex items-center gap-3">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary ring-1 ring-primary/20">
-                  {stat.icon}
-                </div>
-                <div className="text-left">
-                  <p className="text-xl font-bold tabular-nums leading-none text-foreground">{stat.value}</p>
-                  <p className="mt-1 text-sm text-muted-foreground">{stat.label}</p>
-                </div>
-              </div>
-            ))}
-          </motion.div>
+          <HeroStats stats={stats} reduceMotion={reduceMotion} />
         </motion.div>
 
         {/* Coluna direita — collage (posições do código 21st) */}
