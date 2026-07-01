@@ -194,7 +194,7 @@ export function FeaturesDirectory({ initialQuery = "" }: FeaturesDirectoryProps)
                       }}
                       className="group flex items-start gap-3 rounded-2xl border border-slate-200 bg-white p-4 transition-all hover:-translate-y-0.5 hover:border-brand-200 hover:shadow-md"
                     >
-                      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-brand-50 to-violet-50 text-brand-600 ring-1 ring-brand-100">
+                      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-brand-50 to-brand-100 text-brand-600 ring-1 ring-brand-100">
                         <Icon name={item.icon} className="h-4 w-4" />
                       </span>
                       <span className="min-w-0">
@@ -228,7 +228,7 @@ export function FeaturesDirectory({ initialQuery = "" }: FeaturesDirectoryProps)
               filteredGroups.map((group) => (
                 <section key={group.id} id={group.id} className="scroll-mt-36">
                   <div className="mb-5 flex items-center gap-3">
-                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-brand-50 to-violet-50 text-brand-600 ring-1 ring-brand-100">
+                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-brand-50 to-brand-100 text-brand-600 ring-1 ring-brand-100">
                       <Icon name={FEATURE_GROUP_ICONS[group.id] ?? "Layers"} className="h-5 w-5" />
                     </span>
                     <div>
@@ -247,7 +247,7 @@ export function FeaturesDirectory({ initialQuery = "" }: FeaturesDirectoryProps)
                         className="group scroll-mt-36 rounded-2xl border border-slate-200 bg-white p-5 transition-all hover:border-brand-200 hover:shadow-md"
                       >
                         <div className="flex items-start justify-between gap-2">
-                          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-brand-50 to-violet-50 text-brand-600 ring-1 ring-brand-100">
+                          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-brand-50 to-brand-100 text-brand-600 ring-1 ring-brand-100">
                             <Icon name={item.icon} className="h-4 w-4" />
                           </span>
                           <FeatureBadge item={item} />

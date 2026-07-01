@@ -65,7 +65,7 @@ export function PricingCards({
           x: (rect.left + rect.width / 2) / window.innerWidth,
           y: (rect.top + rect.height / 2) / window.innerHeight,
         },
-        colors: ["#6366f1", "#8b5cf6", "#a855f7", "#e2e8f0"],
+        colors: ["#72e3ad", "#48c988", "#006239", "#e2e8f0"],
         ticks: 200,
         gravity: 1.2,
         decay: 0.94,

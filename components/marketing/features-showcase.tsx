@@ -129,7 +129,7 @@ export function FeaturesShowcase() {
           {active && (
             <div className="card-elevated mt-5 p-5 sm:p-6">
               <div className="mb-4 flex items-start gap-3">
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-brand-50 to-violet-50 text-brand-600 ring-1 ring-brand-100">
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-brand-50 to-brand-100 text-brand-600 ring-1 ring-brand-100">
                   <Icon name={FEATURE_GROUP_ICONS[active.id] ?? "Layers"} className="h-5 w-5" />
                 </span>
                 <div>

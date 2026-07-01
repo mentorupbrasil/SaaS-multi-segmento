@@ -13,7 +13,7 @@ export function ComingSoon({
     <div>
       <h1 className="text-2xl font-bold text-slate-900">{title}</h1>
       <div className="card mt-6 flex flex-col items-center gap-3 p-12 text-center">
-        <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-50 to-violet-50 text-brand-600 ring-1 ring-brand-100">
+        <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-50 to-brand-100 text-brand-600 ring-1 ring-brand-100">
           <Icon name={icon} className="h-7 w-7" />
         </div>
         <h2 className="text-lg font-semibold text-slate-900">Módulo em breve</h2>

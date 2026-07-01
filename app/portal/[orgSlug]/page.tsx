@@ -20,7 +20,7 @@ export default async function PortalLandingPage({
   const bookingSlug = org.publicBookingSlug ?? org.slug;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-brand-50 via-white to-violet-50">
+    <div className="min-h-screen bg-gradient-to-br from-brand-50 via-white to-brand-100">
       <div className="mx-auto flex min-h-screen max-w-lg flex-col justify-center px-6 py-12">
         <div className="card overflow-hidden">
           <div className="border-b border-slate-100 bg-slate-50/60 px-8 py-6 text-center">

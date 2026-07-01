@@ -131,10 +131,10 @@ export default async function SegmentLandingPage({
 
           {/* Card de benefícios */}
           <div className="relative mx-auto w-full max-w-md">
-            <div className="absolute -inset-4 rounded-3xl bg-gradient-to-br from-brand-200/40 via-violet-200/40 to-fuchsia-200/40 blur-2xl" />
+            <div className="absolute -inset-4 rounded-3xl bg-gradient-to-br from-brand-200/40 via-brand-200/40 to-brand-300/40 blur-2xl" />
             <div className="relative rounded-2xl border border-slate-200 bg-white p-7 shadow-2xl shadow-slate-300/40">
               <div className="flex items-center gap-3">
-                <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-brand-600 to-fuchsia-600 text-white">
+                <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-brand-600 to-brand-700 text-white">
                   <Icon name={seg.icon} className="h-6 w-6" />
                 </span>
                 <div>
@@ -174,7 +174,7 @@ export default async function SegmentLandingPage({
             if (!mod) return null;
             return (
               <div key={id} className="card p-6 transition-shadow hover:shadow-md">
-                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-brand-50 to-violet-50 text-brand-600 ring-1 ring-brand-100">
+                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-brand-50 to-brand-100 text-brand-600 ring-1 ring-brand-100">
                   <Icon name={mod.nav[0]?.icon ?? "Tag"} className="h-5 w-5" />
                 </div>
                 <h3 className="mt-4 flex items-center gap-2 font-semibold text-slate-900">
@@ -216,7 +216,7 @@ export default async function SegmentLandingPage({
             {extras.groups.map((group) => (
               <div key={group.id} className="card p-6">
                 <h3 className="flex items-center gap-2 font-semibold text-slate-900">
-                  <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-brand-50 to-violet-50 text-brand-600 ring-1 ring-brand-100">
+                  <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-brand-50 to-brand-100 text-brand-600 ring-1 ring-brand-100">
                     <Icon name={group.icon} className="h-5 w-5" />
                   </span>
                   {group.title}
@@ -490,7 +490,7 @@ export default async function SegmentLandingPage({
 
       {/* CTA final */}
       <section className="section py-16">
-        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-brand-600 via-brand-700 to-violet-700 px-8 py-16 text-center shadow-xl">
+        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-brand-600 via-brand-700 to-brand-800 px-8 py-16 text-center shadow-xl">
           <div className="absolute inset-0 bg-grid opacity-20" />
           <div className="relative">
             <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">

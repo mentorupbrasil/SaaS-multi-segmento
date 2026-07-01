@@ -118,7 +118,7 @@ function AnimatedPrimaryCta({
 }) {
   return (
     <span className="relative inline-block overflow-hidden rounded-full p-[1.5px]">
-      <span className="absolute inset-[-1000%] motion-safe:animate-[spin_2.5s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#6366f1_50%,#E2CBFF_100%)] motion-reduce:hidden" />
+      <span className="absolute inset-[-1000%] motion-safe:animate-[spin_2.5s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#d4f5e5_0%,#72e3ad_50%,#d4f5e5_100%)] motion-reduce:hidden" />
       <Link
         href={href}
         className={cn(

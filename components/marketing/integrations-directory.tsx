@@ -22,7 +22,7 @@ function IntegrationCard({ item }: { item: Integration }) {
   return (
     <article className="group relative flex flex-col overflow-hidden rounded-2xl border border-slate-200/80 bg-white p-6 shadow-sm transition-all hover:-translate-y-0.5 hover:border-brand-200 hover:shadow-lg hover:shadow-brand-500/5">
       <div className="flex items-start justify-between gap-3">
-        <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-brand-500 to-violet-600 text-white shadow-lg shadow-brand-500/25 transition-transform group-hover:scale-105">
+        <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-brand-500 to-brand-700 text-white shadow-lg shadow-brand-500/25 transition-transform group-hover:scale-105">
           <Icon name={item.icon} className="h-5 w-5" />
         </span>
         <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-emerald-700 ring-1 ring-emerald-100">
@@ -242,7 +242,7 @@ export function IntegrationsDirectory({ initialQuery = "" }: IntegrationsDirecto
             </Link>
           </div>
 
-          <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-violet-950 p-8 text-white lg:p-10">
+          <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-brand-900 p-8 text-white lg:p-10">
             <p className="text-xs font-semibold uppercase tracking-wider text-brand-300">
               Enterprise
             </p>

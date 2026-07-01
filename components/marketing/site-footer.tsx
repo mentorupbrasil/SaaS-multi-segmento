@@ -68,7 +68,7 @@ export function SiteFooter() {
   return (
     <footer className="border-t border-slate-800 bg-slate-950 text-slate-300">
       {/* CTA final — padrão Notion/Monday */}
-      <div className="border-b border-slate-800/80 bg-gradient-to-r from-brand-950/40 to-violet-950/30">
+      <div className="border-b border-slate-800/80 bg-gradient-to-r from-brand-900/40 to-brand-800/30">
         <div className="section flex flex-col items-start justify-between gap-5 py-12 sm:flex-row sm:items-center">
           <div>
             <p className="text-xl font-bold text-white">Assine e comece hoje</p>

@@ -65,7 +65,7 @@ export default function CasosPage() {
         <div className="grid gap-6 md:grid-cols-3">
           {CASES.map((c) => (
             <div key={c.title} className="card p-6">
-              <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-brand-50 to-violet-50 text-brand-600 ring-1 ring-brand-100">
+              <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-brand-50 to-brand-100 text-brand-600 ring-1 ring-brand-100">
                 <Icon name={c.icon} className="h-5 w-5" />
               </span>
               <span className="mt-4 block text-xs font-semibold uppercase tracking-wide text-brand-600">
@@ -81,7 +81,7 @@ export default function CasosPage() {
       <Testimonials />
 
       <section className="section pb-16">
-        <div className="rounded-3xl bg-gradient-to-br from-brand-600 to-violet-700 px-8 py-12 text-center text-white shadow-xl">
+        <div className="rounded-3xl bg-gradient-to-br from-brand-600 to-brand-800 px-8 py-12 text-center text-white shadow-xl">
           <h2 className="text-2xl font-bold sm:text-3xl">Faça parte dessa lista</h2>
           <p className="mx-auto mt-2 max-w-xl text-brand-100">
             Crie sua conta e organize o seu negócio como os nossos clientes.

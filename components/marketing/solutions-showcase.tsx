@@ -9,8 +9,8 @@ import { Icon } from "@/components/icon";
 import { cn } from "@/lib/utils";
 
 const ACCENTS = [
-  "from-brand-500/10 via-violet-500/5 to-transparent",
-  "from-violet-500/10 via-fuchsia-500/5 to-transparent",
+  "from-brand-500/10 via-brand-400/5 to-transparent",
+  "from-brand-400/10 via-brand-500/5 to-transparent",
   "from-emerald-500/10 via-brand-500/5 to-transparent",
   "from-amber-500/10 via-orange-500/5 to-transparent",
 ] as const;
@@ -19,7 +19,7 @@ function SolutionPreview({ solution, accent }: { solution: Solution; accent: str
   return (
     <div className={cn("relative h-full overflow-hidden p-6 sm:p-8 lg:p-10", "bg-gradient-to-br", accent)}>
       <div className="absolute -right-16 -top-16 h-48 w-48 rounded-full bg-brand-400/10 blur-3xl" />
-      <div className="absolute -bottom-20 -left-10 h-56 w-56 rounded-full bg-violet-400/10 blur-3xl" />
+      <div className="absolute -bottom-20 -left-10 h-56 w-56 rounded-full bg-brand-400/10 blur-3xl" />
 
       <div className="relative">
         <div className="flex items-start gap-3 rounded-2xl border border-slate-200/80 bg-white/90 p-4 shadow-sm backdrop-blur-sm">
@@ -107,7 +107,7 @@ export function SolutionsShowcase() {
                           className={cn(
                             "flex h-10 w-10 shrink-0 items-center justify-center rounded-xl transition-colors",
                             isActive
-                              ? "bg-gradient-to-br from-brand-500 to-violet-600 text-white shadow-lg shadow-brand-500/25"
+                              ? "bg-gradient-to-br from-brand-500 to-brand-700 text-white shadow-lg shadow-brand-500/25"
                               : "bg-white text-slate-500 ring-1 ring-slate-200/80",
                           )}
                         >
@@ -183,14 +183,14 @@ export function SolutionsShowcase() {
               <div
                 className={cn(
                   "absolute inset-x-0 top-0 h-1 bg-gradient-to-r opacity-0 transition-opacity group-hover:opacity-100",
-                  i === 0 && "from-brand-500 to-violet-500",
-                  i === 1 && "from-violet-500 to-fuchsia-500",
+                  i === 0 && "from-brand-500 to-brand-400",
+                  i === 1 && "from-brand-400 to-brand-500",
                   i === 2 && "from-emerald-500 to-brand-500",
                   i === 3 && "from-amber-500 to-orange-500",
                   solution.slug === activeSlug && "opacity-100",
                 )}
               />
-              <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-brand-50 to-violet-50 text-brand-600 ring-1 ring-brand-100">
+              <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-brand-50 to-brand-100 text-brand-600 ring-1 ring-brand-100">
                 <Icon name={solution.icon} className="h-4 w-4" />
               </span>
               <h3 className="mt-3 text-sm font-semibold text-slate-900 group-hover:text-brand-700">

@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 32" role="img" aria-label="Tailwind CSS">
+  <path fill="#06B6D4" d="M27 31c-6 0-9.5-3-7.5-6.6 2.4-4.1 6.3-9.9 10.1-14.5C33.3.7 36.7-1.5 40.6.7L27 31zM13.5 31C5.5 31 1 27.1 4.5 20.5 8.3 13.3 15.5 4.8 21.5-1.1 24.6-4.3 27.5-5.5 30-4.5L13.5 31z"/>
+  <text
+    x="48"
+    y="22"
+    fill="currentColor"
+    font-family="ui-sans-serif, system-ui, sans-serif"
+    font-size="15"
+    font-weight="600"
+    letter-spacing="-0.02em"
+  >
+    Tailwind CSS
+  </text>
+</svg>

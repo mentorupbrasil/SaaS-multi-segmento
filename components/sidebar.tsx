@@ -116,7 +116,7 @@ export function SidebarContent({
     <div className={cn("flex h-full flex-col bg-card", className)}>
       <div className="flex items-center justify-between gap-2 border-b border-border px-5 py-4">
         <div className="flex items-center gap-2.5">
-          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-brand-600 to-violet-600 text-white shadow-sm">
+          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-brand-600 to-brand-700 text-white shadow-sm">
             <Layers className="h-4 w-4" />
           </span>
           <span className="text-base font-bold tracking-tight text-foreground">

@@ -11,6 +11,10 @@ const nextConfig = {
         protocol: "https",
         hostname: "deifkwefumgah.cloudfront.net",
       },
+      {
+        protocol: "https",
+        hostname: "cdn.simpleicons.org",
+      },
     ],
   },
   experimental: {

@@ -12,7 +12,8 @@ interface Logo {
   id: string;
   description: string;
   image: string;
-  className?: string;
+  /** Logos com cor de marca — não inverter no dark mode */
+  preserveColor?: boolean;
 }
 
 const DEFAULT_LOGOS: Logo[] = [
@@ -20,51 +21,68 @@ const DEFAULT_LOGOS: Logo[] = [
     id: "logo-1",
     description: "Astro",
     image: "https://deifkwefumgah.cloudfront.net/shadcnblocks/block/logos/astro-wordmark.svg",
-    className: "h-7 w-auto",
   },
   {
     id: "logo-2",
     description: "Figma",
     image: "https://deifkwefumgah.cloudfront.net/shadcnblocks/block/logos/figma-wordmark.svg",
-    className: "h-7 w-auto",
   },
   {
     id: "logo-3",
     description: "Next.js",
     image: "https://deifkwefumgah.cloudfront.net/shadcnblocks/block/logos/nextjs-wordmark.svg",
-    className: "h-7 w-auto",
   },
   {
     id: "logo-4",
     description: "React",
     image: "https://deifkwefumgah.cloudfront.net/shadcnblocks/block/logos/react-wordmark.svg",
-    className: "h-7 w-auto",
   },
   {
     id: "logo-5",
     description: "shadcn/ui",
     image: "https://deifkwefumgah.cloudfront.net/shadcnblocks/block/logos/shadcn-ui-wordmark.svg",
-    className: "h-7 w-auto",
   },
   {
     id: "logo-6",
     description: "Supabase",
     image: "https://deifkwefumgah.cloudfront.net/shadcnblocks/block/logos/supabase-wordmark.svg",
-    className: "h-7 w-auto",
+    preserveColor: true,
   },
   {
     id: "logo-7",
     description: "Tailwind CSS",
-    image: "https://deifkwefumgah.cloudfront.net/shadcnblocks/block/logos/tailwind-wordmark.svg",
-    className: "h-4 w-auto",
+    image: "/logos/tailwindcss.svg",
+    preserveColor: true,
   },
   {
     id: "logo-8",
     description: "Vercel",
     image: "https://deifkwefumgah.cloudfront.net/shadcnblocks/block/logos/vercel-wordmark.svg",
-    className: "h-7 w-auto",
   },
 ];
+
+const LOGO_SLOT_CLASS = "mx-5 flex h-8 w-[7.5rem] shrink-0 items-center justify-center sm:mx-6 md:mx-8";
+const LOGO_IMAGE_CLASS =
+  "h-7 w-full max-w-[7.5rem] object-contain object-center opacity-80 transition-opacity hover:opacity-100";
+
+function LogoImage({ logo }: { logo: Logo }) {
+  return (
+    <div className={LOGO_SLOT_CLASS}>
+      <Image
+        src={logo.image}
+        alt={logo.description}
+        width={120}
+        height={28}
+        unoptimized
+        className={cn(
+          LOGO_IMAGE_CLASS,
+          !logo.preserveColor && "dark:brightness-0 dark:invert dark:opacity-70 dark:hover:opacity-100",
+          logo.preserveColor && "dark:opacity-70 dark:hover:opacity-100",
+        )}
+      />
+    </div>
+  );
+}
 
 interface LogosStripProps {
   heading?: string;
@@ -115,23 +133,8 @@ export function LogosStrip({
           <Carousel opts={{ loop: true, align: "start", dragFree: true }} plugins={plugins} className="w-full">
             <CarouselContent className="ml-0">
               {carouselLogos.map((logo, index) => (
-                <CarouselItem
-                  key={`${logo.id}-${index}`}
-                  className="flex basis-auto justify-center pl-0"
-                >
-                  <div className="mx-5 flex shrink-0 items-center justify-center sm:mx-6 md:mx-8">
-                    <Image
-                      src={logo.image}
-                      alt={logo.description}
-                      width={120}
-                      height={28}
-                      unoptimized
-                      className={cn(
-                        logo.className,
-                        "w-auto opacity-80 transition-opacity hover:opacity-100 dark:brightness-0 dark:invert",
-                      )}
-                    />
-                  </div>
+                <CarouselItem key={`${logo.id}-${index}`} className="flex basis-auto justify-center pl-0">
+                  <LogoImage logo={logo} />
                 </CarouselItem>
               ))}
             </CarouselContent>

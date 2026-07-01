@@ -58,7 +58,7 @@ export function SegmentsShowcase() {
                 href={`/${seg.slug}`}
                 className="group flex flex-col items-center rounded-2xl border border-slate-200/80 bg-white px-3 py-4 text-center shadow-sm transition-all hover:-translate-y-0.5 hover:border-brand-200 hover:shadow-md"
               >
-                <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-brand-50 to-violet-50 text-brand-600 ring-1 ring-brand-100">
+                <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-brand-50 to-brand-100 text-brand-600 ring-1 ring-brand-100">
                   <Icon name={seg.icon} className="h-5 w-5" />
                 </span>
                 <span className="mt-2 line-clamp-2 text-xs font-semibold leading-tight text-slate-800 group-hover:text-brand-700">

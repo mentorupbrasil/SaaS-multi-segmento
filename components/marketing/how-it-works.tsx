@@ -37,7 +37,7 @@ function StepCard({ item, featured = false }: { item: (typeof STEPS)[number]; fe
       )}
     >
       {featured && (
-        <div className="absolute inset-x-0 top-0 h-0.5 rounded-t-xl bg-gradient-to-r from-brand-500 via-violet-500 to-fuchsia-500" />
+        <div className="absolute inset-x-0 top-0 h-0.5 rounded-t-xl bg-gradient-to-r from-brand-500 via-brand-400 to-brand-500" />
       )}
       <div className="flex items-center justify-between gap-3">
         <span className="text-xs font-bold tabular-nums tracking-wider text-primary">Passo {item.step}</span>

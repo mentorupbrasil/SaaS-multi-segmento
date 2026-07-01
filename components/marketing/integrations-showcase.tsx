@@ -1,114 +1,82 @@
+import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Check } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { INTEGRATIONS, getIntegrationTotal } from "@/lib/integrations";
 import { Icon } from "@/components/icon";
-import { SectionHeader } from "./section-header";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
-const PREVIEW_IDS = ["whatsapp", "pix", "asaas", "google_calendar", "public_booking", "mercadopago"];
+/** Logos oficiais (Simple Icons CDN) — fallback para ícone Lucide */
+const INTEGRATION_LOGOS: Record<string, { src: string; darkInvert?: boolean }> = {
+  whatsapp: { src: "https://cdn.simpleicons.org/whatsapp/25D366" },
+  pix: { src: "https://cdn.simpleicons.org/pix/32BCAD" },
+  mercadopago: { src: "https://cdn.simpleicons.org/mercadopago/00B1EA" },
+  google_calendar: { src: "https://cdn.simpleicons.org/googlecalendar/4285F4" },
+  public_booking: { src: "https://cdn.simpleicons.org/calendly/006BFF" },
+  channel_manager: { src: "https://cdn.simpleicons.org/airbnb/FF5A5F" },
+  instagram: { src: "https://cdn.simpleicons.org/instagram/E4405F", darkInvert: false },
+  export: { src: "https://cdn.simpleicons.org/googlesheets/34A853" },
+};
+
+function IntegrationLogo({ id, name, icon }: { id: string; name: string; icon: string }) {
+  const logo = INTEGRATION_LOGOS[id];
+
+  if (logo) {
+    return (
+      <Image
+        src={logo.src}
+        alt=""
+        width={16}
+        height={16}
+        unoptimized
+        className={cn("size-4 shrink-0", logo.darkInvert !== false && "dark:brightness-0 dark:invert")}
+      />
+    );
+  }
+
+  return <Icon name={icon} className="size-4 shrink-0 text-muted-foreground" />;
+}
 
 export function IntegrationsShowcase() {
   const total = getIntegrationTotal();
-  const preview = PREVIEW_IDS.map((id) => INTEGRATIONS.find((i) => i.id === id)).filter(
-    (i): i is (typeof INTEGRATIONS)[number] => Boolean(i),
-  );
 
   return (
-    <section className="section-premium relative border-y border-slate-200/60 py-16 lg:py-24">
-      <div className="section-glow pointer-events-none" aria-hidden />
+    <section className="border-y border-border bg-background py-12 md:py-16">
+      <div className="section space-y-8 md:space-y-10">
+        <div className="relative z-10 mx-auto max-w-xl space-y-4 text-center md:space-y-5">
+          <span className="eyebrow mx-auto">Integrações</span>
+          <h2 className="text-balance text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+            Conecte com o que{" "}
+            <span className="gradient-text">você já usa</span>
+          </h2>
+          <p className="text-sm leading-relaxed text-muted-foreground sm:text-base">
+            {total} integrações ativas — ative no painel Conexões conforme o seu plano.
+          </p>
+        </div>
 
-      <div className="section relative">
-        <SectionHeader
-          eyebrow="Integrações"
-          title={
-            <>
-              Conecte com o que{" "}
-              <span className="gradient-text">você já usa</span>
-            </>
-          }
-          description={`${total} integrações ativas — ative no painel Conexões conforme o seu plano.`}
-        />
-
-        <div className="card-elevated mt-10 overflow-hidden">
-          <div className="grid lg:grid-cols-[1fr_1.15fr]">
-            <div className="border-b border-slate-100 p-8 sm:p-10 lg:border-b-0 lg:border-r">
-              <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">
-                Por que integrar
-              </p>
-              <ul className="mt-5 space-y-4">
-                {[
-                  {
-                    icon: "MessageCircle",
-                    title: "Comunicação automática",
-                    text: "Lembretes e confirmações no WhatsApp, sem copiar e colar.",
-                  },
-                  {
-                    icon: "Wallet",
-                    title: "Pagamentos conciliados",
-                    text: "PIX, Asaas e Mercado Pago registrados no financeiro.",
-                  },
-                  {
-                    icon: "Plug",
-                    title: "Ativação no painel",
-                    text: "Ligue cada conexão em Conexões — você controla o que usa.",
-                  },
-                ].map((item) => (
-                  <li key={item.title} className="flex items-start gap-3">
-                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-brand-50 to-violet-50 text-brand-600 ring-1 ring-brand-100">
-                      <Icon name={item.icon} className="h-4 w-4" />
-                    </span>
-                    <div>
-                      <p className="text-sm font-semibold text-slate-900">{item.title}</p>
-                      <p className="mt-0.5 text-sm leading-relaxed text-slate-600">{item.text}</p>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-
-              <div className="mt-8 flex flex-wrap gap-3">
-                <Link href="/integracoes" className="btn-primary px-5 py-2.5 shadow-md shadow-brand-600/20">
-                  Ver todas as integrações
-                  <ArrowRight className="h-4 w-4" />
-                </Link>
-                <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-700 ring-1 ring-emerald-100">
-                  <Check className="h-3.5 w-3.5" />
-                  {total} disponíveis
-                </span>
+        <div className="relative mx-auto grid max-w-2xl divide-x divide-y border border-border bg-card sm:grid-cols-2 lg:max-w-4xl lg:grid-cols-3 [&>*]:p-5 sm:[&>*]:p-6">
+          {INTEGRATIONS.map((item) => (
+            <Link
+              key={item.id}
+              href="/integracoes"
+              className="group space-y-2 transition-colors hover:bg-muted/40"
+            >
+              <div className="flex items-center gap-2">
+                <IntegrationLogo id={item.id} name={item.name} icon={item.icon} />
+                <h3 className="text-sm font-medium text-foreground group-hover:text-primary">{item.name}</h3>
               </div>
-            </div>
+              <p className="text-sm leading-snug text-muted-foreground line-clamp-2">{item.description}</p>
+            </Link>
+          ))}
+        </div>
 
-            <div className="bg-gradient-to-br from-slate-50/80 to-white p-6 sm:p-8">
-              <p className="mb-4 text-xs font-semibold uppercase tracking-wider text-slate-400">
-                Principais conexões
-              </p>
-              <div className="space-y-3">
-                {preview.map((item) => (
-                  <Link
-                    key={item.id}
-                    href="/integracoes"
-                    className="group flex items-start gap-4 rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm transition-all hover:-translate-y-0.5 hover:border-brand-200 hover:shadow-md"
-                  >
-                    <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-brand-500 to-violet-600 text-white shadow-lg shadow-brand-500/20">
-                      <Icon name={item.icon} className="h-5 w-5" />
-                    </span>
-                    <div className="min-w-0 flex-1">
-                      <div className="flex flex-wrap items-center gap-2">
-                        <h3 className="font-semibold text-slate-900 group-hover:text-brand-700">
-                          {item.name}
-                        </h3>
-                        <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-emerald-700">
-                          Disponível
-                        </span>
-                      </div>
-                      <p className="mt-1.5 text-sm leading-relaxed text-slate-600 line-clamp-2">
-                        {item.description}
-                      </p>
-                    </div>
-                    <ArrowRight className="mt-1 h-4 w-4 shrink-0 text-slate-300 transition-all group-hover:translate-x-0.5 group-hover:text-brand-600" />
-                  </Link>
-                ))}
-              </div>
-            </div>
-          </div>
+        <div className="text-center">
+          <Button asChild variant="outline" size="sm">
+            <Link href="/integracoes">
+              Ver todas as integrações
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          </Button>
         </div>
       </div>
     </section>

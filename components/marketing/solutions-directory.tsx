@@ -14,8 +14,8 @@ interface SolutionsDirectoryProps {
 }
 
 const ACCENTS = [
-  "from-brand-500/8 via-violet-500/5 to-white",
-  "from-violet-500/8 via-fuchsia-500/5 to-white",
+  "from-brand-500/8 via-brand-400/5 to-white",
+  "from-brand-400/8 via-brand-500/5 to-white",
   "from-emerald-500/8 via-brand-500/5 to-white",
   "from-amber-500/8 via-orange-500/5 to-white",
 ] as const;
@@ -105,7 +105,7 @@ export function SolutionsDirectory({ initialQuery = "" }: SolutionsDirectoryProp
                   i % 2 === 1 && "lg:order-2",
                 )}
               >
-                <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-500 to-violet-600 text-white shadow-lg shadow-brand-500/25">
+                <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-500 to-brand-700 text-white shadow-lg shadow-brand-500/25">
                   <Icon name={s.icon} className="h-6 w-6" />
                 </span>
 

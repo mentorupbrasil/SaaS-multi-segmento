@@ -5,11 +5,9 @@ import { SiteFooter } from "@/components/marketing/site-footer";
 import { HomeHero } from "@/components/marketing/home-hero";
 import { SegmentsShowcase } from "@/components/marketing/segments-showcase";
 import { IntegrationsShowcase } from "@/components/marketing/integrations-showcase";
-import { SecurityShowcase } from "@/components/marketing/security-showcase";
 import { Testimonials } from "@/components/marketing/testimonials";
 import { LogosStrip } from "@/components/marketing/social-proof-strip";
 import { HowItWorks } from "@/components/marketing/how-it-works";
-import { CtaBand } from "@/components/marketing/cta-band";
 import { FeaturesShowcase } from "@/components/marketing/features-showcase";
 import { SolutionsShowcase } from "@/components/marketing/solutions-showcase";
 import { AiShowcase } from "@/components/marketing/ai-showcase";
@@ -35,27 +33,16 @@ export default function HomePage() {
       <SegmentsShowcase />
       <HowItWorks />
       <FeaturesShowcase />
-      <CtaBand
-        variant="light"
-        title="Escolha seu plano e comece hoje"
-        description="Assine em minutos e veja o sistema se adaptar ao seu segmento."
-      />
       <SolutionsShowcase />
       <AiShowcase enabled={featureIaEnabled} />
       <IntegrationsShowcase />
-      <SecurityShowcase />
       <Testimonials />
-      <CtaBand
-        title="Organize o seu negócio hoje"
-        description="Escolha o segmento, assine o plano e comece a operar com agenda, clientes e financeiro prontos."
+      <Faq
+        groups={getHomeFaqGroups()}
+        title="Perguntas frequentes"
+        subtitle="Dúvidas"
+        description="Planos, limites, pagamento e como o GestorPro se adapta ao seu segmento."
       />
-      <div className="border-t border-border bg-muted/30">
-        <Faq
-          groups={getHomeFaqGroups()}
-          title="Perguntas frequentes"
-          description="Planos, limites, pagamento e como o GestorPro se adapta ao seu segmento."
-        />
-      </div>
       <SiteFooter />
     </div>
   );

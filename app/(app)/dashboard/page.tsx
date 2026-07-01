@@ -214,7 +214,7 @@ export default async function DashboardPage() {
   return (
     <div>
       <FadeIn className="mb-8 flex items-center gap-4">
-        <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-600 to-violet-600 text-white shadow-sm">
+        <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-600 to-brand-700 text-white shadow-sm">
           <Icon name={segment?.icon ?? "Building2"} className="h-6 w-6" />
         </span>
         <div>

@@ -96,7 +96,7 @@ export function SecurityShowcase() {
                   key={item.title}
                   className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm transition-shadow hover:shadow-md"
                 >
-                  <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-brand-50 to-violet-50 text-brand-600 ring-1 ring-brand-100">
+                  <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-brand-50 to-brand-100 text-brand-600 ring-1 ring-brand-100">
                     <Icon name={item.icon} className="h-5 w-5" />
                   </span>
                   <h3 className="mt-3 font-semibold text-slate-900">{item.title}</h3>

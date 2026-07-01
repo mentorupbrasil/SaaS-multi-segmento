@@ -22,7 +22,7 @@ export default async function PublicBookingPage({
   const services = await listPublicServices(org.id);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-brand-50 via-white to-violet-50">
+    <div className="min-h-screen bg-gradient-to-br from-brand-50 via-white to-brand-100">
       <div className="mx-auto max-w-xl px-6 py-12">
         <div className="mb-6 text-center">
           <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-100 text-brand-700">

@@ -81,7 +81,7 @@ export default async function BlogPostPage({
           })}
         </div>
 
-        <div className="mt-12 rounded-2xl bg-gradient-to-br from-brand-600 to-violet-700 p-8 text-center text-white">
+        <div className="mt-12 rounded-2xl bg-gradient-to-br from-brand-600 to-brand-800 p-8 text-center text-white">
           <h3 className="text-xl font-bold">Coloque em prática com o GestorPro</h3>
           <p className="mx-auto mt-2 max-w-md text-sm text-brand-100">
             Crie sua conta, escolha o segmento e organize o seu negócio hoje mesmo.

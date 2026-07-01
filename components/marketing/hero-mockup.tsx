@@ -34,7 +34,7 @@ function HeroMockupContent({ animated = false, wide = false }: { animated?: bool
 
   return (
     <>
-      <div className="absolute -inset-4 rounded-3xl bg-gradient-to-br from-brand-400/20 via-violet-400/20 to-fuchsia-400/20 blur-2xl dark:from-brand-600/30 dark:via-violet-600/20 dark:to-fuchsia-600/20" />
+      <div className="absolute -inset-4 rounded-3xl bg-gradient-to-br from-brand-400/20 via-brand-400/20 to-brand-500/20 blur-2xl dark:from-brand-600/30 dark:via-brand-600/20 dark:to-brand-700/20" />
       <div
         className={cn(
           "relative overflow-hidden rounded-2xl border border-border bg-card shadow-2xl shadow-black/10 dark:shadow-black/40",

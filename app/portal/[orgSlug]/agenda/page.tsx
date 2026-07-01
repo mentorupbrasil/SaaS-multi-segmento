@@ -25,7 +25,7 @@ export default async function PortalAgendaPage({
       : [];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-brand-50 via-white to-violet-50">
+    <div className="min-h-screen bg-gradient-to-br from-brand-50 via-white to-brand-100">
       <div className="mx-auto max-w-2xl px-6 py-12">
         <Link
           href={`/portal/${org.slug}`}

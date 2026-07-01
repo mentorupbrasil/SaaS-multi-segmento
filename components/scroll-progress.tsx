@@ -35,7 +35,7 @@ export function ScrollProgress({ className }: { className?: string }) {
   return (
     <motion.div
       className={cn(
-        "fixed inset-x-0 top-0 z-[100] h-[2px] origin-left bg-gradient-to-r from-brand-500 via-violet-500 to-fuchsia-500",
+        "fixed inset-x-0 top-0 z-[100] h-[2px] origin-left bg-gradient-to-r from-brand-500 via-brand-400 to-brand-500",
         className,
       )}
       style={{ scaleX }}

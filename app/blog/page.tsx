@@ -28,7 +28,7 @@ export default function BlogPage() {
               href={`/blog/${post.slug}`}
               className="card group flex flex-col overflow-hidden transition-shadow hover:shadow-md"
             >
-              <div className="flex h-40 items-center justify-center bg-gradient-to-br from-brand-50 to-violet-50">
+              <div className="flex h-40 items-center justify-center bg-gradient-to-br from-brand-50 to-brand-100">
                 <Icon name={post.cover} className="h-12 w-12 text-brand-500" />
               </div>
               <div className="flex flex-1 flex-col p-6">

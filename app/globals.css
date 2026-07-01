@@ -4,49 +4,78 @@
 
 @layer base {
   :root {
-    --font-sans: "Inter", system-ui, -apple-system, sans-serif;
-    --background: 210 40% 98%;
-    --foreground: 222 47% 11%;
-    --card: 0 0% 100%;
-    --card-foreground: 222 47% 11%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 222 47% 11%;
-    --primary: 243 75% 59%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 210 40% 96%;
-    --secondary-foreground: 222 47% 11%;
-    --muted: 210 40% 96%;
-    --muted-foreground: 215 16% 47%;
-    --accent: 210 40% 96%;
-    --accent-foreground: 222 47% 11%;
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 214 32% 91%;
-    --input: 214 32% 91%;
-    --ring: 243 75% 59%;
-    --radius: 0.75rem;
+    --font-sans: "Outfit", system-ui, -apple-system, sans-serif;
+    --font-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+    --font-mono: ui-monospace, monospace;
+    --background: 0 0% 99%;
+    --foreground: 0 0% 9%;
+    --card: 0 0% 99%;
+    --card-foreground: 0 0% 9%;
+    --popover: 0 0% 99%;
+    --popover-foreground: 0 0% 32%;
+    --primary: 152 64% 66%;
+    --primary-foreground: 157 15% 14%;
+    --secondary: 0 0% 99%;
+    --secondary-foreground: 0 0% 9%;
+    --muted: 0 0% 93%;
+    --muted-foreground: 0 0% 13%;
+    --accent: 0 0% 93%;
+    --accent-foreground: 0 0% 13%;
+    --destructive: 9 82% 43%;
+    --destructive-foreground: 0 100% 99%;
+    --border: 0 0% 87%;
+    --input: 0 0% 96%;
+    --ring: 152 64% 66%;
+    --chart-1: 152 64% 66%;
+    --chart-2: 217 91% 60%;
+    --chart-3: 258 90% 66%;
+    --chart-4: 38 92% 50%;
+    --chart-5: 160 84% 39%;
+    --sidebar: 0 0% 99%;
+    --sidebar-foreground: 0 0% 44%;
+    --sidebar-primary: 152 64% 66%;
+    --sidebar-primary-foreground: 157 15% 14%;
+    --sidebar-accent: 0 0% 93%;
+    --sidebar-accent-foreground: 0 0% 13%;
+    --sidebar-border: 0 0% 87%;
+    --sidebar-ring: 152 64% 66%;
+    --radius: 0.5rem;
+    --letter-spacing: 0.025em;
   }
 
   .dark {
-    --background: 222 47% 6%;
-    --foreground: 210 40% 98%;
-    --card: 222 47% 8%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222 47% 8%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 243 75% 65%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 217 33% 14%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217 33% 14%;
-    --muted-foreground: 215 20% 65%;
-    --accent: 217 33% 14%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 63% 45%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 217 33% 16%;
-    --input: 217 33% 16%;
-    --ring: 243 75% 65%;
+    --background: 0 0% 7%;
+    --foreground: 214 32% 91%;
+    --card: 0 0% 9%;
+    --card-foreground: 214 32% 91%;
+    --popover: 0 0% 14%;
+    --popover-foreground: 0 0% 66%;
+    --primary: 156 100% 19%;
+    --primary-foreground: 152 20% 89%;
+    --secondary: 0 0% 14%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 12%;
+    --muted-foreground: 0 0% 64%;
+    --accent: 0 0% 19%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 9 60% 20%;
+    --destructive-foreground: 20 10% 92%;
+    --border: 0 0% 16%;
+    --input: 0 0% 14%;
+    --ring: 142 69% 58%;
+    --chart-1: 142 69% 58%;
+    --chart-2: 213 94% 68%;
+    --chart-3: 258 90% 76%;
+    --chart-4: 43 96% 56%;
+    --chart-5: 172 66% 50%;
+    --sidebar: 0 0% 7%;
+    --sidebar-foreground: 0 0% 54%;
+    --sidebar-primary: 156 100% 19%;
+    --sidebar-primary-foreground: 152 20% 89%;
+    --sidebar-accent: 0 0% 19%;
+    --sidebar-accent-foreground: 0 0% 98%;
+    --sidebar-border: 0 0% 16%;
+    --sidebar-ring: 142 69% 58%;
   }
 
   * {
@@ -66,10 +95,11 @@
   body {
     @apply bg-background text-foreground antialiased;
     font-feature-settings: "rlig" 1, "calt" 1;
+    letter-spacing: var(--letter-spacing);
   }
 
   ::selection {
-    @apply bg-brand-500/20 text-foreground;
+    @apply bg-primary/20 text-foreground;
   }
 }
 
@@ -84,7 +114,7 @@
     @apply btn border border-border bg-card text-foreground shadow-sm hover:bg-accent hover:text-accent-foreground;
   }
   .btn-white {
-    @apply btn bg-white text-brand-700 shadow-sm hover:bg-brand-50 dark:bg-card dark:text-primary dark:hover:bg-accent;
+    @apply btn bg-card text-primary shadow-sm hover:bg-accent dark:hover:bg-accent;
   }
 
   .input {
@@ -99,10 +129,10 @@
   }
 
   .eyebrow {
-    @apply inline-flex items-center gap-2 rounded-full border border-brand-200/80 bg-brand-50 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-brand-700 dark:border-brand-800/60 dark:bg-brand-900/40 dark:text-brand-300;
+    @apply inline-flex items-center gap-2 rounded-full border border-primary/25 bg-primary/10 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-primary;
   }
   .gradient-text {
-    @apply bg-gradient-to-r from-brand-600 via-violet-600 to-fuchsia-600 bg-clip-text text-transparent dark:from-brand-400 dark:via-violet-400 dark:to-fuchsia-400;
+    @apply bg-gradient-to-r from-primary via-emerald-500 to-teal-600 bg-clip-text text-transparent dark:from-primary dark:via-emerald-400 dark:to-teal-400;
   }
   .section {
     @apply mx-auto max-w-6xl px-6;
@@ -114,21 +144,21 @@
   .section-glow {
     @apply pointer-events-none absolute inset-0;
     background:
-      radial-gradient(ellipse 80% 50% at 50% -20%, rgb(99 102 241 / 0.08), transparent),
-      radial-gradient(ellipse 60% 40% at 100% 50%, rgb(139 92 246 / 0.06), transparent),
-      radial-gradient(ellipse 50% 30% at 0% 80%, rgb(59 130 246 / 0.05), transparent);
+      radial-gradient(ellipse 80% 50% at 50% -20%, hsl(var(--primary) / 0.12), transparent),
+      radial-gradient(ellipse 60% 40% at 100% 50%, hsl(var(--chart-5) / 0.08), transparent),
+      radial-gradient(ellipse 50% 30% at 0% 80%, hsl(var(--chart-2) / 0.06), transparent);
   }
   .dark .section-glow {
     background:
-      radial-gradient(ellipse 80% 50% at 50% -20%, rgb(99 102 241 / 0.12), transparent),
-      radial-gradient(ellipse 60% 40% at 100% 50%, rgb(139 92 246 / 0.08), transparent),
-      radial-gradient(ellipse 50% 30% at 0% 80%, rgb(59 130 246 / 0.06), transparent);
+      radial-gradient(ellipse 80% 50% at 50% -20%, hsl(var(--primary) / 0.16), transparent),
+      radial-gradient(ellipse 60% 40% at 100% 50%, hsl(var(--chart-5) / 0.1), transparent),
+      radial-gradient(ellipse 50% 30% at 0% 80%, hsl(var(--chart-2) / 0.08), transparent);
   }
   .card-elevated {
     @apply rounded-3xl border border-border/70 bg-card shadow-xl shadow-black/5 ring-1 ring-border/50 dark:shadow-black/20;
   }
   .card-interactive {
-    @apply rounded-2xl border border-border/80 bg-card shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-brand-200/60 hover:shadow-lg hover:shadow-brand-500/5 dark:hover:border-brand-800/60;
+    @apply rounded-2xl border border-border/80 bg-card shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5;
   }
 }
 

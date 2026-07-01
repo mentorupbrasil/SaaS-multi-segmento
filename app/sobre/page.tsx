@@ -46,7 +46,7 @@ export default function SobrePage() {
         <div className="mt-14 grid gap-6 md:grid-cols-3">
           {VALUES.map((v) => (
             <div key={v.title} className="card p-6">
-              <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-brand-50 to-violet-50 text-brand-600 ring-1 ring-brand-100">
+              <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-brand-50 to-brand-100 text-brand-600 ring-1 ring-brand-100">
                 <Icon name={v.icon} className="h-5 w-5" />
               </span>
               <h3 className="mt-4 font-semibold text-slate-900">{v.title}</h3>

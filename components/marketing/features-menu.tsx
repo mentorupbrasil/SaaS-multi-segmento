@@ -1,160 +1,87 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
-import Link from "next/link";
-import { ArrowRight, Search } from "lucide-react";
+import { ALL_FEATURES } from "@/lib/features";
+import { getFeatureGroups } from "@/lib/feature-vitrine";
 import {
-  filterFeatures,
-  getFeaturedFeatures,
-  getFeatureGroups,
-  getFeatureTotal,
-  FEATURE_GROUP_ICONS,
-} from "@/lib/feature-vitrine";
-import type { FeatureItem } from "@/lib/features";
-import { Icon } from "@/components/icon";
-import { HoveredLink } from "@/components/ui/navbar-menu";
-import { Input } from "@/components/ui/input";
-import { cn } from "@/lib/utils";
+  MegaMenuColumn,
+  MegaMenuCompactItem,
+  MegaMenuGrid,
+  MegaMenuItem,
+  MegaMenuLinks,
+  MegaMenuSectionTitle,
+  MegaMenuSidebar,
+  MegaMenuStory,
+} from "@/components/marketing/mega-menu";
 
-function FeatureBadge({ item }: { item: FeatureItem }) {
-  if (item.planGated) {
-    return (
-      <span className="shrink-0 rounded-full bg-primary/10 px-1.5 py-0.5 text-[9px] font-semibold uppercase text-primary">
-        Pro+
-      </span>
-    );
-  }
-  return null;
-}
-
-function FeatureLink({ item, onClose }: { item: FeatureItem; onClose?: () => void }) {
-  return (
-    <Link
-      href={`/funcionalidades#${item.id}`}
-      onClick={onClose}
-      className="group flex items-start gap-3 rounded-xl p-2.5 transition-colors hover:bg-accent/60"
-    >
-      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-muted text-muted-foreground ring-1 ring-border transition-all group-hover:bg-primary/10 group-hover:text-primary group-hover:ring-primary/20">
-        <Icon name={item.icon} className="h-4 w-4" />
-      </span>
-      <span className="min-w-0 flex-1">
-        <span className="flex flex-wrap items-center gap-1.5">
-          <span className="text-sm font-semibold text-foreground group-hover:text-primary">{item.name}</span>
-          <FeatureBadge item={item} />
-        </span>
-        <span className="mt-0.5 block text-xs font-medium text-muted-foreground">{item.short}</span>
-      </span>
-      <ArrowRight className="mt-1 h-3.5 w-3.5 shrink-0 text-muted-foreground/40 opacity-0 transition-all group-hover:translate-x-0.5 group-hover:text-primary group-hover:opacity-100" />
-    </Link>
-  );
-}
+const PRIMARY_FEATURE_IDS = ["clientes", "agenda", "financeiro", "relatorios", "portal"] as const;
 
 export function FeaturesMenuPanel({ onClose }: { onClose?: () => void }) {
   const groups = getFeatureGroups();
-  const featured = getFeaturedFeatures();
-  const total = getFeatureTotal();
-  const [query, setQuery] = useState("");
-  const searchRef = useRef<HTMLInputElement>(null);
-
-  const isSearching = query.trim().length > 0;
-  const searchResults = useMemo(
-    () => (isSearching ? filterFeatures(query).slice(0, 10) : []),
-    [isSearching, query],
+  const primary = PRIMARY_FEATURE_IDS.map((id) => ALL_FEATURES.find((f) => f.id === id)).filter(
+    (f): f is NonNullable<typeof f> => Boolean(f),
   );
 
+  const moduleItems = groups.flatMap((group) => group.items.slice(0, 2)).slice(0, 4);
+
   return (
-    <div className="w-[min(820px,calc(100vw-2rem))]">
-      <div className="border-b border-border px-5 pb-4 pt-4">
-        <p className="text-sm font-semibold text-foreground">Encontre a funcionalidade que precisa</p>
-        <p className="mt-0.5 text-xs text-muted-foreground">
-          Clientes, agenda, financeiro, PDV, automações, portal… · {total} recursos
-        </p>
-        <div className="relative mt-3">
-          <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-          <Input
-            ref={searchRef}
-            id="features-menu-search"
-            type="search"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Ex.: comissões, estoque, ordens de serviço"
-            className="pl-10"
-          />
-        </div>
-      </div>
-
-      {isSearching ? (
-        <div className="p-5">
-          {searchResults.length === 0 ? (
-            <p className="py-8 text-center text-sm text-muted-foreground">
-              Nenhum resultado para &ldquo;{query}&rdquo;.
-            </p>
-          ) : (
-            <ul className="grid gap-1 sm:grid-cols-2">
-              {searchResults.map((item) => (
-                <li key={item.id}>
-                  <FeatureLink item={item} onClose={onClose} />
-                </li>
-              ))}
-            </ul>
-          )}
-          <p className="mt-4 border-t border-border pt-4 text-center">
-            <Link
-              href={`/funcionalidades?q=${encodeURIComponent(query.trim())}`}
-              onClick={onClose}
-              className="text-sm font-semibold text-primary hover:underline"
-            >
-              Ver todos na página de funcionalidades →
-            </Link>
-          </p>
-        </div>
-      ) : (
-        <div className="grid divide-x divide-border sm:grid-cols-3">
-          {groups.map((group) => (
-            <div key={group.id} className="bg-muted/20 p-4">
-              <div className="mb-3 flex items-start gap-2.5 px-1">
-                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary ring-1 ring-primary/20">
-                  <Icon name={FEATURE_GROUP_ICONS[group.id] ?? "Layers"} className="h-4 w-4" />
-                </span>
-                <div>
-                  <p className="text-xs font-bold text-foreground">{group.label}</p>
-                  <p className="mt-0.5 text-[11px] leading-snug text-muted-foreground">{group.description}</p>
-                </div>
-              </div>
-              <ul className="space-y-0.5">
-                {group.items.slice(0, 4).map((item) => (
-                  <li key={item.id}>
-                    <HoveredLink href={`/funcionalidades#${item.id}`} onClick={onClose}>
-                      {item.name}
-                    </HoveredLink>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
-      )}
-
-      <div className="border-t border-border px-5 py-3">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <div className="flex min-w-0 flex-wrap items-center gap-1.5">
-            <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Destaques</span>
-            {featured.slice(0, 4).map((item) => (
-              <Link
+    <MegaMenuGrid>
+      <MegaMenuColumn>
+        <div className="space-y-0.5">
+          {primary.map((item) =>
+            item ? (
+              <MegaMenuItem
                 key={item.id}
                 href={`/funcionalidades#${item.id}`}
-                onClick={onClose}
-                className="rounded-full bg-muted px-2.5 py-1 text-[11px] font-medium text-muted-foreground transition-colors hover:bg-primary/10 hover:text-primary"
-              >
-                {item.name}
-              </Link>
-            ))}
-          </div>
-          <Link href="/funcionalidades" onClick={onClose} className="shrink-0 text-xs font-semibold text-primary hover:underline">
-            Ver catálogo ({total}) →
-          </Link>
+                icon={item.icon}
+                title={item.name}
+                description={item.short}
+                onNavigate={onClose}
+              />
+            ) : null,
+          )}
         </div>
-      </div>
-    </div>
+      </MegaMenuColumn>
+
+      <MegaMenuColumn className="md:border-l md:border-border">
+        <MegaMenuSectionTitle>Módulos</MegaMenuSectionTitle>
+        <div className="space-y-0.5">
+          {moduleItems.map((item) => (
+            <MegaMenuCompactItem
+              key={item.id}
+              href={`/funcionalidades#${item.id}`}
+              icon={item.icon}
+              title={item.name}
+              description={item.short}
+              onNavigate={onClose}
+            />
+          ))}
+          <MegaMenuCompactItem
+            href="/funcionalidades"
+            icon="Sparkles"
+            title="Ver catálogo completo"
+            description="Explore todos os recursos do GestorPro."
+            onNavigate={onClose}
+          />
+        </div>
+      </MegaMenuColumn>
+
+      <MegaMenuSidebar>
+        <MegaMenuStory
+          href="/casos"
+          title="Barbearia cresce 40% com agenda online e CRM integrado."
+          subtitle="Como negócios locais usam o GestorPro para escalar."
+          onNavigate={onClose}
+        />
+        <MegaMenuLinks
+          title="Explore o GestorPro"
+          links={[
+            { href: "/funcionalidades", label: "Todas as funcionalidades" },
+            { href: "/precos", label: "GestorPro vs planilhas" },
+            { href: "/integracoes", label: "Integrações disponíveis" },
+          ]}
+          onNavigate={onClose}
+        />
+      </MegaMenuSidebar>
+    </MegaMenuGrid>
   );
 }
