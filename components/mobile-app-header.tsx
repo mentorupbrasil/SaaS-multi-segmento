@@ -28,7 +28,7 @@ export function MobileAppHeader(props: SidebarProps) {
           Gestor<span className="text-primary">Pro</span>
         </span>
       </div>
-      <ThemeToggle className="h-9 w-9" />
+      <ThemeToggle compact className="shrink-0" />
     </header>
   );
 }

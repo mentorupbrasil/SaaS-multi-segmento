@@ -123,7 +123,7 @@ export function SidebarContent({
             Gestor<span className="text-primary">Pro</span>
           </span>
         </div>
-        <ThemeToggle className="h-9 w-9 shrink-0" />
+        <ThemeToggle compact className="shrink-0" />
       </div>
 
       <div className="flex items-center gap-3 border-b border-border px-4 py-4">

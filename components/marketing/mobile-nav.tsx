@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 
 const NAV_LINKS = [
   { href: "/segmentos", label: "Segmentos" },
@@ -20,20 +21,22 @@ export function MobileNav() {
 
   return (
     <div className="lg:hidden">
-      <button
+      <Button
         type="button"
+        variant="outline"
+        size="icon"
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
         aria-label={open ? "Fechar menu" : "Abrir menu"}
-        className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 text-slate-700 transition-colors hover:bg-slate-50"
+        className="h-10 w-10"
       >
         {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-      </button>
+      </Button>
 
       <div
         className={cn(
-          "fixed inset-x-0 top-16 z-40 border-b border-slate-200 bg-white shadow-lg transition-all duration-200",
-          open ? "visible opacity-100" : "invisible opacity-0 pointer-events-none",
+          "fixed inset-x-0 top-16 z-40 border-b border-border bg-background/95 shadow-lg backdrop-blur-xl transition-all duration-200",
+          open ? "visible opacity-100" : "pointer-events-none invisible opacity-0",
         )}
       >
         <nav className="section max-h-[calc(100vh-4rem)] overflow-y-auto py-4">
@@ -43,28 +46,24 @@ export function MobileNav() {
                 <Link
                   href={link.href}
                   onClick={() => setOpen(false)}
-                  className="block rounded-xl px-3 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50 hover:text-slate-900"
+                  className="block rounded-xl px-3 py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
                 >
                   {link.label}
                 </Link>
               </li>
             ))}
           </ul>
-          <div className="mt-4 flex flex-col gap-2 border-t border-slate-100 pt-4">
-            <Link
-              href="/login"
-              onClick={() => setOpen(false)}
-              className="btn-secondary w-full justify-center"
-            >
-              Entrar
-            </Link>
-            <Link
-              href="/signup"
-              onClick={() => setOpen(false)}
-              className="btn-primary w-full justify-center"
-            >
-              Assinar agora
-            </Link>
+          <div className="mt-4 flex flex-col gap-2 border-t border-border pt-4">
+            <Button asChild variant="outline" className="w-full">
+              <Link href="/login" onClick={() => setOpen(false)}>
+                Entrar
+              </Link>
+            </Button>
+            <Button asChild className="w-full">
+              <Link href="/signup" onClick={() => setOpen(false)}>
+                Assinar agora
+              </Link>
+            </Button>
           </div>
         </nav>
       </div>
@@ -73,7 +72,7 @@ export function MobileNav() {
         <button
           type="button"
           aria-label="Fechar menu"
-          className="fixed inset-0 top-16 z-30 bg-slate-900/20"
+          className="fixed inset-0 top-16 z-30 bg-background/60 backdrop-blur-sm"
           onClick={() => setOpen(false)}
         />
       )}

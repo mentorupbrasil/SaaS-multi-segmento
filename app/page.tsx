@@ -8,7 +8,7 @@ import { IntegrationsShowcase } from "@/components/marketing/integrations-showca
 import { SecurityShowcase } from "@/components/marketing/security-showcase";
 import { Testimonials } from "@/components/marketing/testimonials";
 import { StatsBar } from "@/components/marketing/stats-bar";
-import { SocialProofStrip } from "@/components/marketing/social-proof-strip";
+import { LogosStrip } from "@/components/marketing/social-proof-strip";
 import { HowItWorks } from "@/components/marketing/how-it-works";
 import { CtaBand } from "@/components/marketing/cta-band";
 import { FeaturesShowcase } from "@/components/marketing/features-showcase";
@@ -33,7 +33,7 @@ export default function HomePage() {
       <SiteHeader />
       <HomeHero starterPrice={starterPrice ?? undefined} />
       <StatsBar />
-      <SocialProofStrip />
+      <LogosStrip />
       <SegmentsShowcase />
       <HowItWorks />
       <FeaturesShowcase />

@@ -85,7 +85,7 @@ export function AdminSidebar({
             <p className="text-xs text-muted-foreground">Super admin</p>
           </div>
         </Link>
-        <ThemeToggle className="h-9 w-9" />
+        <ThemeToggle compact className="shrink-0" />
       </div>
 
       <div className="border-b border-border py-3">

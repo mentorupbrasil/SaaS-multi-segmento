@@ -17,7 +17,7 @@ export default function AuthLayout({
       <header className="section relative flex h-16 items-center justify-between">
         <Logo />
         <nav className="flex items-center gap-2 sm:gap-4">
-          <ThemeToggle />
+          <ThemeToggle compact />
           <Link
             href="/login"
             className="hidden text-sm font-medium text-muted-foreground transition-colors hover:text-foreground sm:inline"
