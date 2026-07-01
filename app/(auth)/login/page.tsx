@@ -4,6 +4,9 @@ import { useActionState } from "react";
 import Link from "next/link";
 import { loginAction, type ActionState } from "../actions";
 import { SubmitButton } from "@/components/submit-button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 const initialState: ActionState = {};
 
@@ -11,48 +14,48 @@ export default function LoginPage() {
   const [state, formAction] = useActionState(loginAction, initialState);
 
   return (
-    <div className="w-full max-w-md">
-      <div className="card overflow-hidden">
-        <div className="border-b border-slate-100 bg-slate-50/60 px-8 py-6">
-          <h1 className="text-2xl font-bold text-slate-900">Bem-vindo de volta</h1>
-          <p className="mt-1 text-sm text-slate-500">Acesse o sistema do seu negócio.</p>
-        </div>
+    <div className="mx-auto w-full max-w-md">
+      <Card className="overflow-hidden shadow-lg shadow-black/5 dark:shadow-black/20">
+        <CardHeader className="border-b border-border bg-muted/30 pb-6">
+          <CardTitle className="text-2xl">Bem-vindo de volta</CardTitle>
+          <CardDescription>Acesse o sistema do seu negócio.</CardDescription>
+        </CardHeader>
 
-        <form action={formAction} className="space-y-4 p-8">
-          <div>
-            <label className="label" htmlFor="email">
-              E-mail
-            </label>
-            <input id="email" name="email" type="email" className="input" placeholder="voce@email.com" required />
-          </div>
-          <div>
-            <label className="label" htmlFor="password">
-              Senha
-            </label>
-            <input id="password" name="password" type="password" className="input" placeholder="Sua senha" required />
-            <p className="mt-1.5 text-right text-xs">
-              <Link href="/forgot-password" className="text-brand-700 hover:underline">
-                Esqueci minha senha
+        <CardContent className="pt-6">
+          <form action={formAction} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="email">E-mail</Label>
+              <Input id="email" name="email" type="email" placeholder="voce@email.com" required autoComplete="email" />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="password">Senha</Label>
+              <Input id="password" name="password" type="password" placeholder="Sua senha" required autoComplete="current-password" />
+              <p className="text-right text-xs">
+                <Link href="/forgot-password" className="text-primary hover:underline">
+                  Esqueci minha senha
+                </Link>
+              </p>
+            </div>
+
+            {state.error && (
+              <p className="rounded-xl bg-destructive/10 px-4 py-3 text-sm text-destructive" role="alert">
+                {state.error}
+              </p>
+            )}
+
+            <SubmitButton className="btn-primary w-full py-3 text-base" pendingText="Entrando...">
+              Entrar
+            </SubmitButton>
+
+            <p className="text-center text-sm text-muted-foreground">
+              Não tem conta?{" "}
+              <Link href="/signup" className="font-semibold text-primary hover:underline">
+                Criar minha conta
               </Link>
             </p>
-          </div>
-
-          {state.error && (
-            <p className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700">{state.error}</p>
-          )}
-
-          <SubmitButton className="w-full py-3 text-base" pendingText="Entrando...">
-            Entrar
-          </SubmitButton>
-
-          <p className="text-center text-sm text-slate-500">
-            Não tem conta?{" "}
-            <Link href="/signup" className="font-semibold text-brand-700 hover:text-brand-800">
-              Criar minha conta
-            </Link>
-          </p>
-        </form>
-      </div>
+          </form>
+        </CardContent>
+      </Card>
     </div>
   );
 }

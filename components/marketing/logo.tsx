@@ -8,8 +8,8 @@ export function Logo({ className, light = false }: { className?: string; light?:
       <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-brand-600 to-fuchsia-600 text-white shadow-sm">
         <Layers className="h-5 w-5" />
       </span>
-      <span className={cn("text-base font-bold tracking-tight", light ? "text-white" : "text-slate-900")}>
-        Gestor<span className="text-brand-600">Pro</span>
+      <span className={cn("text-base font-bold tracking-tight", light ? "text-white" : "text-foreground")}>
+        Gestor<span className="text-primary">Pro</span>
       </span>
     </Link>
   );

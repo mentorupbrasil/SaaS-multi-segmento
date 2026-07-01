@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getAuthContext } from "@/lib/auth-context";
 import { isSubscriptionActive } from "@/lib/subscription";
@@ -10,6 +9,8 @@ import { resolveSegmentModules } from "@/lib/segment-modules";
 import { markOverdueEntries } from "@/lib/finance-utils";
 import { Icon } from "@/components/icon";
 import { formatCurrency } from "@/lib/utils";
+import { StatCard, ModuleCard } from "@/components/stat-card";
+import { FadeIn } from "@/components/motion/fade-in";
 import type { ModuleId } from "@/modules/types";
 
 export default async function DashboardPage() {
@@ -212,51 +213,39 @@ export default async function DashboardPage() {
 
   return (
     <div>
-      <div className="mb-6 flex items-center gap-4">
-        <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-600 to-fuchsia-600 text-white shadow-sm">
+      <FadeIn className="mb-8 flex items-center gap-4">
+        <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-600 to-violet-600 text-white shadow-sm">
           <Icon name={segment?.icon ?? "Building2"} className="h-6 w-6" />
         </span>
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Bem-vindo à {org.name}</h1>
-          <p className="mt-0.5 text-sm text-slate-500">
+          <h1 className="text-balance text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
+            Bem-vindo à {org.name}
+          </h1>
+          <p className="mt-0.5 text-sm text-muted-foreground">
             Painel do seu sistema de {segment?.label.toLowerCase() ?? "negócio"}.
           </p>
         </div>
-      </div>
+      </FadeIn>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {visibleStats.map((s) => (
-          <Link key={s.label} href={s.href} className="card p-5 transition-all hover:-translate-y-0.5 hover:shadow-md">
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-slate-500">{s.label}</span>
-              <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-brand-50 to-violet-50 text-brand-600 ring-1 ring-brand-100">
-                <Icon name={s.icon} className="h-4 w-4" />
-              </span>
-            </div>
-            <p className="mt-3 text-2xl font-bold text-slate-900">{s.value}</p>
-          </Link>
+          <StatCard key={s.label} href={s.href} label={s.label} value={s.value} icon={s.icon} />
         ))}
       </div>
 
-      <div className="mt-8">
-        <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-slate-400">
+      <div className="mt-10">
+        <h2 className="mb-4 text-sm font-semibold uppercase tracking-wider text-muted-foreground">
           Módulos do seu segmento
         </h2>
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {nav.map((item) => (
-            <Link
+            <ModuleCard
               key={item.href}
               href={item.href}
-              className="card flex items-center gap-3 p-4 transition-all hover:-translate-y-0.5 hover:shadow-md"
-            >
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-brand-50 to-violet-50 text-brand-600 ring-1 ring-brand-100">
-                <Icon name={item.icon} className="h-5 w-5" />
-              </div>
-              <div>
-                <p className="text-sm font-medium text-slate-900">{item.label}</p>
-                {item.comingSoon && <p className="text-xs text-amber-600">Em breve</p>}
-              </div>
-            </Link>
+              label={item.label}
+              icon={item.icon}
+              comingSoon={item.comingSoon}
+            />
           ))}
         </div>
       </div>

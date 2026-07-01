@@ -1,4 +1,6 @@
 import { Icon } from "@/components/icon";
+import { FadeIn } from "@/components/motion/fade-in";
+import { Card, CardContent } from "@/components/ui/card";
 
 interface EmptyStateProps {
   title?: string;
@@ -9,11 +11,17 @@ interface EmptyStateProps {
 
 export function EmptyState({ title, description, action, icon = "FolderOpen" }: EmptyStateProps) {
   return (
-    <div className="card flex flex-col items-center p-10 text-center">
-      <Icon name={icon} className="mb-3 h-10 w-10 text-slate-300" />
-      {title && <p className="mb-1 font-medium text-slate-700">{title}</p>}
-      <p className="text-sm text-slate-500">{description}</p>
-      {action && <div className="mt-4">{action}</div>}
-    </div>
+    <FadeIn>
+      <Card className="border-dashed">
+        <CardContent className="flex flex-col items-center p-10 text-center">
+          <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-muted">
+            <Icon name={icon} className="h-7 w-7 text-muted-foreground" />
+          </div>
+          {title && <p className="mb-1 font-semibold text-foreground">{title}</p>}
+          <p className="max-w-sm text-sm text-muted-foreground">{description}</p>
+          {action && <div className="mt-5">{action}</div>}
+        </CardContent>
+      </Card>
+    </FadeIn>
   );
 }

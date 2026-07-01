@@ -12,7 +12,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   ]);
 
   return (
-    <div className="flex min-h-screen bg-slate-50">
+    <div className="flex min-h-screen bg-background">
       <AdminSidebar
         userName={session.user?.name ?? session.user?.email ?? ""}
         organizations={organizations}
@@ -20,8 +20,8 @@ export default async function AdminLayout({ children }: { children: React.ReactN
         segments={segments}
         activeSegmentId={ctx.effectiveSegmentId}
       />
-      <main className="h-screen flex-1 overflow-y-auto">
-        <div className="mx-auto max-w-6xl px-6 py-8">{children}</div>
+      <main className="flex-1 overflow-y-auto">
+        <div className="mx-auto max-w-6xl px-4 py-6 sm:px-6 sm:py-8">{children}</div>
       </main>
     </div>
   );

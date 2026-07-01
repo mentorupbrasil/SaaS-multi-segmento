@@ -1,5 +1,8 @@
+"use client";
+
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
+import { FadeIn } from "@/components/motion/fade-in";
 
 interface SectionHeaderProps {
   eyebrow: ReactNode;
@@ -17,17 +20,17 @@ export function SectionHeader({
   className,
 }: SectionHeaderProps) {
   return (
-    <div
+    <FadeIn
       className={cn(
         align === "center" ? "mx-auto max-w-3xl text-center" : "max-w-2xl text-left",
         className,
       )}
     >
       <span className="eyebrow">{eyebrow}</span>
-      <h2 className="mt-4 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl lg:text-[2.75rem] lg:leading-tight">
+      <h2 className="text-balance mt-4 text-3xl font-bold tracking-tight text-foreground sm:text-4xl lg:text-[2.75rem] lg:leading-tight">
         {title}
       </h2>
-      {description && <p className="mt-4 text-lg text-slate-600">{description}</p>}
-    </div>
+      {description && <p className="mt-4 text-lg text-muted-foreground">{description}</p>}
+    </FadeIn>
   );
 }

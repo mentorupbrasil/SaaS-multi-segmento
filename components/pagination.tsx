@@ -56,7 +56,7 @@ export function Pagination({
   const to = Math.min(currentPage * pageSize, total);
 
   return (
-    <div className="mt-4 flex flex-wrap items-center justify-between gap-3 text-sm text-slate-600">
+    <div className="mt-4 flex flex-wrap items-center justify-between gap-3 text-sm text-muted-foreground">
       <p>
         Exibindo {from}–{to} de {total}
       </p>
@@ -82,8 +82,8 @@ export function Pagination({
             href={buildHref(basePath, pageNumber, searchParams)}
             className={
               pageNumber === currentPage
-                ? "inline-flex min-w-9 items-center justify-center rounded-xl bg-brand-600 px-2.5 py-1.5 text-sm font-semibold text-white"
-                : "inline-flex min-w-9 items-center justify-center rounded-xl border border-slate-200 bg-white px-2.5 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50"
+                ? "inline-flex min-w-9 items-center justify-center rounded-xl bg-primary px-2.5 py-1.5 text-sm font-semibold text-primary-foreground"
+                : "inline-flex min-w-9 items-center justify-center rounded-xl border border-border bg-card px-2.5 py-1.5 text-sm font-medium text-foreground hover:bg-accent"
             }
             aria-current={pageNumber === currentPage ? "page" : undefined}
           >
