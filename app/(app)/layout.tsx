@@ -1,4 +1,5 @@
-import { redirect } from "next/navigation";import { getOptionalAuthContext, listOrganizationsForSwitcher } from "@/lib/auth-context";
+import { redirect } from "next/navigation";
+import { getOptionalAuthContext, listOrganizationsForSwitcher } from "@/lib/auth-context";
 import { getSegment } from "@/segments";
 import { buildNavForUser } from "@/lib/nav";
 import { requireActiveSubscription, isSubscriptionActive } from "@/lib/subscription";
@@ -68,6 +69,7 @@ export default async function AppLayout({
         segmentIcon={segment?.icon ?? "Building2"}
         userName={session?.user?.name ?? session?.user?.email ?? ""}
         navItems={navItems}
+        subscriptionActive={subscriptionActive}
         isPlatformAdmin={isPlatformAdmin}
         organizations={organizations}
         activeOrgId={ctx.orgId}

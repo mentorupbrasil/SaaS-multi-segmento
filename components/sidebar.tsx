@@ -16,6 +16,7 @@ interface SidebarProps {
   segmentIcon: string;
   userName: string;
   navItems: NavItem[];
+  subscriptionActive?: boolean;
   isPlatformAdmin?: boolean;
   organizations?: OrgOption[];
   activeOrgId?: string;
@@ -29,6 +30,7 @@ export function Sidebar({
   segmentIcon,
   userName,
   navItems,
+  subscriptionActive = true,
   isPlatformAdmin = false,
   organizations = [],
   activeOrgId = "",
@@ -39,7 +41,9 @@ export function Sidebar({
 
   const baseItems: NavItem[] = isPlatformAdmin
     ? [{ href: "/admin", label: "Centro de comando", icon: "LayoutDashboard" }]
-    : [{ href: "/dashboard", label: "Painel", icon: "LayoutDashboard" }];
+    : subscriptionActive
+      ? [{ href: "/dashboard", label: "Painel", icon: "LayoutDashboard" }]
+      : [];
   const bottomItems: NavItem[] = [
     { href: "/assinatura", label: "Assinatura", icon: "CreditCard" },
     { href: "/configuracoes", label: "Configurações", icon: "Settings" },
@@ -112,9 +116,11 @@ export function Sidebar({
 
       <nav className="flex-1 space-y-1 overflow-y-auto px-3 py-4">
         {baseItems.map(renderItem)}
-        <div className="px-3 pb-1 pt-4 text-xs font-semibold uppercase tracking-wider text-slate-400">
-          {isPlatformAdmin ? "Todos os módulos" : "Módulos"}
-        </div>
+        {navItems.length > 0 && (
+          <div className="px-3 pb-1 pt-4 text-xs font-semibold uppercase tracking-wider text-slate-400">
+            {isPlatformAdmin ? "Todos os módulos" : "Módulos"}
+          </div>
+        )}
         {navItems.map(renderItem)}
         <div className="px-3 pb-1 pt-4 text-xs font-semibold uppercase tracking-wider text-slate-400">
           Conta

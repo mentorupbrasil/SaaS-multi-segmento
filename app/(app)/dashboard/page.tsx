@@ -1,5 +1,7 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { getAuthContext } from "@/lib/auth-context";
+import { isSubscriptionActive } from "@/lib/subscription";
 import { prisma } from "@/lib/db";
 import { getSegment } from "@/segments";
 import { resolveTerms, term } from "@/lib/terms";
@@ -13,6 +15,11 @@ import type { ModuleId } from "@/modules/types";
 export default async function DashboardPage() {
   const ctx = await getAuthContext();
   const org = ctx.organization;
+
+  if (!ctx.isPlatformAdmin && !isSubscriptionActive(org)) {
+    redirect("/assinatura");
+  }
+
   const segmentId = ctx.effectiveSegmentId;
   const segment = getSegment(segmentId);
   const terms = resolveTerms(segmentId, (org.config as { terms?: Record<string, string> })?.terms);
@@ -203,9 +210,6 @@ export default async function DashboardPage() {
 
   const visibleStats = stats.filter((s) => modules.has(s.module));
 
-  const subscriptionActive =
-    org.subscriptionStatus === "ACTIVE" || org.subscriptionStatus === "TRIALING";
-
   return (
     <div>
       <div className="mb-6 flex items-center gap-4">
@@ -219,17 +223,6 @@ export default async function DashboardPage() {
           </p>
         </div>
       </div>
-
-      {!subscriptionActive && (
-        <div className="mb-6 flex items-center justify-between rounded-xl border border-amber-200 bg-amber-50 px-4 py-3">
-          <p className="text-sm text-amber-800">
-            Sua assinatura está inativa. Reative o seu plano para continuar usando o sistema.
-          </p>
-          <Link href="/assinatura" className="text-sm font-semibold text-amber-900 underline">
-            Ver planos
-          </Link>
-        </div>
-      )}
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {visibleStats.map((s) => (

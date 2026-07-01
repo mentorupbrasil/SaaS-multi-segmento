@@ -8,15 +8,13 @@ export default auth((req) => {
   const pathname = req.nextUrl.pathname;
   const requestHeaders = new Headers(req.headers);
   requestHeaders.set("x-pathname", pathname);
+  requestHeaders.set("x-url", req.url);
 
-  const response = NextResponse.next({
+  return NextResponse.next({
     request: { headers: requestHeaders },
   });
-  response.cookies.set("gp-path", pathname, { httpOnly: true, path: "/", sameSite: "lax" });
-  return response;
 });
 
 export const config = {
-  // Aplica em tudo, exceto assets estaticos e a rota de API do auth.
   matcher: ["/((?!api/auth|_next/static|_next/image|favicon.ico|.*\\..*).*)"],
 };
