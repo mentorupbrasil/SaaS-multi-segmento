@@ -23,8 +23,6 @@ interface LogosStripProps {
   className?: string;
 }
 
-import { getFeaturedSegments } from "@/lib/segment-vitrine";
-
 function buildLogoItems(): LogoItem[] {
   const featured = getFeaturedSegments();
   const featuredIds = new Set(featured.map((s) => s.id));

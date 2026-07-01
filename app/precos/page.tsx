@@ -46,7 +46,7 @@ export default function PrecosPage() {
         secondaryLabel="Tirar dúvidas"
       />
 
-      <div className="border-t border-slate-100 bg-white">
+      <div className="border-t border-border bg-background">
         <Faq
           items={getPricingFaqItems()}
           title="Dúvidas sobre planos e cobrança"
