@@ -11,6 +11,7 @@ import { SiteHeader } from "@/components/marketing/site-header";
 import { SiteFooter } from "@/components/marketing/site-footer";
 import { Pricing } from "@/components/marketing/pricing";
 import { Faq } from "@/components/marketing/faq";
+import { getSegmentLandingFaq } from "@/lib/platform-faq";
 
 export const dynamicParams = false;
 
@@ -34,11 +35,6 @@ export async function generateMetadata({
   };
 }
 
-const GENERIC_FAQ = [
-  { q: "Preciso instalar algo?", a: "Não. Funciona online no computador e no celular, com seus dados seguros na nuvem." },
-  { q: "Como começo a usar?", a: "Escolha o seu segmento e o plano, crie a conta e o sistema já fica ativo e pronto para usar na hora." },
-  { q: "Tem fidelidade ou multa?", a: "Não. Você assina por mês e pode trocar de plano ou cancelar quando quiser, sem multa." },
-];
 
 export default async function SegmentLandingPage({
   params,
@@ -91,7 +87,7 @@ export default async function SegmentLandingPage({
 
   const extras = getSegmentExtras(seg.category);
 
-  const faqItems = [...(seg.faq ?? []), ...GENERIC_FAQ];
+  const faqItems = getSegmentLandingFaq(seg);
 
   return (
     <div className="bg-white">
@@ -458,7 +454,11 @@ export default async function SegmentLandingPage({
         <Pricing />
       </div>
 
-      <Faq items={faqItems} title={`Dúvidas sobre o sistema para ${seg.label.toLowerCase()}`} />
+      <Faq
+          items={faqItems}
+          title={`Dúvidas sobre ${seg.label}`}
+          description="Perguntas do nicho e o que cada plano libera para o seu segmento."
+        />
 
       {/* Segmentos relacionados */}
       {related.length > 0 && (

@@ -13,7 +13,7 @@ const STEPS = [
     icon: "LogIn",
     step: "2",
     title: "Assine e ative sua conta",
-    text: "Escolha o plano, conclua o cadastro e pague via PIX ou cartão. Conta ativa na hora.",
+    text: "Escolha o plano (Inicial, Profissional ou Premium), conclua o cadastro e pague via Asaas. O painel libera na confirmação.",
   },
   {
     icon: "Rocket",

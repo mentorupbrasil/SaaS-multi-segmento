@@ -16,6 +16,8 @@ import { CtaBand } from "@/components/marketing/cta-band";
 import { FeaturesShowcase } from "@/components/marketing/features-showcase";
 import { SolutionsShowcase } from "@/components/marketing/solutions-showcase";
 import { AiShowcase } from "@/components/marketing/ai-showcase";
+import { Faq } from "@/components/marketing/faq";
+import { getHomeFaqGroups } from "@/lib/platform-faq";
 
 export const metadata: Metadata = {
   title: "GestorPro | A plataforma de gestão que entende o seu negócio",
@@ -104,6 +106,14 @@ export default function HomePage() {
         title="Organize o seu negócio hoje"
         description="Escolha o segmento, assine o plano e comece a operar com agenda, clientes e financeiro prontos."
       />
+
+      <div className="border-t border-slate-100 bg-slate-50/50">
+        <Faq
+          groups={getHomeFaqGroups()}
+          title="Perguntas frequentes"
+          description="Planos, limites, pagamento e como o GestorPro se adapta ao seu segmento."
+        />
+      </div>
 
       <SiteFooter />
     </div>

@@ -4,8 +4,7 @@ import { Icon } from "@/components/icon";
 import { Faq } from "@/components/marketing/faq";
 import { CtaBand } from "@/components/marketing/cta-band";
 import { MarketingShell, PageHero } from "@/components/marketing/marketing-shell";
-import { getHomeFaqGroups } from "@/lib/home-faq";
-import type { FaqGroup } from "@/components/marketing/faq";
+import { getSupportFaqGroups } from "@/lib/platform-faq";
 
 export const metadata: Metadata = {
   title: "Suporte",
@@ -36,33 +35,6 @@ const CHANNELS = [
     cta: "Ver conteúdos",
   },
 ];
-
-const ACCOUNT_FAQ: FaqGroup = {
-  id: "conta",
-  label: "Conta e acesso",
-  items: [
-    {
-      q: "Como crio a minha conta?",
-      a: "Clique em “Assinar agora”, escolha o seu segmento e o plano, preencha os dados e conclua o pagamento. A conta fica ativa assim que o pagamento for confirmado.",
-    },
-    {
-      q: "Esqueci a minha senha, e agora?",
-      a: "Na tela de login você pode redefinir a senha. Se ainda tiver problema, fale com o suporte por e-mail.",
-    },
-    {
-      q: "Como troco de plano?",
-      a: "Dentro do sistema, acesse Assinatura e escolha o novo plano. A mudança é imediata.",
-    },
-    {
-      q: "Vocês ajudam na configuração inicial?",
-      a: "Sim. Nos planos Profissional e acima, oferecemos onboarding assistido para você começar com tudo pronto.",
-    },
-  ],
-};
-
-function getSupportFaqGroups(): FaqGroup[] {
-  return [ACCOUNT_FAQ, ...getHomeFaqGroups()];
-}
 
 export default function SuportePage() {
   return (
