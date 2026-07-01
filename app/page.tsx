@@ -7,7 +7,6 @@ import { SegmentsShowcase } from "@/components/marketing/segments-showcase";
 import { IntegrationsShowcase } from "@/components/marketing/integrations-showcase";
 import { SecurityShowcase } from "@/components/marketing/security-showcase";
 import { Testimonials } from "@/components/marketing/testimonials";
-import { StatsBar } from "@/components/marketing/stats-bar";
 import { LogosStrip } from "@/components/marketing/social-proof-strip";
 import { HowItWorks } from "@/components/marketing/how-it-works";
 import { CtaBand } from "@/components/marketing/cta-band";
@@ -32,7 +31,6 @@ export default function HomePage() {
     <div className="bg-background">
       <SiteHeader />
       <HomeHero starterPrice={starterPrice ?? undefined} />
-      <StatsBar />
       <LogosStrip />
       <SegmentsShowcase />
       <HowItWorks />
