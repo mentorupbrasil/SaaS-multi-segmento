@@ -35,21 +35,21 @@ function ThemeButton({
       aria-label={label}
       aria-pressed={active}
       className={cn(
-        "group flex items-center gap-2 transition-colors duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:ring-offset-background",
-        compact ? "px-2.5 py-2" : "px-3 py-2 sm:px-4",
-        position === "first" && "rounded-l-lg border-r border-border/80",
+        "group flex items-center gap-1.5 transition-colors duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:ring-offset-background",
+        compact ? "px-2 py-1.5" : "px-2 py-1.5 sm:px-2.5",
+        position === "first" && "rounded-l-md border-r border-border/80",
         position === "middle" && "border-r border-border/80",
-        position === "last" && "rounded-r-lg",
+        position === "last" && "rounded-r-md",
         active
           ? "bg-accent text-foreground shadow-sm"
           : "bg-transparent text-muted-foreground hover:bg-accent/50 hover:text-foreground",
       )}
     >
       <Icon
-        className="h-4 w-4 shrink-0 transition-transform duration-300 group-hover:scale-110 sm:h-[1.125rem] sm:w-[1.125rem]"
+        className="h-3.5 w-3.5 shrink-0 transition-transform duration-300 group-hover:scale-110"
         aria-hidden
       />
-      {!compact && <span className="hidden select-none text-sm font-medium sm:inline">{label}</span>}
+      {!compact && <span className="hidden select-none text-xs font-medium sm:inline">{label}</span>}
     </button>
   );
 }
@@ -64,8 +64,8 @@ export function ThemeToggle({ className, compact = false }: ThemeToggleProps) {
     return (
       <div
         className={cn(
-          "inline-flex animate-pulse rounded-lg border border-border bg-muted/40",
-          compact ? "h-9 w-[7.5rem]" : "h-9 w-32 sm:w-44",
+          "inline-flex animate-pulse rounded-md border border-border bg-muted/40",
+          compact ? "h-8 w-[6.25rem]" : "h-8 w-28 sm:w-[7.75rem]",
           className,
         )}
         aria-hidden
@@ -84,7 +84,7 @@ export function ThemeToggle({ className, compact = false }: ThemeToggleProps) {
   return (
     <div
       className={cn(
-        "relative inline-flex overflow-hidden rounded-lg border border-border/80 bg-card/60 shadow-sm shadow-black/5 backdrop-blur-md transition-colors duration-500 dark:bg-card/40 dark:shadow-black/20",
+        "relative inline-flex overflow-hidden rounded-md border border-border/80 bg-card/60 shadow-sm shadow-black/5 backdrop-blur-md transition-colors duration-500 dark:bg-card/40 dark:shadow-black/20",
         className,
       )}
       role="group"

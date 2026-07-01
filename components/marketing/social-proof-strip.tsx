@@ -1,47 +1,85 @@
 "use client";
 
 import { useMemo } from "react";
-import Link from "next/link";
+import Image from "next/image";
 import AutoScroll from "embla-carousel-auto-scroll";
 import { useReducedMotion } from "framer-motion";
-import { ALL_SEGMENTS } from "@/segments";
-import { getFeaturedSegments } from "@/lib/segment-vitrine";
-import { Icon } from "@/components/icon";
 import { FadeIn } from "@/components/motion/fade-in";
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
 import { cn } from "@/lib/utils";
 
-interface LogoItem {
+interface Logo {
   id: string;
-  label: string;
-  href: string;
-  icon: string;
-}
-
-interface LogosStripProps {
-  heading?: string;
+  description: string;
+  image: string;
   className?: string;
 }
 
-function buildLogoItems(): LogoItem[] {
-  const featured = getFeaturedSegments();
-  const featuredIds = new Set(featured.map((s) => s.id));
-  const rest = ALL_SEGMENTS.filter((s) => !featuredIds.has(s.id)).slice(0, 10);
+const DEFAULT_LOGOS: Logo[] = [
+  {
+    id: "logo-1",
+    description: "Astro",
+    image: "https://deifkwefumgah.cloudfront.net/shadcnblocks/block/logos/astro-wordmark.svg",
+    className: "h-7 w-auto",
+  },
+  {
+    id: "logo-2",
+    description: "Figma",
+    image: "https://deifkwefumgah.cloudfront.net/shadcnblocks/block/logos/figma-wordmark.svg",
+    className: "h-7 w-auto",
+  },
+  {
+    id: "logo-3",
+    description: "Next.js",
+    image: "https://deifkwefumgah.cloudfront.net/shadcnblocks/block/logos/nextjs-wordmark.svg",
+    className: "h-7 w-auto",
+  },
+  {
+    id: "logo-4",
+    description: "React",
+    image: "https://deifkwefumgah.cloudfront.net/shadcnblocks/block/logos/react-wordmark.svg",
+    className: "h-7 w-auto",
+  },
+  {
+    id: "logo-5",
+    description: "shadcn/ui",
+    image: "https://deifkwefumgah.cloudfront.net/shadcnblocks/block/logos/shadcn-ui-wordmark.svg",
+    className: "h-7 w-auto",
+  },
+  {
+    id: "logo-6",
+    description: "Supabase",
+    image: "https://deifkwefumgah.cloudfront.net/shadcnblocks/block/logos/supabase-wordmark.svg",
+    className: "h-7 w-auto",
+  },
+  {
+    id: "logo-7",
+    description: "Tailwind CSS",
+    image: "https://deifkwefumgah.cloudfront.net/shadcnblocks/block/logos/tailwind-wordmark.svg",
+    className: "h-4 w-auto",
+  },
+  {
+    id: "logo-8",
+    description: "Vercel",
+    image: "https://deifkwefumgah.cloudfront.net/shadcnblocks/block/logos/vercel-wordmark.svg",
+    className: "h-7 w-auto",
+  },
+];
 
-  return [...featured, ...rest].map((seg) => ({
-    id: seg.id,
-    label: seg.label,
-    href: `/${seg.slug}`,
-    icon: seg.icon,
-  }));
+interface LogosStripProps {
+  heading?: string;
+  logos?: Logo[];
+  className?: string;
 }
 
 export function LogosStrip({
   heading = "Empresas que utilizam nossos serviços",
+  logos = DEFAULT_LOGOS,
   className,
 }: LogosStripProps) {
   const reduceMotion = useReducedMotion();
-  const logos = useMemo(() => buildLogoItems(), []);
+
+  const carouselLogos = useMemo(() => [...logos, ...logos], [logos]);
 
   const plugins = useMemo(
     () =>
@@ -52,7 +90,7 @@ export function LogosStrip({
               playOnInit: true,
               stopOnInteraction: false,
               stopOnMouseEnter: true,
-              speed: 0.85,
+              speed: 1,
             }),
           ],
     [reduceMotion],
@@ -61,7 +99,10 @@ export function LogosStrip({
   return (
     <section className={cn("border-b border-border bg-muted/20 py-10 md:py-14", className)} aria-labelledby="logos-heading">
       <FadeIn className="section flex flex-col items-center text-center">
-        <h2 id="logos-heading" className="text-balance max-w-2xl text-xl font-bold tracking-tight text-foreground sm:text-2xl lg:text-3xl">
+        <h2
+          id="logos-heading"
+          className="text-balance max-w-2xl text-xl font-bold tracking-tight text-foreground sm:text-2xl lg:text-3xl"
+        >
           {heading}
         </h2>
         <p className="mt-2 max-w-lg text-sm text-muted-foreground">
@@ -71,35 +112,37 @@ export function LogosStrip({
 
       <div className="section pt-8 md:pt-10">
         <div className="relative mx-auto flex items-center justify-center lg:max-w-5xl">
-          <Carousel opts={{ loop: true, align: "start", dragFree: true }} plugins={plugins}>
-            <CarouselContent className="-ml-2 md:-ml-4">
-              {logos.map((logo) => (
+          <Carousel opts={{ loop: true, align: "start", dragFree: true }} plugins={plugins} className="w-full">
+            <CarouselContent className="ml-0">
+              {carouselLogos.map((logo, index) => (
                 <CarouselItem
-                  key={logo.id}
-                  className="flex basis-1/2 justify-center pl-2 sm:basis-1/3 md:basis-1/4 md:pl-4 lg:basis-1/5 xl:basis-1/6"
+                  key={`${logo.id}-${index}`}
+                  className="flex basis-auto justify-center pl-0"
                 >
-                  <Link
-                    href={logo.href}
-                    className="group mx-4 flex shrink-0 items-center gap-2.5 rounded-2xl border border-border/60 bg-card px-4 py-3 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-md md:mx-6 md:px-5"
-                  >
-                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary ring-1 ring-primary/20 transition-transform duration-300 group-hover:scale-105">
-                      <Icon name={logo.icon} className="h-4 w-4" />
-                    </span>
-                    <span className="whitespace-nowrap text-sm font-semibold text-muted-foreground transition-colors group-hover:text-foreground">
-                      {logo.label}
-                    </span>
-                  </Link>
+                  <div className="mx-5 flex shrink-0 items-center justify-center sm:mx-6 md:mx-8">
+                    <Image
+                      src={logo.image}
+                      alt={logo.description}
+                      width={120}
+                      height={28}
+                      unoptimized
+                      className={cn(
+                        logo.className,
+                        "w-auto opacity-80 transition-opacity hover:opacity-100 dark:brightness-0 dark:invert",
+                      )}
+                    />
+                  </div>
                 </CarouselItem>
               ))}
             </CarouselContent>
           </Carousel>
 
           <div
-            className="pointer-events-none absolute inset-y-0 left-0 w-12 bg-gradient-to-r from-muted/20 to-transparent md:w-16"
+            className="pointer-events-none absolute inset-y-0 left-0 w-10 bg-gradient-to-r from-muted/20 to-transparent sm:w-12"
             aria-hidden
           />
           <div
-            className="pointer-events-none absolute inset-y-0 right-0 w-12 bg-gradient-to-l from-muted/20 to-transparent md:w-16"
+            className="pointer-events-none absolute inset-y-0 right-0 w-10 bg-gradient-to-l from-muted/20 to-transparent sm:w-12"
             aria-hidden
           />
         </div>

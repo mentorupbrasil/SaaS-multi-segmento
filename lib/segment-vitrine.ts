@@ -1,8 +1,16 @@
 import { ALL_SEGMENTS, getSegmentGroups } from "@/segments";
 import type { SegmentCategory, SegmentTemplate } from "@/segments/types";
+import { CATEGORY_META } from "@/segments/types";
 
 /** Máximo de segmentos listados no mega-menu (resto vai para a página). */
 export const MENU_SEGMENT_PREVIEW_LIMIT = 12;
+
+/** Categorias exibidas nas 3 colunas do mega-menu (mesmo layout de funcionalidades). */
+export const MENU_SEGMENT_CATEGORIES: SegmentCategory[] = ["beleza", "saude", "alimentacao"];
+
+export const SEGMENT_CATEGORY_ICONS: Record<SegmentCategory, string> = Object.fromEntries(
+  Object.entries(CATEGORY_META).map(([key, meta]) => [key, meta.icon]),
+) as Record<SegmentCategory, string>;
 
 /** Segmentos exibidos como atalhos rápidos no menu e na vitrine. */
 export const FEATURED_SEGMENT_IDS = [
@@ -43,6 +51,19 @@ export function filterSegments(query: string, category?: SegmentCategory): Segme
 
 export function getSegmentGroupsForVitrine() {
   return getSegmentGroups();
+}
+
+export function getMenuSegmentGroups() {
+  return MENU_SEGMENT_CATEGORIES.map((category) => {
+    const meta = CATEGORY_META[category];
+    return {
+      category,
+      label: meta.label,
+      description: meta.description,
+      icon: meta.icon,
+      segments: ALL_SEGMENTS.filter((s) => s.category === category),
+    };
+  }).filter((g) => g.segments.length > 0);
 }
 
 /** Nomes curtos para preview em cards de categoria (home). */

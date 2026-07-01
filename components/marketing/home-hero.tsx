@@ -1,7 +1,6 @@
 "use client";
 
 import { Icon } from "@/components/icon";
-import { HeroMockup } from "@/components/marketing/hero-mockup";
 import { HeroSection } from "@/components/marketing/hero-section";
 import { getSegmentTotal } from "@/lib/segment-vitrine";
 
@@ -50,20 +49,19 @@ export function HomeHero({ starterPrice }: { starterPrice?: number }) {
         {
           value: `${total}+`,
           label: "segmentos prontos",
-          icon: <Icon name="Layers" className="h-5 w-5" />,
+          icon: <Icon name="Layers" className="h-3.5 w-3.5" />,
         },
         {
           value: "2 min",
           label: "para criar conta",
-          icon: <Icon name="Zap" className="h-5 w-5" />,
+          icon: <Icon name="Zap" className="h-3.5 w-3.5" />,
         },
         {
           value: "100%",
           label: "suporte em português",
-          icon: <Icon name="Headphones" className="h-5 w-5" />,
+          icon: <Icon name="Headphones" className="h-3.5 w-3.5" />,
         },
       ]}
-      preview={<HeroMockup wide />}
     />
   );
 }

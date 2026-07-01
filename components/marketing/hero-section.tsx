@@ -31,7 +31,6 @@ export interface HeroSectionProps {
   description: string;
   actions: ActionProps[];
   stats: StatProps[];
-  preview?: React.ReactNode;
   className?: string;
 }
 
@@ -79,10 +78,10 @@ function HeroStats({
   reduceMotion: boolean | null;
 }) {
   return (
-    <motion.div className="mx-auto mt-10 w-full max-w-2xl" variants={reduceMotion ? undefined : itemVariants}>
-      <div className="overflow-hidden rounded-2xl border border-border/70 bg-gradient-to-br from-card/90 via-card/70 to-muted/30 shadow-sm ring-1 ring-black/[0.03] backdrop-blur-sm dark:from-card/80 dark:via-card/60 dark:to-muted/20 dark:ring-white/[0.04]">
+    <motion.div className="mx-auto mt-8 w-full max-w-xl" variants={reduceMotion ? undefined : itemVariants}>
+      <div className="overflow-hidden rounded-xl border border-border/50 bg-card/40 backdrop-blur-sm">
         <motion.div
-          className="grid grid-cols-3 divide-x divide-border/60"
+          className="grid grid-cols-3 divide-x divide-border/50"
           variants={reduceMotion ? undefined : statsContainerVariants}
           initial={reduceMotion ? false : "hidden"}
           animate={reduceMotion ? false : "visible"}
@@ -90,19 +89,15 @@ function HeroStats({
           {stats.map((stat) => (
             <motion.div
               key={stat.label}
-              className="group flex flex-col items-center gap-2 px-2 py-4 transition-colors hover:bg-primary/[0.04] sm:px-4 sm:py-5"
+              className="group flex items-center justify-center gap-2 px-2 py-2.5 transition-colors hover:bg-primary/[0.03] sm:gap-2.5 sm:px-3 sm:py-3"
               variants={reduceMotion ? undefined : statItemVariants()}
-              whileHover={reduceMotion ? undefined : { y: -2 }}
-              transition={{ type: "spring", stiffness: 400, damping: 28 }}
             >
-              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-primary/15 to-primary/5 text-primary shadow-inner ring-1 ring-primary/15 transition-transform group-hover:scale-105 sm:h-10 sm:w-10">
+              <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary ring-1 ring-primary/10">
                 {stat.icon}
               </div>
-              <div className="min-w-0 text-center">
-                <p className="text-base font-bold tabular-nums tracking-tight text-foreground sm:text-xl">
-                  {stat.value}
-                </p>
-                <p className="mt-0.5 text-[10px] leading-snug text-muted-foreground sm:text-xs">{stat.label}</p>
+              <div className="min-w-0 text-left">
+                <p className="text-sm font-semibold tabular-nums leading-none text-foreground">{stat.value}</p>
+                <p className="mt-0.5 text-[10px] leading-tight text-muted-foreground">{stat.label}</p>
               </div>
             </motion.div>
           ))}
@@ -144,7 +139,6 @@ export function HeroSection({
   description,
   actions,
   stats,
-  preview,
   className,
 }: HeroSectionProps) {
   const reduceMotion = useReducedMotion();
@@ -156,7 +150,7 @@ export function HeroSection({
       <section className="relative">
         <RetroGrid cellSize={56} opacity={0.35} />
 
-        <div className="section relative z-10 pb-16 pt-16 sm:pb-24 sm:pt-20 md:pt-24">
+        <div className="section relative z-10 pb-12 pt-16 sm:pb-16 sm:pt-20 md:pt-24">
           <motion.div
             className="mx-auto max-w-3xl space-y-6 text-center"
             variants={reduceMotion ? undefined : containerVariants}
@@ -218,21 +212,6 @@ export function HeroSection({
 
             <HeroStats stats={stats} reduceMotion={reduceMotion} />
           </motion.div>
-
-          {preview && (
-            <motion.div
-              className="relative mx-auto mt-16 max-w-5xl px-2 sm:mt-20 sm:px-4 md:mt-24"
-              initial={reduceMotion ? false : { opacity: 0, y: 48 }}
-              animate={reduceMotion ? false : { opacity: 1, y: 0 }}
-              transition={{ duration: 0.85, delay: 0.35, ease: [0.21, 0.47, 0.32, 0.98] as const }}
-            >
-              <div
-                className="pointer-events-none absolute inset-x-[10%] -top-6 h-20 bg-gradient-to-b from-primary/25 to-transparent blur-3xl sm:-top-10 sm:h-28"
-                aria-hidden
-              />
-              <div className="relative [mask-image:linear-gradient(to_bottom,black_88%,transparent_100%)]">{preview}</div>
-            </motion.div>
-          )}
         </div>
       </section>
     </div>

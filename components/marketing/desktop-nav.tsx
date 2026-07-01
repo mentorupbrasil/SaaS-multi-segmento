@@ -13,7 +13,7 @@ export function DesktopNav() {
 
   return (
     <Menu setActive={setActive}>
-      <MenuItem setActive={setActive} active={active} item="Segmentos" dropdownAlign="start">
+      <MenuItem setActive={setActive} active={active} item="Segmentos" dropdownAlign="center">
         <SegmentsMenuPanel onClose={close} />
       </MenuItem>
 
