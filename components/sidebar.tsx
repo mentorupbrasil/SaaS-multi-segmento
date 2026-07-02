@@ -7,6 +7,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import { Icon } from "@/components/icon";
 import { signOutAction } from "@/app/(app)/actions";
 import { cn } from "@/lib/utils";
+import { type OrgOption } from "@/components/org-switcher";
 import { SegmentSwitcher, type SegmentOption } from "@/components/segment-switcher";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
