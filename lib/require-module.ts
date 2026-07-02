@@ -2,12 +2,10 @@ import { redirect } from "next/navigation";
 import { getAuthContext } from "@/lib/auth-context";
 import { isFeatureEnabled } from "@/lib/feature-flags";
 import { isModuleAllowedByPlan } from "@/lib/plan-enforcement";
-import { canAccessFeature } from "@/lib/plan-limits";
+import { canAccessFeature, hasGrowthPlanAccess } from "@/lib/plan-limits";
 import { checkModuleAccess, getModuleForPath } from "@/lib/route-modules";
 
 export { checkModuleAccess, getModuleForPath } from "@/lib/route-modules";
-
-const PREMIUM_PLANS = new Set(["pro", "premium", "enterprise"]);
 
 function basePath(pathname: string): string {
   const parts = pathname.split("/").filter(Boolean);
@@ -35,10 +33,10 @@ export async function requireModule(pathname: string) {
 
   if (base === "/ia") {
     if (!isFeatureEnabled("IA")) redirect("/dashboard");
-    if (!PREMIUM_PLANS.has(plan)) redirect("/assinatura");
+    if (!hasGrowthPlanAccess(plan)) redirect("/assinatura");
   }
 
-  if (base === "/conexoes" && !PREMIUM_PLANS.has(plan)) {
+  if (base === "/conexoes" && !hasGrowthPlanAccess(plan)) {
     redirect("/assinatura");
   }
 }

@@ -22,7 +22,7 @@ function normalize(text: string): string {
 export default function SignupPage() {
   const [state, formAction] = useActionState(signupAction, initialState);
   const [segmentId, setSegmentId] = useState<string>("");
-  const [planId, setPlanId] = useState<string>("pro");
+  const [planId, setPlanId] = useState<string>("starter");
   const [query, setQuery] = useState<string>("");
   useEffect(() => {
     const fromUrl = new URLSearchParams(window.location.search).get("plan");

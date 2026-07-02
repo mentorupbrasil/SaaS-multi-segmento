@@ -1,7 +1,13 @@
 import { prisma } from "@/lib/db";
 import type { ModuleId } from "@/modules/types";
 
-export type PlanId = "starter" | "pro" | "premium" | "enterprise";
+export type PlanId = "starter" | "pro" | "enterprise";
+
+/** Planos legados mapeados para a nova estrutura (Premium → Profissional). */
+const LEGACY_PLAN_ALIASES: Record<string, PlanId> = {
+  premium: "pro",
+  free: "starter",
+};
 
 export type PlanFeature =
   | "whatsapp_reminders"
@@ -21,18 +27,12 @@ export interface PlanLimits {
 
 export const PLAN_LIMITS: Record<PlanId, PlanLimits> = {
   starter: {
-    maxUsers: 2,
-    maxBranches: 1,
-    moduleExtras: [],
-    features: [],
-  },
-  pro: {
     maxUsers: 8,
     maxBranches: 1,
     moduleExtras: [],
     features: ["whatsapp_reminders", "public_booking", "advanced_reports", "data_export"],
   },
-  premium: {
+  pro: {
     maxUsers: null,
     maxBranches: null,
     moduleExtras: ["inventory", "work_orders"],
@@ -64,6 +64,7 @@ export const PLAN_LIMITS: Record<PlanId, PlanLimits> = {
 const DEFAULT_LIMITS = PLAN_LIMITS.starter;
 
 export function normalizePlanId(plan: string): PlanId {
+  if (plan in LEGACY_PLAN_ALIASES) return LEGACY_PLAN_ALIASES[plan];
   if (plan in PLAN_LIMITS) return plan as PlanId;
   return "starter";
 }
@@ -74,6 +75,12 @@ export function getPlanLimits(plan: string): PlanLimits {
 
 export function canAccessFeature(plan: string, feature: PlanFeature): boolean {
   return getPlanLimits(plan).features.includes(feature);
+}
+
+/** Integrações (/conexoes), relatórios avançados e IA a partir do Inicial. */
+export function hasGrowthPlanAccess(plan: string): boolean {
+  const id = normalizePlanId(plan);
+  return id === "starter" || id === "pro" || id === "enterprise";
 }
 
 export function formatUserLimit(plan: string): string {
@@ -109,10 +116,8 @@ export async function getOrgUsage(orgId: string) {
   }
 
   const limits = getPlanLimits(org.plan);
-  const usersOverLimit =
-    limits.maxUsers !== null && userCount > limits.maxUsers;
-  const branchesOverLimit =
-    limits.maxBranches !== null && branchCount > limits.maxBranches;
+  const usersOverLimit = limits.maxUsers !== null && userCount > limits.maxUsers;
+  const branchesOverLimit = limits.maxBranches !== null && branchCount > limits.maxBranches;
 
   return {
     plan: normalizePlanId(org.plan),

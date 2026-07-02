@@ -44,7 +44,7 @@ export const INTEGRATIONS: Integration[] = [
     category: "Comunicação",
     description:
       "Lembretes, confirmações e mensagens automáticas para reduzir faltas e manter o cliente informado.",
-    planLabel: "Profissional+",
+    planLabel: "Inicial+",
     highlights: ["Confirmação de agendamento", "Lembretes automáticos", "Ativação em Conexões"],
   },
   {
@@ -55,7 +55,7 @@ export const INTEGRATIONS: Integration[] = [
     category: "Pagamentos",
     description:
       "Receba PIX dos seus clientes e registre no financeiro com conciliação integrada ao caixa.",
-    planLabel: "Profissional+",
+    planLabel: "Inicial+",
     highlights: ["Baixa no financeiro", "Chave ou provedor", "Painel Conexões"],
   },
   {
@@ -66,7 +66,7 @@ export const INTEGRATIONS: Integration[] = [
     category: "Pagamentos",
     description:
       "Cobranças online, links de pagamento e webhook para atualizar o status automaticamente.",
-    planLabel: "Profissional+",
+    planLabel: "Inicial+",
     highlights: ["Cartão e boleto", "Webhook configurável", "Conciliação no caixa"],
   },
   {
@@ -88,7 +88,7 @@ export const INTEGRATIONS: Integration[] = [
     category: "Produtividade",
     description:
       "Sincronize agendamentos do painel com o Google Calendar da equipe em tempo real.",
-    planLabel: "Profissional+",
+    planLabel: "Inicial+",
     highlights: ["Sync bidirecional", "Por profissional", "OAuth Google"],
   },
   {
@@ -99,7 +99,7 @@ export const INTEGRATIONS: Integration[] = [
     category: "Produtividade",
     description:
       "Link público para o cliente agendar sozinho — /agendar/seu-slug, sem precisar ligar ou mandar mensagem.",
-    planLabel: "Profissional+",
+    planLabel: "Inicial+",
     highlights: ["Link personalizado", "Horários em tempo real", "Captação 24h"],
   },
   {
@@ -110,7 +110,7 @@ export const INTEGRATIONS: Integration[] = [
     category: "Fiscal",
     description:
       "Emissão fiscal integrada com certificado A1, configuração em Fiscal e envio à SEFAZ.",
-    planLabel: "Profissional+",
+    planLabel: "Inicial+",
     highlights: ["Certificado A1", "NF-e e NFC-e", "Painel Fiscal"],
   },
   {
@@ -121,7 +121,7 @@ export const INTEGRATIONS: Integration[] = [
     category: "Hospedagem",
     description:
       "Sincronize tarifas e disponibilidade com OTAs como Booking e Airbnb a partir do módulo de tarifas.",
-    planLabel: "Premium+",
+    planLabel: "Profissional+",
     highlights: ["OTAs conectadas", "Tarifas centralizadas", "Menos overbooking"],
   },
   {
@@ -132,7 +132,7 @@ export const INTEGRATIONS: Integration[] = [
     category: "Marketing",
     description:
       "Receba leads e agendamentos vindos das redes sociais direto no funil do GestorPro.",
-    planLabel: "Profissional+",
+    planLabel: "Inicial+",
     highlights: ["Captação social", "Agenda unificada", "Conexões no painel"],
   },
   {
@@ -143,7 +143,7 @@ export const INTEGRATIONS: Integration[] = [
     category: "Produtividade",
     description:
       "Exporte clientes, financeiro, agenda e outros módulos em CSV ou Excel para análise externa.",
-    planLabel: "Profissional+",
+    planLabel: "Inicial+",
     highlights: ["CSV e Excel", "Por módulo ativo", "Backup operacional"],
   },
 ];

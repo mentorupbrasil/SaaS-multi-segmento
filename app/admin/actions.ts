@@ -9,7 +9,7 @@ import { ALL_SEGMENTS } from "@/segments";
 import { getOrCreateDemoOrganization } from "@/lib/demo-org";
 import { logPlatformAudit } from "@/lib/audit-log";
 
-const PLAN_IDS = ["free", "starter", "pro", "premium", "enterprise"] as const;
+const PLAN_IDS = ["free", "starter", "pro", "enterprise"] as const;
 const SUBSCRIPTION_STATUSES = ["ACTIVE", "TRIALING", "PAST_DUE", "CANCELED"] as const;
 
 async function assertPlatformAdmin() {

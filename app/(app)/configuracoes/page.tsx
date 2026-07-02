@@ -108,7 +108,7 @@ export default async function ConfiguracoesPage() {
           </ul>
           {activeModuleIds.length < segmentModuleIds.length && (
             <p className="mt-3 text-xs text-amber-700">
-              Alguns módulos do segmento exigem plano Profissional ou Premium.{" "}
+              Alguns módulos do segmento exigem plano Profissional.{" "}
               <Link href="/assinatura" className="underline">
                 Compare planos
               </Link>

@@ -30,7 +30,6 @@ export function OrganizationAdminForm({
             <option value="free">Free</option>
             <option value="starter">Inicial</option>
             <option value="pro">Profissional</option>
-            <option value="premium">Premium</option>
             <option value="enterprise">Enterprise</option>
           </select>
         </div>

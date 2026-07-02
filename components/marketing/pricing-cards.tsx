@@ -98,7 +98,7 @@ export function PricingCards({
         </span>
       </div>
 
-      <div className="mx-auto grid max-w-6xl grid-cols-1 items-start gap-5 md:grid-cols-2 lg:grid-cols-4">
+      <div className="mx-auto grid max-w-6xl grid-cols-1 items-start gap-5 md:grid-cols-2 lg:grid-cols-3">
         {cards.map((plan, index) => {
           const isEnterprise = plan.monthly === null;
           const displayPrice = isEnterprise ? null : isMonthly ? plan.monthly! : plan.yearlyMonthly!;

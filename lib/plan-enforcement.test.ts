@@ -2,7 +2,6 @@ import { describe, expect, it } from "vitest";
 import {
   filterModulesByPlan,
   isModuleAllowedByPlan,
-  STARTER_BASE_MODULES,
 } from "./plan-enforcement";
 
 describe("plan-enforcement", () => {
@@ -16,11 +15,10 @@ describe("plan-enforcement", () => {
     "pdv",
   ] as const;
 
-  it("starter only gets base operational modules", () => {
+  it("starter gets segment modules except inventory/work_orders", () => {
     const mods = filterModulesByPlan([...segmentMods], "starter");
-    expect(mods).toEqual(expect.arrayContaining(STARTER_BASE_MODULES));
+    expect(mods).toContain("pdv");
     expect(mods).not.toContain("inventory");
-    expect(mods).not.toContain("pdv");
   });
 
   it("starter cannot access inventory or work_orders directly", () => {
@@ -29,13 +27,13 @@ describe("plan-enforcement", () => {
     expect(isModuleAllowedByPlan("clients", "starter")).toBe(true);
   });
 
-  it("pro gets segment modules except premium extras", () => {
-    const mods = filterModulesByPlan([...segmentMods], "pro");
-    expect(mods).toContain("pdv");
-    expect(mods).not.toContain("inventory");
+  it("pro gets all segment modules including inventory", () => {
+    const mods = filterModulesByPlan(["clients", "inventory", "work_orders"], "pro");
+    expect(mods).toContain("inventory");
+    expect(mods).toContain("work_orders");
   });
 
-  it("premium includes extra modules", () => {
+  it("legacy premium maps to pro module access", () => {
     const mods = filterModulesByPlan(["clients", "inventory", "work_orders"], "premium");
     expect(mods).toContain("inventory");
     expect(mods).toContain("work_orders");

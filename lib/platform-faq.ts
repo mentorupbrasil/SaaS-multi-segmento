@@ -12,7 +12,6 @@ import type { ModuleId } from "@/modules/types";
 const segmentTotal = getSegmentTotal();
 const starter = PLANS.find((p) => p.id === "starter")!;
 const pro = PLANS.find((p) => p.id === "pro")!;
-const premium = PLANS.find((p) => p.id === "premium")!;
 
 function isBillingConfigured(): boolean {
   return Boolean(process.env.ASAAS_API_KEY?.trim());
@@ -28,12 +27,10 @@ export function getSegmentPlanFaqAnswer(seg: SegmentTemplate): string {
   const segmentModules = resolveSegmentModules(seg.id);
   const inicial = filterModulesByPlan(segmentModules, "starter");
   const profissional = filterModulesByPlan(segmentModules, "pro");
-  const completo = filterModulesByPlan(segmentModules, "premium");
 
   return [
-    `No plano Inicial (${formatCurrency(starter.priceMonthly!)}): ${moduleNames(inicial)}.`,
-    `No Profissional (${formatCurrency(pro.priceMonthly!)}): ${moduleNames(profissional)} — inclui WhatsApp, agendamento online, relatórios e exportação.`,
-    `No Premium (${formatCurrency(premium.priceMonthly!)}): ${moduleNames(completo)} — com estoque, ordens de serviço, filiais e usuários ilimitados quando aplicável ao segmento.`,
+    `No plano Inicial (${formatCurrency(starter.priceMonthly!)}): ${moduleNames(inicial)} — inclui WhatsApp, Google Agenda, pagamentos, relatórios, exportação e agendamento online.`,
+    `No Profissional (${formatCurrency(pro.priceMonthly!)}): ${moduleNames(profissional)} — com estoque, ordens de serviço, filiais e usuários ilimitados quando aplicável ao segmento.`,
   ].join(" ");
 }
 
@@ -42,12 +39,12 @@ export function getPricingFaqItems(): FaqItem[] {
   const billing = isBillingConfigured();
   return [
     {
-      q: "Qual a diferença entre Inicial, Profissional e Premium?",
-      a: `O ${starter.name} (${formatCurrency(starter.priceMonthly!)}/mês) cobre o essencial: agenda, clientes, serviços, financeiro, caixa e equipe — até 2 usuários e 1 unidade. O ${pro.name} (${formatCurrency(pro.priceMonthly!)}/mês) libera todos os módulos do seu segmento (PDV, pets, turmas, orçamentos etc.), WhatsApp, link de agendamento, relatórios avançados e exportação CSV/Excel — até 8 usuários. O ${premium.name} (${formatCurrency(premium.priceMonthly!)}/mês) adiciona estoque, ordens de serviço, usuários ilimitados, múltiplas filiais e relatórios consolidados.`,
+      q: "Qual a diferença entre Inicial e Profissional?",
+      a: `O ${starter.name} (${formatCurrency(starter.priceMonthly!)}/mês) inclui todos os módulos do seu segmento, WhatsApp, Google Agenda, pagamentos (PIX/Mercado Pago), relatórios avançados, exportação CSV/Excel, link de agendamento online e até 8 usuários em 1 unidade. O ${pro.name} (${formatCurrency(pro.priceMonthly!)}/mês) adiciona estoque, ordens de serviço, usuários ilimitados, múltiplas filiais e relatórios consolidados.`,
     },
     {
       q: "O plano Inicial inclui todos os módulos do meu segmento?",
-      a: "Não. O Inicial é para começar enxuto: operação do dia a dia com agenda, clientes, serviços, financeiro e caixa. Módulos avançados do segmento — como PDV, pets, turmas, veículos ou orçamentos — liberam no Profissional. Estoque e ordens de serviço ficam no Premium.",
+      a: "Sim. No Inicial você já tem PDV, pets, turmas, orçamentos e demais módulos do seu nicho — além de integrações, relatórios e exportação. Estoque e ordens de serviço ficam no Profissional.",
     },
     {
       q: "Posso trocar de plano depois?",
@@ -65,15 +62,15 @@ export function getPricingFaqItems(): FaqItem[] {
     },
     {
       q: "Quantos usuários e filiais posso ter?",
-      a: "Inicial: até 2 usuários e 1 unidade. Profissional: até 8 usuários e 1 unidade. Premium e Enterprise: usuários e filiais ilimitados (Enterprise inclui gestão de rede sob contrato).",
+      a: "Inicial: até 8 usuários e 1 unidade. Profissional e Enterprise: usuários e filiais ilimitados (Enterprise inclui gestão de rede sob contrato).",
     },
     {
       q: "WhatsApp e agendamento online estão em qual plano?",
-      a: "Lembretes por WhatsApp e o link público para o cliente agendar sozinho (/agendar/seu-slug) estão no Profissional ou superior. No Inicial você opera pelo painel interno; para automação e captação online, faça upgrade.",
+      a: "Lembretes por WhatsApp, Google Agenda, pagamentos e o link público para o cliente agendar sozinho (/agendar/seu-slug) estão no plano Inicial.",
     },
     {
       q: "Consigo exportar relatórios e listas?",
-      a: "Exportação CSV e Excel está no Profissional ou superior. No Inicial você usa o painel normalmente, mas os botões de exportação pedem upgrade — e a API também bloqueia sem o plano correto.",
+      a: "Exportação CSV e Excel está incluída no plano Inicial — clientes, financeiro, agenda e outros módulos ativos.",
     },
     {
       q: "Como funciona o plano Enterprise?",
@@ -112,7 +109,7 @@ export function getHomeFaqGroups(): FaqGroup[] {
       items: [
         {
           q: "Quanto custa e qual plano escolher?",
-          a: `Comece pelo ${starter.name} (${formatCurrency(starter.priceMonthly!)}/mês) se você é MEI ou dupla e quer agenda + caixa. Vá de ${pro.name} (${formatCurrency(pro.priceMonthly!)}/mês) quando precisar de todos os módulos do segmento, WhatsApp, agendamento online e exportação. O ${premium.name} (${formatCurrency(premium.priceMonthly!)}/mês) é para quem precisa de estoque, ordens de serviço e várias unidades. Compare tudo em /precos.`,
+          a: `Comece pelo ${starter.name} (${formatCurrency(starter.priceMonthly!)}/mês) — já inclui todos os módulos do segmento, integrações e relatórios. Vá de ${pro.name} (${formatCurrency(pro.priceMonthly!)}/mês) quando precisar de estoque, ordens de serviço e várias unidades. Compare em /precos.`,
         },
         {
           q: "Tem fidelidade ou multa para cancelar?",
@@ -130,19 +127,19 @@ export function getHomeFaqGroups(): FaqGroup[] {
       items: [
         {
           q: "O que cada plano libera na prática?",
-          a: `Inicial: agenda, clientes, serviços, financeiro, caixa, equipe (2 usuários, 1 unidade). Profissional: tudo do segmento + WhatsApp + agendamento público + relatórios + exportação (8 usuários). Premium: + estoque, ordens de serviço, filiais e usuários ilimitados, relatórios consolidados. IA e Conexões: Profissional ou superior.`,
+          a: `Inicial: todos os módulos do segmento + WhatsApp + Google Agenda + pagamentos + relatórios + exportação (8 usuários, 1 unidade). Profissional: + estoque, ordens de serviço, filiais e usuários ilimitados, relatórios consolidados. IA e Conexões: Inicial ou superior.`,
         },
         {
           q: "Posso ter mais de uma filial?",
-          a: "Múltiplas filiais no Premium ou Enterprise. Inicial e Profissional operam com 1 unidade. Cadastre filiais em Configurações → Filiais.",
+          a: "Múltiplas filiais no Profissional ou Enterprise. O Inicial opera com 1 unidade. Cadastre filiais em Configurações → Filiais.",
         },
         {
           q: "IA, portal do cliente e integrações funcionam?",
-          a: "IA (/ia) e Integrações (/conexoes) exigem plano Profissional ou superior (e flags de ambiente quando aplicável). O portal do cliente permite acompanhar OS, orçamentos e área do responsável em educação. A IA gera resumos; com chave OpenAI configurada usa modelo real.",
+          a: "IA (/ia) e Integrações (/conexoes) estão no plano Inicial (e flags de ambiente quando aplicável). O portal do cliente permite acompanhar OS, orçamentos e área do responsável em educação.",
         },
         {
           q: "Consigo exportar meus dados?",
-          a: "Sim, a partir do Profissional — CSV e Excel em clientes, financeiro, agenda e outros módulos ativos. No Inicial o painel funciona, mas exportação exige upgrade.",
+          a: "Sim — CSV e Excel no plano Inicial, em clientes, financeiro, agenda e outros módulos ativos.",
         },
       ],
     },
@@ -156,11 +153,11 @@ export function getHomeFaqGroups(): FaqGroup[] {
         },
         {
           q: "Como convido minha equipe?",
-          a: "Em Equipe, convide por e-mail respeitando o limite do plano (2 no Inicial, 8 no Profissional, ilimitado no Premium). Ao atingir o limite, o sistema pede upgrade.",
+          a: "Em Equipe, convide por e-mail respeitando o limite do plano (8 no Inicial, ilimitado no Profissional). Ao atingir o limite, o sistema pede upgrade.",
         },
         {
           q: "Como falo com o suporte?",
-          a: `Inicial: e-mail (${PLATFORM_EMAIL}). Profissional e Premium: prioridade na fila. Enterprise: gerente dedicado. Canais em /suporte.`,
+          a: `Inicial e Profissional: suporte prioritário (${PLATFORM_EMAIL}). Enterprise: gerente dedicado. Canais em /suporte.`,
         },
       ],
     },
@@ -195,7 +192,7 @@ export function getAccountFaqGroup(): FaqGroup {
       },
       {
         q: "Vocês ajudam na configuração inicial?",
-        a: "Profissional e Premium incluem onboarding assistido. Enterprise tem treinamento dedicado. No Inicial você configura pelo painel com artigos em /suporte e /blog.",
+        a: "Inicial e Profissional incluem onboarding assistido. Enterprise tem treinamento dedicado.",
       },
     ],
   };
@@ -223,7 +220,7 @@ export function getSegmentLandingFaq(seg: SegmentTemplate): FaqItem[] {
     },
     {
       q: "Posso mudar de plano depois?",
-      a: "Sim, sem fidelidade. Comece pelo Inicial e suba para Profissional quando precisar de módulos extras do segmento, ou Premium para estoque e multi-unidade.",
+      a: "Sim, sem fidelidade. Comece pelo Inicial (completo para a maioria dos negócios) e suba para Profissional quando precisar de estoque, OS e multi-unidade.",
     },
     {
       q: "Tem fidelidade ou multa?",

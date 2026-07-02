@@ -16,7 +16,7 @@ function CellValue({ value }: { value: string | boolean }) {
   return <span className="text-sm font-medium text-foreground">{value}</span>;
 }
 
-export function PricingComparison({ highlightPlanId = "pro", className }: { highlightPlanId?: string; className?: string }) {
+export function PricingComparison({ highlightPlanId = "starter", className }: { highlightPlanId?: string; className?: string }) {
   const highlightIndex = PLANS.findIndex((p) => p.id === highlightPlanId);
 
   return (

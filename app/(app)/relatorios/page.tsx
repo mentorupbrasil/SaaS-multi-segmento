@@ -37,7 +37,7 @@ export default async function RelatoriosPage({
         />
         <div className="card p-10 text-center">
           <p className="text-muted-foreground">
-            Relatórios avançados estão disponíveis a partir do plano Profissional.
+            Relatórios avançados estão disponíveis a partir do plano Inicial.
           </p>
           <Link href="/assinatura" className="btn-primary mt-4 inline-flex">
             Ver planos
@@ -347,7 +347,7 @@ export default async function RelatoriosPage({
       {hasConsolidated && (
         <section className="card mt-8 overflow-hidden">
           <h2 className="border-b border-border px-4 py-3 text-lg font-semibold">
-            Visão consolidada (Premium)
+            Visão consolidada (Profissional)
           </h2>
           <div className="grid gap-4 p-4 sm:grid-cols-3">
             <div className="rounded-xl bg-muted p-4">

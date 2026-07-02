@@ -10,7 +10,7 @@ import { formatCurrency } from "@/lib/utils";
 export const metadata: Metadata = {
   title: "Preços e planos",
   description:
-    "Planos GestorPro: Inicial R$ 39,90, Profissional R$ 79,90 e Premium R$ 149,90/mês. Sem fidelidade. PIX, boleto e cartão via Asaas.",
+    "Planos GestorPro: Inicial R$ 39,90 com integrações e relatórios · Profissional R$ 79,90. Sem fidelidade. PIX, boleto e cartão via Asaas.",
 };
 
 const starter = PLANS.find((p) => p.id === "starter")!;
@@ -23,12 +23,12 @@ export default function PrecosPage() {
         eyebrow="Planos e preços"
         title={
           <>
-            Do essencial ao completo —{" "}
-            <span className="gradient-text">sem pagar a mais</span>
+            Tudo que você precisa por{" "}
+            <span className="gradient-text">{formatCurrency(starter.priceMonthly!)}</span>
           </>
         }
-        description={`Inicial ${formatCurrency(starter.priceMonthly!)} · Profissional ${formatCurrency(pro.priceMonthly!)} · Premium ${formatCurrency(PLANS.find((p) => p.id === "premium")!.priceMonthly!)}. Sem fidelidade. Escolha o que cabe na sua fase e faça upgrade quando crescer.`}
-        primaryCta={{ href: "/signup", label: "Assinar agora" }}
+        description={`Inicial ${formatCurrency(starter.priceMonthly!)} com módulos do segmento, WhatsApp, Google Agenda, pagamentos e relatórios · Profissional ${formatCurrency(pro.priceMonthly!)} para estoque e multi-unidade. Sem fidelidade.`}
+        primaryCta={{ href: "/signup?plan=starter", label: "Assinar por R$ 39,90" }}
         secondaryCta={{ href: "/suporte", label: "Falar com vendas" }}
       />
 
@@ -38,9 +38,9 @@ export default function PrecosPage() {
 
       <CtaBand
         variant="light"
-        title="Comece enxuto, cresça no seu ritmo"
-        description="O Inicial cobre agenda e caixa. O Profissional libera todo o segmento. O Premium adiciona estoque, OS e filiais. Troque de plano em Assinatura, sem burocracia."
-        primaryHref="/signup"
+        title="Comece completo, cresça no seu ritmo"
+        description="O Inicial já inclui integrações, relatórios e todos os módulos do seu segmento. O Profissional adiciona estoque, OS e filiais ilimitadas."
+        primaryHref="/signup?plan=starter"
         primaryLabel="Começar pelo Inicial"
         secondaryHref="/suporte"
         secondaryLabel="Tirar dúvidas"

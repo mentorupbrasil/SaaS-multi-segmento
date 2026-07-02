@@ -3,6 +3,7 @@ import { getSegment } from "@/segments";
 import { ALL_MODULES, MODULES } from "@/modules";
 import { resolveSegmentModules } from "./segment-modules";
 import { filterModulesByPlan } from "./plan-enforcement";
+import { hasGrowthPlanAccess } from "./plan-limits";
 import { resolveTerms, type Terms } from "./terms";
 
 export interface NavItem {
@@ -54,8 +55,7 @@ export function buildNav(org: OrgLike): NavItem[] {
     }
   }
 
-  const premiumPlans = ["pro", "premium", "enterprise"];
-  if (org.plan && premiumPlans.includes(org.plan)) {
+  if (org.plan && hasGrowthPlanAccess(org.plan)) {
     if (isFeatureEnabled("IA")) {
       items.push({ href: "/ia", label: "IA", icon: "Sparkles" });
     }

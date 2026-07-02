@@ -212,7 +212,7 @@ export function IntegrationsDirectory({ initialQuery = "" }: IntegrationsDirecto
                 {
                   n: "1",
                   title: "Assine o plano certo",
-                  text: "Profissional ou superior para a maioria; Premium para channel manager e multi-unidade.",
+                  text: "Inicial ou superior para a maioria; Profissional para channel manager e multi-unidade.",
                 },
                 {
                   n: "2",

@@ -9,17 +9,24 @@ import {
 
 describe("getPlanLimits", () => {
   it("falls back to starter for unknown plan", () => {
-    expect(getPlanLimits("invalid").maxUsers).toBe(2);
+    expect(getPlanLimits("invalid").maxUsers).toBe(8);
     expect(getPlanLimits("invalid").maxBranches).toBe(1);
   });
 
-  it("pro limits", () => {
-    const limits = getPlanLimits("pro");
+  it("starter has growth features", () => {
+    const limits = getPlanLimits("starter");
     expect(limits.maxUsers).toBe(8);
     expect(limits.features).toContain("data_export");
+    expect(limits.features).toContain("whatsapp_reminders");
   });
 
-  it("premium has extra modules feature", () => {
+  it("pro has extra modules feature", () => {
+    const limits = getPlanLimits("pro");
+    expect(limits.features).toContain("extra_modules");
+    expect(limits.maxUsers).toBeNull();
+  });
+
+  it("legacy premium maps to pro limits", () => {
     const limits = getPlanLimits("premium");
     expect(limits.features).toContain("extra_modules");
     expect(limits.maxUsers).toBeNull();
@@ -32,32 +39,30 @@ describe("getPlanLimits", () => {
 });
 
 describe("canAccessFeature", () => {
-  it("pro has advanced reports and export", () => {
-    expect(canAccessFeature("pro", "advanced_reports")).toBe(true);
-    expect(canAccessFeature("pro", "data_export")).toBe(true);
+  it("starter has integrations and reports", () => {
+    expect(canAccessFeature("starter", "advanced_reports")).toBe(true);
+    expect(canAccessFeature("starter", "data_export")).toBe(true);
+    expect(canAccessFeature("starter", "whatsapp_reminders")).toBe(true);
+    expect(canAccessFeature("starter", "public_booking")).toBe(true);
   });
 
-  it("starter has no premium features", () => {
-    expect(canAccessFeature("starter", "whatsapp_reminders")).toBe(false);
-    expect(canAccessFeature("starter", "public_booking")).toBe(false);
-    expect(canAccessFeature("starter", "data_export")).toBe(false);
-  });
-
-  it("consolidated reports only premium+", () => {
-    expect(canAccessFeature("pro", "consolidated_reports")).toBe(false);
+  it("consolidated reports only pro+", () => {
+    expect(canAccessFeature("starter", "consolidated_reports")).toBe(false);
+    expect(canAccessFeature("pro", "consolidated_reports")).toBe(true);
     expect(canAccessFeature("premium", "consolidated_reports")).toBe(true);
   });
 });
 
 describe("format helpers", () => {
   it("formats user and branch limits", () => {
-    expect(formatUserLimit("starter")).toBe("2");
-    expect(formatUserLimit("premium")).toBe("Ilimitado");
+    expect(formatUserLimit("starter")).toBe("8");
+    expect(formatUserLimit("pro")).toBe("Ilimitado");
     expect(formatBranchLimit("starter")).toBe("1 unidade");
   });
 
-  it("normalizes plan id", () => {
+  it("normalizes plan id including legacy premium", () => {
     expect(normalizePlanId("unknown")).toBe("starter");
     expect(normalizePlanId("pro")).toBe("pro");
+    expect(normalizePlanId("premium")).toBe("pro");
   });
 });
