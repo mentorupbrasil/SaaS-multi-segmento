@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getOptionalAuthContext, listOrganizationsForSwitcher } from "@/lib/auth-context";
 import { getSegment } from "@/segments";
@@ -86,9 +87,9 @@ export default async function AppLayout({
               <span>
                 Modo preview: <strong>{segment.label}</strong> — conta demo com clientes, agenda e módulos reais.
               </span>
-              <a href="/admin/segmentos" className="shrink-0 font-medium underline underline-offset-2 hover:no-underline">
+              <Link href="/admin/segmentos" className="shrink-0 font-medium underline underline-offset-2 hover:no-underline">
                 Trocar segmento
-              </a>
+              </Link>
             </div>
           )}
           <div className="mx-auto max-w-6xl px-4 py-6 sm:px-6 sm:py-8">
