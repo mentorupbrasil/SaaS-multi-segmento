@@ -11,7 +11,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { buttonVariants } from "@/components/ui/button";
 import { cn, formatCurrency } from "@/lib/utils";
 
 function CellValue({ value }: { value: string | boolean }) {
@@ -132,11 +131,8 @@ export function PricingComparison({
                 <Link
                   href={plan.priceMonthly === null ? "/suporte" : `/signup?plan=${plan.id}`}
                   className={cn(
-                    buttonVariants({
-                      variant: plan.highlight ? "default" : "outline",
-                      size: "sm",
-                    }),
-                    "w-full max-w-[148px]",
+                    "inline-flex w-full max-w-[148px] items-center justify-center rounded-xl px-3 py-2 text-sm font-semibold transition-colors",
+                    plan.highlight ? "btn-primary" : "btn-secondary",
                   )}
                 >
                   {plan.priceMonthly === null ? "Falar com vendas" : "Assinar"}
