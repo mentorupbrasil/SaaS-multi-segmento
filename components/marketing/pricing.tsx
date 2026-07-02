@@ -54,7 +54,7 @@ export function Pricing({
           <div className="mb-8 text-center">
             <h3 className="text-xl font-bold tracking-tight text-foreground sm:text-2xl">Compare os planos em detalhes</h3>
             <p className="mt-2 text-sm text-muted-foreground">
-              Todos incluem agenda, clientes e financeiro. Módulos avançados do segmento a partir do Profissional.
+              O Inicial já inclui integrações e todos os módulos do segmento. O Profissional adiciona estoque e multi-unidade.
             </p>
           </div>
           <PricingComparison className={premium ? "shadow-xl shadow-black/5 ring-1 ring-border/50" : undefined} />
