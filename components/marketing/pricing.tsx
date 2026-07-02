@@ -52,9 +52,9 @@ export function Pricing({
       {withComparison && (
         <div className={cn("section relative mx-auto max-w-5xl pb-16", premium ? "mt-8" : "mt-12")}>
           <div className="mb-8 text-center">
-            <h3 className="text-xl font-bold tracking-tight text-foreground sm:text-2xl">Compare os planos em detalhes</h3>
+            <h3 className="text-xl font-bold tracking-tight text-foreground sm:text-2xl">O que muda em cada plano</h3>
             <p className="mt-2 text-sm text-muted-foreground">
-              O Inicial já inclui integrações e todos os módulos do segmento. O Profissional adiciona estoque e multi-unidade.
+              Todos incluem o sistema completo do segmento. Compare só usuários, filiais e recursos avançados.
             </p>
           </div>
           <PricingComparison className={premium ? "shadow-xl shadow-black/5 ring-1 ring-border/50" : undefined} />

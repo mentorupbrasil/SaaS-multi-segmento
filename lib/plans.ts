@@ -78,50 +78,38 @@ export interface ComparisonRow {
   values: (string | boolean)[];
 }
 
+/** Itens iguais em todos os planos — exibidos uma vez acima da tabela. */
+export const COMPARISON_INCLUDED_EVERYWHERE = [
+  "Agenda, clientes, serviços e financeiro",
+  "Todos os módulos do seu segmento",
+  "WhatsApp, Google Agenda e pagamentos",
+  "Relatórios, exportação Excel e agendamento online",
+];
+
+/** Só o que muda entre planos (tabela enxuta). */
+export const COMPARISON_ROWS: ComparisonRow[] = [
+  { label: "Usuários na equipe", values: ["Até 8", "Ilimitado", "Ilimitado"] },
+  { label: "Unidades / filiais", values: ["1 unidade", "Ilimitadas", "Rede / franquias"] },
+  { label: "Estoque e ordens de serviço", values: [false, true, true] },
+  { label: "Relatórios multi-unidade", values: [false, true, true] },
+  { label: "Integrações personalizadas", values: [false, false, true] },
+  { label: "Suporte", values: ["Prioritário", "Dedicado", "Gerente de conta"] },
+  { label: "SLA garantido", values: [false, false, true] },
+];
+
+export function getDifferentiatingComparisonRows(): ComparisonRow[] {
+  return COMPARISON_ROWS.filter((row) => {
+    const serialized = row.values.map((v) => String(v));
+    return new Set(serialized).size > 1;
+  });
+}
+
+/** @deprecated Use COMPARISON_ROWS — mantido para compatibilidade interna */
 export interface ComparisonGroup {
   group: string;
   rows: ComparisonRow[];
 }
 
 export const COMPARISON: ComparisonGroup[] = [
-  {
-    group: "Operação do dia a dia",
-    rows: [
-      { label: "Agenda, clientes e serviços", values: [true, true, true] },
-      { label: "Financeiro e caixa", values: [true, true, true] },
-      { label: "Módulos extras do segmento (PDV, pets, turmas…)", values: [true, true, true] },
-      { label: "Estoque e ordens de serviço", values: [false, true, true] },
-      { label: "Painel com indicadores", values: ["Completo", "Completo", "Completo"] },
-    ],
-  },
-  {
-    group: "Equipe e unidades",
-    rows: [
-      { label: "Usuários na equipe", values: ["8", "Ilimitado", "Ilimitado"] },
-      { label: "Unidades / filiais", values: ["1", "Ilimitado", "Rede"] },
-      { label: "Níveis de permissão", values: [true, true, true] },
-    ],
-  },
-  {
-    group: "Crescimento e automação",
-    rows: [
-      { label: "Relatórios avançados", values: [true, true, true] },
-      { label: "Relatórios consolidados (multi-unidade)", values: [false, true, true] },
-      { label: "Exportação CSV / Excel", values: [true, true, true] },
-      { label: "Lembretes por WhatsApp", values: [true, true, true] },
-      { label: "Google Agenda", values: [true, true, true] },
-      { label: "Pagamentos (PIX / Mercado Pago)", values: [true, true, true] },
-      { label: "Link público de agendamento", values: [true, true, true] },
-      { label: "Integrações e IA", values: [true, true, true] },
-      { label: "Integrações personalizadas", values: [false, false, true] },
-    ],
-  },
-  {
-    group: "Suporte",
-    rows: [
-      { label: "Atendimento", values: ["Prioritário", "Dedicado", "Gerente de conta"] },
-      { label: "Onboarding assistido", values: [true, true, true] },
-      { label: "SLA garantido", values: [false, false, true] },
-    ],
-  },
+  { group: "Diferenças entre planos", rows: getDifferentiatingComparisonRows() },
 ];
