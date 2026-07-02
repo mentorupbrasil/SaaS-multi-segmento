@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 import { switchOrganizationAction } from "@/app/admin/actions";
+import { clearStuckOverlays } from "@/lib/clear-stuck-overlays";
 import { getSegment } from "@/segments";
 
 export interface OrgOption {
@@ -25,8 +26,8 @@ export function OrgSwitcher({ organizations, activeOrgId, compact }: OrgSwitcher
   return (
     <div className={compact ? "" : "mb-4 px-3"}>
       {!compact && (
-        <p className="mb-1.5 px-1 text-xs font-semibold uppercase tracking-wider text-slate-400">
-          Organização ativa
+        <p className="mb-1.5 px-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+          Tenant real (opcional)
         </p>
       )}
       <select
@@ -35,9 +36,15 @@ export function OrgSwitcher({ organizations, activeOrgId, compact }: OrgSwitcher
         disabled={pending}
         onChange={(e) => {
           const orgId = e.target.value;
+          (document.activeElement as HTMLElement | null)?.blur();
           startTransition(async () => {
-            await switchOrganizationAction(orgId);
-            router.refresh();
+            try {
+              await switchOrganizationAction(orgId);
+              router.push("/dashboard");
+              router.refresh();
+            } finally {
+              clearStuckOverlays();
+            }
           });
         }}
       >

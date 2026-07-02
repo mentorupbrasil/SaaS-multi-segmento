@@ -2,7 +2,8 @@
 
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
-import { switchSegmentAction } from "@/app/admin/actions";
+import { Loader2 } from "lucide-react";
+import { enterSegmentFlow } from "@/lib/client/enter-segment-flow";
 
 export function EnterSegmentButton({
   segmentId,
@@ -17,17 +18,25 @@ export function EnterSegmentButton({
   return (
     <button
       type="button"
-      className="btn-primary text-sm"
+      className="btn-primary inline-flex items-center gap-2 text-sm"
       disabled={pending}
       onClick={() => {
         startTransition(async () => {
-          await switchSegmentAction(segmentId);
+          const result = await enterSegmentFlow(segmentId);
+          if (result.error) return;
           router.push("/dashboard");
           router.refresh();
         });
       }}
     >
-      {pending ? "Abrindo..." : label}
+      {pending ? (
+        <>
+          <Loader2 className="h-4 w-4 animate-spin" />
+          Abrindo...
+        </>
+      ) : (
+        label
+      )}
     </button>
   );
 }

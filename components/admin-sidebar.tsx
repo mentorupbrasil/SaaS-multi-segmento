@@ -94,7 +94,9 @@ export function AdminSidebar({
 
       <div className="border-b border-border py-3">
         <SegmentSwitcher segments={segments} activeSegmentId={activeSegmentId} />
-        <OrgSwitcher organizations={organizations} activeOrgId={activeOrgId} />
+        <div className="mt-2 border-t border-border pt-3">
+          <OrgSwitcher organizations={organizations} activeOrgId={activeOrgId} />
+        </div>
       </div>
 
       <ScrollArea className="flex-1 p-3">

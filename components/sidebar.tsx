@@ -7,7 +7,6 @@ import { motion, useReducedMotion } from "framer-motion";
 import { Icon } from "@/components/icon";
 import { signOutAction } from "@/app/(app)/actions";
 import { cn } from "@/lib/utils";
-import { OrgSwitcher, type OrgOption } from "@/components/org-switcher";
 import { SegmentSwitcher, type SegmentOption } from "@/components/segment-switcher";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -142,13 +141,11 @@ export function SidebarContent({
 
       {isPlatformAdmin && segments.length > 0 && (
         <div className="border-b border-border py-3">
-          <SegmentSwitcher segments={segments} activeSegmentId={activeSegmentId} />
-        </div>
-      )}
-
-      {isPlatformAdmin && organizations.length > 0 && (
-        <div className="border-b border-border py-3">
-          <OrgSwitcher organizations={organizations} activeOrgId={activeOrgId} compact />
+          <SegmentSwitcher
+            segments={segments}
+            activeSegmentId={activeSegmentId}
+            onNavigate={onNavigate}
+          />
         </div>
       )}
 

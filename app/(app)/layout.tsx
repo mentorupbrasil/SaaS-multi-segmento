@@ -82,9 +82,13 @@ export default async function AppLayout({
         <MobileAppHeader {...sidebarProps} />
         <main className="flex-1 overflow-y-auto">
           {ctx.isSegmentPreview && segment && (
-            <div className="border-b border-amber-200/80 bg-amber-50 px-6 py-2.5 text-sm text-amber-900 dark:border-amber-900/50 dark:bg-amber-950/40 dark:text-amber-200">
-              Modo preview: interface de <strong>{segment.label}</strong>. Dados da organização ativa.
-              Use o seletor <strong>Sistema / segmento</strong> no menu para trocar.
+            <div className="flex flex-wrap items-center justify-between gap-2 border-b border-amber-200/80 bg-amber-50 px-4 py-2.5 text-sm text-amber-900 dark:border-amber-900/50 dark:bg-amber-950/40 dark:text-amber-200 sm:px-6">
+              <span>
+                Modo preview: <strong>{segment.label}</strong> — conta demo com clientes, agenda e módulos reais.
+              </span>
+              <a href="/admin/segmentos" className="shrink-0 font-medium underline underline-offset-2 hover:no-underline">
+                Trocar segmento
+              </a>
             </div>
           )}
           <div className="mx-auto max-w-6xl px-4 py-6 sm:px-6 sm:py-8">

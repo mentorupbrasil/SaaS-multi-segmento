@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Outfit } from "next/font/google";
 import { Analytics } from "@/components/analytics";
+import { RouteChangeCleanup } from "@/components/route-change-cleanup";
 import { ThemeProvider } from "@/components/theme-provider";
 import "./globals.css";
 
@@ -24,6 +25,7 @@ export default function RootLayout({
     <html lang="pt-BR" className={outfit.variable} suppressHydrationWarning>
       <body>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+          <RouteChangeCleanup />
           {children}
         </ThemeProvider>
         <Analytics />

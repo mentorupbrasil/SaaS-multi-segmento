@@ -7,5 +7,6 @@ export function listSegmentsForSwitcher(): SegmentOption[] {
     label: seg.label,
     tagline: seg.tagline,
     category: CATEGORY_LABELS[seg.category],
+    icon: seg.icon,
   })).sort((a, b) => a.label.localeCompare(b.label, "pt-BR"));
 }
